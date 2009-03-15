@@ -1,0 +1,114 @@
+body {
+	background: #fff;
+	color: #333;
+	font: 11px verdana, arial, helvetica, sans-serif;
+	margin: 0 10px 10px;
+}
+
+h1 {
+	color: #006dba;
+	font-weight: normal;
+	font-size: 16px;
+	margin: .8em 0 .3em 0;
+}
+
+.logEntry div.entryHeader {
+	cursor: pointer;
+	overflow: hidden;
+	white-space: nowrap;
+	margin: 10px 0 5px 0;
+	padding: 5px 5px 5px 30px;
+	width: 100%;
+}
+
+#layout {
+	width: 97%;
+}
+
+.info div.entryHeader {
+	background: #f3f8fc url(../images/skin/information.png) 7px 60% no-repeat;
+	border: 1px solid #b2d1ff;
+	color: #006dba;
+}
+
+.warning div.entryHeader {
+	background: #ffffcc url(../images/skin/information.png) 7px 60% no-repeat;
+	border: 1px solid #ffcc00;
+	color: #ff6600;
+}
+
+.error div.entryHeader {
+	background: #ffe0e0 url(../images/skin/exclamation.png) 7px 60% no-repeat;
+	border: 1px solid #ff6666;
+	color: #cc0000;
+}
+
+.empty div.entryHeader {
+	background-image: none;
+	cursor: auto;
+}
+
+div.entryContent {
+	display: none;
+	padding-left: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	font-size: 12px;
+	text-align: left;
+	white-space: pre-wrap;
+	font-family: "courier new" courier, monospace;
+}
+
+div.entryHeader .links {
+	display: none;
+}
+
+div.selected .links {
+	display: block;
+	float: right;
+	font-size: 0.9em;
+	padding-right: 10px;
+}
+
+.selected div.entryContent {
+	display: block;
+}
+
+.logEntry div.message {
+	float: left;
+}
+
+.logEntry div.count {
+	float: left;
+	padding-left: 0.5em;
+	font-size: 0.7em;
+	padding-top: 0.4em;
+}
+
+.logEntry div.date {
+	float: right;
+	font-size: 0.9em;
+}
+
+.message {
+
+}
+
+div.errors {
+	background: #fff3f3;
+	border: 1px solid red;
+	color: #cc0000;
+	margin: 10px 0 5px 0;
+	padding: 5px 0 5px 0;
+}
+
+div.errors ul {
+	list-style: none;
+	padding: 0;
+}
+
+div.errors li {
+	background: url(../images/skin/exclamation.png) 8px 0% no-repeat;
+	line-height: 16px;
+	padding-left: 30px;
+}

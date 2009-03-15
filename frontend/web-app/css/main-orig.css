@@ -1,0 +1,122 @@
+body, td {
+	color: black;
+	font-family: arial, helvetica, sans-serif;
+	font-size: 12px;
+	margin: 0 8px 8px;
+
+}
+
+#layout {
+	border: 1px solid;
+	width: 100%;
+}
+
+#titleBar {
+	text-align: right;
+	margin-right: 10px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	font-size: 22px;
+	color: gray;
+	font-family: arial, helvetica, serif;
+}
+
+#content {
+	padding: 10px;
+}
+
+#menu {
+	width: 10%;
+}
+
+.logEntry div.entryHeader {
+	padding: 2px 5px;
+	border-bottom: 1px solid #ccccff;
+	cursor: pointer;
+}
+
+.info div.entryHeader {
+	background-color: #e9e9ff;
+}
+
+.warning div.entryHeader {
+	background-color: #feb585;
+}
+
+.error div.entryHeader {
+	background-color: #ffcccc;
+}
+
+.empty div.entryHeader {
+	background-color: #e9e9ff;
+}
+
+div.entryContent {
+	display: none;
+	padding-left: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	font-size: 12px;
+	color: #990033;
+	text-align: left;
+	white-space: pre;
+	font-family: "courier new" courier, monospace;
+}
+
+.entryContent pre {
+	margin: 0px;
+	padding: 0px;
+}
+
+div.selected {
+	border: 1px solid #9999ff;
+	border-spacing: 0;
+	margin: 0;
+	padding: 0;
+}
+
+.selected div.entryContent {
+	display: block;
+}
+
+.logEntry div.message {
+	font-weight: bold;
+	float: left;
+}
+
+.logEntry div.count {
+	color: gray;
+	float: left;
+	padding-left: 0.5em;
+	font-size: 0.9em;
+}
+
+.logEntry div.date {
+	float: right;
+	color: gray;
+	font-size: 0.9em;
+}
+
+#linksBlock .gwt-Hyperlink {
+	display: inline;
+}
+
+#linksBlock .gwt-HTML {
+	margin-left: 5px;
+	margin-right: 5px;
+	display: inline;
+}
+
+#linksBlock {
+	padding: 10px;
+	padding-bottom: 0px;
+	margin-bottom: 0px;
+	text-align: right;
+	font-size: 18px;
+	font-weight: normal;
+	color: #663766;
+}
+
+#linksBlock a:visited {
+	color: #0055cc;
+}

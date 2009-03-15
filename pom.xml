@@ -25,5 +25,6 @@
 
   <modules>
     <module>core</module>
+	  <module>frontend</module>
   </modules>
 </project>
