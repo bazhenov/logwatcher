@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://logging.farpost.com/schema"
+        xmlns:u="http://logging.farpost.com/schema"
+        elementFormDefault="qualified">
+
+  <element name="logEntry" type="u:LogEntry"/>
+
+  <complexType name="LogEntry">
+    <all>
+      <element name="message" type="string"/>
+      <element name="severity" type="u:Severity"/>
+      <element name="group" type="u:Group"/>
+      <element name="cause" type="u:Cause" minOccurs="0"/>
+    </all>
+    <attribute name="date" type="dateTime"/>
+    <attribute name="checksum" type="string"/>
+  </complexType>
+
+  <complexType name="Severity">
+    <attribute name="name">
+      <simpleType>
+        <restriction base="string">
+          <enumeration value="trace"/>
+          <enumeration value="debug"/>
+          <enumeration value="info"/>
+          <enumeration value="warning"/>
+          <enumeration value="error"/>
+        </restriction>
+      </simpleType>
+
+    </attribute>
+  </complexType>
+
+  <complexType name="Group">
+    <attribute name="name" type="string"/>
+  </complexType>
+
+  <complexType name="Cause">
+    <all>
+      <element name="message" type="string"/>
+      <element name="stackTrace" type="string"/>
+      <element name="cause" type="u:Cause" minOccurs="0"/>
+    </all>
+    <attribute name="type" type="string"/>
+  </complexType>
+</schema>

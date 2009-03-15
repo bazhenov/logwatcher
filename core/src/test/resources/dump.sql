@@ -1,0 +1,13 @@
+DROP TABLE IF EXISTS log_entry;
+
+CREATE TABLE log_entry (
+	`id` INT(11) NOT NULL AUTO_INCREMENT,
+	`date` DATE NOT NULL,
+	`checksum` VARCHAR(128) NOT NULL,
+	`group` VARCHAR(128) NULL,
+	`text` TEXT NOT NULL,
+	`count` INT(11) NOT NULL DEFAULT 1,
+	`last_date` TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+	PRIMARY KEY(`id`),
+	UNIQUE KEY(`date`)
+) ENGINE=InnoDB;
