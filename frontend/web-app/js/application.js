@@ -19,10 +19,3 @@ function toggle(el) {
     el.className += ' selected';
   }
 }
-
-function copyToClipboard(el) {
-  var contentNode = el.parentNode.parentNode.nextSibling;
-  var text = contentNode.innerHTML.createTextRange();
-  window.clipboardData.setData("Text", text);
-  alert(text);
-}

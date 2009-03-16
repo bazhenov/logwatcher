@@ -11,7 +11,7 @@ beans = {
 
 	transportListener(WriteToStorageTransportListener, ref("logStorage"), ref("marshaller"))
 
-	transport(UdpTransport, 6518, ref("transportListener")) { bean ->
+	transport(UdpTransport, 6578, ref("transportListener")) { bean ->
 		bean.initMethod = 'start'
 	}
 

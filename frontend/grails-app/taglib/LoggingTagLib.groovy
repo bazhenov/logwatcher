@@ -47,7 +47,6 @@ class LoggingTagLib {
 		if ( lastTime ) {
 			out << "<div class='date'>Last: ${lastTime}</div>"
 		}
-		out << "<div class='links'><a href='#' onclick='return copyToClipboard(this)'>Copy to clipboard</a></div>"
 		out << "<div style='clear: both'></div>"
 		out << "</div>"
 		out << "<div class='entryContent'>${content}</div>"

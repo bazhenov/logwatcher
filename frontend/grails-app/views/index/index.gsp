@@ -10,10 +10,5 @@
 	<g:entry ref="${entry}"/>
 </g:each>
 
-<g:entry title="subject" content="My text"/>
-
-<g:entry title="Empty info" severity="info"/>
-<g:entry title="Warning" severity="warning" content="Some text"/>
-<g:entry title="Achtung" severity="error" content="Some text"/>
 </body>
 </html>
