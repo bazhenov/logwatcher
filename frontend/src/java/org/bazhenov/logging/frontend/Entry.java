@@ -13,12 +13,8 @@ public class Entry {
 	public Entry(AggregatedLogEntry aggregatedEntry) {
 		LogEntry entry = aggregatedEntry.getSampleEntry();
 		Cause cause = entry.getCause();
-		String text = cause != null
-			? cause.getStackTrace()
-			: null;
-
 		this.title = entry.getMessage();
-		this.text = text;
+		this.text = formatCause(cause);
 		this.count = aggregatedEntry.getCount();
 		this.lastTime = aggregatedEntry.getLastTime();
 	}
@@ -44,5 +40,29 @@ public class Entry {
 
 	public DateTime getLastTime() {
 		return lastTime;
+	}
+
+	private static String formatCause(Cause rootCause) {
+		StringBuilder prefix = new StringBuilder();
+		StringBuilder stackTrace = new StringBuilder();
+
+		if ( rootCause != null ) {
+			Cause cause = rootCause;
+			while ( cause != null ) {
+				if ( cause != rootCause ) {
+					stackTrace.append("\n\n").append(prefix).append("Caused by ");
+				}
+				String iStack = cause.getStackTrace().replaceAll("\n", "\n" + prefix);
+				stackTrace.append(cause.getType())
+					.append(": ")
+					.append(cause.getMessage())
+					.append("\n")
+					.append(prefix)
+					.append(iStack);
+				cause = cause.getCause();
+				prefix.append("  ");
+			}
+		}
+		return stackTrace.toString();
 	}
 }
