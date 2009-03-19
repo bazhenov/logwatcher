@@ -14,7 +14,7 @@ public class Entry {
 		LogEntry entry = aggregatedEntry.getSampleEntry();
 		Cause cause = entry.getCause();
 		String text = cause != null
-			? cause.getMessage()
+			? cause.getStackTrace()
 			: null;
 
 		this.title = entry.getMessage();

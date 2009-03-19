@@ -6,11 +6,12 @@ class LoggingTagLib {
 	public final int MAX_LENGTH = 100;
 	def dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm", new Locale("En"))
 
-	def entry = {attrs ->
+	def entry = {attrs, body ->
 		String title
 		String content
 		int count
 		String lastTime
+		String message;
 
 		def entry = attrs['ref'] as Entry
 		if ( entry ) {
@@ -18,10 +19,12 @@ class LoggingTagLib {
 			content = entry.text
 			count = entry.count
 			lastTime = dateFormat.format(entry.lastTime.asDate())
+			message = entry.getText()
 		} else {
 			title = attrs['title']
 			content = attrs['content']
 			count = attrs['count']
+			message = body()
 		}
 
 		if ( title.length() > MAX_LENGTH ) {
