@@ -25,6 +25,14 @@ h1 {
 	width: 97%;
 }
 
+#header {
+	text-align: right;
+}
+
+#header A {
+	font-size: 12px;
+}
+
 .info div.entryHeader {
 	background: #f3f8fc url(../images/skin/information.png) 7px 60% no-repeat;
 	border: 1px solid #b2d1ff;
