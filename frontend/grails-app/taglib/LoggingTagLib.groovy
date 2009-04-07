@@ -43,7 +43,7 @@ class LoggingTagLib {
 		out << "<div class='${className}'>"
 		out << "<div class='entryHeader' ${listener}>"
 		out << "<div style='clear: both'></div>"
-		out << "<div class='message'>${title}</div>"
+		out << "<div class='message'>${title.encodeAsHTML()}</div>"
 		if ( count > 1 ) {
 			out << "<div class='count'>${count} times</div>"
 		}
@@ -52,7 +52,7 @@ class LoggingTagLib {
 		}
 		out << "<div style='clear: both'></div>"
 		out << "</div>"
-		out << "<div class='entryContent'>${content}</div>"
+		out << "<div class='entryContent'>${content.encodeAsHTML()}</div>"
 		out << "</div>"
 	}
 }

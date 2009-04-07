@@ -8,7 +8,6 @@ import java.net.*;
 public class UdpTransport implements Transport {
 
 	private final SocketThread thread;
-
 	private volatile int bufferSize = 4096;
 
 	public UdpTransport(int port, TransportListener listener) throws SocketException {
@@ -35,9 +34,7 @@ public class UdpTransport implements Transport {
 
 		private DatagramSocket socket;
 		private TransportListener listener;
-
 		private final Logger log = Logger.getLogger(UdpTransport.class);
-
 
 		public SocketThread(DatagramSocket socket, TransportListener listener) {
 			this.socket = socket;
@@ -58,7 +55,7 @@ public class UdpTransport implements Transport {
 					log.warn("Stopping transport thread", e);
 					break;
 				} catch ( TransportException e ) {
-					log.error("Listener failed at message: "+message, e);
+					log.error("Listener failed at message: " + message, e);
 				}
 			}
 		}

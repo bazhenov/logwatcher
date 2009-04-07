@@ -17,7 +17,7 @@ public class MySqlLogStorageTest extends LogStorageTest {
 			props.load(new FileReader(fileName));
 		} catch ( IOException e ) {
 			throw new RuntimeException(
-				"Unable to read mysql properties file. " + "Run tests with -Dmysql.config=../path/to/mysql.properties");
+				"Unable to read mysql properties file. Run tests with -Dmysql.config=../path/to/mysql.properties");
 		}
 		String url = props.getProperty("url");
 		String username = props.getProperty("username");

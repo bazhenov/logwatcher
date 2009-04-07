@@ -13,6 +13,10 @@ beans = {
 
 	transport(UdpTransport, 6578, ref("transportListener")) { bean ->
 		bean.initMethod = 'start'
+		bean.destroyMethod = 'stop'
+		bean.lazyInit = false
+		
+		bufferSize = 100000
 	}
 
 }
