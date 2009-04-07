@@ -3,7 +3,7 @@ import java.text.SimpleDateFormat
 
 class LoggingTagLib {
 
-	public final int MAX_LENGTH = 100;
+	public final int MAX_LENGTH = 150;
 	def dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm", new Locale("En"))
 
 	def entry = {attrs, body ->
@@ -27,7 +27,7 @@ class LoggingTagLib {
 			message = body()
 		}
 
-		if ( title.length() > MAX_LENGTH ) {
+		if ( title.length() > MAX_LENGTH + "...".length() ) {
 			title = title.substring(0, MAX_LENGTH) + "..."
 		}
 
