@@ -2,3 +2,7 @@
 *.iws
 *.iml
 /*.properties
+/core/target
+/frontend/target
+/frontend/test
+/frontend/web-app/WEB-INF/classes

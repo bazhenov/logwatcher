@@ -63,7 +63,7 @@ div.entryContent {
 	padding-bottom: 5px;
 	font-size: 12px;
 	text-align: left;
-	white-space: pre-wrap;
+	white-space: pre;
 	font-family: "courier new" courier, monospace;
 }
 
