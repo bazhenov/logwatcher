@@ -102,6 +102,11 @@ div.selected .links {
 
 }
 
+.linkToJira {
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
 div.errors {
 	background: #fff3f3;
 	border: 1px solid red;

@@ -14,7 +14,7 @@ class LoggingTagLib {
 		String message;
 
 		def entry = attrs['ref'] as Entry
-		if ( entry ) {
+		if (entry) {
 			title = entry.title
 			content = entry.text
 			count = entry.count
@@ -27,14 +27,14 @@ class LoggingTagLib {
 			message = body()
 		}
 
-		if ( title.length() > MAX_LENGTH + "...".length() ) {
+		if (title.length() > MAX_LENGTH + "...".length()) {
 			title = title.substring(0, MAX_LENGTH) + "..."
 		}
 
 		def isEmpty = !content || content.length() <= 0;
 		def severity = attrs['severity'] ?: 'info'
 		def className = "logEntry ${severity}"
-		if ( isEmpty ) {
+		if (isEmpty) {
 			className += " empty";
 		}
 		def listener = isEmpty ? '' : "onclick='return toggle(this.parentNode); return false;'"
@@ -44,12 +44,16 @@ class LoggingTagLib {
 		out << "<div class='entryHeader' ${listener}>"
 		out << "<div style='clear: both'></div>"
 		out << "<div class='message'>${title.encodeAsHTML()}</div>"
-		if ( count > 1 ) {
+		if (count > 1) {
 			out << "<div class='count'>${count} times</div>"
 		}
-		if ( lastTime ) {
+		if (lastTime) {
 			out << "<div class='date'>Last: ${lastTime}</div>"
 		}
+
+		out << "<span class='linkToJira'><a href='http://jira.dev.loc/jira/secure/CreateIssueDetails.jspa?pid=10000&issuetype=1&summary=" +
+						URLEncoder.encode(title) + "&description=" + URLEncoder.encode(content) + "&priority=3' target='_blank'>[создать таск]</a></span>"
+
 		out << "<div style='clear: both'></div>"
 		out << "</div>"
 		out << "<div class='entryContent'>${content.encodeAsHTML()}</div>"
