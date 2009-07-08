@@ -18,7 +18,7 @@ abstract public class LogStorageTest {
 		DateTime date = now();
 
 		Cause cause = new Cause("type", "message", "###");
-		LogEntry entry = new LogEntry(date, "group", "message", Severity.debug, "34fd", cause);
+		LogEntry entry = new LogEntry(date, "group", "message", Severity.debug, "34fd", cause, "my application");
 
 		storage.writeEntry(entry);
 
@@ -33,8 +33,8 @@ abstract public class LogStorageTest {
 		DateTime evening = november(12, 2008).at(18, 05);
 
 		String checksum = "1f";
-		LogEntry entry1 = new LogEntry(morning, "group", "message", Severity.debug, checksum);
-		LogEntry entry2 = new LogEntry(evening, "group", "message", Severity.debug, checksum);
+		LogEntry entry1 = new LogEntry(morning, "group", "message", Severity.debug, checksum, "my application");
+		LogEntry entry2 = new LogEntry(evening, "group", "message", Severity.debug, checksum, "my application");
 
 		storage.writeEntry(entry1);
 		storage.writeEntry(entry2);

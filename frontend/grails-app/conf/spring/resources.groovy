@@ -1,7 +1,7 @@
 import org.bazhenov.logging.transport.UdpTransport
-import org.bazhenov.logging.storage.InMemoryLogStorage
 import org.bazhenov.logging.marshalling.JDomMarshaller
 import org.bazhenov.logging.transport.WriteToStorageTransportListener
+import org.bazhenov.logging.storage.*
 
 beans = {
 
@@ -15,7 +15,7 @@ beans = {
 		bean.initMethod = 'start'
 		bean.destroyMethod = 'stop'
 		bean.lazyInit = false
-		
+
 		bufferSize = 100000
 	}
 

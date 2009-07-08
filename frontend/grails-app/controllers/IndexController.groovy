@@ -11,7 +11,7 @@ class IndexController {
 	DateFormat format = new SimpleDateFormat("yyyy-MM-dd")
 
 	def index = {
-		String dateStr = params['date'] as String
+		String dateStr = params.date as String
 		Date date;
 		if ( dateStr ) {
 			date = new Date(format.parse(dateStr))
@@ -19,13 +19,21 @@ class IndexController {
 			date = DateTime.today()
 		}
 
-		def entries = logStorage
-			.getEntries(date)
-			.collect { new Entry(it) }
+		def app = params.application
+		def storageEntries = logStorage.getEntries(date)
+		def filteredEntries = storageEntries.findAll { filterCriteria(app, it) }
+		def allApps = allApplications(storageEntries)
+		def entries	= filteredEntries.collect { new Entry(it) }
 
-		[
-			'entries': entries,
-			'today': Date.today()
-		]
+		[entries: entries, today: Date.today(), date: date,
+				application: app, allApps: allApps]
+	}
+
+	private allApplications(entries){
+		entries.sampleEntry.application.unique()
+	}
+
+	private filterCriteria(appFilter, entry){
+		appFilter ? entry.sampleEntry.application == appFilter : true
 	}
 }

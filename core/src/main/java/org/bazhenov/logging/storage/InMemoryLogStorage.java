@@ -1,5 +1,6 @@
 package org.bazhenov.logging.storage;
 
+import com.farpost.timepoint.*;
 import com.farpost.timepoint.Date;
 import org.bazhenov.logging.*;
 

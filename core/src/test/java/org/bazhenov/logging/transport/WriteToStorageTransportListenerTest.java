@@ -16,7 +16,7 @@ public class WriteToStorageTransportListenerTest {
 		throws TransportException, MarshallerException, LogStorageException {
 		DateTime date = now();
 		Cause cause = new Cause("type", "message", "stack");
-		LogEntry entry = new LogEntry(date, "group", "message", Severity.error, "checksum", cause);
+		LogEntry entry = new LogEntry(date, "group", "message", Severity.error, "checksum", cause, "default");
 
 		LogStorage storage = new InMemoryLogStorage();
 		Marshaller marshaller = new JDomMarshaller();

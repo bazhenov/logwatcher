@@ -13,27 +13,29 @@ import com.farpost.timepoint.DateTime;
  * исключительные ситуаци для получения статистической информации.
  */
 public class LogEntry {
-
 	private DateTime date;
 	private String message;
 	private Severity severity;
 	private String group;
 	private String checksum;
+	private String application;
 	private Cause cause;
 
-	public LogEntry(DateTime date, String group, String message, Severity severity, String checksum) {
+	public LogEntry(DateTime date, String group, String message, Severity severity, String checksum, String application) {
 		this.date = date;
 		this.group = group;
 		this.message = message;
 		this.severity = severity;
 		this.checksum = checksum;
+		this.application = application;
 	}
 
 	public LogEntry(DateTime date, String group, String message, Severity severity, String checksum,
-	                Cause cause) {
-		this(date, group, message, severity, checksum);
+	                Cause cause, String application) {
+		this(date, group, message, severity, checksum, application);
 		this.cause = cause;
 	}
+
 
 	public DateTime getDate() {
 		return date;
@@ -57,6 +59,10 @@ public class LogEntry {
 
 	public String getChecksum() {
 		return checksum;
+	}
+
+	public String getApplication() {
+		return application;
 	}
 
 	public boolean equals(Object o) {
@@ -92,6 +98,11 @@ public class LogEntry {
 		if ( message != null
 			? !message.equals(entry.message)
 			: entry.message != null ) {
+			return false;
+		}
+		if ( application != null
+			? !application.equals(entry.application)
+			: entry.application != null ) {
 			return false;
 		}
 		if ( severity != entry.severity ) {

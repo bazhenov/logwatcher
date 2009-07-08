@@ -31,6 +31,7 @@ public class JDomMarshaller implements Marshaller {
 		String date = dateToString(entry);
 		root.setAttribute("date", date);
 		root.addContent(element("message", entry.getMessage()));
+		root.addContent(element("application", entry.getApplication()));
 		root.addContent(element("group").setAttribute("name", entry.getGroup()));
 		root.addContent(element("severity").setAttribute("name", entry.getSeverity().toString()));
 
@@ -73,6 +74,10 @@ public class JDomMarshaller implements Marshaller {
 			Document doc = builder.build(new StringReader(data));
 			Element root = doc.getRootElement();
 			String message = root.getChildText("message", namespace);
+			String application = root.getChildText("application", namespace);
+			if(application == null){
+				application = "default";
+			}
 			String checksum = root.getAttributeValue("checksum");
 			DateTime dateTime = dateTime(root.getAttributeValue("date"));
 			String group = root.getChild("group", namespace).getAttributeValue("name");
@@ -84,7 +89,7 @@ public class JDomMarshaller implements Marshaller {
 			if ( causeNode != null ) {
 				cause = parseCause(causeNode);
 			}
-			return new LogEntry(dateTime, group, message, severity, checksum, cause);
+			return new LogEntry(dateTime, group, message, severity, checksum, cause, application);
 		} catch ( JDOMException e ) {
 			throw new MarshallerException(e);
 		} catch ( IOException e ) {

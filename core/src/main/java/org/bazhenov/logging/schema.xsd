@@ -10,8 +10,9 @@
     <all>
       <element name="message" type="string"/>
       <element name="severity" type="u:Severity"/>
-      <element name="group" type="u:Group"/>
-      <element name="cause" type="u:Cause" minOccurs="0"/>
+	    <element name="group" type="u:Group"/>
+	    <element name="cause" type="u:Cause" minOccurs="0"/>
+	    <element name="application" type="string" minOccurs="0"/>
     </all>
     <attribute name="date" type="dateTime"/>
     <attribute name="checksum" type="string"/>

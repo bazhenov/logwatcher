@@ -13,7 +13,7 @@ public abstract class AbstractLogEntryMarshallerTest {
 		Marshaller marshaller = getMarshaller();
 
 		Cause cause = new Cause("type", "msg", "stacktrace");
-		LogEntry entry = new LogEntry(now(), "group", "message", Severity.info, "3df", cause);
+		LogEntry entry = new LogEntry(now(), "group", "message", Severity.info, "3df", cause, "default");
 		String data = marshaller.marshall(entry);
 		LogEntry entryCopy = marshaller.unmarshall(data);
 

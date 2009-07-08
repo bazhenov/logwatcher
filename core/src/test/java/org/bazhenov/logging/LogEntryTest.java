@@ -15,7 +15,7 @@ public class LogEntryTest {
 		DateTime date = november(12, 2008).at(15, 23);
 		String group = "group";
 		String checksum = "3d4f";
-		LogEntry logEntry = new LogEntry(date, group, logMessage, Severity.info, checksum);
+		LogEntry logEntry = new LogEntry(date, group, logMessage, Severity.info, checksum, "default");
 
 		assertThat(logEntry.getDate(), equalTo(date));
 		assertThat(logEntry.getGroup(), equalTo(group));
@@ -39,7 +39,7 @@ public class LogEntryTest {
 	@Test
 	public void entryMayHaveCause() {
 		Cause cause = createCause();
-		LogEntry entry = new LogEntry(now(), "group", "message", Severity.warning, "3d", cause);
+		LogEntry entry = new LogEntry(now(), "group", "message", Severity.warning, "3d", cause, "default");
 
 		assertThat(entry.getCause(), equalTo(cause));
 	}
