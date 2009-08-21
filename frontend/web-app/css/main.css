@@ -1,74 +1,51 @@
-body {
-	font-family: arial, helvetica, sans-serif;
-	font-size: 12px;
-	color: #4A4A4A;
-}
+body				  { font-size: 24px; }
 
-a {
-	color: #0099ff;
-	text-decoration: none;
-}
+a             { color: #0099ff; text-decoration: none }
+a:hover				{ color: red; text-decoration: underline }
+a:visited			{ color: brown; text-decoration: underline }
 
-a:hover {
-	color: red;
-	text-decoration: underline;
-}
+.entry				{ position: relative }
+.entry a			{ display: inline; text-align: right; }
 
-a:visited {
-	color: brown;
-	text-decoration: underline;
-}
+.entry                      {	border-top: 1px dotted gray; padding-bottom: 10px; padding-top: 10px;
+															padding-left: 15px }
+.selectedEntry              { background-color: #ffd; }
+.entryHeader .times         { color: #888; font-size: 60%; line-height: 20px; }
+.entry:hover                { background-color: #ffd }
+.entry:hover .operations    { display: inline }
+.operations                 { display: none; padding: 3px 0 0 0; position: absolute; top: 20px;
+															right: 10px; font-size: 70%; }
 
-a.asynchronous {
-	color: #0099ff !important;
-	text-decoration: none !important;
-	border-bottom: 1px dashed !important;
-}
 
-#mainPanel {
-	margin: 10px;
-}
+.withStacktrace .message  { cursor: pointer }
 
-.entryContent .stacktrace {
-	white-space: pre-wrap;
-	font-family: "courier new" courier, monospace;
-	margin-bottom: 5px;
-	margin-top: 10px;
-}
 
-.entryContent ul {
-	list-style-type: none;
-	padding: 0;
-	font-size: 70%;
-	color: gray;
-}
+.asynchronous { color: #0099ff !important; text-decoration: none !important;
+								border-bottom: 1px dashed !important }
 
-.entryContent li span {
-	color: black;
-}
 
-.entry {
-	border-bottom: 1px dotted gray;
-	padding-bottom: 10px;
-	padding-top: 10px;
-	padding-left: 15px;
-}
+#mainPanel { margin: 10px }
 
-.error {
-	background-color: #fee;
-}
 
-.info {
-	background-color: #dfd;
-}
+.entryContent               { font-size: 12px }
+.entryContent .stacktrace   { font-family: monospace; margin-bottom: 5px; margin-top: 10px }
+.entryContent ul            {  list-style-type: none; padding: 0; color: gray }
+.entryContent li span       { color: black }
+.selectedEntry .entryContent { display: block !important }
 
-.warning {
-	background-color: #ffc;
-}
+
+
+.applicationId          { margin-right: 10px; }
+.error .applicationId   { color: #c90000 }
+.info .applicationId    { color: #3366ff; }
+.warning .applicationId { color: #ff9900; }
+
+.warningMarker { color: #ff0033; }
+
+.additionalInfo {	border-bottom: 1px dashed; cursor: default }
 
 #menuBar {
 	border-bottom: 1px solid #777;
-	text-align: right;
 	padding-right: 50px;
 }
 
@@ -79,7 +56,7 @@ a.asynchronous {
 	padding: 2px 10px;
 	margin: 3px;
 
-	line-height: 20px;
+	line-height: 19px;
 	text-decoration: none;
 	color: #777;
 	font-weight: bold;
@@ -98,37 +75,15 @@ a.asynchronous {
 	float: right;
 }
 
-.entryHeader .times {
-	color: #888;
-	font-size: 80%;
-}
-
-span.additionalInfo {
-	border-bottom: 1px dashed #888;
-	cursor: default;
-}
-
 .entry .entryContent {
 	display: none;
-}
-
-.selectedEntry .entryContent {
-	display: block !important;
 }
 
 .applicationId {
 	font-variant:small-caps;
 }
 
-.message {
-	cursor: pointer;
-	font-style: normal;
-	color: black;
-}
 
-.entryContent .operations a {
-	font-size: 120%;
-}
 
 span.tag {
 	font-size: 70%;
