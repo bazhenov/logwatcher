@@ -1,4 +1,4 @@
-body				  { font-size: 21px; }
+body				  { font-size: 21px }
 
 a             { color: #0099ff; text-decoration: none }
 a:hover				{ color: red; text-decoration: underline }
@@ -17,7 +17,8 @@ a:visited			{ color: brown; text-decoration: underline }
 															right: 10px; font-size: 70%; }
 
 
-.withStacktrace .message  { cursor: pointer; font-family: "verdana", serif !important;  }
+.message                  { color:#666666 }
+.withStacktrace .message  { cursor: pointer; color: black; }
 
 
 .asynchronous { color: #0099ff !important; text-decoration: none !important;
@@ -39,6 +40,12 @@ a:visited			{ color: brown; text-decoration: underline }
 .error .applicationId   { color: #c90000 }
 .info .applicationId    { color: #3366ff; }
 .warning .applicationId { color: #ff9900; }
+
+.marker                 { margin-right: 5px; }
+.error .marker          { color: #c90000 }
+.info .marker           { color: #3366ff; }
+.warning .marker        { color: #ff9900; }
+
 
 .warningMarker { color: #ff0033; }
 
