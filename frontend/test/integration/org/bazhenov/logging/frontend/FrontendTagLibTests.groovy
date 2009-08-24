@@ -16,15 +16,17 @@ public class FrontendTagLibTests extends GroovyTestCase {
 	}
 
 	void testTagLibCanFormatEntries() {
-		DateTime time = DateTime.now().minusHour(1);
+		DateTime time = new DateTime(new Date(99, 0, 15, 15, 3, 28))
 		def logEntry = new LogEntry(time, "SomeGroup", "OutOfMemoryException", Severity.error, "ae23",
 			"frontend")
 		def aggregatedEntry = new AggregatedLogEntryImpl(logEntry)
 		def entry = new Entry(aggregatedEntry)
 
 		tagLib.entry(ref: entry) {}
-		assertContains "OutOfMemoryException", out as String
-		assertContains "frontend", out as String
-		assertContains "error", out as String
+		String html = out as String
+		assertContains "OutOfMemoryException", html
+		assertContains "frontend", html
+		assertContains "error", html
+		assertContains "15 января, 15:03", html
 	}
 }

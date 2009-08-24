@@ -1,12 +1,14 @@
 package org.bazhenov.logging.frontend
-
 import groovy.xml.MarkupBuilder
-import org.bazhenov.logging.Severity
+import org.bazhenov.logging.frontend.Entry
+import org.bazhenov.logging.frontend.FrontendDateFormat
+import java.text.DateFormat
+
 
 public class FrontendTagLib {
 
 	public final int MAX_LENGTH = 80;
-
+	DateFormat shortFormat = new FrontendDateFormat()
 	Writer out
 
 	def entry = {attrs, body ->
@@ -29,13 +31,13 @@ public class FrontendTagLib {
 		}
 
 		def html = new MarkupBuilder(out)
-		html.div('class': classes.join(" ")) {
-			div('class': 'entryHeader') {
+		html.div ('class': classes.join(" ")) {
+			div ('class': 'entryHeader') {
 				span 'class': 'marker', (withStacktrace ? "&bull;" : "&empty;")
 				span 'class': 'message', title
-				div('class': 'times') {
-					span('class': 'applicationId', applicationId)
-					span("&mdash последний раз")
+				div ('class': 'times') {
+					span 'class': 'applicationId', applicationId
+					span "&mdash последний раз " + shortFormat.format(entry.lastTime.asDate())
 				}
 			}
 
