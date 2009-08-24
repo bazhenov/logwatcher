@@ -30,7 +30,6 @@ public class FrontendDateFormatTest extends GroovyTestCase {
 		assertEquals "менее минуты назад", buffer as String
 		assertEquals 0, fp.beginIndex
 		assertEquals 17, fp.endIndex
-
 	}
 
 	void testFormatterCanProviderFieldPositionInformation() {

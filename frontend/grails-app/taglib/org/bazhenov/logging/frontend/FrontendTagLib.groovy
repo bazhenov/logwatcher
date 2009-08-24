@@ -3,12 +3,17 @@ import groovy.xml.MarkupBuilder
 import org.bazhenov.logging.frontend.Entry
 import org.bazhenov.logging.frontend.FrontendDateFormat
 import java.text.DateFormat
+import java.text.SimpleDateFormat
+import groovy.xml.StreamingMarkupBuilder
 
 
 public class FrontendTagLib {
 
+	static namespace = 'f'
+
 	public final int MAX_LENGTH = 80;
 	DateFormat shortFormat = new FrontendDateFormat()
+	DateFormat fullFormat = new SimpleDateFormat("d MMMM yyyy, HH:mm:ss zz", new Locale("Ru"))
 	Writer out
 
 	def entry = {attrs, body ->
@@ -22,29 +27,53 @@ public class FrontendTagLib {
 		}
 
 		def classes = ['entry']
-		def withStacktrace = !entry.withStacktrace()
+		def withStacktrace = entry.withStacktrace()
 
-		classes.add entry.severity as String
+		String severety = entry.severity as String
+		classes.add severety
 
 		if ( withStacktrace ) {
 			classes.add "withStacktrace"
 		}
+		def isExceptionNew = entry.lastTime.plusMinute(30).isInFuture()
+		def additionalInfoClasses = ['additionalInfo']
+		if ( isExceptionNew ) {
+			additionalInfoClasses.add 'warningMarker'
+		}
+
+		def markerClasses = ['marker']
+		if ( !withStacktrace ) {
+			markerClasses.add "emptyMarker"
+		}
+
+		def shortDate = shortFormat.format(entry.lastTime.asDate())
+		def fullDate = fullFormat.format(entry.lastTime.asDate())
+
+		def jiraLink = "http://jira.dev.loc/jira/secure/CreateIssueDetails.jspa?pid=10000&" +
+			"issuetype=1&summary=" + URLEncoder.encode(title) + "&description=" +
+			URLEncoder.encode(message) + "&priority=3"
 
 		def html = new MarkupBuilder(out)
+		html.nospace = true
 		html.div ('class': classes.join(" ")) {
 			div ('class': 'entryHeader') {
-				span 'class': 'marker', (withStacktrace ? "&bull;" : "&empty;")
+				span 'class': markerClasses.join(" "), (withStacktrace ? "•" : "∅")
 				span 'class': 'message', title
 				div ('class': 'times') {
 					span 'class': 'applicationId', applicationId
-					span "&mdash последний раз " + shortFormat.format(entry.lastTime.asDate())
+					span " — последний раз "
+					span 'class': additionalInfoClasses.join(" "), title: fullDate, shortDate
 				}
 			}
 
-			div('class': 'entryContent') {
-				if ( withStacktrace ) {
+			if ( withStacktrace ) {
+				div('class': 'entryContent') {
 					pre 'class': 'stacktrace', message
 				}
+			}
+
+			div ('class': 'operations') {
+				yieldUnescaped("<a href='${jiraLink}' target='_blank'>создать таск</a>")
 			}
 
 		}

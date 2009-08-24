@@ -1,28 +1,24 @@
 <html>
 <head>
-	<title>An Example Page</title>
+	<meta content="text/html;charset=UTF8"/>
 	<meta name="layout" content="main"/>
-
 </head>
 <body>
 
-<div id="header">
-	<p>
-		<g:link controller="index" action="index" params="[date: today]">today</g:link> |
-		<g:link controller="index" action="index" params="[date: today.minusDay(1)]">yesterday</g:link>
-	</p>
-	<p>
-		Фильтр:
-		<g:link controller="index" action="index" params="[date: date]">все</g:link>
-		<g:each in="${allApps}" var="par">
-			<g:link controller="index" action="index" params="[date: date, application: par]">${par}</g:link>
-		</g:each>
-	</p>
+<h1>LogWatcher</h1>
+
+<div id="menuBar">
+	<a href="${createLink(controller: 'index', action: 'index', params: [date: today])}">cегодня</a>
+	<a href="${createLink(controller: 'index', action: 'index', params: [date: today.minusDay(1)])}">вчера</a>
+	<a href="${createLink(controller: 'index', action: 'index', params: [date: today.minusDay(2)])}">позавчера</a>
 </div>
 
-<g:each in="${entries}" var="entry">
-	<g:entry ref="${entry}"/>
-</g:each>
+<div id="mainPanel">
+	<h3><%= date %></h3>
 
+	<g:each in="${entries}" var="entry">
+		<f:entry ref="${entry}"/>
+	</g:each>
+</div>
 </body>
 </html>

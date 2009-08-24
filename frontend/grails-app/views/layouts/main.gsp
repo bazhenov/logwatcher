@@ -1,27 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<title>LogViewer Application</title>
-	<link rel="stylesheet" href="${createLinkTo(dir: 'css', file: 'main.css')}"/>
+	<title>LogWatcher - логи под присмотром</title>
 	<meta content="text/html;charset=UTF8"/>
-	<script type="text/javascript" src="${createLinkTo(dir: 'js', file: 'application.js')}"></script>
+	<link rel="stylesheet" href="${createLinkTo(dir: 'css', file: 'main.css')}"/>
+
+	<script type="text/javascript" src="${createLinkTo(dir: 'js', file: 'jquery-1.3.2.js')}"></script>
+	<script type="text/javascript" src="${createLinkTo(dir: 'js', file: 'exception-list.js')}"></script>
 </head>
 
 <body>
-
-<h1>LogWatcher</h1>
-
-<table id="layout">
-	<tr>
-		<td id="linksBlock"/>
-	</tr>
-	<tr>
-		<td id="content">
-			<g:layoutBody/>
-		</td>
-	</tr>
-</table>
-
+	<g:layoutBody/>
 </body>
 </html>
