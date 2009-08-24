@@ -7,8 +7,10 @@ public class Entry {
 
 	private final String title;
 	private final String text;
+	private final String applicationId;
 	private final int count;
 	private final DateTime lastTime;
+	private final Severity severity;
 
 	public Entry(AggregatedLogEntry aggregatedEntry) {
 		LogEntry entry = aggregatedEntry.getSampleEntry();
@@ -17,6 +19,8 @@ public class Entry {
 		this.text = formatCause(cause);
 		this.count = aggregatedEntry.getCount();
 		this.lastTime = aggregatedEntry.getLastTime();
+		this.applicationId = entry.getApplication();
+		this.severity = entry.getSeverity();
 	}
 
 	public Entry(String title, String text, int count, DateTime lastTime) {
@@ -24,6 +28,8 @@ public class Entry {
 		this.text = text;
 		this.count = count;
 		this.lastTime = lastTime;
+		this.applicationId = "";
+		this.severity = Severity.info;
 	}
 
 	public String getTitle() {
@@ -34,12 +40,24 @@ public class Entry {
 		return text;
 	}
 
+	public Severity getSeverity() {
+		return severity;
+	}
+
+	public boolean withStacktrace() {
+		return text.length() > 0;
+	}
+
 	public int getCount() {
 		return count;
 	}
 
 	public DateTime getLastTime() {
 		return lastTime;
+	}
+
+	public String getApplicationId() {
+		return applicationId;
 	}
 
 	private static String formatCause(Cause rootCause) {
