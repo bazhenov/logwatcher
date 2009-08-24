@@ -5,11 +5,11 @@
   <message>Log message</message>
   <group name="group"/>
   <severity name="warning"/>
+	<application id="baza-frontend" />
 
   <cause type="RuntimeException">
     <message>Error occured</message>
     <stackTrace>Stacktrace</stackTrace>
-	  <application>baza</application>
     <cause type="InternalException">
       <message>Another message</message>
       <stackTrace>Another stacktrace</stackTrace>

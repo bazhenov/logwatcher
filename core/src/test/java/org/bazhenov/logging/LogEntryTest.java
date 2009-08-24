@@ -26,6 +26,7 @@ public class LogEntryTest {
 
 	@Test
 	public void cause() {
+    
 		String stackTrace = "stackTrace";
 		String message = "message";
 		String type = "type";

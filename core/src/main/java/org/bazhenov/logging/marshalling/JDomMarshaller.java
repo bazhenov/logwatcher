@@ -31,7 +31,7 @@ public class JDomMarshaller implements Marshaller {
 		String date = dateToString(entry);
 		root.setAttribute("date", date);
 		root.addContent(element("message", entry.getMessage()));
-		root.addContent(element("application", entry.getApplication()));
+		root.addContent(element("application").setAttribute("id", entry.getApplicationId()));
 		root.addContent(element("group").setAttribute("name", entry.getGroup()));
 		root.addContent(element("severity").setAttribute("name", entry.getSeverity().toString()));
 
@@ -74,7 +74,7 @@ public class JDomMarshaller implements Marshaller {
 			Document doc = builder.build(new StringReader(data));
 			Element root = doc.getRootElement();
 			String message = root.getChildText("message", namespace);
-			String application = root.getChildText("application", namespace);
+			String application = root.getChild("application", namespace).getAttributeValue("id");
 			if(application == null){
 				application = "default";
 			}

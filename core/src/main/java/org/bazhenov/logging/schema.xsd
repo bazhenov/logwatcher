@@ -10,9 +10,9 @@
     <all>
       <element name="message" type="string"/>
       <element name="severity" type="u:Severity"/>
+	    <element name="application" type="u:ApplicationDescriptor" />
 	    <element name="group" type="u:Group"/>
 	    <element name="cause" type="u:Cause" minOccurs="0"/>
-	    <element name="application" type="string" minOccurs="0"/>
     </all>
     <attribute name="date" type="dateTime"/>
     <attribute name="checksum" type="string"/>
@@ -45,4 +45,8 @@
     </all>
     <attribute name="type" type="string"/>
   </complexType>
+
+	<complexType name="ApplicationDescriptor">
+		<attribute name="id" use="required" />
+	</complexType>
 </schema>
