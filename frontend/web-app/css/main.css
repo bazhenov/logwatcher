@@ -17,8 +17,8 @@ a:visited			{ color: brown; text-decoration: underline }
 															right: 10px; font-size: 70%; }
 
 
-.message                  { color:#666666 }
-.withStacktrace .message  { cursor: pointer; color: black; }
+.message                  { color: black; }
+.withStacktrace .message  { cursor: pointer;  }
 
 
 .asynchronous { color: #0099ff !important; text-decoration: none !important;
@@ -28,22 +28,23 @@ a:visited			{ color: brown; text-decoration: underline }
 #mainPanel { margin: 10px }
 
 
-.entryContent               { font-size: 12px }
+.entryContent               { font-size: 12px; margin-left: 17px }
 .entryContent .stacktrace   { font-family: monospace; margin-bottom: 5px; margin-top: 10px }
 .entryContent ul            {  list-style-type: none; padding: 0; color: gray }
 .entryContent li span       { color: black }
 .selectedEntry .entryContent { display: block !important }
 
 
-.applicationId { font-variant:small-caps; color: black; }
+.applicationId { font-variant:small-caps; color: black; margin-left: 17px }
 
 .marker                 { margin-right: 5px; }
+.emptyMarker            { font-size: 60% }
 .error .marker          { color: #c90000 }
 .info .marker           { color: #3366ff; }
 .warning .marker        { color: #ff9900; }
 
 
-.warningMarker { color: #ff0033; }
+.warningMarker { color: #990000; }
 
 .additionalInfo {	border-bottom: 1px dashed; cursor: default }
 
