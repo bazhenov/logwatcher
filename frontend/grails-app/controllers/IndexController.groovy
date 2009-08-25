@@ -1,4 +1,5 @@
 import com.farpost.timepoint.Date
+import static com.farpost.timepoint.Date.*
 import com.farpost.timepoint.DateTime
 import org.bazhenov.logging.frontend.Entry
 import org.bazhenov.logging.storage.LogStorage
@@ -16,7 +17,7 @@ class IndexController {
 		if ( dateStr ) {
 			date = new Date(format.parse(dateStr))
 		} else {
-			date = DateTime.today()
+			date = today()
 		}
 
 		def app = params.application
@@ -25,8 +26,14 @@ class IndexController {
 		def allApps = allApplications(storageEntries)
 		def entries	= filteredEntries.collect { new Entry(it) }
 
-		[entries: entries, today: Date.today(), date: date,
-				application: app, allApps: allApps]
+		[
+			entries: entries,
+			today: Date.today(),
+			date: date,
+			linkDates: ['сегодня': today(), 'вчера': today().minusDay(1), 'позавчера': today().minusDay(2)],
+			application: app,
+			allApps: allApps
+		]
 	}
 
 	private allApplications(entries){

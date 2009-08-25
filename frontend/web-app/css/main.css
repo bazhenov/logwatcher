@@ -1,95 +1,56 @@
-body				  { font-size: 21px; font-family: tahoma; }
+body				                    { font-size: 21px; font-family: tahoma; }
 
-a					{ color: #0099ff; text-decoration: none }
-a:hover				{ color: red; text-decoration: underline }
-a:visited			{ color: brown; text-decoration: underline }
+a					                      { color: #0099ff; text-decoration: none }
+a:hover				                  { color: red; text-decoration: underline }
+a:visited			                  { color: brown; text-decoration: underline }
 
-.entry				{ position: relative }
-.entry a			{ display: inline; text-align: right; }
+.entry				                  { position: relative }
+.entry a			                  { display: inline; text-align: right; }
 
-.entry                      {	border-top: 1px dotted gray; padding-bottom: 10px; padding-top: 10px;
-															padding-left: 15px }
-.selectedEntry              { background-color: #ffd; }
-.entryHeader .times         { color: #888; font-size: 60%; line-height: 20px; }
-.entry:hover                { background-color: #ffd }
-.entry:hover .operations    { display: inline }
-.operations                 { display: none; padding: 3px 0 0 0; position: absolute; top: 20px;
-															right: 10px; font-size: 70%; }
+.entry                          {	border-top: 1px dotted gray; padding-bottom: 10px;
+																	padding-top: 10px; padding-left: 15px }
+.selectedEntry                  { background-color: #ffd; }
+.entryHeader .times             { color: #888; font-size: 60%; line-height: 20px; }
+.entry:hover                    { background-color: #ffd }
 
+.entry:hover .operations        { display: inline }
+.operations                     { display: none; position: absolute; top: 20px; right: 20px;
+																	font-size: 70% }
 
-.message                  { color: black; }
-.withStacktrace .message  { cursor: pointer;  }
-
-
-.asynchronous { color: #0099ff !important; text-decoration: none !important;
-								border-bottom: 1px dashed !important }
+.message                        { color: black; }
+.withStacktrace .message        { cursor: pointer;  }
 
 
-#mainPanel { margin: 10px }
+.asynchronous                   { color: #0099ff !important; text-decoration: none !important;
+																	border-bottom: 1px dashed !important }
 
+#mainPanel                      { margin: 10px }
 
-.entryContent                   { font-size: 12px; margin-left: 25px }
+#notificationPanel              { text-align: center; font-size: 150%; color: #666; font-family: serif !important; }
+
+.entryContent                   { font-size: 12px; margin-left: 25px; display: none }
 .entryContent .stacktrace       { font-family: monospace; margin-bottom: 5px; margin-top: 10px }
 .entryContent ul                { list-style-type: none; padding: 0; color: gray }
 .entryContent li span           { color: black }
 .selectedEntry .entryContent    { display: block !important }
 
+.applicationId                  { font-variant:small-caps; color: black; margin-left: 24px }
 
-.applicationId                  { font-variant:small-caps; color: black; margin-left: 25px }
+.marker                         { margin-right: 5px; }
+.emptyMarker                    { font-size: 60% }
+.error .marker                  { color: #c90000 }
+.info .marker                   { color: #3366ff; }
+.warning .marker                { color: #ff9900; }
 
-.marker                 { margin-right: 5px; }
-.emptyMarker            { font-size: 60% }
-.error .marker          { color: #c90000 }
-.info .marker           { color: #3366ff; }
-.warning .marker        { color: #ff9900; }
+.additionalInfo                 {	border-bottom: 1px dashed; cursor: default }
+.warningMarker                  { color: #990000; }
 
+#menuBar            { border-bottom: 1px solid #777;	padding-left: 25px }
+#menuBar a          { border: 1px solid #ddd; border-bottom: none; padding: 2px 10px; margin: 3px;
+											line-height: 19px; text-decoration: none; color: #777; font-weight: bold;
+											font-size: 12px }
+#menuBar a.selected { border: 1px solid #777; border-bottom-color: #fff }
+#menuBar div        { border: 1px solid red; width: 300px; display: block; float: right }
 
-.warningMarker { color: #990000; }
-
-.additionalInfo {	border-bottom: 1px dashed; cursor: default }
-
-#menuBar {
-	border-bottom: 1px solid #777;
-	padding-right: 50px;
-}
-
-#menuBar a {
-	border: 1px solid #ddd;
-	border-bottom: none;
-
-	padding: 2px 10px;
-	margin: 3px;
-
-	line-height: 19px;
-	text-decoration: none;
-	color: #777;
-	font-weight: bold;
-	font-size: 12px;
-}
-
-#menuBar a.selected {
-	border: 1px solid #777;
-	border-bottom-color: #fff;
-}
-
-#menuBar div {
-	border: 1px solid red;
-	width: 300px;
-	display: block;
-	float: right;
-}
-
-.entry .entryContent {
-	display: none;
-}
-
-span.tag {
-	font-size: 70%;
-	background-color: #E0EAF1;
-	border-bottom: 1px solid #3E6D8E;
-	border-right: 1px solid #7F9FB6;
-	color: #3E6D8E;
-	margin: 1px;
-	padding: 1px;
-
-}
+span.tag            { font-size: 70%; background-color: #E0EAF1; border-bottom: 1px solid #3E6D8E;
+											border-right: 1px solid #7F9FB6; color: #3E6D8E; margin: 1px; padding: 1px }

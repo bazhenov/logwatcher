@@ -4,10 +4,10 @@
 <head>
 	<title>LogWatcher - логи под присмотром</title>
 	<meta content="text/html;charset=UTF8"/>
-	<link rel="stylesheet" href="${createLinkTo(dir: 'css', file: 'main.css')}"/>
+	<link rel="stylesheet" href="${resource(dir: 'css', file: 'main.css')}"/>
 
-	<script type="text/javascript" src="${createLinkTo(dir: 'js', file: 'jquery-1.3.2.js')}"></script>
-	<script type="text/javascript" src="${createLinkTo(dir: 'js', file: 'exception-list.js')}"></script>
+	<script type="text/javascript" src="${resource(dir: 'js', file: 'jquery-1.3.2.js')}"></script>
+	<script type="text/javascript" src="${resource(dir: 'js', file: 'exception-list.js')}"></script>
 </head>
 
 <body>
