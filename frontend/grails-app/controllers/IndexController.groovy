@@ -19,7 +19,7 @@ class IndexController {
 			date = DateTime.today()
 		}
 
-		def app = params.getApplicationId
+		def app = params.application
 		def storageEntries = logStorage.getEntries(date)
 		def filteredEntries = storageEntries.findAll { filterCriteria(app, it) }
 		def allApps = allApplications(storageEntries)
@@ -30,10 +30,10 @@ class IndexController {
 	}
 
 	private allApplications(entries){
-		entries.sampleEntry.getApplicationId.unique()
+		entries.sampleEntry.applicationId.unique()
 	}
 
 	private filterCriteria(appFilter, entry){
-		appFilter ? entry.sampleEntry.getApplicationId == appFilter : true
+		appFilter ? entry.sampleEntry.applicationId == appFilter : true
 	}
 }

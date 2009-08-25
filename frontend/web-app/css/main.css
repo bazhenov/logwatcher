@@ -28,14 +28,14 @@ a:visited			{ color: brown; text-decoration: underline }
 #mainPanel { margin: 10px }
 
 
-.entryContent               { font-size: 12px; margin-left: 17px }
-.entryContent .stacktrace   { font-family: monospace; margin-bottom: 5px; margin-top: 10px }
-.entryContent ul            {  list-style-type: none; padding: 0; color: gray }
-.entryContent li span       { color: black }
-.selectedEntry .entryContent { display: block !important }
+.entryContent                   { font-size: 12px; margin-left: 25px }
+.entryContent .stacktrace       { font-family: monospace; margin-bottom: 5px; margin-top: 10px }
+.entryContent ul                { list-style-type: none; padding: 0; color: gray }
+.entryContent li span           { color: black }
+.selectedEntry .entryContent    { display: block !important }
 
 
-.applicationId { font-variant:small-caps; color: black; margin-left: 17px }
+.applicationId                  { font-variant:small-caps; color: black; margin-left: 25px }
 
 .marker                 { margin-right: 5px; }
 .emptyMarker            { font-size: 60% }
@@ -82,9 +82,6 @@ a:visited			{ color: brown; text-decoration: underline }
 .entry .entryContent {
 	display: none;
 }
-
-
-
 
 span.tag {
 	font-size: 70%;

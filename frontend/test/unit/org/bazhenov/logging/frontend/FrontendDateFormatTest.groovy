@@ -1,6 +1,7 @@
 package org.bazhenov.logging.frontend
 
 import java.util.Date
+import static com.farpost.timepoint.Date.*;
 import java.text.DateFormat
 import org.bazhenov.logging.frontend.FrontendDateFormat
 import java.text.FieldPosition
@@ -17,7 +18,7 @@ public class FrontendDateFormatTest extends GroovyTestCase {
 		formatter.format(date, buffer, fp)
 		assertEquals "1 марта, 05:01", buffer as String
 		assertEquals 0, fp.beginIndex
-		assertEquals 13, fp.endIndex
+		assertEquals 14, fp.endIndex
 	}
 
 	void testFormatterCanFormatDatesLessThanMinuteAgo() {
@@ -29,7 +30,7 @@ public class FrontendDateFormatTest extends GroovyTestCase {
 		formatter.format(calendar.getTime(), buffer, fp)
 		assertEquals "менее минуты назад", buffer as String
 		assertEquals 0, fp.beginIndex
-		assertEquals 17, fp.endIndex
+		assertEquals 18, fp.endIndex
 	}
 
 	void testFormatterCanProviderFieldPositionInformation() {
@@ -43,7 +44,40 @@ public class FrontendDateFormatTest extends GroovyTestCase {
 
 		formatter.format(calendar.getTime(), buffer, fp)
 		assertEquals "в 15:32", buffer as String
-		assertEquals 2, fp.beginIndex
-		assertEquals 6, fp.endIndex
+	}
+
+	void testClientCanUseFieldPositionForAdditionalFormattingOfTodaysDates() {
+		def timepoint = today().at(15, 32);
+
+		def fp = new FieldPosition(DateFormat.HOUR0_FIELD)
+		StringBuffer buffer = new StringBuffer()
+
+		formatter.format(timepoint.asDate(), buffer, fp)
+
+		wrapWithSpan fp, buffer
+
+		assertEquals "в <span>15:32</span>", buffer as String
+	}
+
+	void testClientCanUseFieldPositionForAdditionalFormattingWithGeneralDates() {
+		def timepoint = november(12, 2008).at(02, 03);
+
+		def fp = new FieldPosition(DateFormat.HOUR0_FIELD)
+
+		StringBuffer buffer = new StringBuffer()
+		formatter.format(timepoint.asDate(), buffer, fp)
+		wrapWithSpan fp, buffer
+		assertEquals "<span>12 ноября, 02:03</span>", buffer as String
+
+		buffer = new StringBuffer()
+		buffer.append("Event occured at ")
+		formatter.format(timepoint.asDate(), buffer, fp)
+		wrapWithSpan fp, buffer
+		assertEquals "Event occured at <span>12 ноября, 02:03</span>", buffer as String
+	}
+
+	private def wrapWithSpan(FieldPosition fp, StringBuffer buffer) {
+		buffer.insert(fp.endIndex, "</span>");
+		buffer.insert(fp.beginIndex, "<span>")
 	}
 }

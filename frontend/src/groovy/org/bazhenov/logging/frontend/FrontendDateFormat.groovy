@@ -22,7 +22,7 @@ public class FrontendDateFormat extends DateFormat {
 		if ( millsSinceNow < 60000 && millsSinceNow > 0 ) {
 			formatLessThanMinuteDate(calendar, toAppendTo, fieldPosition)
 			return toAppendTo
-		}else{
+		} else {
 			def today = now
 			today.set(Calendar.HOUR_OF_DAY, 0)
 			today.set(Calendar.MINUTE, 0)
@@ -32,7 +32,7 @@ public class FrontendDateFormat extends DateFormat {
 			calendar.setTime(date);
 			if ( calendar.before(today) ) {
 				formatGenericDate(calendar, toAppendTo, fieldPosition)
-			}else{
+			} else {
 				formatTodaysDate(calendar, toAppendTo, fieldPosition)
 			}
 		}
@@ -45,31 +45,32 @@ public class FrontendDateFormat extends DateFormat {
 		def hours = calendar.get(Calendar.HOUR_OF_DAY) as String
 		def minutes = calendar.get(Calendar.MINUTE) as String
 
-		fp.beginIndex = max(0, toAppendTo.length() - 1)
+		fp.beginIndex = toAppendTo.length()
 		toAppendTo.
 			append(day).append(" ").append(month).
 			append(", ").
 			append(hours.padLeft(2, "0")).append(":").append(minutes.padLeft(2, "0"))
-		fp.endIndex = toAppendTo.length() - 1
+		fp.endIndex = toAppendTo.length()
 	}
 
 	private def formatTodaysDate(Calendar calendar, StringBuffer toAppendTo, FieldPosition fp) {
 		def hours = calendar.get(Calendar.HOUR_OF_DAY) as String
 		def minutes = calendar.get(Calendar.MINUTE) as String
 
-		def length = toAppendTo.length()
-		fp.beginIndex = length + 2
+		toAppendTo.append("в ")
+		fp.beginIndex = toAppendTo.length()
 		toAppendTo.
-			append("в ").
-			append(hours.padLeft(2, "0")).append(":").append(minutes.padLeft(2, "0"))
+			append(hours.padLeft(2, "0")).
+			append(":").
+			append(minutes.padLeft(2, "0"))
 
-		fp.endIndex = toAppendTo.length() - 1
+		fp.endIndex = toAppendTo.length()
 	}
 
 	private def formatLessThanMinuteDate(Calendar calendar, StringBuffer toAppendTo, FieldPosition fp) {
-		fp.beginIndex = max(0, toAppendTo.length() - 1)
+		fp.beginIndex = toAppendTo.length()
 		toAppendTo.append("менее минуты назад")
-		fp.endIndex = toAppendTo.length() - 1
+		fp.endIndex = toAppendTo.length()
 	}
 
 	public Date parse(String source, ParsePosition pos) {

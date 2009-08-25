@@ -1,15 +1,33 @@
 package org.bazhenov.logging.frontend
+
 import groovy.xml.MarkupBuilder
+import java.text.DateFormat
+import java.text.FieldPosition
+import java.text.SimpleDateFormat
 import org.bazhenov.logging.frontend.Entry
 import org.bazhenov.logging.frontend.FrontendDateFormat
-import java.text.DateFormat
-import java.text.SimpleDateFormat
-import groovy.xml.StreamingMarkupBuilder
-
+import static java.lang.Math.*
 
 public class FrontendTagLib {
 
+	static {
+		Integer.metaClass.pluralize = FrontendTagLib.pluralize;
+	}
+
 	static namespace = 'f'
+
+	static def pluralize = { titles ->
+		def number = delegate
+		def abs = abs(number)
+		def cases = [2, 0, 1, 1, 1, 2]
+
+		if ( titles instanceof String ) {
+			titles = titles.split(" ")
+		}
+
+		def result = titles[ (abs%100 > 4 && abs%100 < 20) ? 2 : cases[min(abs%10, 5)] ]
+		number + " " + result
+	}
 
 	public final int MAX_LENGTH = 80;
 	DateFormat shortFormat = new FrontendDateFormat()
@@ -21,6 +39,7 @@ public class FrontendTagLib {
 		def title = entry.title
 		def message = entry.text
 		def applicationId = entry.applicationId
+		def count = entry.count
 
 		if ( title.length() > MAX_LENGTH + "...".length() ) {
 			title = title.substring(0, MAX_LENGTH) + "..."
@@ -46,8 +65,27 @@ public class FrontendTagLib {
 			markerClasses.add "emptyMarker"
 		}
 
-		def shortDate = shortFormat.format(entry.lastTime.asDate())
+		def fieldPosition = new FieldPosition(DateFormat.HOUR0_FIELD)
+		def buffer = new StringBuffer()
+		def shortDate = shortFormat.format(entry.lastTime.asDate(), buffer, fieldPosition)
 		def fullDate = fullFormat.format(entry.lastTime.asDate())
+
+
+		 /**
+	  	* Не забываем, что теги надо вставлять в обратной последовательности, чтобы не допустить
+		  * смещения индексов в FieldPosition
+		  */
+		buffer.insert(fieldPosition.endIndex, "</span>")
+		buffer.insert(fieldPosition.beginIndex, "<span class='${additionalInfoClasses.join(' ')}' title='${fullDate}'>")
+
+		def lastOccurenceInfo = shortDate.toString();
+
+		def timesInfo
+		if ( count > 1000 ) {
+			timesInfo = "<span class='additionalInfo' title='${count.pluralize("раз раза раз")}'>более 1000 раз</span>"
+		}else{
+			timesInfo = count.pluralize("раз раза раз")
+		}
 
 		def jiraLink = "http://jira.dev.loc/jira/secure/CreateIssueDetails.jspa?pid=10000&" +
 			"issuetype=1&summary=" + URLEncoder.encode(title) + "&description=" +
@@ -55,14 +93,18 @@ public class FrontendTagLib {
 
 		def html = new MarkupBuilder(out)
 		html.nospace = true
-		html.div ('class': classes.join(" ")) {
-			div ('class': 'entryHeader') {
+		html.div('class': classes.join(" ")) {
+			div('class': 'entryHeader') {
 				span 'class': markerClasses.join(" "), (withStacktrace ? "•" : "∅")
 				span 'class': 'message', title
-				div ('class': 'times') {
+				div('class': 'times') {
 					span 'class': 'applicationId', applicationId
-					span " — последний раз "
-					span 'class': additionalInfoClasses.join(" "), title: fullDate, shortDate
+					yield " — "
+					if ( count > 1 ) {
+						yieldUnescaped timesInfo + ", "
+						yield " последний раз "
+					}
+					yieldUnescaped lastOccurenceInfo
 				}
 			}
 
@@ -72,44 +114,10 @@ public class FrontendTagLib {
 				}
 			}
 
-			div ('class': 'operations') {
+			div('class': 'operations') {
 				yieldUnescaped("<a href='${jiraLink}' target='_blank'>создать таск</a>")
 			}
 
 		}
-		return;
-
-		out << "<div class='entry withStacktrace warning'>\
-		<div class='entryHeader'>\
-			<span class='marker'>&bull;</span><span class='message'\
-				>Exception occured during service execution: Error Fetching http headers</span>\
-			<div class='times'><span class='applicationId'>baza-frontend</span>\
-					&mdash; <span class='additionalInfo' title='2565 раз'>более 1000 раз</span>,\
-					последний раз <span class='additionalInfo warningMarker' title='12 июля 2009, 18:25:12 VLAST'>менее минуты назад</span>\
-			</div>\
-		</div>\
-		<div class='entryContent'>\
-			<ul>\
-				<li><span>сервера:</span> n1.baza.loc, n2.baza.loc...</li>\
-				<li><span>адреса:</span> /auto/sale</li>\
-			</ul>\
-			<pre class='stacktrace'>AdvertServiceException: Error Fetching http headers\
-  at /var/www/baza.farpost.ru/rev/20090817-1520/slr/advert/src/remote/AdvertSoapDecorator.class.php:16\
-  10 : slrSoapDecorator.class.php:94 AdvertSoapDecorator->handleException('Error Fetc...', SoapFault)\
-  9 : unknown:0 slrSoapDecorator->__call('findLinks', [1])\
-  8 : AdvertRemoteProvider.class.php:331 AdvertSoapDecorator->findLinks([2])\
-  7 : AdvertLinkFinder.class.php:77 AdvertRemoteProvider->findLinks(AdvertLinkFinder)\
-  6 : AdvertAbstractFinder.class.php:59 AdvertLinkFinder->getResults()\
-  5 : AdvertAbstractFinder.class.php:35 AdvertAbstractFinder->fetchResults()\
-  4 : AdvertRemoteAdvertisement.class.php:118 AdvertAbstractFinder->results()\
-  3 : advertUnpopularDeactivationService.class.php:34 AdvertRemoteAdvertisement->getLinks(true)\
-  2 : advertUnpopularDeactivationService.class.php:23 advertUnpopularDeactivationService->deactivateByMaxViews([849])\
-  1 : service_runner.php:38 advertUnpopularDeactivationService->run()</pre>\
-		</div>\
-		<div class='operations'>\
-			<a href='#'>cоздать таск</a> или\
-			<a href='#' class='asynchronous removeEntry'>удалить</a>\
-		</div>\
-	</div>"
 	}
 }

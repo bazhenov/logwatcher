@@ -19,7 +19,7 @@ public class Entry {
 		this.text = formatCause(cause);
 		this.count = aggregatedEntry.getCount();
 		this.lastTime = aggregatedEntry.getLastTime();
-		this.applicationId = entry.getApplication();
+		this.applicationId = entry.getApplicationId();
 		this.severity = entry.getSeverity();
 	}
 

@@ -4,9 +4,12 @@ import com.farpost.timepoint.DateTime
 import org.bazhenov.logging.Severity
 import org.codehaus.groovy.grails.commons.ApplicationAttributes
 import org.bazhenov.logging.Cause
+import org.bazhenov.logging.frontend.FrontendTagLib
 
 class BootStrap {
 	def init = {servletContext ->
+		Integer.metaClass.pluralize = FrontendTagLib.pluralize;
+
 		def ctx = servletContext.getAttribute(ApplicationAttributes.APPLICATION_CONTEXT)
 		LogStorage s = ctx.logStorage
 		s.writeEntry new LogEntry(DateTime.now(), "group", "AdvertServiceException: Error Fetching http headers", Severity.error, "sum", "advert");
@@ -23,7 +26,13 @@ class BootStrap {
   2 : advertUnpopularDeactivationService.class.php:23 advertUnpopularDeactivationService->deactivateByMaxViews([849])\n\
   1 : service_runner.php:38 advertUnpopularDeactivationService->run()")
 		s.writeEntry new LogEntry(DateTime.now().minusHour(2), "group", "OverflowFundsException", Severity.warning, "sum2", cause, "billing");
+		s.writeEntry new LogEntry(DateTime.now().minusHour(2), "group", "OverflowFundsException", Severity.warning, "sum2", cause, "billing");
 		s.writeEntry new LogEntry(DateTime.now().minusMinute(18), "group", "java.lang.OutOfMemoryException", Severity.info, "sum3", "search");
+
+		s.writeEntry new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long long Exception", Severity.error, "sum4", cause, "searcha");
+		s.writeEntry new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long long Exception", Severity.error, "sum4", cause, "searcha");
+		s.writeEntry new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long long Exception", Severity.error, "sum4", cause, "searcha");
+		s.writeEntry new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long long Exception", Severity.error, "sum4", cause, "searcha");
 		s.writeEntry new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long long Exception", Severity.error, "sum4", cause, "searcha");
 	}
 
