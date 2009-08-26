@@ -1,6 +1,5 @@
 package org.bazhenov.logging.storage;
 
-import com.farpost.timepoint.*;
 import com.farpost.timepoint.Date;
 import org.bazhenov.logging.*;
 
@@ -12,23 +11,24 @@ import java.util.concurrent.locks.*;
  */
 public class InMemoryLogStorage implements LogStorage {
 
-	private final Map<Date, Map<String, AggregatedLogEntryImpl>> entries =
+	private final Map<Date, Map<String, AggregatedLogEntryImpl>> entriesByDay =
 		new HashMap<Date, Map<String, AggregatedLogEntryImpl>>();
-	ReadWriteLock lock = new ReentrantReadWriteLock();
+	private final List<AggregatedLogEntry> entries = new ArrayList<AggregatedLogEntry>();
+	private final ReadWriteLock lock = new ReentrantReadWriteLock();
 
 	public void writeEntry(LogEntry entry) throws LogStorageException {
 		Lock l = lock.writeLock();
+		l.lock();
 		try {
-			l.lockInterruptibly();
 			Date date = entry.getDate().getDate();
 			String checksum = entry.getChecksum();
 
 			Map<String, AggregatedLogEntryImpl> dayEntries;
-			if ( entries.containsKey(date) ) {
-				dayEntries = entries.get(date);
+			if ( entriesByDay.containsKey(date) ) {
+				dayEntries = entriesByDay.get(date);
 			}else{
 				dayEntries = new HashMap<String, AggregatedLogEntryImpl>();
-				entries.put(date, dayEntries);
+				entriesByDay.put(date, dayEntries);
 			}
 
 			if ( dayEntries.containsKey(checksum) ) {
@@ -36,32 +36,46 @@ public class InMemoryLogStorage implements LogStorage {
 				aggregate.setLastTime(entry.getDate());
 				aggregate.incrementCount();
 			}else{
-				dayEntries.put(entry.getChecksum(), new AggregatedLogEntryImpl(entry));
+				AggregatedLogEntryImpl aggregatedEntry = new AggregatedLogEntryImpl(entry);
+				dayEntries.put(entry.getChecksum(), aggregatedEntry);
+				entries.add(aggregatedEntry);
 			}
-		} catch ( InterruptedException e ) {
-			throw new LogStorageException(e);
 		} finally {
 			l.unlock();
 		}
 	}
 
 	public List<AggregatedLogEntry> getEntries(Date date) throws LogStorageException {
-		Map<String, AggregatedLogEntryImpl> dayEntries = entries.get(date);
-		return dayEntries == null
-			? new ArrayList<AggregatedLogEntry>(0)
-			: new ArrayList<AggregatedLogEntry>(dayEntries.values());
+		Lock l = lock.readLock();
+		l.lock();
+		try {
+			Map<String, AggregatedLogEntryImpl> dayEntries = entriesByDay.get(date);
+			return dayEntries == null
+				? new ArrayList<AggregatedLogEntry>(0)
+				: new ArrayList<AggregatedLogEntry>(dayEntries.values());
+		} finally {
+			l.unlock();
+		}
 	}
 
 	public int getEntryCount(Date date) throws LogStorageException {
 		Lock l = lock.readLock();
+		l.lock();
 		try {
-			l.lockInterruptibly();
-			Map<String, AggregatedLogEntryImpl> dayEntries = entries.get(date);
+			Map<String, AggregatedLogEntryImpl> dayEntries = entriesByDay.get(date);
 			return dayEntries == null
 				? 0
 				: dayEntries.size();
-		} catch ( InterruptedException e ) {
-			throw new LogStorageException(e);
+		} finally {
+			l.unlock();
+		}
+	}
+
+	public int countEntries(Collection<LogEntryMatcher> criterias) throws LogStorageException {
+		Lock l = lock.readLock();
+		l.lock();
+		try {
+			return entries.size();
 		} finally {
 			l.unlock();
 		}

@@ -99,6 +99,28 @@ public class MySqlLogStorage implements LogStorage {
 		}
 	}
 
+	public int countEntries(Collection<LogEntryMatcher> criterias) throws LogStorageException {
+		Connection conn = null;
+		PreparedStatement st = null;
+		ResultSet set = null;
+		try {
+			conn = dataSource.getConnection();
+			st = conn.prepareStatement("SELECT COUNT(*) FROM `log_entry`");
+
+			set = st.executeQuery();
+			if ( set.first() ) {
+				return set.getInt(1);
+			}
+			return 0;
+		} catch ( SQLException e ) {
+			throw new LogStorageException(e);
+		} finally {
+			close(set);
+			close(st);
+			close(conn);
+		}
+	}
+
 	private java.sql.Date date(Date date) {
 		return new java.sql.Date(date.asTimestamp());
 	}

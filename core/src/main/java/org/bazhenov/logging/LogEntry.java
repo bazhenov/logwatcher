@@ -13,6 +13,7 @@ import com.farpost.timepoint.DateTime;
  * исключительные ситуации для получения статистической информации.
  */
 public class LogEntry {
+
 	private DateTime date;
 	private String message;
 	private Severity severity;
@@ -21,7 +22,8 @@ public class LogEntry {
 	private String applicationId;
 	private Cause cause;
 
-	public LogEntry(DateTime date, String group, String message, Severity severity, String checksum, String applicationId) {
+	public LogEntry(DateTime date, String group, String message, Severity severity, String checksum,
+	                String applicationId) {
 		this.date = date;
 		this.group = group;
 		this.message = message;
@@ -65,46 +67,46 @@ public class LogEntry {
 	}
 
 	public boolean equals(Object o) {
-		if (this == o) {
+		if ( this == o ) {
 			return true;
 		}
-		if (o == null || getClass() != o.getClass()) {
+		if ( o == null || getClass() != o.getClass() ) {
 			return false;
 		}
 
 		LogEntry entry = (LogEntry) o;
 
-		if (cause != null
+		if ( cause != null
 			? !cause.equals(entry.cause)
-			: entry.cause != null) {
+			: entry.cause != null ) {
 			return false;
 		}
-		if (checksum != null
+		if ( checksum != null
 			? !checksum.equals(entry.checksum)
-			: entry.checksum != null) {
+			: entry.checksum != null ) {
 			return false;
 		}
-		if (date != null
+		if ( date != null
 			? !date.equals(entry.date)
-			: entry.date != null) {
+			: entry.date != null ) {
 			return false;
 		}
-		if (group != null
+		if ( group != null
 			? !group.equals(entry.group)
-			: entry.group != null) {
+			: entry.group != null ) {
 			return false;
 		}
-		if (message != null
+		if ( message != null
 			? !message.equals(entry.message)
-			: entry.message != null) {
+			: entry.message != null ) {
 			return false;
 		}
-		if (applicationId != null
+		if ( applicationId != null
 			? !applicationId.equals(entry.applicationId)
-			: entry.applicationId != null) {
+			: entry.applicationId != null ) {
 			return false;
 		}
-		if (severity != entry.severity) {
+		if ( severity != entry.severity ) {
 			return false;
 		}
 
