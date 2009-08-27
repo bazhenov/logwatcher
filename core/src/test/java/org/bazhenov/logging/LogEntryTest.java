@@ -6,6 +6,8 @@ import static com.farpost.timepoint.DateTime.now;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import org.testng.annotations.Test;
+import static org.bazhenov.logging.Severity.warning;
+import static org.bazhenov.logging.Severity.info;
 
 public class LogEntryTest {
 
@@ -15,12 +17,12 @@ public class LogEntryTest {
 		DateTime date = november(12, 2008).at(15, 23);
 		String group = "group";
 		String checksum = "3d4f";
-		LogEntry logEntry = new LogEntry(date, group, logMessage, Severity.info, checksum, "default");
+		LogEntry logEntry = new LogEntry(date, group, logMessage, info, checksum, "default");
 
 		assertThat(logEntry.getDate(), equalTo(date));
 		assertThat(logEntry.getGroup(), equalTo(group));
 		assertThat(logEntry.getMessage(), equalTo(logMessage));
-		assertThat(logEntry.getSeverity(), equalTo(Severity.info));
+		assertThat(logEntry.getSeverity(), equalTo(info));
 		assertThat(logEntry.getChecksum(), equalTo(checksum));
 	}
 
@@ -39,7 +41,7 @@ public class LogEntryTest {
 	@Test
 	public void entryMayHaveCause() {
 		Cause cause = createCause();
-		LogEntry entry = new LogEntry(now(), "group", "message", Severity.warning, "3d", cause, "default");
+		LogEntry entry = new LogEntry(now(), "group", "message", warning, "3d", cause, "default");
 
 		assertThat(entry.getCause(), equalTo(cause));
 	}

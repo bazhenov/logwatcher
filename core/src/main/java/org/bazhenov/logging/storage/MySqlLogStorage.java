@@ -5,9 +5,8 @@ import com.farpost.timepoint.DateTime;
 import org.bazhenov.logging.*;
 import org.bazhenov.logging.marshalling.Marshaller;
 import org.bazhenov.logging.marshalling.MarshallerException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.simple.*;
+import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -40,10 +39,8 @@ public class MySqlLogStorage implements LogStorage {
 				"VALUES(?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE `last_date` = ?, `count` = `count` + 1";
 
 			DateTime date = entry.getDate();
-			Object []args = new Object[] {
-				date(date.getDate()), entry.getChecksum(), entry.getGroup(), marshaller.marshall(entry),
-				1, timestamp(date), timestamp(date)
-			};
+			Object []args = new Object[] {date(date.getDate()), entry.getChecksum(), entry.getGroup(),
+				marshaller.marshall(entry),	1, timestamp(date), timestamp(date)	};
 			jdbc.update(sql, args);
 		} catch ( MarshallerException e ) {
 			throw new LogStorageException(e);
