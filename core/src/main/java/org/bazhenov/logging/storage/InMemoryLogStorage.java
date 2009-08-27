@@ -11,8 +11,7 @@ import java.util.concurrent.locks.*;
  */
 public class InMemoryLogStorage implements LogStorage {
 
-	private final Map<Date, Map<String, AggregatedLogEntryImpl>> entriesByDay =
-		new HashMap<Date, Map<String, AggregatedLogEntryImpl>>();
+	private final Map<Date, Map<String, AggregatedLogEntryImpl>> entriesByDay = new HashMap<Date, Map<String, AggregatedLogEntryImpl>>();
 	private final List<AggregatedLogEntry> entries = new ArrayList<AggregatedLogEntry>();
 	private final ReadWriteLock lock = new ReentrantReadWriteLock();
 
@@ -26,7 +25,7 @@ public class InMemoryLogStorage implements LogStorage {
 			Map<String, AggregatedLogEntryImpl> dayEntries;
 			if ( entriesByDay.containsKey(date) ) {
 				dayEntries = entriesByDay.get(date);
-			}else{
+			} else {
 				dayEntries = new HashMap<String, AggregatedLogEntryImpl>();
 				entriesByDay.put(date, dayEntries);
 			}
@@ -35,7 +34,7 @@ public class InMemoryLogStorage implements LogStorage {
 				AggregatedLogEntryImpl aggregate = dayEntries.get(checksum);
 				aggregate.setLastTime(entry.getDate());
 				aggregate.incrementCount();
-			}else{
+			} else {
 				AggregatedLogEntryImpl aggregatedEntry = new AggregatedLogEntryImpl(entry);
 				dayEntries.put(entry.getChecksum(), aggregatedEntry);
 				entries.add(aggregatedEntry);
@@ -75,9 +74,24 @@ public class InMemoryLogStorage implements LogStorage {
 		Lock l = lock.readLock();
 		l.lock();
 		try {
-			return entries.size();
+			int matches = 0;
+			for ( AggregatedLogEntry entry : entries ) {
+				if ( isMatching(entry, criterias) ) {
+					matches++;
+				}
+			}
+			return matches;
 		} finally {
 			l.unlock();
 		}
+	}
+
+	private boolean isMatching(AggregatedLogEntry entry, Collection<LogEntryMatcher> criterias) {
+		for ( LogEntryMatcher matcher : criterias ) {
+			if ( !matcher.isMatch(entry) ) {
+				return false;
+			}
+		}
+		return true;
 	}
 }

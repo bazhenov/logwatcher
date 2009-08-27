@@ -23,18 +23,17 @@ abstract public class LogStorageTest {
 
 	@Test
 	public void storageCanSaveEntry() throws Exception {
-		DateTime date = now();
+		DateTime now = now();
 
 		LogEntry entry = newEntry().create();
 		storage.writeEntry(entry);
 
-		assertThat(storage.getEntryCount(date.getDate()), equalTo(1));
-		assertThat(storage.getEntryCount(date.plusDay(1).getDate()), equalTo(0));
+		assertThat(storage.getEntryCount(now.getDate()), equalTo(1));
+		assertThat(storage.getEntryCount(now.plusDay(1).getDate()), equalTo(0));
 	}
 
 	@Test
 	public void storageCanGetAggregatedEntries() throws Exception {
-		LogStorage storage = createStorage();
 		DateTime morning = november(12, 2008).at(11, 00);
 		DateTime evening = november(12, 2008).at(18, 05);
 
@@ -54,13 +53,42 @@ abstract public class LogStorageTest {
 
 	@Test
 	public void storageCanCountEntries() throws Exception {
-		LogStorage storage = createStorage();
 		LogEntry entry = newEntry().create();
 
 		storage.writeEntry(entry);
 
 		int count = from(storage).count();
 		assertThat(count, equalTo(1));
+	}
+
+	@Test
+	public void storageCanCountEntriesByCriteria() throws LogStorageException {
+		DateTime now = now();
+		DateTime yesterday = now.minusDay(1);
+
+		newEntry().
+			occuredAt(yesterday).
+			checksum("2fe").
+			saveIn(storage);
+		newEntry().
+			occuredAt(now).
+			checksum("3fe").
+			saveIn(storage);
+
+		int count = from(storage).
+			date(now.getDate()).
+			count();
+		assertThat(count, equalTo(1));
+
+		count = from(storage).
+			date(yesterday.getDate()).
+			count();
+		assertThat(count, equalTo(1));
+
+		count = from(storage).
+			date(yesterday.minusDay(1).getDate()).
+			count();
+		assertThat(count, equalTo(0));
 	}
 
 	private LogEntryBuilder newEntry() {
