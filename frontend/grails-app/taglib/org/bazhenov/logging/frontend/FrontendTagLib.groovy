@@ -1,12 +1,14 @@
 package org.bazhenov.logging.frontend
 
-import groovy.xml.MarkupBuilder
 import java.text.DateFormat
 import java.text.FieldPosition
 import java.text.SimpleDateFormat
 import org.bazhenov.logging.frontend.Entry
 import org.bazhenov.logging.frontend.FrontendDateFormat
-import static java.lang.Math.*
+import static java.lang.Math.abs
+import static java.lang.Math.min
+import static java.net.URLEncoder.encode
+import org.codehaus.groovy.grails.plugins.codecs.HTMLCodec
 
 public class FrontendTagLib {
 
@@ -67,18 +69,18 @@ public class FrontendTagLib {
 
 		def fieldPosition = new FieldPosition(DateFormat.HOUR0_FIELD)
 		def buffer = new StringBuffer()
-		def shortDate = shortFormat.format(entry.lastTime.asDate(), buffer, fieldPosition)
+		shortFormat.format(entry.lastTime.asDate(), buffer, fieldPosition)
 		def fullDate = fullFormat.format(entry.lastTime.asDate())
 
 
-		 /**
-	  	* Не забываем, что теги надо вставлять в обратной последовательности, чтобы не допустить
-		  * смещения индексов в FieldPosition
-		  */
+		/**
+		 * Не забываем, что теги надо вставлять в обратной последовательности, чтобы не допустить
+		 * смещения индексов в FieldPosition
+		 */
 		buffer.insert(fieldPosition.endIndex, "</span>")
 		buffer.insert(fieldPosition.beginIndex, "<span class='${additionalInfoClasses.join(' ')}' title='${fullDate}'>")
 
-		def lastOccurenceInfo = shortDate.toString();
+		def lastOccurenceInfo = buffer.toString();
 
 		def timesInfo
 		if ( count > 1000 ) {
@@ -88,36 +90,31 @@ public class FrontendTagLib {
 		}
 
 		def jiraLink = "http://jira.dev.loc/jira/secure/CreateIssueDetails.jspa?pid=10000&" +
-			"issuetype=1&summary=" + URLEncoder.encode(title) + "&description=" +
-			URLEncoder.encode(message) + "&priority=3"
+			"issuetype=1&summary=${encode(title)}&description=${encode(message)}&priority=3"
 
-		def html = new MarkupBuilder(out)
-		html.nospace = true
-		html.div('class': classes.join(" ")) {
-			div('class': 'entryHeader') {
-				span 'class': markerClasses.join(" "), (withStacktrace ? "•" : "∅")
-				span 'class': 'message', title
-				div('class': 'times') {
-					span 'class': 'applicationId', applicationId
-					yield " — "
-					if ( count > 1 ) {
-						yieldUnescaped timesInfo + ", "
-						yield " последний раз "
-					}
-					yieldUnescaped lastOccurenceInfo
-				}
-			}
+		title = HTMLCodec.encode(title)
+		message = HTMLCodec.encode(message)
 
-			if ( withStacktrace ) {
-				div('class': 'entryContent') {
-					pre 'class': 'stacktrace', message
-				}
-			}
+		out <<  "<div class='${classes.join(" ")}'>"
+		out <<    "<div class='entryHeader'>"
+		out <<      "<span class='${markerClasses.join(" ")}'>${withStacktrace ? "•" : "∅"}</span>"
+		out <<      "<span class='message'>${title}</span>"
+		out <<      "<div class='times'>"
+		out <<        "<span class='applicationId'>${applicationId}</span> &mdash "
+		out <<        (count > 1 ? "${timesInfo}, последний раз " : "")
+		out <<        lastOccurenceInfo
+		out <<      "</div>"
 
-			div('class': 'operations') {
-				yieldUnescaped("<a href='${jiraLink}' target='_blank'>создать таск</a>")
-			}
-
+		if ( withStacktrace ) {
+			out <<      "<div class='entryContent'>"
+			out <<        "<pre class='stacktrace'>${message}</pre>"
+			out <<      "</div>"
 		}
+
+		out <<      "<div class='operations'>"
+		out <<        "<a href='${jiraLink}' target='_blank'>создать таск</a>"
+		out <<      "</div>"
+		out <<    "</div>"
+		out <<  "</div>"
 	}
 }

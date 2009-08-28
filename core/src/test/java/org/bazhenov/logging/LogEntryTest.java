@@ -14,7 +14,7 @@ public class LogEntryTest {
 	@Test
 	public void entryParameters() {
 		String logMessage = "ExceptionMessage";
-		DateTime date = november(12, 2008).at(15, 23);
+		DateTime date = november(12, 2008).at("15:23");
 		String group = "group";
 		String checksum = "3d4f";
 		LogEntry logEntry = new LogEntry(date, group, logMessage, info, checksum, "default");

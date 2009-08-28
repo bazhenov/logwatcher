@@ -34,8 +34,8 @@ abstract public class LogStorageTest {
 
 	@Test
 	public void storageCanGetAggregatedEntries() throws Exception {
-		DateTime morning = november(12, 2008).at(11, 00);
-		DateTime evening = november(12, 2008).at(18, 05);
+		DateTime morning = november(12, 2008).at("11:00");
+		DateTime evening = november(12, 2008).at("18:05");
 
 		LogEntry entry1 = newEntry().
 			occuredAt(morning).

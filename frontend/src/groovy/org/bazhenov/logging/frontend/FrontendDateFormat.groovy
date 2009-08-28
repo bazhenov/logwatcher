@@ -3,7 +3,6 @@ package org.bazhenov.logging.frontend
 import java.text.DateFormat
 import java.text.FieldPosition
 import java.text.ParsePosition
-import static java.lang.Math.max
 
 public class FrontendDateFormat extends DateFormat {
 

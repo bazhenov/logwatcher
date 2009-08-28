@@ -1,10 +1,10 @@
 package org.bazhenov.logging.frontend
 
-import java.util.Date
-import static com.farpost.timepoint.Date.*;
 import java.text.DateFormat
-import org.bazhenov.logging.frontend.FrontendDateFormat
 import java.text.FieldPosition
+import org.bazhenov.logging.frontend.FrontendDateFormat
+import static com.farpost.timepoint.Date.november
+import static com.farpost.timepoint.Date.today
 
 public class FrontendDateFormatTest extends GroovyTestCase {
 
