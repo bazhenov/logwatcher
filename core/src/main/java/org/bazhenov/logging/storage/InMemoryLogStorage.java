@@ -86,6 +86,23 @@ public class InMemoryLogStorage implements LogStorage {
 		}
 	}
 
+	public void removeEntries(String checksum, Date date) throws LogStorageException {
+		Lock l = lock.writeLock();
+		l.lock();
+		try {
+			Map<String, AggregatedLogEntryImpl> byDate = entriesByDay.get(date);
+			if ( byDate != null ) {
+				AggregatedLogEntryImpl entry = byDate.get(checksum);
+				if ( entry != null ) {
+					byDate.remove(checksum);
+					entries.remove(entry);
+				}
+			}
+		} finally {
+			l.unlock();
+		}
+	}
+
 	private boolean isMatching(AggregatedLogEntry entry, Collection<LogEntryMatcher> criterias) {
 		for ( LogEntryMatcher matcher : criterias ) {
 			if ( !matcher.isMatch(entry) ) {

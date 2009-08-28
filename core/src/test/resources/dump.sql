@@ -9,5 +9,5 @@ CREATE TABLE log_entry (
 	`count` INT(11) NOT NULL DEFAULT 1,
 	`last_date` TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
 	PRIMARY KEY(`id`),
-	UNIQUE KEY(`date`)
+	UNIQUE KEY(`date`, `checksum`)
 ) ENGINE=InnoDB;

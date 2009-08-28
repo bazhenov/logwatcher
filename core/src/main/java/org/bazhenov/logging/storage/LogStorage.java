@@ -54,4 +54,12 @@ public interface LogStorage {
 	 */
 	int countEntries(Collection<LogEntryMatcher> criterias)
 		throws LogStorageException, InvalidCriteriaException;
+
+	/**
+	 * Удаляет из хранилища записи с указанной контрольной суммой за указанную дату
+	 * @param checksum контрольная сумма
+	 * @param date дата
+	 * @throws LogStorageException в случае внутренней ошибки
+	 */
+	void removeEntries(String checksum, Date date) throws LogStorageException;
 }

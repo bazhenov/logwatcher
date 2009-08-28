@@ -7,6 +7,8 @@ import org.bazhenov.logging.marshalling.Marshaller;
 import org.bazhenov.logging.marshalling.MarshallerException;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+import org.springframework.dao.DataAccessException;
+import org.apache.log4j.Logger;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -18,6 +20,7 @@ public class MySqlLogStorage implements LogStorage {
 	private final SqlMatcherMapper mapper;
 	private final SimpleJdbcTemplate jdbc;
 	private final ParameterizedRowMapper<AggregatedLogEntry> entryCreator;
+	private final Logger log = Logger.getLogger(MySqlLogStorage.class);
 
 	public MySqlLogStorage(DataSource dataSource, Marshaller marshaller, SqlMatcherMapper mapper) {
 		this.marshaller = marshaller;
@@ -35,21 +38,35 @@ public class MySqlLogStorage implements LogStorage {
 			Object[] args = new Object[]{date(date.getDate()), entry.getChecksum(), entry.getGroup(),
 				marshaller.marshall(entry), 1, timestamp(date), timestamp(date)};
 			jdbc.update(sql, args);
+
+			if ( log.isDebugEnabled() ) {
+				log.debug("Entry with checksum: " + entry.getChecksum() + " wrote to database");
+			}
 		} catch ( MarshallerException e ) {
+			throw new LogStorageException(e);
+		} catch ( DataAccessException e ) {
 			throw new LogStorageException(e);
 		}
 	}
 
 	public List<AggregatedLogEntry> getEntries(Date date) throws LogStorageException {
-		return jdbc.query("SELECT * FROM `log_entry` WHERE `date` = ?", entryCreator, date(date));
+		try {
+			return jdbc.query("SELECT * FROM `log_entry` WHERE `date` = ?", entryCreator, date(date));
+		} catch ( DataAccessException e ) {
+			throw new LogStorageException(e);
+		}
 	}
 
 	public int getEntryCount(Date date) throws LogStorageException {
-		return jdbc.queryForInt("SELECT SUM(`count`) FROM `log_entry` WHERE `date` = ?", date(date));
+		try {
+			return jdbc.queryForInt("SELECT SUM(`count`) FROM `log_entry` WHERE `date` = ?", date(date));
+		} catch ( DataAccessException e ) {
+			throw new LogStorageException(e);
+		}
 	}
 
-	public int countEntries(Collection<LogEntryMatcher> criterias) throws LogStorageException,
-		InvalidCriteriaException {
+	public int countEntries(Collection<LogEntryMatcher> criterias)
+		throws LogStorageException, InvalidCriteriaException {
 
 		String sql = "SELECT COUNT(*) FROM `log_entry` l";
 		List arguments = new LinkedList();
@@ -59,14 +76,27 @@ public class MySqlLogStorage implements LogStorage {
 		if ( lateBoundMatchers.size() > 0 ) {
 			throw new InvalidCriteriaException(lateBoundMatchers);
 		}
-		return jdbc.queryForInt(sql);
+		try {
+			return jdbc.queryForInt(sql);
+		} catch ( DataAccessException e ) {
+			throw new LogStorageException(e);
+		}
+	}
+
+	public void removeEntries(String checksum, Date date) throws LogStorageException {
+		try {
+			jdbc.update("DELETE FROM `log_entry` WHERE date = ? AND checksum = ?", date(date), checksum);
+		} catch ( DataAccessException e ) {
+			throw new LogStorageException(e);
+		}
 	}
 
 	/**
 	 * Принимает критерии отбора (список обьектов типа {@link LogEntryMatcher}), буффер куда
 	 * писать WHERE clause и список куда добавлять sql аргументы.
+	 *
 	 * @param criterias критерии отбора
-	 * @param builder буффер для записи выражения WHERE
+	 * @param builder   буффер для записи выражения WHERE
 	 * @param arguments список куда будут добавлены sql аргументы
 	 * @return список критериев, которые не могут быть обработаны {@link SqlMatcherMapper}'ом
 	 */

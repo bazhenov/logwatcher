@@ -46,18 +46,28 @@ abstract public class LogStorageTest {
 		DateTime morning = november(12, 2008).at("11:00");
 		DateTime evening = november(12, 2008).at("18:05");
 
-		LogEntry entry1 = entry().
+		entry().
 			occured(morning).
-			create();
-		LogEntry entry2 = entry().
+			saveIn(storage);
+		entry().
 			occured(evening).
-			create();
-
-		storage.writeEntry(entry1);
-		storage.writeEntry(entry2);
+			saveIn(storage);
 
 		List<AggregatedLogEntry> list = storage.getEntries(morning.getDate());
 		assertThat(list.size(), equalTo(1));
+	}
+
+	@Test
+	public void storageShouldNotAggregateEntriesWithNonEqualsChecksum() throws Exception {
+		entry().
+			checksum("FF").
+			saveIn(storage);
+		entry().
+			checksum("FE").
+			saveIn(storage);
+
+		List<AggregatedLogEntry> list = storage.getEntries(today());
+		assertThat(list.size(), equalTo(2));
 	}
 
 	@Test
@@ -96,6 +106,34 @@ abstract public class LogStorageTest {
 			date(yesterday.minusDay(1)).
 			count();
 		assertThat(count, equalTo(0));
+	}
+
+	@Test
+	public void storageCanRemoveEntriesByCriteria() throws LogStorageException,
+		InvalidCriteriaException {
+
+		Date today = today();
+		Date yesterday = yesterday();
+
+		entry().
+			occured(today.at("12:35")).
+			checksum("FF").
+			saveIn(storage);
+
+		entry().
+			occured(today.at("12:35")).
+			checksum("FE").
+			saveIn(storage);
+
+		entry().
+			occured(yesterday.at("11:36")).
+			checksum("FF").
+			saveIn(storage);
+
+		storage.removeEntries("FF", today);
+
+		assertThat(from(storage).count(), equalTo(2));
+
 	}
 
 	protected abstract LogStorage createStorage() throws Exception;
