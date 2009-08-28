@@ -1,9 +1,13 @@
 package org.bazhenov.logging.storage;
 
 import static com.farpost.timepoint.Date.november;
+import static com.farpost.timepoint.Date.yesterday;
+import static com.farpost.timepoint.Date.today;
 import com.farpost.timepoint.DateTime;
+import com.farpost.timepoint.Date;
 import static com.farpost.timepoint.DateTime.now;
 import org.bazhenov.logging.*;
+import static org.bazhenov.logging.TestSupport.entry;
 import static org.bazhenov.logging.storage.LogEntries.from;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -23,13 +27,18 @@ abstract public class LogStorageTest {
 
 	@Test
 	public void storageCanSaveEntry() throws Exception {
-		DateTime now = now();
+		Date today = today();
 
-		LogEntry entry = newEntry().create();
+		LogEntry entry = entry().
+			occured(today.at("11:35")).
+			create();
 		storage.writeEntry(entry);
 
-		assertThat(storage.getEntryCount(now.getDate()), equalTo(1));
-		assertThat(storage.getEntryCount(now.plusDay(1).getDate()), equalTo(0));
+		AggregatedLogEntry aggreagatedEntry = from(storage).
+			date(today).
+			findFirst();
+
+		assertThat(aggreagatedEntry.getSampleEntry(), equalTo(entry));
 	}
 
 	@Test
@@ -37,11 +46,11 @@ abstract public class LogStorageTest {
 		DateTime morning = november(12, 2008).at("11:00");
 		DateTime evening = november(12, 2008).at("18:05");
 
-		LogEntry entry1 = newEntry().
-			occuredAt(morning).
+		LogEntry entry1 = entry().
+			occured(morning).
 			create();
-		LogEntry entry2 = newEntry().
-			occuredAt(evening).
+		LogEntry entry2 = entry().
+			occured(evening).
 			create();
 
 		storage.writeEntry(entry1);
@@ -53,7 +62,7 @@ abstract public class LogStorageTest {
 
 	@Test
 	public void storageCanCountEntries() throws Exception {
-		LogEntry entry = newEntry().create();
+		LogEntry entry = entry().create();
 
 		storage.writeEntry(entry);
 
@@ -63,36 +72,30 @@ abstract public class LogStorageTest {
 
 	@Test
 	public void storageCanCountEntriesByCriteria() throws LogStorageException {
-		DateTime now = now();
-		DateTime yesterday = now.minusDay(1);
+		Date yesterday = yesterday();
 
-		newEntry().
-			occuredAt(yesterday).
+		entry().
+			occured(yesterday.at("12:23")).
 			checksum("2fe").
 			saveIn(storage);
-		newEntry().
-			occuredAt(now).
+		entry().
 			checksum("3fe").
 			saveIn(storage);
 
 		int count = from(storage).
-			date(now.getDate()).
+			date(yesterday).
 			count();
 		assertThat(count, equalTo(1));
 
 		count = from(storage).
-			date(yesterday.getDate()).
+			date(yesterday).
 			count();
 		assertThat(count, equalTo(1));
 
 		count = from(storage).
-			date(yesterday.minusDay(1).getDate()).
+			date(yesterday.minusDay(1)).
 			count();
 		assertThat(count, equalTo(0));
-	}
-
-	private LogEntryBuilder newEntry() {
-		return new LogEntryBuilder();
 	}
 
 	protected abstract LogStorage createStorage() throws Exception;

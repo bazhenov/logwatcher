@@ -35,7 +35,11 @@ public class LogEntryBuilder {
 		return new LogEntry(time, group, message, severity, checksum, cause, applicationId);
 	}
 
-	public LogEntryBuilder occuredAt(DateTime time) {
+	/**
+	 * Устанавливает время когда произошло событие
+	 * @param time время возникновения события
+	 */
+	public LogEntryBuilder occured(DateTime time) {
 		this.time = time;
 		return this;
 	}
