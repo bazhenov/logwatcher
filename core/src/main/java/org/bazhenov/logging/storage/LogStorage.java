@@ -34,14 +34,24 @@ public interface LogStorage {
 	 */
 	int getEntryCount(Date date) throws LogStorageException;
 
+	/**
+	 * Возвращает список записей за указанную дату. Возвращаемый вам список принадлежит вам. Вы имеете
+	 * право использовать и менять его по собственному усмотрению.
+	 *
+	 * @param date дата
+	 * @return список записей за заданную дату
+	 * @throws LogStorageException в случае внутренней ошибки
+	 */
 	List<AggregatedLogEntry> getEntries(Date date) throws LogStorageException;
 
 	/**
-	 * Подсчитывает колличество записей в хранилище с заданными условиями
+	 * Подсчитывает колличество записей в хранилище с заданными условиями.
 	 *
 	 * @param criterias условия отбора записей
-	 * @throws LogStorageException в случае внутренней ошибки
 	 * @return колличество записей
+	 * @throws LogStorageException в случае внутренней ошибки
+	 * @throws InvalidCriteriaException в случае если заданные критерии неверны
 	 */
-	int countEntries(Collection<LogEntryMatcher> criterias) throws LogStorageException;
+	int countEntries(Collection<LogEntryMatcher> criterias)
+		throws LogStorageException, InvalidCriteriaException;
 }

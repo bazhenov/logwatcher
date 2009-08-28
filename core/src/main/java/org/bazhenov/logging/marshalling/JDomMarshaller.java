@@ -13,17 +13,20 @@ import java.text.*;
 
 public class JDomMarshaller implements Marshaller {
 
-	private final SAXBuilder builder;
-	private final Namespace namespace;
-	private final XMLOutputter out;
-	private final DateFormat format;
-
-	public JDomMarshaller() {
-		builder = new SAXBuilder();
-		namespace = Namespace.getNamespace("http://logging.farpost.com/schema");
-		out = new XMLOutputter(Format.getPrettyFormat());
-		format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-	}
+	private final ThreadLocal<SAXBuilder> builder = new ThreadLocal<SAXBuilder>() {
+		@Override
+		protected SAXBuilder initialValue() {
+			return new SAXBuilder();
+		}
+	};
+	private final ThreadLocal<XMLOutputter> out = new ThreadLocal<XMLOutputter>() {
+		@Override
+		protected XMLOutputter initialValue() {
+			return new XMLOutputter(Format.getPrettyFormat());
+		}
+	};
+	private final Namespace namespace = Namespace.getNamespace("http://logging.farpost.com/schema");
+	private final DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
 	public String marshall(LogEntry entry) throws MarshallerException {
 		Element root = element("logEntry");
@@ -42,7 +45,7 @@ public class JDomMarshaller implements Marshaller {
 
 		Document doc = new Document(root);
 
-		return out.outputString(doc);
+		return out.get().outputString(doc);
 	}
 
 	private String dateToString(LogEntry entry) {
@@ -71,7 +74,7 @@ public class JDomMarshaller implements Marshaller {
 
 	public LogEntry unmarshall(String data) throws MarshallerException {
 		try {
-			Document doc = builder.build(new StringReader(data));
+			Document doc = builder.get().build(new StringReader(data));
 			Element root = doc.getRootElement();
 			String message = root.getChildText("message", namespace);
 			String application = root.getChild("application", namespace).getAttributeValue("id");

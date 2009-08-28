@@ -44,7 +44,7 @@ public class LogEntriesFinder {
 	 * @return количество записей
 	 * @throws LogStorageException в случае внутренней ошибки
 	 */
-	public int count() throws LogStorageException {
+	public int count() throws LogStorageException, InvalidCriteriaException {
 		return storage.countEntries(criterias);
 	}
 }

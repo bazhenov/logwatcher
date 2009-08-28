@@ -45,6 +45,6 @@ public class MySqlLogStorageTest extends LogStorageTest {
 			connection.close();
 		}
 
-		return new MySqlLogStorage(ds, new JDomMarshaller());
+		return new MySqlLogStorage(ds, new JDomMarshaller(), new AnnotationDrivenMatcherMapperImpl(new Object()));
 	}
 }

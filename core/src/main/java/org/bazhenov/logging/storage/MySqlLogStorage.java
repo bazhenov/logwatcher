@@ -15,32 +15,25 @@ import java.util.*;
 public class MySqlLogStorage implements LogStorage {
 
 	private final Marshaller marshaller;
+	private final SqlMatcherMapper mapper;
 	private final SimpleJdbcTemplate jdbc;
 	private final ParameterizedRowMapper<AggregatedLogEntry> entryCreator;
 
-	public MySqlLogStorage(DataSource dataSource, Marshaller marshaller) {
+	public MySqlLogStorage(DataSource dataSource, Marshaller marshaller, SqlMatcherMapper mapper) {
 		this.marshaller = marshaller;
+		this.mapper = mapper;
 		this.jdbc = new SimpleJdbcTemplate(dataSource);
-
-		entryCreator = new ParameterizedRowMapper<AggregatedLogEntry>() {
-			public AggregatedLogEntry mapRow(ResultSet rs, int rowNum) throws SQLException {
-				try {
-					return createEntry(rs);
-				} catch ( MarshallerException e ) {
-					throw new SQLException(e);
-				}
-			}
-		};
+		entryCreator = new EntryCreator(marshaller);
 	}
 
 	public void writeEntry(LogEntry entry) throws LogStorageException {
 		try {
-			String sql = "INSERT INTO log_entry (`date`, `checksum`, `group`, `text`, `count`, `last_date`) "	+
-				"VALUES(?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE `last_date` = ?, `count` = `count` + 1";
+			String sql = "INSERT INTO log_entry (`date`, `checksum`, `group`, `text`, `count`, `last_date`) "
+				+ "VALUES(?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE `last_date` = ?, `count` = `count` + 1";
 
 			DateTime date = entry.getDate();
-			Object []args = new Object[] {date(date.getDate()), entry.getChecksum(), entry.getGroup(),
-				marshaller.marshall(entry),	1, timestamp(date), timestamp(date)	};
+			Object[] args = new Object[]{date(date.getDate()), entry.getChecksum(), entry.getGroup(),
+				marshaller.marshall(entry), 1, timestamp(date), timestamp(date)};
 			jdbc.update(sql, args);
 		} catch ( MarshallerException e ) {
 			throw new LogStorageException(e);
@@ -55,8 +48,37 @@ public class MySqlLogStorage implements LogStorage {
 		return jdbc.queryForInt("SELECT SUM(`count`) FROM `log_entry` WHERE `date` = ?", date(date));
 	}
 
-	public int countEntries(Collection<LogEntryMatcher> criterias) throws LogStorageException {
-		return jdbc.queryForInt("SELECT COUNT(*) FROM `log_entry`");
+	public int countEntries(Collection<LogEntryMatcher> criterias) throws LogStorageException,
+		InvalidCriteriaException {
+
+		String sql = "SELECT COUNT(*) FROM `log_entry` l";
+		List arguments = new LinkedList();
+		StringBuilder whereClause = new StringBuilder();
+		Collection<LogEntryMatcher> lateBoundMatchers = fillWhereClause(criterias, whereClause,
+			arguments);
+		if ( lateBoundMatchers.size() > 0 ) {
+			throw new InvalidCriteriaException(lateBoundMatchers);
+		}
+		return jdbc.queryForInt(sql);
+	}
+
+	/**
+	 * Принимает критерии отбора (список обьектов типа {@link LogEntryMatcher}), буффер куда
+	 * писать WHERE clause и список куда добавлять sql аргументы.
+	 * @param criterias критерии отбора
+	 * @param builder буффер для записи выражения WHERE
+	 * @param arguments список куда будут добавлены sql аргументы
+	 * @return список критериев, которые не могут быть обработаны {@link SqlMatcherMapper}'ом
+	 */
+	private Collection<LogEntryMatcher> fillWhereClause(Collection<LogEntryMatcher> criterias,
+	                                                    StringBuilder builder, List arguments) {
+		WhereClause where = new WhereClause(builder, arguments);
+		for ( LogEntryMatcher matcher : criterias ) {
+			if ( mapper.handle(matcher, where) ) {
+				criterias.remove(matcher);
+			}
+		}
+		return criterias;
 	}
 
 	private java.sql.Date date(Date date) {
@@ -67,10 +89,27 @@ public class MySqlLogStorage implements LogStorage {
 		return new Timestamp(date.asTimestamp());
 	}
 
-	private AggregatedLogEntry createEntry(ResultSet rs) throws MarshallerException, SQLException {
-		LogEntry sampleEntry = marshaller.unmarshall(rs.getString("text"));
-		DateTime lastTime = new DateTime(rs.getTimestamp("last_date"));
-		int count = rs.getInt("count");
-		return new AggregatedLogEntryImpl(sampleEntry, lastTime, count);
+	private static class EntryCreator implements ParameterizedRowMapper<AggregatedLogEntry> {
+
+		private final Marshaller marshaller;
+
+		public EntryCreator(Marshaller marshaller) {
+			this.marshaller = marshaller;
+		}
+
+		public AggregatedLogEntry mapRow(ResultSet rs, int rowNum) throws SQLException {
+			try {
+				return createEntry(rs);
+			} catch ( MarshallerException e ) {
+				throw new SQLException(e);
+			}
+		}
+
+		private AggregatedLogEntry createEntry(ResultSet rs) throws MarshallerException, SQLException {
+			LogEntry sampleEntry = marshaller.unmarshall(rs.getString("text"));
+			DateTime lastTime = new DateTime(rs.getTimestamp("last_date"));
+			int count = rs.getInt("count");
+			return new AggregatedLogEntryImpl(sampleEntry, lastTime, count);
+		}
 	}
 }

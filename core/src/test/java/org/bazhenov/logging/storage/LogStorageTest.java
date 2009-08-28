@@ -71,7 +71,7 @@ abstract public class LogStorageTest {
 	}
 
 	@Test
-	public void storageCanCountEntriesByCriteria() throws LogStorageException {
+	public void storageCanCountEntriesByCriteria() throws LogStorageException, InvalidCriteriaException {
 		Date yesterday = yesterday();
 
 		entry().
