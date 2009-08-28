@@ -16,6 +16,10 @@ public class InvalidCriteriaException extends Exception {
 		this("Some matchers are not physically linked to storage: [" + buildMatcersList(badMatchers) + "]");
 	}
 
+	public InvalidCriteriaException(Throwable cause) {
+		super(cause);
+	}
+
 	private static String buildMatcersList(Collection<LogEntryMatcher> badMatchers) {
 		StringBuilder builder = new StringBuilder();
 		for ( LogEntryMatcher matcher : badMatchers ) {

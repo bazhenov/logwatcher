@@ -1,8 +1,9 @@
-package org.bazhenov.logging.storage;
+package org.bazhenov.logging.storage.sql;
 
 import com.farpost.timepoint.Date;
 import com.farpost.timepoint.DateTime;
 import org.bazhenov.logging.*;
+import org.bazhenov.logging.storage.*;
 import org.bazhenov.logging.marshalling.Marshaller;
 import org.bazhenov.logging.marshalling.MarshallerException;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
@@ -31,8 +32,8 @@ public class MySqlLogStorage implements LogStorage {
 
 	public void writeEntry(LogEntry entry) throws LogStorageException {
 		try {
-			String sql = "INSERT INTO log_entry (`date`, `checksum`, `group`, `text`, `count`, `last_date`) "
-				+ "VALUES(?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE `last_date` = ?, `count` = `count` + 1";
+			String sql = "INSERT INTO log_entry (`date`, `checksum`, `group`, `text`, `count`, `last_date`) " +
+				"VALUES(?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE `last_date` = ?, `count` = `count` + 1";
 
 			DateTime date = entry.getDate();
 			Object[] args = new Object[]{date(date.getDate()), entry.getChecksum(), entry.getGroup(),
@@ -68,18 +69,25 @@ public class MySqlLogStorage implements LogStorage {
 	public int countEntries(Collection<LogEntryMatcher> criterias)
 		throws LogStorageException, InvalidCriteriaException {
 
-		String sql = "SELECT COUNT(*) FROM `log_entry` l";
-		List arguments = new LinkedList();
-		StringBuilder whereClause = new StringBuilder();
-		Collection<LogEntryMatcher> lateBoundMatchers = fillWhereClause(criterias, whereClause,
-			arguments);
-		if ( lateBoundMatchers.size() > 0 ) {
-			throw new InvalidCriteriaException(lateBoundMatchers);
-		}
-		try {
-			return jdbc.queryForInt(sql);
-		} catch ( DataAccessException e ) {
-			throw new LogStorageException(e);
+		StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM `log_entry` l");
+		if ( criterias == null || criterias.size() <= 0 ) {
+			return jdbc.queryForInt(sql.toString());
+		} else {
+			List arguments = new LinkedList();
+			StringBuilder whereClause = new StringBuilder();
+			try {
+				Collection<LogEntryMatcher> lateBoundMatchers = fillWhereClause(criterias, whereClause,
+					arguments);
+				if ( lateBoundMatchers.size() > 0 ) {
+					throw new InvalidCriteriaException(lateBoundMatchers);
+				}
+				sql.append(" WHERE ").append(whereClause);
+				return jdbc.queryForInt(sql.toString(), arguments.toArray());
+			} catch ( DataAccessException e ) {
+				throw new LogStorageException(e);
+			} catch ( MatcherMapperException e ) {
+				throw new InvalidCriteriaException(e);
+			}
 		}
 	}
 
@@ -101,24 +109,32 @@ public class MySqlLogStorage implements LogStorage {
 	 * @return список критериев, которые не могут быть обработаны {@link SqlMatcherMapper}'ом
 	 */
 	private Collection<LogEntryMatcher> fillWhereClause(Collection<LogEntryMatcher> criterias,
-	                                                    StringBuilder builder, List arguments) {
+	                                                    StringBuilder builder, List arguments)
+		throws MatcherMapperException {
+
 		WhereClause where = new WhereClause(builder, arguments);
-		for ( LogEntryMatcher matcher : criterias ) {
+		Iterator<LogEntryMatcher> iterator = criterias.iterator();
+		while ( iterator.hasNext() ) {
+			LogEntryMatcher matcher = iterator.next();
 			if ( mapper.handle(matcher, where) ) {
-				criterias.remove(matcher);
+				iterator.remove();
 			}
 		}
 		return criterias;
 	}
 
-	private java.sql.Date date(Date date) {
+	static java.sql.Date date(Date date) {
 		return new java.sql.Date(date.asTimestamp());
 	}
 
-	private Timestamp timestamp(DateTime date) {
+	static Timestamp timestamp(DateTime date) {
 		return new Timestamp(date.asTimestamp());
 	}
 
+	/**
+	 * Имплементация {@link ParameterizedRowMapper}, которая из {@link ResultSet}'а создает
+	 * обьекты типа {@link AggregatedLogEntry}.
+	 */
 	private static class EntryCreator implements ParameterizedRowMapper<AggregatedLogEntry> {
 
 		private final Marshaller marshaller;

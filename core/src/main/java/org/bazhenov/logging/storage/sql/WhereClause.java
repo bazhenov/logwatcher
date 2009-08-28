@@ -1,4 +1,4 @@
-package org.bazhenov.logging.storage;
+package org.bazhenov.logging.storage.sql;
 
 import static java.util.Collections.addAll;
 import java.util.List;

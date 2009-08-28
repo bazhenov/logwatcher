@@ -2,6 +2,7 @@ package org.bazhenov.logging.storage;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.bazhenov.logging.marshalling.JDomMarshaller;
+import org.bazhenov.logging.storage.sql.*;
 
 import java.io.*;
 import java.sql.Connection;
@@ -45,6 +46,7 @@ public class MySqlLogStorageTest extends LogStorageTest {
 			connection.close();
 		}
 
-		return new MySqlLogStorage(ds, new JDomMarshaller(), new AnnotationDrivenMatcherMapperImpl(new Object()));
+		SqlMatcherMapper mapper = new AnnotationDrivenMatcherMapperImpl(new SqlMatcherMapperRules());
+		return new MySqlLogStorage(ds, new JDomMarshaller(), mapper);
 	}
 }

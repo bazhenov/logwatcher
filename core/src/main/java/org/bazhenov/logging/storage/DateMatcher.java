@@ -11,6 +11,10 @@ public class DateMatcher implements LogEntryMatcher {
 		this.date = date;
 	}
 
+	public Date getDate() {
+		return date;
+	}
+
 	public boolean isMatch(AggregatedLogEntry entry) {
 		return entry.getLastTime().getDate().equals(date);
 	}

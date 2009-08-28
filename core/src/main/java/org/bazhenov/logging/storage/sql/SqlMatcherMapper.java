@@ -1,6 +1,6 @@
-package org.bazhenov.logging.storage;
+package org.bazhenov.logging.storage.sql;
 
-import java.util.List;
+import org.bazhenov.logging.storage.LogEntryMatcher;
 
 /**
  * Имплементации этого интерфейса занимаются тем, что превращают обьекты типа
@@ -8,5 +8,5 @@ import java.util.List;
  */
 public interface SqlMatcherMapper {
 
-	public boolean handle(LogEntryMatcher matcher, WhereClause clause);
+	public boolean handle(LogEntryMatcher matcher, WhereClause clause) throws MatcherMapperException;
 }

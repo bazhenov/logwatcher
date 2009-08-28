@@ -1,18 +1,16 @@
 package org.bazhenov.logging.storage;
 
-import static com.farpost.timepoint.Date.november;
-import static com.farpost.timepoint.Date.yesterday;
-import static com.farpost.timepoint.Date.today;
-import com.farpost.timepoint.DateTime;
 import com.farpost.timepoint.Date;
-import static com.farpost.timepoint.DateTime.now;
-import org.bazhenov.logging.*;
+import static com.farpost.timepoint.Date.*;
+import com.farpost.timepoint.DateTime;
+import org.bazhenov.logging.AggregatedLogEntry;
+import org.bazhenov.logging.LogEntry;
 import static org.bazhenov.logging.TestSupport.entry;
 import static org.bazhenov.logging.storage.LogEntries.from;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import java.util.*;
 

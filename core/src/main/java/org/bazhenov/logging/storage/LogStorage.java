@@ -47,7 +47,8 @@ public interface LogStorage {
 	/**
 	 * Подсчитывает колличество записей в хранилище с заданными условиями.
 	 *
-	 * @param criterias условия отбора записей
+	 * @param criterias условия отбора записей или {@code null} если интересует общее количество
+	 * записей в хранилище
 	 * @return колличество записей
 	 * @throws LogStorageException в случае внутренней ошибки
 	 * @throws InvalidCriteriaException в случае если заданные критерии неверны
