@@ -12,6 +12,7 @@
       <element name="severity" type="u:Severity"/>
 	    <element name="application" type="u:ApplicationDescriptor" />
 	    <element name="group" type="u:Group"/>
+	    <element name="attributes" type="u:AttributeCollection" minOccurs="0" />
 	    <element name="cause" type="u:Cause" minOccurs="0"/>
     </all>
     <attribute name="date" type="dateTime"/>
@@ -48,5 +49,16 @@
 
 	<complexType name="ApplicationDescriptor">
 		<attribute name="id" use="required" />
+	</complexType>
+
+	<complexType name="AttributeCollection">
+		<sequence maxOccurs="unbounded">
+			<element name="attribute">
+				<complexType>
+					<attribute name="name" type="string" use="required" />
+					<attribute name="value" type="string" use="required" />
+				</complexType>
+			</element>
+		</sequence>
 	</complexType>
 </schema>
