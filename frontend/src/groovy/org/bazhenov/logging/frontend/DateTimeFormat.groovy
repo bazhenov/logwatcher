@@ -4,7 +4,7 @@ import java.text.DateFormat
 import java.text.FieldPosition
 import java.text.ParsePosition
 
-public class FrontendDateFormat extends DateFormat {
+public class DateTimeFormat extends DateFormat {
 
 	private Calendar calendar = Calendar.instance
 

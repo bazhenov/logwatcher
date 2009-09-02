@@ -4,7 +4,7 @@ import java.text.DateFormat
 import java.text.FieldPosition
 import java.text.SimpleDateFormat
 import org.bazhenov.logging.frontend.Entry
-import org.bazhenov.logging.frontend.FrontendDateFormat
+import org.bazhenov.logging.frontend.DateTimeFormat
 import static java.lang.Math.abs
 import static java.lang.Math.min
 import static java.net.URLEncoder.encode
@@ -32,7 +32,7 @@ public class FrontendTagLib {
 	}
 
 	public final int MAX_LENGTH = 80;
-	DateFormat shortFormat = new FrontendDateFormat()
+	DateFormat shortFormat = new DateTimeFormat()
 	DateFormat fullFormat = new SimpleDateFormat("d MMMM yyyy, HH:mm:ss zz", new Locale("Ru"))
 	Writer out
 
