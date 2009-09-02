@@ -1,5 +1,8 @@
 package org.bazhenov.logging.frontend
 
+/**
+ * Утилитарный класс предоставляющий матчеры для поиска подстроки в строке
+ */
 public class Asserts {
 
 	public static void assertContains(def needle, String stack) {
