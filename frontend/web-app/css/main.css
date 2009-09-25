@@ -1,5 +1,10 @@
 body				                    { font-size: 21px; font-family: tahoma, serif; }
 
+#firstDot                       { color: #ff3333; font-size: 150% }
+#secondDot                      { color: #ff9900; font-size: 150% }
+#thirdDot                       { color: #009900; font-size: 150% }
+
+h1                              { font-size: 18px; font-weight: normal; margin: 0 0 0 0 }
 h2                              { font-size: 24px; font-weight: normal; color: gray }
 
 #footer                         { font-size: 12px; margin-top: 20px; color: gray; text-align: center; }

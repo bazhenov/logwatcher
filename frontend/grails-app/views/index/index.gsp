@@ -5,7 +5,7 @@
 </head>
 <body>
 
-<h1>LogWatcher</h1>
+<h1><span id="firstDot">&bull;</span><span id="secondDot">&bull;</span><span id="thirdDot">&bull;</span></h1>
 
 <div id="menuBar">
 	<g:each in="${linkDates}">
@@ -27,8 +27,8 @@
 			<f:entry ref="${entry}"/>
 		</g:each>
 		<div id="footer">
-			Всего <%= entries.collect { it.count }.sum().pluralize("сообщение сообщения сообщений") %>
-			сгрупированных в <%= entries.size().pluralize("запись записи записей") %>
+			Всего <%= entries.collect { it.count }.sum().pluralize("сообщение сообщения сообщений") %>,
+			<%= entries.size().pluralize("запись записи записей") %>
 		</div>
 	</g:if>
 	<g:else>
