@@ -1,21 +1,22 @@
 package org.bazhenov.logging.frontend
 
+import com.farpost.timepoint.Date
 import java.text.DateFormat
 import java.text.FieldPosition
-import org.bazhenov.logging.frontend.FrontendDateTimeFormat
+import org.bazhenov.logging.frontend.DateTimeFormat
 import static com.farpost.timepoint.Date.november
 import static com.farpost.timepoint.Date.today
 
-public class FrontendDateFormatTest extends GroovyTestCase {
+public class DateTimeFormatTest extends GroovyTestCase {
 
-	DateFormat formatter = new FrontendDateTimeFormat();
+	DateFormat formatter = new DateTimeFormat();
 
 	void testFormatterCanFormatGenericDates() {
-		def date = new Date(99, 2, 1, 5, 01, 53)
+		def date = Date.march(1, 1999).at("05:01");
 
 		def fp = new FieldPosition(DateFormat.HOUR0_FIELD)
 		def buffer = new StringBuffer()
-		formatter.format(date, buffer, fp)
+		formatter.format(date.asDate(), buffer, fp)
 		assertEquals "1 марта, 05:01", buffer as String
 		assertEquals 0, fp.beginIndex
 		assertEquals 14, fp.endIndex

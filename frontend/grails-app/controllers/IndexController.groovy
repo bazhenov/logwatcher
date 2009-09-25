@@ -5,7 +5,7 @@ import org.bazhenov.logging.frontend.Entry
 import org.bazhenov.logging.storage.LogStorage
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import org.bazhenov.logging.frontend.FrontendDateFormat
+import org.bazhenov.logging.frontend.RussianDateFormat
 
 class IndexController {
 
@@ -31,7 +31,7 @@ class IndexController {
 			entries: entries,
 			today: Date.today(),
 			date: date,
-			dateAsString: new FrontendDateFormat().format(date.asDate()),
+			dateAsString: new RussianDateFormat().format(date.asDate()),
 			linkDates: ['сегодня': today(), 'вчера': today().minusDay(1), 'позавчера': today().minusDay(2)],
 			application: app,
 			allApps: allApps

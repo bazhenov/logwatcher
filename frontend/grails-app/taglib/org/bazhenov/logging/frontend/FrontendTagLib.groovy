@@ -4,7 +4,7 @@ import java.text.DateFormat
 import java.text.FieldPosition
 import java.text.SimpleDateFormat
 import org.bazhenov.logging.frontend.Entry
-import org.bazhenov.logging.frontend.FrontendDateTimeFormat
+import org.bazhenov.logging.frontend.DateTimeFormat
 import static java.lang.Math.abs
 import static java.lang.Math.min
 import static java.net.URLEncoder.encode
@@ -32,7 +32,7 @@ public class FrontendTagLib {
 	}
 
 	public final int MAX_LENGTH = 80;
-	DateFormat shortFormat = new FrontendDateTimeFormat()
+	DateFormat shortFormat = new DateTimeFormat()
 	DateFormat fullFormat = new SimpleDateFormat("d MMMM yyyy, HH:mm:ss zz", new Locale("Ru"))
 	Writer out
 
@@ -95,7 +95,7 @@ public class FrontendTagLib {
 		title = HTMLCodec.encode(title)
 		message = HTMLCodec.encode(message)
 
-		out <<  "<div class='${classes.join(" ")}' checksum='${entry.checksum}'>"
+		out <<  "<div class='${classes.join(" ")}'>"
 		out <<    "<div class='entryHeader'>"
 		out <<      "<span class='${markerClasses.join(" ")}'>${withStacktrace ? "•" : "∅"}</span>"
 		out <<      "<span class='message'>${title}</span>"
@@ -113,8 +113,6 @@ public class FrontendTagLib {
 
 		out <<      "<div class='operations'>"
 		out <<        "<a href='${jiraLink}' target='_blank'>создать таск</a>"
-		out <<        " или "
-		out <<        "<a href='#' class='asynchronous removeEntry'>удалить</a>"
 		out <<      "</div>"
 		out <<    "</div>"
 		out <<  "</div>"
