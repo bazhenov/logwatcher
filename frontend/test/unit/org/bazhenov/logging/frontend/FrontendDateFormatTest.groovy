@@ -2,13 +2,13 @@ package org.bazhenov.logging.frontend
 
 import java.text.DateFormat
 import java.text.FieldPosition
-import org.bazhenov.logging.frontend.FrontendDateFormat
+import org.bazhenov.logging.frontend.FrontendDateTimeFormat
 import static com.farpost.timepoint.Date.november
 import static com.farpost.timepoint.Date.today
 
 public class FrontendDateFormatTest extends GroovyTestCase {
 
-	DateFormat formatter = new FrontendDateFormat();
+	DateFormat formatter = new FrontendDateTimeFormat();
 
 	void testFormatterCanFormatGenericDates() {
 		def date = new Date(99, 2, 1, 5, 01, 53)

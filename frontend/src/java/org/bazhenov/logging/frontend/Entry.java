@@ -11,6 +11,7 @@ public class Entry {
 	private final int count;
 	private final DateTime lastTime;
 	private final Severity severity;
+	private final String checksum;
 
 	public Entry(AggregatedLogEntry aggregatedEntry) {
 		LogEntry entry = aggregatedEntry.getSampleEntry();
@@ -21,6 +22,7 @@ public class Entry {
 		this.lastTime = aggregatedEntry.getLastTime();
 		this.applicationId = entry.getApplicationId();
 		this.severity = entry.getSeverity();
+		this.checksum = entry.getChecksum();
 	}
 
 	public Entry(String title, String text, int count, DateTime lastTime) {
@@ -28,7 +30,7 @@ public class Entry {
 		this.text = text;
 		this.count = count;
 		this.lastTime = lastTime;
-		this.applicationId = "";
+		this.checksum = this.applicationId = "";
 		this.severity = Severity.info;
 	}
 
@@ -42,6 +44,10 @@ public class Entry {
 
 	public Severity getSeverity() {
 		return severity;
+	}
+
+	public String getChecksum() {
+		return checksum;
 	}
 
 	public boolean withStacktrace() {

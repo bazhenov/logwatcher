@@ -5,6 +5,7 @@ import org.bazhenov.logging.frontend.Entry
 import org.bazhenov.logging.storage.LogStorage
 import java.text.DateFormat
 import java.text.SimpleDateFormat
+import org.bazhenov.logging.frontend.FrontendDateFormat
 
 class IndexController {
 
@@ -30,10 +31,18 @@ class IndexController {
 			entries: entries,
 			today: Date.today(),
 			date: date,
+			dateAsString: new FrontendDateFormat().format(date.asDate()),
 			linkDates: ['сегодня': today(), 'вчера': today().minusDay(1), 'позавчера': today().minusDay(2)],
 			application: app,
 			allApps: allApps
 		]
+	}
+
+	def removeEntry = {
+		String checksum = params.checksum as String
+		Date date = params.date ? new Date(format.parse(params.date))	: today()
+		logStorage.removeEntries(checksum, date)
+		render status: 200
 	}
 
 	private allApplications(entries){
