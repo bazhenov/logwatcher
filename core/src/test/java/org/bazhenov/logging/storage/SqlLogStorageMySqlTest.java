@@ -2,14 +2,19 @@ package org.bazhenov.logging.storage;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.bazhenov.logging.marshalling.JDomMarshaller;
-import org.bazhenov.logging.storage.sql.*;
+import org.bazhenov.logging.storage.sql.AnnotationDrivenMatcherMapperImpl;
+import org.bazhenov.logging.storage.sql.SqlLogStorage;
+import static org.bazhenov.logging.storage.sql.SqlLogStorage.loadDump;
+import org.bazhenov.logging.storage.sql.SqlMatcherMapper;
+import org.bazhenov.logging.storage.sql.SqlMatcherMapperRules;
 
-import java.io.*;
-import java.sql.Connection;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Properties;
 
-public class MySqlLogStorageTest extends LogStorageTest {
+public class SqlLogStorageMySqlTest extends LogStorageTest {
 
 	protected LogStorage createStorage() throws IOException, SQLException {
 		String fileName = System.getProperty("mysql.config", "mysql.properties");
@@ -18,7 +23,7 @@ public class MySqlLogStorageTest extends LogStorageTest {
 			props.load(new FileReader(fileName));
 		} catch ( IOException e ) {
 			throw new RuntimeException(
-				"Unable to read mysql properties file. Run tests with -Dmysql.config=../path/to/mysql.properties");
+				"Unable to read MySQL properties file. Run tests with -Dmysql.config=../path/to/mysql.properties");
 		}
 		String url = props.getProperty("url");
 		String username = props.getProperty("username");
@@ -31,22 +36,10 @@ public class MySqlLogStorageTest extends LogStorageTest {
 		ds.setPassword(password);
 		ds.setUrl(url);
 
-		StringBuffer buffer = new StringBuffer();
-		BufferedReader reader = new BufferedReader(
-			new InputStreamReader(MySqlLogStorage.class.getResourceAsStream("/dump.sql")));
-		String line;
-		while ( (line = reader.readLine()) != null ) {
-			buffer.append(line).append("\n");
-		}
-
-		Connection connection = ds.getConnection();
-		try {
-			connection.prepareStatement(buffer.toString()).executeUpdate();
-		} finally {
-			connection.close();
-		}
+		InputStream stream = SqlLogStorage.class.getResourceAsStream("/dump.mysql.sql");
+		loadDump(ds, stream);
 
 		SqlMatcherMapper mapper = new AnnotationDrivenMatcherMapperImpl(new SqlMatcherMapperRules());
-		return new MySqlLogStorage(ds, new JDomMarshaller(), mapper);
+		return new SqlLogStorage(ds, new JDomMarshaller(), mapper);
 	}
 }

@@ -25,4 +25,10 @@ $(function() {
 
 		return false;
 	})
+
+	$('.entry').draggable({
+		helper: 'clone',
+		axis: 'y',
+		containment: 'parent',
+		});
 })

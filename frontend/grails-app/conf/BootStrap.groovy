@@ -10,6 +10,7 @@ class BootStrap {
 	def init = {servletContext ->
 		Integer.metaClass.pluralize = FrontendTagLib.pluralize;
 
+		/**
 		def ctx = servletContext.getAttribute(ApplicationAttributes.APPLICATION_CONTEXT)
 		LogStorage s = ctx.logStorage
 		s.writeEntry new LogEntry(DateTime.now(), "group", "AdvertServiceException: Error Fetching http headers", Severity.error, "sum", "advert");
@@ -34,6 +35,7 @@ class BootStrap {
 		s.writeEntry new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long long Exception", Severity.error, "sum4", cause, "searcha");
 		s.writeEntry new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long long Exception", Severity.error, "sum4", cause, "searcha");
 		s.writeEntry new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long long Exception", Severity.error, "sum4", cause, "searcha");
+		**/
 	}
 
 	def destroy = {

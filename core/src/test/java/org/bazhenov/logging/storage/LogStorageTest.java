@@ -6,7 +6,7 @@ import com.farpost.timepoint.DateTime;
 import org.bazhenov.logging.AggregatedLogEntry;
 import org.bazhenov.logging.LogEntry;
 import static org.bazhenov.logging.TestSupport.entry;
-import static org.bazhenov.logging.storage.LogEntries.from;
+import static org.bazhenov.logging.storage.LogEntries.entries;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import org.testng.annotations.BeforeMethod;
@@ -32,9 +32,9 @@ abstract public class LogStorageTest {
 			create();
 		storage.writeEntry(entry);
 
-		AggregatedLogEntry aggreagatedEntry = from(storage).
+		AggregatedLogEntry aggreagatedEntry = entries().
 			date(today).
-			findFirst();
+			findFirst(storage);
 
 		assertThat(aggreagatedEntry.getSampleEntry(), equalTo(entry));
 	}
@@ -56,6 +56,43 @@ abstract public class LogStorageTest {
 	}
 
 	@Test
+	public void storageCanFilterEntriesByApplicationId() throws LogStorageException,
+		InvalidCriteriaException {
+		entry().
+			applicationId("frontend").
+			saveIn(storage);
+
+		entry().
+			applicationId("billing").
+			saveIn(storage);
+
+		int count = entries()
+			.applicationId("frontend")
+			.count(storage);
+
+		assertThat(count, equalTo(1));
+	}
+
+	@Test
+	public void storageCanMaintainChecksumAliases() throws LogStorageException,
+		InvalidCriteriaException {
+		entry().
+			checksum("foo").
+			saveIn(storage);
+
+		entry().
+			checksum("bar").
+			saveIn(storage);
+
+		storage.createChecksumAlias("foo", "bar");
+
+		int count = entries().
+			checksum("bar").
+			count(storage);
+		assertThat(count, equalTo(1));
+	}
+
+	@Test
 	public void storageShouldNotAggregateEntriesWithNonEqualsChecksum() throws Exception {
 		entry().
 			checksum("FF").
@@ -74,7 +111,7 @@ abstract public class LogStorageTest {
 
 		storage.writeEntry(entry);
 
-		int count = from(storage).count();
+		int count = entries().count(storage);
 		assertThat(count, equalTo(1));
 	}
 
@@ -90,19 +127,19 @@ abstract public class LogStorageTest {
 			checksum("3fe").
 			saveIn(storage);
 
-		int count = from(storage).
+		int count = entries().
 			date(yesterday).
-			count();
+			count(storage);
 		assertThat(count, equalTo(1));
 
-		count = from(storage).
+		count = entries().
 			date(yesterday).
-			count();
+			count(storage);
 		assertThat(count, equalTo(1));
 
-		count = from(storage).
+		count = entries().
 			date(yesterday.minusDay(1)).
-			count();
+			count(storage);
 		assertThat(count, equalTo(0));
 	}
 
@@ -130,7 +167,7 @@ abstract public class LogStorageTest {
 
 		storage.removeEntries("FF", today);
 
-		assertThat(from(storage).count(), equalTo(2));
+		assertThat(entries().count(storage), equalTo(2));
 
 	}
 

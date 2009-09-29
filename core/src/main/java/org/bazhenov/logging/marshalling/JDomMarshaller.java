@@ -35,7 +35,7 @@ public class JDomMarshaller implements Marshaller {
 		root.setAttribute("date", date);
 		root.addContent(element("message", entry.getMessage()));
 		root.addContent(element("application").setAttribute("id", entry.getApplicationId()));
-		root.addContent(element("group").setAttribute("name", entry.getGroup()));
+		root.addContent(element("group").setAttribute("name", entry.getCategory()));
 		root.addContent(element("severity").setAttribute("name", entry.getSeverity().toString()));
 
 		Cause cause = entry.getCause();

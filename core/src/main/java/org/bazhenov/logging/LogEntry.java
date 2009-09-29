@@ -50,7 +50,7 @@ public class LogEntry {
 		return severity;
 	}
 
-	public String getGroup() {
+	public String getCategory() {
 		return group;
 	}
 
@@ -111,5 +111,31 @@ public class LogEntry {
 		}
 
 		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = date != null
+			? date.hashCode()
+			: 0;
+		result = 31 * result + (message != null
+			? message.hashCode()
+			: 0);
+		result = 31 * result + (severity != null
+			? severity.hashCode()
+			: 0);
+		result = 31 * result + (group != null
+			? group.hashCode()
+			: 0);
+		result = 31 * result + (checksum != null
+			? checksum.hashCode()
+			: 0);
+		result = 31 * result + (applicationId != null
+			? applicationId.hashCode()
+			: 0);
+		result = 31 * result + (cause != null
+			? cause.hashCode()
+			: 0);
+		return result;
 	}
 }

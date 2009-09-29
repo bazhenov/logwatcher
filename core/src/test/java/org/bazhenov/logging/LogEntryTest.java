@@ -20,7 +20,7 @@ public class LogEntryTest {
 		LogEntry logEntry = new LogEntry(date, group, logMessage, info, checksum, "default");
 
 		assertThat(logEntry.getDate(), equalTo(date));
-		assertThat(logEntry.getGroup(), equalTo(group));
+		assertThat(logEntry.getCategory(), equalTo(group));
 		assertThat(logEntry.getMessage(), equalTo(logMessage));
 		assertThat(logEntry.getSeverity(), equalTo(info));
 		assertThat(logEntry.getChecksum(), equalTo(checksum));

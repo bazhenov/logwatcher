@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class AggregatedLogEntryImpl implements AggregatedLogEntry {
 
-	private DateTime lastTime;
+	private volatile DateTime lastTime;
 	private final LogEntry sampleEntry;
 	private final AtomicInteger count;
 
@@ -42,5 +42,9 @@ public class AggregatedLogEntryImpl implements AggregatedLogEntry {
 
 	public void incrementCount() {
 		count.incrementAndGet();
+	}
+
+	public void incrementCount(int times) {
+		count.addAndGet(times);
 	}
 }

@@ -8,18 +8,26 @@ import org.bazhenov.logging.AggregatedLogEntry;
 
 public class LogEntriesFinder {
 
-	private final LogStorage storage;
 	private final List<LogEntryMatcher> criterias = new LinkedList<LogEntryMatcher>();
 	@Deprecated
 	private Date date;
 
-	public LogEntriesFinder(LogStorage storage) {
-		this.storage = storage;
+	public LogEntriesFinder() {
 	}
 
 	public LogEntriesFinder date(Date date) {
 		this.date = date;
 		criterias.add(new DateMatcher(date));
+		return this;
+	}
+
+	public LogEntriesFinder applicationId(String applicationId) {
+		criterias.add(new ApplicationIdMatcher(applicationId));
+		return this;
+	}
+
+	public LogEntriesFinder checksum(String checksum) {
+		criterias.add(new ChecksumMatcher(checksum));
 		return this;
 	}
 
@@ -31,8 +39,9 @@ public class LogEntriesFinder {
 	 *
 	 * @return первая запись подпадающиая под условия
 	 * @throws LogStorageException в случае возникновения внутренней ошибки
+	 * @param storage
 	 */
-	public AggregatedLogEntry findFirst() throws LogStorageException {
+	public AggregatedLogEntry findFirst(LogStorage storage) throws LogStorageException {
 		List<AggregatedLogEntry> entries = storage.getEntries(date);
 		return entries.size() > 0
 			? entries.get(0)
@@ -43,8 +52,9 @@ public class LogEntriesFinder {
 	 * Возвращает количество записей в хранилище подпадающих под заданные критерии.
 	 * @return количество записей
 	 * @throws LogStorageException в случае внутренней ошибки
+	 * @param storage
 	 */
-	public int count() throws LogStorageException, InvalidCriteriaException {
+	public int count(LogStorage storage) throws LogStorageException, InvalidCriteriaException {
 		return storage.countEntries(criterias);
 	}
 }

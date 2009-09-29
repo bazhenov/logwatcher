@@ -19,7 +19,7 @@ public class AnnotationDrivenMatcherMapperImpl implements SqlMatcherMapper {
 		for ( Method m : handlerClass.getDeclaredMethods() ) {
 			if ( m.getAnnotation(Matcher.class) != null ) {
 				Class<?>[] types = m.getParameterTypes();
-				if ( !LogEntryMatcher.class.isAssignableFrom(types[0]) ) {
+				if ( !matcher.getClass().isAssignableFrom(types[0]) ) {
 					continue;
 				}
 				if ( !types[1].equals(WhereClause.class) ) {

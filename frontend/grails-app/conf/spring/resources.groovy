@@ -1,11 +1,23 @@
 import org.bazhenov.logging.transport.UdpTransport
 import org.bazhenov.logging.marshalling.JDomMarshaller
 import org.bazhenov.logging.transport.WriteToStorageTransportListener
-import org.bazhenov.logging.storage.*
+import org.bazhenov.logging.storage.sql.*
+import org.apache.commons.dbcp.BasicDataSource
 
 beans = {
 
-	logStorage(InMemoryLogStorage)
+	datasource(BasicDataSource) {
+		driverClassName = "org.h2.Driver"
+		username = "sa"
+		password = ""
+		url = "jdbc:h2:./database/logging"
+	}
+
+	mapperRules(SqlMatcherMapperRules)
+
+	matcherMapper(AnnotationDrivenMatcherMapperImpl, ref("mapperRules"))
+
+	logStorage(SqlLogStorage, ref("datasource"), ref("marshaller"), ref("matcherMapper"))
 
 	marshaller(JDomMarshaller)
 

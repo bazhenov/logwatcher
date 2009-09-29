@@ -14,10 +14,11 @@ public class InMemoryLogStorage implements LogStorage {
 	private final Map<Date, Map<String, AggregatedLogEntryImpl>> entriesByDay = new HashMap<Date, Map<String, AggregatedLogEntryImpl>>();
 	private final List<AggregatedLogEntry> entries = new ArrayList<AggregatedLogEntry>();
 	private final ReadWriteLock lock = new ReentrantReadWriteLock();
+	private Lock writeLock = lock.writeLock();
+	private Lock readLock = lock.readLock();
 
 	public void writeEntry(LogEntry entry) throws LogStorageException {
-		Lock l = lock.writeLock();
-		l.lock();
+		writeLock.lock();
 		try {
 			Date date = entry.getDate().getDate();
 			String checksum = entry.getChecksum();
@@ -40,39 +41,55 @@ public class InMemoryLogStorage implements LogStorage {
 				entries.add(aggregatedEntry);
 			}
 		} finally {
-			l.unlock();
+			writeLock.unlock();
+		}
+	}
+
+	public void createChecksumAlias(String checksum, String alias) {
+		writeLock.lock();
+		try {
+			for ( Map<String, AggregatedLogEntryImpl> entriesForDate : entriesByDay.values() ) {
+				AggregatedLogEntryImpl entry = entriesForDate.get(checksum);
+				if ( entry != null ) {
+					entriesForDate.remove(checksum);
+					if ( entriesForDate.containsKey(alias) ) {
+						entriesForDate.get(alias).incrementCount(entry.getCount());
+					}else{
+						throw new RuntimeException("Ooops");
+					}
+				}
+			}
+		} finally {
+			writeLock.unlock();
 		}
 	}
 
 	public List<AggregatedLogEntry> getEntries(Date date) throws LogStorageException {
-		Lock l = lock.readLock();
-		l.lock();
+		readLock.lock();
 		try {
 			Map<String, AggregatedLogEntryImpl> dayEntries = entriesByDay.get(date);
 			return dayEntries == null
 				? new ArrayList<AggregatedLogEntry>(0)
 				: new ArrayList<AggregatedLogEntry>(dayEntries.values());
 		} finally {
-			l.unlock();
+			readLock.unlock();
 		}
 	}
 
 	public int getEntryCount(Date date) throws LogStorageException {
-		Lock l = lock.readLock();
-		l.lock();
+		readLock.lock();
 		try {
 			Map<String, AggregatedLogEntryImpl> dayEntries = entriesByDay.get(date);
 			return dayEntries == null
 				? 0
 				: dayEntries.size();
 		} finally {
-			l.unlock();
+			readLock.unlock();
 		}
 	}
 
 	public int countEntries(Collection<LogEntryMatcher> criterias) throws LogStorageException {
-		Lock l = lock.readLock();
-		l.lock();
+		readLock.lock();
 		try {
 			int matches = 0;
 			for ( AggregatedLogEntry entry : entries ) {
@@ -82,13 +99,12 @@ public class InMemoryLogStorage implements LogStorage {
 			}
 			return matches;
 		} finally {
-			l.unlock();
+			readLock.unlock();
 		}
 	}
 
 	public void removeEntries(String checksum, Date date) throws LogStorageException {
-		Lock l = lock.writeLock();
-		l.lock();
+		writeLock.lock();
 		try {
 			Map<String, AggregatedLogEntryImpl> byDate = entriesByDay.get(date);
 			if ( byDate != null ) {
@@ -99,7 +115,7 @@ public class InMemoryLogStorage implements LogStorage {
 				}
 			}
 		} finally {
-			l.unlock();
+			writeLock.unlock();
 		}
 	}
 

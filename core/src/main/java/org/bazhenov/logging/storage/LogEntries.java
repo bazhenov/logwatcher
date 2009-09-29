@@ -14,7 +14,7 @@ package org.bazhenov.logging.storage;
  */
 public class LogEntries {
 
-	public static LogEntriesFinder from(LogStorage storage) {
-		return new LogEntriesFinder(storage);
+	public static LogEntriesFinder entries() {
+		return new LogEntriesFinder();
 	}
 }

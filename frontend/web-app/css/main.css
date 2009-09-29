@@ -13,7 +13,7 @@ a					                      { color: #0099ff; text-decoration: none }
 a:hover				                  { color: red; text-decoration: underline }
 a:visited			                  { color: brown; text-decoration: underline }
 
-.entry				                  { position: relative }
+.entry				                  { position: relative; }
 .entry a			                  { display: inline; text-align: right; }
 
 .entry                          {	border-top: 1px dotted gray; padding-bottom: 10px;

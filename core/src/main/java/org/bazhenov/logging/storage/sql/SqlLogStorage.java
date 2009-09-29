@@ -14,16 +14,20 @@ import org.apache.log4j.Logger;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.*;
+import java.io.InputStream;
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
-public class MySqlLogStorage implements LogStorage {
+public class SqlLogStorage implements LogStorage {
 
 	private final Marshaller marshaller;
 	private final SqlMatcherMapper mapper;
 	private final SimpleJdbcTemplate jdbc;
 	private final ParameterizedRowMapper<AggregatedLogEntry> entryCreator;
-	private final Logger log = Logger.getLogger(MySqlLogStorage.class);
+	private final Logger log = Logger.getLogger(SqlLogStorage.class);
 
-	public MySqlLogStorage(DataSource dataSource, Marshaller marshaller, SqlMatcherMapper mapper) {
+	public SqlLogStorage(DataSource dataSource, Marshaller marshaller, SqlMatcherMapper mapper) {
 		this.marshaller = marshaller;
 		this.mapper = mapper;
 		this.jdbc = new SimpleJdbcTemplate(dataSource);
@@ -32,13 +36,17 @@ public class MySqlLogStorage implements LogStorage {
 
 	public void writeEntry(LogEntry entry) throws LogStorageException {
 		try {
-			String sql = "INSERT INTO log_entry (`date`, `checksum`, `group`, `text`, `count`, `last_date`) " +
-				"VALUES(?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE `last_date` = ?, `count` = `count` + 1";
+			int rowsUpdated = jdbc.update("UPDATE log_entry SET count = count + 1, last_date = ? WHERE date = ? AND checksum = ?",
+				timestamp(entry.getDate()), date(entry.getDate()), entry.getChecksum());
+			if ( rowsUpdated <= 0 ) {
+				String sql = "INSERT INTO log_entry (date, checksum, category, text, count, last_date, application_id) " +
+					"VALUES(?, ?, ?, ?, ?, ?, ?)";
 
-			DateTime date = entry.getDate();
-			Object[] args = new Object[]{date(date.getDate()), entry.getChecksum(), entry.getGroup(),
-				marshaller.marshall(entry), 1, timestamp(date), timestamp(date)};
-			jdbc.update(sql, args);
+				DateTime date = entry.getDate();
+				Object[] args = new Object[]{date(date.getDate()), entry.getChecksum(), entry.getCategory(),
+					marshaller.marshall(entry), 1, timestamp(date), entry.getApplicationId()};
+				jdbc.update(sql, args);
+			}
 
 			if ( log.isDebugEnabled() ) {
 				log.debug("Entry with checksum: " + entry.getChecksum() + " wrote to database");
@@ -52,15 +60,19 @@ public class MySqlLogStorage implements LogStorage {
 
 	public List<AggregatedLogEntry> getEntries(Date date) throws LogStorageException {
 		try {
-			return jdbc.query("SELECT * FROM `log_entry` WHERE `date` = ?", entryCreator, date(date));
+			return jdbc.query("SELECT * FROM log_entry WHERE date = ?", entryCreator, date(date));
 		} catch ( DataAccessException e ) {
 			throw new LogStorageException(e);
 		}
 	}
 
+	public void createChecksumAlias(String checksum, String alias) {
+		jdbc.update("DELETE FROM log_entry WHERE checksum = ?", checksum);
+	}
+
 	public int getEntryCount(Date date) throws LogStorageException {
 		try {
-			return jdbc.queryForInt("SELECT SUM(`count`) FROM `log_entry` WHERE `date` = ?", date(date));
+			return jdbc.queryForInt("SELECT SUM(count) FROM log_entry WHERE date = ?", date(date));
 		} catch ( DataAccessException e ) {
 			throw new LogStorageException(e);
 		}
@@ -93,7 +105,7 @@ public class MySqlLogStorage implements LogStorage {
 
 	public void removeEntries(String checksum, Date date) throws LogStorageException {
 		try {
-			jdbc.update("DELETE FROM `log_entry` WHERE date = ? AND checksum = ?", date(date), checksum);
+			jdbc.update("DELETE FROM log_entry WHERE date = ? AND checksum = ?", date(date), checksum);
 		} catch ( DataAccessException e ) {
 			throw new LogStorageException(e);
 		}
@@ -125,6 +137,24 @@ public class MySqlLogStorage implements LogStorage {
 
 	static java.sql.Date date(Date date) {
 		return new java.sql.Date(date.asTimestamp());
+	}
+
+	public static void loadDump(DataSource ds, InputStream stream)
+		throws IOException, SQLException {
+		StringBuffer buffer = new StringBuffer();
+		BufferedReader reader = new BufferedReader(
+			new InputStreamReader(stream));
+		String line;
+		while ( (line = reader.readLine()) != null ) {
+			buffer.append(line).append("\n");
+		}
+
+		Connection connection = ds.getConnection();
+		try {
+			connection.prepareStatement(buffer.toString()).executeUpdate();
+		} finally {
+			connection.close();
+		}
 	}
 
 	static Timestamp timestamp(DateTime date) {

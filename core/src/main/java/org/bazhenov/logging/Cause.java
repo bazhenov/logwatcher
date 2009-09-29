@@ -73,4 +73,21 @@ public class Cause {
 
 		return true;
 	}
+
+	@Override
+	public int hashCode() {
+		int result = type != null
+			? type.hashCode()
+			: 0;
+		result = 31 * result + (message != null
+			? message.hashCode()
+			: 0);
+		result = 31 * result + (stackTrace != null
+			? stackTrace.hashCode()
+			: 0);
+		result = 31 * result + (cause != null
+			? cause.hashCode()
+			: 0);
+		return result;
+	}
 }

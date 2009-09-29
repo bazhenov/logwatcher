@@ -54,4 +54,9 @@ public class LogEntryBuilder {
 		this.checksum = checksum;
 		return this;
 	}
+
+	public LogEntryBuilder applicationId(String applicationId) {
+		this.applicationId = applicationId;
+		return this;
+	}
 }
