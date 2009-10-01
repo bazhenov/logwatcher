@@ -40,6 +40,32 @@ abstract public class LogStorageTest {
 	}
 
 	@Test
+	public void storageMustOrderEntriesByLastOccurenceDate() throws LogStorageException,
+		InvalidCriteriaException {
+		Date today = today();
+
+		LogEntry thirdEntry = entry().
+			occured(today.at("12:55")).
+			checksum("a").
+			saveIn(storage);
+
+		LogEntry firstEntry = entry().
+			occured(today.at("15:55")).
+			checksum("b").
+			saveIn(storage);
+
+		LogEntry secondEntry = entry().
+			occured(today.at("15:53")).
+			checksum("c").
+			saveIn(storage);
+
+		List<AggregatedLogEntry> list = entries().date(today).from(storage);
+		assertThat(list.get(0).getSampleEntry(), equalTo(firstEntry));
+		assertThat(list.get(1).getSampleEntry(), equalTo(secondEntry));
+		assertThat(list.get(2).getSampleEntry(), equalTo(thirdEntry));
+	}
+
+	@Test
 	public void storageCanGetAggregatedEntries() throws Exception {
 		DateTime morning = november(12, 2008).at("11:00");
 		DateTime evening = november(12, 2008).at("18:05");

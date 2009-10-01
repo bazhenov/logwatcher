@@ -39,21 +39,24 @@ public class FrontendTagLib {
 	def entry = {attrs, body ->
 		Entry entry = attrs['ref'] as Entry
 		def title = entry.title
-		def message = entry.text
+
 		def applicationId = entry.applicationId
 		def count = entry.count
 
-		if ( title.length() > MAX_LENGTH + "...".length() ) {
+		def withStacktrace = entry.withStacktrace()
+		def isTitleTooLong = title.length() > MAX_LENGTH + "...".length();
+		if ( isTitleTooLong ) {
 			title = title.substring(0, MAX_LENGTH) + "..."
 		}
+		def hasMessage = withStacktrace || isTitleTooLong
+		def message = (!withStacktrace && isTitleTooLong)	? entry.title	: entry.text
 
 		def classes = ['entry']
-		def withStacktrace = entry.withStacktrace()
 
 		String severety = entry.severity as String
 		classes.add severety
 
-		if ( withStacktrace ) {
+		if ( hasMessage ) {
 			classes.add "withStacktrace"
 		}
 		def isExceptionNew = entry.lastTime.plusMinute(30).isInFuture()
@@ -63,7 +66,7 @@ public class FrontendTagLib {
 		}
 
 		def markerClasses = ['marker']
-		if ( !withStacktrace ) {
+		if ( !hasMessage ) {
 			markerClasses.add "emptyMarker"
 		}
 
@@ -71,7 +74,6 @@ public class FrontendTagLib {
 		def buffer = new StringBuffer()
 		shortFormat.format(entry.lastTime.asDate(), buffer, fieldPosition)
 		def fullDate = fullFormat.format(entry.lastTime.asDate())
-
 
 		/**
 		 * Не забываем, что теги надо вставлять в обратной последовательности, чтобы не допустить
@@ -95,9 +97,9 @@ public class FrontendTagLib {
 		title = HTMLCodec.encode(title)
 		message = HTMLCodec.encode(message)
 
-		out <<  "<div class='${classes.join(" ")}'>"
+		out <<  "<div class='${classes.join(" ")}' checksum='${entry.checksum}'>"
 		out <<    "<div class='entryHeader'>"
-		out <<      "<span class='${markerClasses.join(" ")}'>${withStacktrace ? "•" : "∅"}</span>"
+		out <<      "<span class='${markerClasses.join(" ")}'>${hasMessage ? "•" : "∅"}</span>"
 		out <<      "<span class='message'>${title}</span>"
 		out <<      "<div class='times'>"
 		out <<        "<span class='applicationId'>${applicationId}</span> &mdash "
@@ -105,7 +107,7 @@ public class FrontendTagLib {
 		out <<        lastOccurenceInfo
 		out <<      "</div>"
 
-		if ( withStacktrace ) {
+		if ( hasMessage ) {
 			out <<      "<div class='entryContent'>"
 			out <<        "<pre class='stacktrace'>${message}</pre>"
 			out <<      "</div>"
@@ -113,6 +115,8 @@ public class FrontendTagLib {
 
 		out <<      "<div class='operations'>"
 		out <<        "<a href='${jiraLink}' target='_blank'>создать таск</a>"
+		out <<        " или "
+		out <<        "<a class='removeEntry asynchronous' href='#'>удалить</a>"
 		out <<      "</div>"
 		out <<    "</div>"
 		out <<  "</div>"

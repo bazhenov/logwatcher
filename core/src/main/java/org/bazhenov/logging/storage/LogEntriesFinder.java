@@ -57,4 +57,8 @@ public class LogEntriesFinder {
 	public int count(LogStorage storage) throws LogStorageException, InvalidCriteriaException {
 		return storage.countEntries(criterias);
 	}
+
+	public List<AggregatedLogEntry> from(LogStorage storage) throws LogStorageException, InvalidCriteriaException {
+		return storage.getEntries(criterias);
+	}
 }

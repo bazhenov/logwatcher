@@ -25,7 +25,7 @@ public class JDomMarshaller implements Marshaller {
 			return new XMLOutputter(Format.getPrettyFormat());
 		}
 	};
-	private final Namespace namespace = Namespace.getNamespace("http://logging.farpost.com/schema");
+	private final Namespace namespace = Namespace.getNamespace("http://logging.farpost.com/schema/v1.1");
 	private final DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
 	public String marshall(LogEntry entry) throws MarshallerException {

@@ -39,6 +39,16 @@ public class FrontendTagLibTests extends GroovyTestCase {
 		assertContains(["NotRuntimeException", "Ooops#2", "stacktrace#2"], html)
 	}
 
+	void testTagLibShouldFormatLongEntries() {
+		def title = "very very very very very very very very very very very very very very very very very very very very very very very very very very very very very very long text";
+		def time = january(2008, 12).at("12:02")
+		def logEntry = new LogEntry(time, "group", title, Severity.error, "as", null, "frontend");
+		def aggregatedEntry = new AggregatedLogEntryImpl(logEntry, time, 5232)
+		tagLib.entry(ref: new Entry(aggregatedEntry)) {}
+		String html = out as String;
+		assertContains title, html
+	}
+
 	void testTagLibCanFormatEmptyEntries() {
 		DateTime time = new DateTime(new Date(99, 0, 15, 15, 3, 28))
 		def logEntry = new LogEntry(time, "SomeGroup", "OutOfMemoryException", Severity.error, "ae23",

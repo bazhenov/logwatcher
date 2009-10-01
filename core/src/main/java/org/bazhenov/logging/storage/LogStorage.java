@@ -48,9 +48,9 @@ public interface LogStorage {
 	 * Подсчитывает колличество записей в хранилище с заданными условиями.
 	 *
 	 * @param criterias условия отбора записей или {@code null} если интересует общее количество
-	 * записей в хранилище
+	 *                  записей в хранилище
 	 * @return колличество записей
-	 * @throws LogStorageException в случае внутренней ошибки
+	 * @throws LogStorageException      в случае внутренней ошибки
 	 * @throws InvalidCriteriaException в случае если заданные критерии неверны
 	 */
 	int countEntries(Collection<LogEntryMatcher> criterias)
@@ -58,8 +58,9 @@ public interface LogStorage {
 
 	/**
 	 * Удаляет из хранилища записи с указанной контрольной суммой за указанную дату
+	 *
 	 * @param checksum контрольная сумма
-	 * @param date дата
+	 * @param date     дата
 	 * @throws LogStorageException в случае внутренней ошибки
 	 */
 	void removeEntries(String checksum, Date date) throws LogStorageException;
@@ -72,7 +73,10 @@ public interface LogStorage {
 	 * сумма на alias.
 	 *
 	 * @param checksum контролная сумма, которую надо смапить
-	 * @param alias контрольная сумма - синоним
+	 * @param alias    контрольная сумма - синоним
 	 */
-	void createChecksumAlias(String checksum, String alias);
+	void createChecksumAlias(String checksum, String alias) throws LogStorageException;
+
+	List<AggregatedLogEntry> getEntries(Collection<LogEntryMatcher> criterias)
+		throws LogStorageException, InvalidCriteriaException;
 }

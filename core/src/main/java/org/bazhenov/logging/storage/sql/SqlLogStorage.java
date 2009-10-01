@@ -66,6 +66,30 @@ public class SqlLogStorage implements LogStorage {
 		}
 	}
 
+	public List<AggregatedLogEntry> getEntries(Collection<LogEntryMatcher> criterias)
+		throws LogStorageException, InvalidCriteriaException {
+		StringBuilder sql = new StringBuilder("SELECT * FROM `log_entry` l");
+		if ( criterias == null || criterias.size() <= 0 ) {
+			throw new InvalidCriteriaException("Empty criteria given");
+		} else {
+			List arguments = new LinkedList();
+			StringBuilder whereClause = new StringBuilder();
+			try {
+				Collection<LogEntryMatcher> lateBoundMatchers = fillWhereClause(criterias, whereClause,
+					arguments);
+				if ( lateBoundMatchers.size() > 0 ) {
+					throw new InvalidCriteriaException(lateBoundMatchers);
+				}
+				sql.append(" WHERE ").append(whereClause).append(" ORDER BY l.last_date DESC");
+				return jdbc.query(sql.toString(), entryCreator, arguments.toArray());
+			} catch ( DataAccessException e ) {
+				throw new LogStorageException(e);
+			} catch ( MatcherMapperException e ) {
+				throw new InvalidCriteriaException(e);
+			}
+		}
+	}
+
 	public void createChecksumAlias(String checksum, String alias) {
 		jdbc.update("DELETE FROM log_entry WHERE checksum = ?", checksum);
 	}

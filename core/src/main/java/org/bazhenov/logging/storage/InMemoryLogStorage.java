@@ -16,6 +16,7 @@ public class InMemoryLogStorage implements LogStorage {
 	private final ReadWriteLock lock = new ReentrantReadWriteLock();
 	private Lock writeLock = lock.writeLock();
 	private Lock readLock = lock.readLock();
+	private Comparator<? super AggregatedLogEntry> comparator = new AggregatedLogEntryComparator();
 
 	public void writeEntry(LogEntry entry) throws LogStorageException {
 		writeLock.lock();
@@ -62,6 +63,18 @@ public class InMemoryLogStorage implements LogStorage {
 		} finally {
 			writeLock.unlock();
 		}
+	}
+
+	public List<AggregatedLogEntry> getEntries(Collection<LogEntryMatcher> criterias)
+		throws LogStorageException, InvalidCriteriaException {
+		List<AggregatedLogEntry> result = new ArrayList<AggregatedLogEntry>();
+		for ( AggregatedLogEntry entry : entries ) {
+			if ( isMatching(entry, criterias) ) {
+				result.add(entry);
+			}
+		}
+		Collections.sort(result, comparator);
+		return result;
 	}
 
 	public List<AggregatedLogEntry> getEntries(Date date) throws LogStorageException {

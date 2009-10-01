@@ -54,7 +54,7 @@ public class UdpTransport implements Transport {
 				} catch ( IOException e ) {
 					log.warn("Stopping transport thread", e);
 					break;
-				} catch ( TransportException e ) {
+				} catch ( Exception e ) {
 					log.error("Listener failed at message: " + message, e);
 				}
 			}
