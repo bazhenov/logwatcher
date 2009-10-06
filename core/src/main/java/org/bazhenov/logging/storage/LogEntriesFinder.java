@@ -5,6 +5,7 @@ import com.farpost.timepoint.Date;
 import java.util.*;
 
 import org.bazhenov.logging.AggregatedLogEntry;
+import org.bazhenov.logging.Severity;
 
 public class LogEntriesFinder {
 
@@ -22,12 +23,19 @@ public class LogEntriesFinder {
 	}
 
 	public LogEntriesFinder applicationId(String applicationId) {
-		criterias.add(new ApplicationIdMatcher(applicationId));
-		return this;
+		return withCriteria(new ApplicationIdMatcher(applicationId));
 	}
 
 	public LogEntriesFinder checksum(String checksum) {
-		criterias.add(new ChecksumMatcher(checksum));
+		return withCriteria(new ChecksumMatcher(checksum));
+	}
+
+	public LogEntriesFinder severity(Severity severity) {
+		return withCriteria(new SeverityMatcher(severity));
+	}
+
+	private LogEntriesFinder withCriteria(LogEntryMatcher matcher) {
+		criterias.add(matcher);
 		return this;
 	}
 
@@ -58,7 +66,7 @@ public class LogEntriesFinder {
 		return storage.countEntries(criterias);
 	}
 
-	public List<AggregatedLogEntry> from(LogStorage storage) throws LogStorageException, InvalidCriteriaException {
+	public List<AggregatedLogEntry> find(LogStorage storage) throws LogStorageException, InvalidCriteriaException {
 		return storage.getEntries(criterias);
 	}
 }

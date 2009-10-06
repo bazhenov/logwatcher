@@ -6,6 +6,9 @@ import org.bazhenov.logging.storage.LogStorage
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import org.bazhenov.logging.frontend.RussianDateFormat
+import static org.bazhenov.logging.storage.LogEntries.entries
+import javax.servlet.http.Cookie
+import org.bazhenov.logging.Severity
 
 class IndexController {
 
@@ -14,15 +17,32 @@ class IndexController {
 
 	def index = {
 		String dateStr = params.date as String
-		Date date;
+		Date date
 		if ( dateStr ) {
 			date = new Date(format.parse(dateStr))
 		} else {
 			date = today()
 		}
 
+		Cookie cookie = request.cookies.find { it.name == 'severity' } as Cookie
+		Severity cookieSeverity = Severity.forName(cookie?.value);
+		Severity requestSeverity = Severity.forName(params.severity);
+		Severity severity = null;
+
+		if ( requestSeverity ) {
+			severity = requestSeverity
+			if ( requestSeverity != cookieSeverity ) {
+				response.addCookie(new Cookie("severity", severity as String))
+			}
+		}else if ( cookieSeverity ) {
+			severity = cookieSeverity
+		}else{
+			severity = Severity.error
+			response.addCookie(new Cookie("severity", severity as String))
+		}
+
 		def app = params.application
-		def storageEntries = logStorage.getEntries(date)
+		def storageEntries = entries().date(date).severity(severity).find(logStorage)
 		def filteredEntries = storageEntries.findAll { filterCriteria(app, it) }
 		def allApps = allApplications(storageEntries)
 		def entries	= filteredEntries.collect { new Entry(it) }
@@ -34,7 +54,8 @@ class IndexController {
 			dateAsString: new RussianDateFormat().format(date.asDate()),
 			linkDates: ['сегодня': today(), 'вчера': today().minusDay(1), 'позавчера': today().minusDay(2)],
 			application: app,
-			allApps: allApps
+			allApps: allApps,
+			severity: severity
 		]
 	}
 

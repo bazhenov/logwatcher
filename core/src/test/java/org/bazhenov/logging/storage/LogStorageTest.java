@@ -5,6 +5,7 @@ import static com.farpost.timepoint.Date.*;
 import com.farpost.timepoint.DateTime;
 import org.bazhenov.logging.AggregatedLogEntry;
 import org.bazhenov.logging.LogEntry;
+import org.bazhenov.logging.Severity;
 import static org.bazhenov.logging.TestSupport.entry;
 import static org.bazhenov.logging.storage.LogEntries.entries;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -59,7 +60,7 @@ abstract public class LogStorageTest {
 			checksum("c").
 			saveIn(storage);
 
-		List<AggregatedLogEntry> list = entries().date(today).from(storage);
+		List<AggregatedLogEntry> list = entries().date(today).find(storage);
 		assertThat(list.get(0).getSampleEntry(), equalTo(firstEntry));
 		assertThat(list.get(1).getSampleEntry(), equalTo(secondEntry));
 		assertThat(list.get(2).getSampleEntry(), equalTo(thirdEntry));
@@ -165,6 +166,28 @@ abstract public class LogStorageTest {
 
 		count = entries().
 			date(yesterday.minusDay(1)).
+			count(storage);
+		assertThat(count, equalTo(0));
+	}
+
+	@Test
+	public void storageCanCountEntriesBySeverity() throws LogStorageException, InvalidCriteriaException {
+		entry().
+			severity(Severity.warning).
+			saveIn(storage);
+
+		int count = entries().
+			severity(Severity.warning).
+			count(storage);
+		assertThat(count, equalTo(1));
+
+		count = entries().
+			severity(Severity.info).
+			count(storage);
+		assertThat(count, equalTo(1));
+
+		count = entries().
+			severity(Severity.error).
 			count(storage);
 		assertThat(count, equalTo(0));
 	}

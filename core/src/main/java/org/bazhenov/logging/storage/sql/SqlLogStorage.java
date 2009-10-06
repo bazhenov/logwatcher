@@ -39,12 +39,12 @@ public class SqlLogStorage implements LogStorage {
 			int rowsUpdated = jdbc.update("UPDATE log_entry SET count = count + 1, last_date = ? WHERE date = ? AND checksum = ?",
 				timestamp(entry.getDate()), date(entry.getDate()), entry.getChecksum());
 			if ( rowsUpdated <= 0 ) {
-				String sql = "INSERT INTO log_entry (date, checksum, category, text, count, last_date, application_id) " +
-					"VALUES(?, ?, ?, ?, ?, ?, ?)";
+				String sql = "INSERT INTO log_entry (date, checksum, category, text, count, last_date, application_id, severity) " +
+					"VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 
 				DateTime date = entry.getDate();
 				Object[] args = new Object[]{date(date.getDate()), entry.getChecksum(), entry.getCategory(),
-					marshaller.marshall(entry), 1, timestamp(date), entry.getApplicationId()};
+					marshaller.marshall(entry), 1, timestamp(date), entry.getApplicationId(), entry.getSeverity().getCode()};
 				jdbc.update(sql, args);
 			}
 

@@ -85,10 +85,13 @@ public class FrontendTagLib {
 		def lastOccurenceInfo = buffer.toString();
 
 		def timesInfo
-		if ( count > 1000 ) {
-			timesInfo = "<span class='additionalInfo' title='${count.pluralize("раз раза раз")}'>более 1000 раз</span>"
-		}else{
-			timesInfo = count.pluralize("раз раза раз")
+		timesInfo = count.pluralize("раз раза раз")
+		if ( count > 10000 ) {
+			timesInfo = "<span class='additionalInfo' title='${timesInfo}'>более 10 000 раз</span>"
+		} else if ( count > 5000 ) {
+			timesInfo = "<span class='additionalInfo' title='${timesInfo}'>более 5 000 раз</span>"
+		} else if ( count > 1000 ) {
+			timesInfo = "<span class='additionalInfo' title='${timesInfo}'>более 1 000 раз</span>"
 		}
 
 		def jiraLink = "http://jira.dev.loc/jira/secure/CreateIssueDetails.jspa?pid=10000&" +

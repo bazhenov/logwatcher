@@ -10,8 +10,8 @@ class BootStrap {
 	def init = {servletContext ->
 		Integer.metaClass.pluralize = FrontendTagLib.pluralize;
 
-		/**
-		def ctx = servletContext.getAttribute(ApplicationAttributes.APPLICATION_CONTEXT)
+
+		/*def ctx = servletContext.getAttribute(ApplicationAttributes.APPLICATION_CONTEXT)
 		LogStorage s = ctx.logStorage
 		s.writeEntry new LogEntry(DateTime.now(), "group", "AdvertServiceException: Error Fetching http headers", Severity.error, "sum", "advert");
 		def cause = new Cause("RuntimeException", "Devision by zero", "AdvertServiceException: Error Fetching http headers\n\
@@ -30,12 +30,13 @@ class BootStrap {
 		s.writeEntry new LogEntry(DateTime.now().minusHour(2), "group", "OverflowFundsException", Severity.warning, "sum2", cause, "billing");
 		s.writeEntry new LogEntry(DateTime.now().minusMinute(18), "group", "java.lang.OutOfMemoryException", Severity.info, "sum3", "search");
 
-		s.writeEntry new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long long Exception", Severity.error, "sum4", cause, "searcha");
-		s.writeEntry new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long long Exception", Severity.error, "sum4", cause, "searcha");
-		s.writeEntry new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long long Exception", Severity.error, "sum4", cause, "searcha");
-		s.writeEntry new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long long Exception", Severity.error, "sum4", cause, "searcha");
-		s.writeEntry new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long long Exception", Severity.error, "sum4", cause, "searcha");
-		**/
+
+		s.writeEntry new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4", cause, "searcha");
+		s.writeEntry new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4", cause, "searcha");
+		s.writeEntry new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4", cause, "searcha");
+		s.writeEntry new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long longvery very very long long Exceptionvery very very very long longvery very long longvery very very long long Exception", Severity.error, "sum4", cause, "searcha");
+
+		s.writeEntry new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum5", null, "searcha");*/
 	}
 
 	def destroy = {

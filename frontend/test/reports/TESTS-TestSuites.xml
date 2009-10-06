@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <testsuites>
-  <testsuite errors="0" failures="0" hostname="bazhenov-desktop" id="0" name="InstallControllerTests" package="" tests="1" time="1.483" timestamp="2009-09-29T00:53:22">
+  <testsuite errors="0" failures="0" hostname="bazhenov-desktop" id="0" name="InstallControllerTests" package="" tests="1" time="1.643" timestamp="2009-09-29T02:07:22">
       <properties />
 
-      <testcase classname="InstallControllerTests" name="testSomething" time="1.482" />
+      <testcase classname="InstallControllerTests" name="testSomething" time="1.643" />
 
       <system-out><![CDATA[--Output from testSomething--
 ]]></system-out>
@@ -12,14 +12,14 @@
 ]]></system-err>
 
   </testsuite>
-  <testsuite errors="0" failures="0" hostname="bazhenov-desktop" id="1" name="FrontendTagLibTests" package="org.bazhenov.logging.frontend" tests="3" time="0.195" timestamp="2009-09-29T00:53:23">
+  <testsuite errors="0" failures="0" hostname="bazhenov-desktop" id="1" name="FrontendTagLibTests" package="org.bazhenov.logging.frontend" tests="3" time="0.217" timestamp="2009-09-29T02:07:24">
       <properties />
 
-      <testcase classname="org.bazhenov.logging.frontend.FrontendTagLibTests" name="testTagLibCanFormatNormalEntries" time="0.166" />
+      <testcase classname="org.bazhenov.logging.frontend.FrontendTagLibTests" name="testTagLibCanFormatNormalEntries" time="0.197" />
 
-      <testcase classname="org.bazhenov.logging.frontend.FrontendTagLibTests" name="testTagLibCanFormatEmptyEntries" time="0.025" />
+      <testcase classname="org.bazhenov.logging.frontend.FrontendTagLibTests" name="testTagLibCanFormatEmptyEntries" time="0.017" />
 
-      <testcase classname="org.bazhenov.logging.frontend.FrontendTagLibTests" name="testPluralize" time="0.0040" />
+      <testcase classname="org.bazhenov.logging.frontend.FrontendTagLibTests" name="testPluralize" time="0.0030" />
 
       <system-out><![CDATA[--Output from testTagLibCanFormatNormalEntries--
 --Output from testTagLibCanFormatEmptyEntries--

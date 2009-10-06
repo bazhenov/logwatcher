@@ -2,9 +2,13 @@
 <html>
 <head>
 	<meta content="text/html;charset=UTF8"/>
+
+
 	<link type="text/css" rel="stylesheet" href="./css/main.css"/>
+	<link type="text/css" rel="stylesheet" href="./css/ui.all.css"/>
 	<script type="text/javascript" src="./js/jquery-1.3.2.js"></script>
 	<script type="text/javascript" src="./js/jquery-ui-1.7.2.js"></script>
+
 	<script type="text/javascript" src="./js/exception-list.js"></script>
 	<title>LogWatcher</title>
 </head>
@@ -12,6 +16,9 @@
 
 <h1><span id="firstDot">&bull;</span><span id="secondDot">&bull;</span><span id="thirdDot">&bull;</span></h1>
 
+<script type="text/javascript">
+	severityLevel = 'info'
+</script>
 
 <div id="menuBar">
 	<a href="#">cегодня</a>
@@ -22,94 +29,102 @@
 
 	<h2>Записи за 12 июля</h2>
 
-	<div class="entry withStacktrace warning">
-		<div class="entryHeader">
-			<span class="marker">&bull;</span><span class="message"
-				>Exception occured during service execution: Error Fetching http headers</span>
-			<div class="times">
-        <span class="applicationId">baza-frontend</span>
-					&mdash; <span class="additionalInfo" title="2565 раз">более 1000 раз</span>,
-					последний раз <span class="additionalInfo warningMarker" title="12 июля 2009, 18:25:12 VLAST">менее минуты назад</span>
-			</div>
-		</div>
-
-
-		<div class="entryContent">
-			<ul>
-				<li><span>сервера:</span> n1.baza.loc, n2.baza.loc...</li>
-				<li><span>адреса:</span> /auto/sale</li>
-			</ul>
-			<pre class="stacktrace">AdvertServiceException: Error Fetching http headers
-  at /var/www/baza.farpost.ru/rev/20090817-1520/slr/advert/src/remote/AdvertSoapDecorator.class.php:16
-  10 : slrSoapDecorator.class.php:94 AdvertSoapDecorator->handleException("Error Fetc...", SoapFault)
-  9 : unknown:0 slrSoapDecorator->__call("findLinks", [1])
-  8 : AdvertRemoteProvider.class.php:331 AdvertSoapDecorator->findLinks([2])
-  7 : AdvertLinkFinder.class.php:77 AdvertRemoteProvider->findLinks(AdvertLinkFinder)
-  6 : AdvertAbstractFinder.class.php:59 AdvertLinkFinder->getResults()
-  5 : AdvertAbstractFinder.class.php:35 AdvertAbstractFinder->fetchResults()
-  4 : AdvertRemoteAdvertisement.class.php:118 AdvertAbstractFinder->results()
-  3 : advertUnpopularDeactivationService.class.php:34 AdvertRemoteAdvertisement->getLinks(true)
-  2 : advertUnpopularDeactivationService.class.php:23 advertUnpopularDeactivationService->deactivateByMaxViews([849])
-  1 : service_runner.php:38 advertUnpopularDeactivationService->run()</pre>
-		</div>
-
-		<div class="spinner"></div>
-
-		<div class="operations">
-			<a href="#">cоздать таск</a> или
-			<a href="#" class="asynchronous removeEntry">удалить</a>
-		</div>
+	<div id="sliderContainer">
+		<div id="sliderValue">error</div>
+		<div id="slider"></div>
 	</div>
 
-	<div class="entry error">
-		<div class="entryHeader">
-			<span class="marker emptyMarker">&empty;</span><span class="message"
-				>java.lang.OutOfMemoryException</span>
-			<div class="times"><span class="applicationId"
-				>billing</span> &mdash; <span class="additionalInfo" title="2565 раз"
-				>более 1000 раз</span>, последний раз в <span class="additionalInfo"
-			                                            title="12 июля 2009, 18:25:12 VLAST">18:25</span>
+	<div id="entries">
+
+		<div class="entry withStacktrace warning">
+			<div class="entryHeader">
+				<span class="marker">&bull;</span><span class="message"
+					>Exception occured during service execution: Error Fetching http headers</span>
+				<div class="times">
+					<span class="applicationId">baza-frontend</span>
+						&mdash; <span class="additionalInfo" title="2565 раз">более 1000 раз</span>,
+						последний раз <span class="additionalInfo warningMarker" title="12 июля 2009, 18:25:12 VLAST">менее минуты назад</span>
+				</div>
+			</div>
+
+
+			<div class="entryContent">
+				<ul>
+					<li><span>сервера:</span> n1.baza.loc, n2.baza.loc...</li>
+					<li><span>адреса:</span> /auto/sale</li>
+				</ul>
+				<pre class="stacktrace">AdvertServiceException: Error Fetching http headers
+		at /var/www/baza.farpost.ru/rev/20090817-1520/slr/advert/src/remote/AdvertSoapDecorator.class.php:16
+		10 : slrSoapDecorator.class.php:94 AdvertSoapDecorator->handleException("Error Fetc...", SoapFault)
+		9 : unknown:0 slrSoapDecorator->__call("findLinks", [1])
+		8 : AdvertRemoteProvider.class.php:331 AdvertSoapDecorator->findLinks([2])
+		7 : AdvertLinkFinder.class.php:77 AdvertRemoteProvider->findLinks(AdvertLinkFinder)
+		6 : AdvertAbstractFinder.class.php:59 AdvertLinkFinder->getResults()
+		5 : AdvertAbstractFinder.class.php:35 AdvertAbstractFinder->fetchResults()
+		4 : AdvertRemoteAdvertisement.class.php:118 AdvertAbstractFinder->results()
+		3 : advertUnpopularDeactivationService.class.php:34 AdvertRemoteAdvertisement->getLinks(true)
+		2 : advertUnpopularDeactivationService.class.php:23 advertUnpopularDeactivationService->deactivateByMaxViews([849])
+		1 : service_runner.php:38 advertUnpopularDeactivationService->run()</pre>
+			</div>
+
+			<div class="spinner"></div>
+
+			<div class="operations">
+				<a href="#">cоздать таск</a> или
+				<a href="#" class="asynchronous removeEntry">удалить</a>
 			</div>
 		</div>
 
-		<div class="operations">
-			<a href="#">cоздать таск</a> или
-			<a href="#" class="asynchronous removeEntry">удалить</a>
-		</div>
-	</div>
+		<div class="entry error">
+			<div class="entryHeader">
+				<span class="marker emptyMarker">&empty;</span><span class="message"
+					>java.lang.OutOfMemoryException</span>
+				<div class="times"><span class="applicationId"
+					>billing</span> &mdash; <span class="additionalInfo" title="2565 раз"
+					>более 1000 раз</span>, последний раз в <span class="additionalInfo"
+																										title="12 июля 2009, 18:25:12 VLAST">18:25</span>
+				</div>
+			</div>
 
-	<div class="entry withStacktrace error">
-		<div class="entryHeader">
-			<span class="marker">&bull;</span><span class="message"
-				>Exception occured during service execution: Error Fetching http headers</span>
-			<div class="times"><span class="applicationId">frontend</span> &mdash;
-				<span class="additionalInfo" title="2565 раз">более 1000 раз</span>,
-					последний раз в <span class="additionalInfo" title="12 июля 2009, 18:25:12 VLAST">18:25</span>
+			<div class="operations">
+				<a href="#">cоздать таск</a> или
+				<a href="#" class="asynchronous removeEntry">удалить</a>
 			</div>
 		</div>
 
-		<div class="entryContent">
-			<ul>
-				<li><span>сервера:</span> n1.baza.loc, n2.baza.loc...</li>
-				<li><span>адреса:</span> /auto/sale</li>
-			</ul>
-			<pre class="stacktrace">AdvertServiceException: Error Fetching http headers
-  at /var/www/baza.farpost.ru/rev/20090817-1520/slr/advert/src/remote/AdvertSoapDecorator.class.php:16
-  10 : slrSoapDecorator.class.php:94 AdvertSoapDecorator->handleException("Error Fetc...", SoapFault)
-  9 : unknown:0 slrSoapDecorator->__call("findLinks", [1])
-  8 : AdvertRemoteProvider.class.php:331 AdvertSoapDecorator->findLinks([2])
-  7 : AdvertLinkFinder.class.php:77 AdvertRemoteProvider->findLinks(AdvertLinkFinder)
-  6 : AdvertAbstractFinder.class.php:59 AdvertLinkFinder->getResults()
-  5 : AdvertAbstractFinder.class.php:35 AdvertAbstractFinder->fetchResults()
-  4 : AdvertRemoteAdvertisement.class.php:118 AdvertAbstractFinder->results()
-  3 : advertUnpopularDeactivationService.class.php:34 AdvertRemoteAdvertisement->getLinks(true)
-  2 : advertUnpopularDeactivationService.class.php:23 advertUnpopularDeactivationService->deactivateByMaxViews([849])
-  1 : service_runner.php:38 advertUnpopularDeactivationService->run()</pre>
-		</div>
+		<div class="entry withStacktrace error">
+			<div class="entryHeader">
+				<span class="marker">&bull;</span><span class="message"
+					>Exception occured during service execution: Error Fetching http headers</span>
+				<div class="times"><span class="applicationId">frontend</span> &mdash;
+					<span class="additionalInfo" title="2565 раз">более 1000 раз</span>,
+						последний раз в <span class="additionalInfo" title="12 июля 2009, 18:25:12 VLAST">18:25</span>
+				</div>
+			</div>
 
-		<div class="operations">
-			<a href="#">cоздать таск</a> или
-			<a href="#" class="asynchronous removeEntry">удалить</a>
+			<div class="entryContent">
+				<ul>
+					<li><span>сервера:</span> n1.baza.loc, n2.baza.loc...</li>
+					<li><span>адреса:</span> /auto/sale</li>
+				</ul>
+				<pre class="stacktrace">AdvertServiceException: Error Fetching http headers
+		at /var/www/baza.farpost.ru/rev/20090817-1520/slr/advert/src/remote/AdvertSoapDecorator.class.php:16
+		10 : slrSoapDecorator.class.php:94 AdvertSoapDecorator->handleException("Error Fetc...", SoapFault)
+		9 : unknown:0 slrSoapDecorator->__call("findLinks", [1])
+		8 : AdvertRemoteProvider.class.php:331 AdvertSoapDecorator->findLinks([2])
+		7 : AdvertLinkFinder.class.php:77 AdvertRemoteProvider->findLinks(AdvertLinkFinder)
+		6 : AdvertAbstractFinder.class.php:59 AdvertLinkFinder->getResults()
+		5 : AdvertAbstractFinder.class.php:35 AdvertAbstractFinder->fetchResults()
+		4 : AdvertRemoteAdvertisement.class.php:118 AdvertAbstractFinder->results()
+		3 : advertUnpopularDeactivationService.class.php:34 AdvertRemoteAdvertisement->getLinks(true)
+		2 : advertUnpopularDeactivationService.class.php:23 advertUnpopularDeactivationService->deactivateByMaxViews([849])
+		1 : service_runner.php:38 advertUnpopularDeactivationService->run()</pre>
+			</div>
+
+			<div class="operations">
+				<a href="#">cоздать таск</a> или
+				<a href="#" class="asynchronous removeEntry">удалить</a>
+			</div>
 		</div>
 	</div>
 

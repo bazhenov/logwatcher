@@ -5,6 +5,7 @@ CREATE TABLE log_entry (
 	date DATE NOT NULL,
 	checksum VARCHAR NOT NULL,
 	category VARCHAR NULL,
+	severity INT NOT NULL,
 	application_id VARCHAR NOT NULL,
 	text varchar NOT NULL,
 	count INT NOT NULL DEFAULT 1,
