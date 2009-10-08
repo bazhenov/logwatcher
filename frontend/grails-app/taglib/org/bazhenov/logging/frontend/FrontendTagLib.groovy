@@ -100,6 +100,7 @@ public class FrontendTagLib {
 		title = HTMLCodec.encode(title)
 		message = HTMLCodec.encode(message)
 
+		out <<  "<a name='${entry.checksum}'></a>"
 		out <<  "<div class='${classes.join(" ")}' checksum='${entry.checksum}'>"
 		out <<    "<div class='entryHeader'>"
 		out <<      "<span class='${markerClasses.join(" ")}'>${hasMessage ? "•" : "∅"}</span>"
@@ -119,7 +120,9 @@ public class FrontendTagLib {
 		out <<      "<div class='operations'>"
 		out <<        "<a href='${jiraLink}' target='_blank'>создать таск</a>"
 		out <<        " или "
-		out <<        "<a class='removeEntry asynchronous' href='#'>удалить</a>"
+		out <<        "<a class='removeEntry asynchronous' href='#'>удалить</a> "
+		out <<        "<a href='./${entry.lastTime.date}?severity=${entry.severity}#${entry.checksum}'>"
+		out <<          "<img src='./images/link-icon.png' /></a>"
 		out <<      "</div>"
 		out <<    "</div>"
 		out <<  "</div>"

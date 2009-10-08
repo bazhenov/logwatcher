@@ -1,5 +1,5 @@
 body				                    { font-size: 21px; font-family: tahoma, serif; }
-
+img                             { border: 0px }
 #firstDot                       { color: #ff3333; font-size: 150% }
 #secondDot                      { color: #ff9900; font-size: 150% }
 #thirdDot                       { color: #009900; font-size: 150% }

@@ -1,5 +1,12 @@
 $(function() {
-	$('.withStacktrace .message').click(function() {
+
+})
+
+severity = ['all', 'trace', 'debug', 'info', 'warning', 'error'];
+
+$(document).ready(function() {
+
+	$('.message').click(function() {
 		$(this).parents(".entry").toggleClass('selectedEntry')
 	})
 
@@ -25,11 +32,6 @@ $(function() {
 
 		return false;
 	})
-})
-
-severity = ['all', 'trace', 'debug', 'info', 'warning', 'error'];
-
-$(document).ready(function() {
 
 	$('#slider').slider({
 		step: 1,
@@ -54,6 +56,15 @@ $(document).ready(function() {
 			$('#sliderValue').text(severity[i]);
 			$('#slider').slider('option', 'value', i);
 		}
+	}
+
+	var checksum = location.hash.substring(1);
+	if ( checksum.length > 0 ) {
+		$('.entry').each(function() {
+			if ( $(this).attr('checksum') == checksum ) {
+				$(this).toggleClass('selectedEntry');
+			}
+		});
 	}
 
 });
