@@ -38,7 +38,9 @@ a:visited			                  { color: brown; text-decoration: underline }
 #notificationPanel              { text-align: center; font-size: 150%; color: #666; font-family: serif !important; }
 
 .entryContent                   { font-size: 12px; margin-left: 17px; display: none }
-.entryContent .stacktrace       { font-family: monospace; margin-bottom: 5px; margin-top: 10px }
+.entryContent .stacktrace       { font-family: monospace; margin-bottom: 5px; margin-top: 10px;
+																	white-space:pre-wrap; }
+
 .entryContent ul                { list-style-type: none; padding: 0; color: gray }
 .entryContent li span           { color: black }
 .selectedEntry .entryContent    { display: block !important }
