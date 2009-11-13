@@ -2,8 +2,8 @@
 *.iws
 *.iml
 /*.properties
-/core/target
-/frontend/target
-/frontend/test
-/frontend/web-app/WEB-INF/classes
-/*
+/*.log
+/test-output
+/log4j.xml
+target
+test
