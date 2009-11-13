@@ -164,7 +164,7 @@ public class EntryTag extends TagSupport {
 		return stackTrace.toString();
 	}
 
-	private static String pluralize(int number, String titles) {
+	public static String pluralize(int number, String titles) {
 		int abs = abs(number);
 		int[] cases = new int[]{2, 0, 1, 1, 1, 2};
 		String[] strings = titles.split(" ");

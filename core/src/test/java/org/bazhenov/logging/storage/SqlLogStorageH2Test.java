@@ -12,24 +12,11 @@ import java.util.*;
 public class SqlLogStorageH2Test extends LogStorageTest {
 
 	protected LogStorage createStorage() throws IOException, SQLException {
-		String fileName = System.getProperty("h2.config", "h2.properties");
-		Properties props = new Properties();
-		try {
-			props.load(new FileReader(fileName));
-		} catch ( IOException e ) {
-			throw new RuntimeException(
-				"Unable to read H2 properties file. Run tests with -Dh2.config=../path/to/h2.properties");
-		}
-		String url = props.getProperty("url");
-		String username = props.getProperty("username");
-		String password = props.getProperty("password");
-		String driver = props.getProperty("driver");
-
 		BasicDataSource ds = new BasicDataSource();
-		ds.setDriverClassName(driver);
-		ds.setUsername(username);
-		ds.setPassword(password);
-		ds.setUrl(url);
+		ds.setDriverClassName("org.h2.Driver");
+		ds.setUsername("sa");
+		ds.setPassword("");
+		ds.setUrl("jdbc:h2:./test/as");
 
 		InputStream stream = SqlLogStorage.class.getResourceAsStream("/dump.h2.sql");
 		loadDump(ds, stream);
