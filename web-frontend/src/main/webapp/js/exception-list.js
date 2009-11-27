@@ -47,7 +47,7 @@ $(document).ready(function() {
 				type: "GET",
 				url: './session?severity=' + value,
 				complete: function() {
-					window.location.reload();
+					window.location = window.location;
 				}
 			});
 		}

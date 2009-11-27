@@ -36,7 +36,7 @@ public class EntryTag extends TagSupport {
 		LogEntry sampleEntry = entry.getSampleEntry();
 		String title = sampleEntry.getMessage();
 
-		String applicationId = sampleEntry.getApplication();
+		String applicationId = sampleEntry.getApplicationId();
 		int count = entry.getCount();
 
 		boolean withStacktrace = sampleEntry.getCause() != null;

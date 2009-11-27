@@ -61,9 +61,9 @@ public class DateTimeFormat extends DateFormat {
 		toAppendTo.append("в ");
 		fp.setBeginIndex(toAppendTo.length());
 		toAppendTo.
-			append(String.format("%1$#2", hours)).
+			append(String.format("%02d", hours)).
 			append(":").
-			append(String.format("%1$#2", minutes));
+			append(String.format("%02d", minutes));
 
 		fp.setEndIndex(toAppendTo.length());
 	}

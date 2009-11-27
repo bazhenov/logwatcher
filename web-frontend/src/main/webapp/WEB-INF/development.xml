@@ -3,4 +3,8 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+	<bean id="storage" class="org.bazhenov.logging.storage.InMemoryLogStorage" />
+	<bean class="org.bazhenov.logging.web.Bootstrap" init-method="load" lazy-init="false">
+		<property name="storage" ref="storage" />
+	</bean>
 </beans>

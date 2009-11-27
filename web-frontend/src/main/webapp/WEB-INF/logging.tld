@@ -15,7 +15,7 @@
 			<description>Ссылка на запись типа AggregatedLogEntry</description>
 			<name>entry</name>
 			<required>true</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 			<type>org.bazhenov.logging.AggregatedLogEntry</type>
 		</attribute>
 	</tag>
