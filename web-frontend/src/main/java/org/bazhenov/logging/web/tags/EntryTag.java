@@ -129,7 +129,7 @@ public class EntryTag extends TagSupport {
 			out.write("<a class='removeEntry asynchronous' href='#'>удалить</a> ");
 			out.write("<a href='./" + entry.getLastTime()
 				.getDate() + "?severity=" + sampleEntry.getSeverity() + "#" + sampleEntry.getChecksum() + "'>");
-			out.write("<img src='./images/link-icon.png' /></a>");
+			out.write(" <img src='./images/link-icon.png' /></a>");
 			out.write("</div>");
 			out.write("</div>");
 			out.write("</div>");

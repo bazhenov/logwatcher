@@ -8,15 +8,15 @@
 	<uri>http://bazhenov.org/logging</uri>
 
 	<tag>
-		<name>greeting</name>
-		<tag-class>org.bazhenov.logging.web.tags.GreetingsTag</tag-class>
+		<name>entry</name>
+		<tag-class>org.bazhenov.logging.web.tags.EntryTag</tag-class>
 		<body-content>empty</body-content>
 		<attribute>
-			<description>Имя кого преветствуем</description>
-			<name>name</name>
+			<description>Ссылка на запись типа AggregatedLogEntry</description>
+			<name>entry</name>
 			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-			<type>java.lang.String</type>
+			<rtexprvalue>false</rtexprvalue>
+			<type>org.bazhenov.logging.AggregatedLogEntry</type>
 		</attribute>
 	</tag>
 </taglib>
