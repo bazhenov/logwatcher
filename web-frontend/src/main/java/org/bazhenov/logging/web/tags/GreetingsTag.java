@@ -1,4 +1,4 @@
-package org.bazhenov.logging.jsp.tags;
+package org.bazhenov.logging.web.tags;
 
 import javax.servlet.jsp.tagext.TagSupport;
 import javax.servlet.jsp.JspException;

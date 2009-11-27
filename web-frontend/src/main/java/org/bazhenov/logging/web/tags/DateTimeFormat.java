@@ -1,4 +1,4 @@
-package org.bazhenov.logging.jsp.tags;
+package org.bazhenov.logging.web.tags;
 
 import java.text.DateFormat;
 import java.text.FieldPosition;

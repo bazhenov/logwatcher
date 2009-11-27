@@ -1,4 +1,4 @@
-package org.bazhenov.logging.jsp.tags;
+package org.bazhenov.logging.web.tags;
 
 import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
 import static org.apache.commons.lang.StringUtils.join;

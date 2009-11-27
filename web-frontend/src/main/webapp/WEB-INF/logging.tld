@@ -9,7 +9,7 @@
 
 	<tag>
 		<name>greeting</name>
-		<tag-class>org.bazhenov.logging.jsp.tags.GreetingsTag</tag-class>
+		<tag-class>org.bazhenov.logging.web.tags.GreetingsTag</tag-class>
 		<body-content>empty</body-content>
 		<attribute>
 			<description>Имя кого преветствуем</description>

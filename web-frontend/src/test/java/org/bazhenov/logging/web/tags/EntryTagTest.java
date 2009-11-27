@@ -1,4 +1,4 @@
-package org.bazhenov.logging.jsp.tags;
+package org.bazhenov.logging.web.tags;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -8,7 +8,7 @@ import org.springframework.mock.web.MockServletContext;
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;
 import org.bazhenov.logging.*;
-import static org.bazhenov.logging.jsp.tags.EntryTag.pluralize;
+import static org.bazhenov.logging.web.tags.EntryTag.pluralize;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.Tag;
