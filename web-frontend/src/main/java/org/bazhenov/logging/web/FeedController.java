@@ -53,9 +53,16 @@ public class FeedController {
 		dates.put("сегодня", today);
 		dates.put("вчера", today.minusDay(1));
 		dates.put("позавчера", today.minusDay(2));
+		if ( date.lessThan(today.minusDay(2)) ) {
+			dates.put(date.toString(), date);
+		}
 		map.addAttribute("dates", dates);
 
 		map.addAttribute("date", date);
+		map.addAttribute("prevDate", date.minusDay(1));
+		if ( date.lessThan(today()) ) {
+			map.addAttribute("nextDate", date.plusDay(1));
+		}
 		String severity = getSeverity(request);
 		map.addAttribute("severity", severity);
 		List<AggregatedLogEntry> entries = entries().

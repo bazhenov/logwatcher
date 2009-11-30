@@ -1,11 +1,14 @@
-body				                    { font-size: 21px; font-family: tahoma, serif; }
+body				                    { font-size: 21px; font-family: tahoma, serif; padding:0; margin:0 }
 img                             { border: 0 }
-#firstDot                       { color: #ff3333; font-size: 150% }
-#secondDot                      { color: #ff9900; font-size: 150% }
-#thirdDot                       { color: #009900; font-size: 150% }
+#firstDot                       { color: #ff3333; font-size: 180%; position: absolute; left: 10px }
+#secondDot                      { color: #ff9900; font-size: 180%; position: absolute; left: 15px }
+#thirdDot                       { color: #009900; font-size: 180%; position: absolute; left: 20px }
 
-h1                              { font-size: 18px; font-weight: normal; margin: 0 0 0 0 }
-h2                              { font-size: 24px; font-weight: normal; color: gray }
+h1                              { font-size: 18px; font-weight: normal; margin: 0 0 10px 10px }
+h2                              { font-size: 24px; font-weight: normal; color: #555; margin-left: 25px; }
+h2 a                            { text-decoration:none !important; }
+h2 a:visited                    { color: rgb(0, 153, 255) }
+#header                         { background-color: rgb(247, 247, 247); padding:0; margin:0 }
 
 #footer                         { font-size: 12px; margin-top: 20px; color: gray; text-align: center; }
 
@@ -13,7 +16,7 @@ a					                      { color: #0099ff; text-decoration: none }
 a:hover				                  { color: red; text-decoration: underline }
 a:visited			                  { color: brown; text-decoration: underline }
 
-.entry				                  { position: relative; }
+.entry				                  { position: relative }
 .entry a			                  { display: inline; text-align: right; }
 
 .entry                          {	border-top: 1px dotted gray; padding-bottom: 10px;
@@ -33,7 +36,7 @@ a:visited			                  { color: brown; text-decoration: underline }
 .asynchronous                   { color: #0099ff !important; text-decoration: none !important;
 																	border-bottom: 1px dashed !important }
 
-#mainPanel                      { margin: 10px }
+#mainPanel                      { margin: 25px; padding-top: 10px; }
 
 #notificationPanel              { text-align: center; font-size: 150%; color: #666; font-family: serif !important; }
 
@@ -62,12 +65,21 @@ a:visited			                  { color: brown; text-decoration: underline }
 .additionalInfo                 {	border-bottom: 1px dashed; cursor: default }
 .warningMarker                  { color: #990000; }
 
-#menuBar            { border-bottom: 1px solid #777;	padding-left: 25px }
-#menuBar a          { border: 1px solid #ddd; border-bottom: none; padding: 2px 10px; margin: 3px;
-											line-height: 19px; text-decoration: none; color: #777; font-weight: bold;
-											font-size: 12px }
-#menuBar a.selected { border: 1px solid #777; border-bottom-color: #fff }
+#menuBar            { border-bottom: 1px solid #999; padding-left: 25px; padding-top: 10px; margin:0 }
+#menuBar a          { border: 1px solid #ddd; border-bottom: none; padding-top: 5px; padding-left: 15px;
+											padding-right: 15px; margin: 5px;
+											text-decoration: none; color: #777;	font-size: 14px; background-color:white; vertical-align: bottom }
+#menuBar a.selected { border: 1px solid #777; border-bottom-color: #fff; font-size: 100%; color:black; }
 #menuBar div        { border: 1px solid red; width: 300px; display: block; float: right }
+
+
+#searchBox              { position: absolute; left:35%; width: 30%;	top: 83px }
+
+#searchBox INPUT        { font-size: 16px; color: #666; padding-bottom: 5px; padding-left: 20px;
+													background-image: url("../images/magnifying_glass.png"); background-repeat: no-repeat;
+													background-position:left; margin-bottom: 5px; width: 100% }
+#searchBox INPUT:focus  { color: black; }
+#searchBox span         { font-size: 12px; color: gray; }
 
 span.tag            { font-size: 70%; background-color: #E0EAF1; border-bottom: 1px solid #3E6D8E;
 											border-right: 1px solid #7F9FB6; color: #3E6D8E; margin: 1px; padding: 1px }
@@ -75,5 +87,5 @@ span.tag            { font-size: 70%; background-color: #E0EAF1; border-bottom: 
 #slider             { font-size: 50%; width: 100px }
 #sliderValue        { width: 100px; text-align: center; padding-bottom: 5px; font-size: 60%;
 											visibility: hidden; font-variant: small-caps; }
-#sliderContainer    { padding: 10px; position: absolute; right: 20px; top: 70px; }
+#sliderContainer    { padding: 10px; position: absolute; right: 20px; top: 0px; }
 #sliderContainer:hover #sliderValue    { visibility: visible; }

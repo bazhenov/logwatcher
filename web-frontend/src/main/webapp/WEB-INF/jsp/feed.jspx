@@ -27,28 +27,50 @@
 		<script type="text/javascript" src="${jsUrl}">&amp;nbsp;</script>
 	</head>
 
-	<body>
-	<h1><span id="firstDot">&amp;bull;</span><span id="secondDot">&amp;bull;</span><span
-		id="thirdDot">&amp;bull;</span></h1>
+	<body><div id="header">
+		<h1><span id="firstDot">&amp;bull;</span><span id="secondDot">&amp;bull;</span><span
+			id="thirdDot">&amp;bull;</span><span>&amp;nbsp;</span></h1>
 
-	<div id="menuBar">
-		<c:forEach var="i" items="${dates}">
-			<c:url var="url" value="/feed">
-				<c:param name="date" value="${i.value}"/>
-			</c:url>
-			<c:choose>
-				<c:when test="${i.value == date}">
-					<a href="${url}" class="selected">${i.key}</a>
-				</c:when>
-				<c:otherwise>
-					<a href="${url}">${i.key}</a>
-				</c:otherwise>
-			</c:choose>
-		</c:forEach>
+		<div id="menuBar">
+			<c:forEach var="i" items="${dates}">
+				<c:url var="url" value="/feed">
+					<c:param name="date" value="${i.value}"/>
+				</c:url>
+				<c:choose>
+					<c:when test="${i.value == date}">
+						<a href="${url}" class="selected">${i.key}</a>
+					</c:when>
+					<c:otherwise>
+						<a href="${url}">${i.key}</a>
+					</c:otherwise>
+				</c:choose>
+			</c:forEach>
+		</div>
 	</div>
 
+	<h2>
+			<c:if test="${nextDate != null}">
+				<c:url var="url" value="/feed">
+					<c:param name="date" value="${nextDate}"/>
+				</c:url>
+				<a href="${url}">&amp;larr;</a>
+			</c:if>
+			Записи за 27 ноября
+			<c:if test="${prevDate != null}">
+				<c:url var="url" value="/feed">
+					<c:param name="date" value="${prevDate}"/>
+				</c:url>
+				<a href="${url}">&amp;rarr;</a>
+			</c:if>
+		</h2>
+		<div id="searchBox">
+			<input type="text" id="searchInput" />
+			<span>Например: <a href="#" onclick="$('#searchInput').val($(this).text())">at: frontend occured: last 2 days</a></span>
+		</div>
+
 	<div id="mainPanel">
-		<h2>Записи за 27 ноября</h2>
+
+
 
 		<div id="sliderContainer">
 			<div id="sliderValue">&amp;nbsp;</div>
@@ -74,7 +96,6 @@
 			Всего 6191 сообщение,
 			19 записей
 		</div>
-
 
 	</div>
 	</body>
