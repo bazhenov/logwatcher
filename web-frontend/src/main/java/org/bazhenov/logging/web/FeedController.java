@@ -14,8 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -32,6 +31,14 @@ public class FeedController {
 			return new SimpleDateFormat("yyyy-MM-dd");
 		}
 	};
+
+	private final ThreadLocal<DateFormat> fullFormat = new ThreadLocal<DateFormat>() {
+		@Override
+		protected DateFormat initialValue() {
+			return new SimpleDateFormat("d MMMM");
+		}
+	};
+
 	private LogStorage storage;
 
 	public void setStorage(LogStorage storage) {
@@ -44,9 +51,11 @@ public class FeedController {
 	}
 
 	@RequestMapping(value = "/feed")
-	public String handleFeed(ModelMap map, HttpServletRequest request) throws ParseException,
+	public String handleFeed(ModelMap map, HttpServletRequest request, HttpServletResponse response) throws ParseException,
 		LogStorageException, InvalidCriteriaException {
 
+		response.setContentType("text/html");
+		response.setCharacterEncoding("UTF-8");
 		Date today = today();
 		Date date;
 		String dateStr = request.getParameter("date");
@@ -56,19 +65,19 @@ public class FeedController {
 			date = new Date(format.get().parse(dateStr).getTime());
 		}
 
-		Map<String, Date> dates = new LinkedHashMap<String, Date>();
-		dates.put("сегодня", today);
-		dates.put("вчера", today.minusDay(1));
-		dates.put("позавчера", today.minusDay(2));
+		Map<String, java.util.Date> dates = new LinkedHashMap<String, java.util.Date>();
+		dates.put("today", today.asDate());
+		dates.put("yesterday", today.minusDay(1).asDate());
+		dates.put("2 days ago", today.minusDay(2).asDate());
 		if ( date.lessThan(today.minusDay(2)) ) {
-			dates.put(date.toString(), date);
+			dates.put(fullFormat.get().format(date.asDate()), date.asDate());
 		}
 		map.addAttribute("dates", dates);
 
-		map.addAttribute("date", date);
-		map.addAttribute("prevDate", date.minusDay(1));
+		map.addAttribute("date", date.asDate());
+		map.addAttribute("prevDate", date.minusDay(1).asDate());
 		if ( date.lessThan(today()) ) {
-			map.addAttribute("nextDate", date.plusDay(1));
+			map.addAttribute("nextDate", date.plusDay(1).asDate());
 		}
 		String severity = getSeverity(request);
 		map.addAttribute("severity", severity);

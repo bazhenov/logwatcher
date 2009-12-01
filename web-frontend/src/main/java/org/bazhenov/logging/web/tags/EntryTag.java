@@ -85,13 +85,13 @@ public class EntryTag extends TagSupport {
 
 		String lastOccurenceInfo = buffer.toString();
 
-		String timesInfo = pluralize(count, "раз раза раз");
+		String timesInfo = pluralize(count, "- times times");
 		if ( count > 10000 ) {
-			timesInfo = "<span class='additionalInfo' title='" + timesInfo + "'>более 10 000 раз</span>";
+			timesInfo = "<span class='additionalInfo' title='" + timesInfo + "'>more than 10 000 times</span>";
 		} else if ( count > 5000 ) {
-			timesInfo = "<span class='additionalInfo' title='" + timesInfo + "'>более 5 000 раз</span>";
+			timesInfo = "<span class='additionalInfo' title='" + timesInfo + "'>more than 5 000 times</span>";
 		} else if ( count > 1000 ) {
-			timesInfo = "<span class='additionalInfo' title='" + timesInfo + "'>более 1 000 раз</span>";
+			timesInfo = "<span class='additionalInfo' title='" + timesInfo + "'>more than 1 000 times</span>";
 		}
 
 		title = escapeHtml(title);
@@ -104,14 +104,14 @@ public class EntryTag extends TagSupport {
 				"<div class='" + join(classes, " ") + "' checksum='" + sampleEntry.getChecksum() + "'>");
 			out.write("<div class='entryHeader'>");
 			out.write("<span class='" + join(markerClasses, " ") + "'>" + (hasMessage
-				? "•"
+				? "&bull;"
 				: "") + "</span>");
 			out.write("<div class='message'>" + title + "</div>");
 			out.write("<div class='messageOverlay'></div>");
 			out.write("<div class='times'>");
 			out.write("<span class='applicationId'>" + applicationId + "</span> &mdash ");
 			out.write((count > 1
-				? timesInfo + ", последний раз "
+				? timesInfo + ", last time "
 				: ""));
 			out.write(lastOccurenceInfo);
 			out.write("</div>");
@@ -122,9 +122,9 @@ public class EntryTag extends TagSupport {
 				out.write("</div>");
 			}
 			out.write("<div class='operations'>");
-			out.write("<a href='" + jiraLink + "' target='_blank'>создать таск</a>");
-			out.write(" или ");
-			out.write("<a class='removeEntry asynchronous' href='#'>удалить</a> ");
+			out.write("<a href='" + jiraLink + "' target='_blank'>create task</a>");
+			out.write(" or ");
+			out.write("<a class='removeEntry asynchronous' href='#'>remove</a> ");
 			out.write("<a href='./" + entry.getLastTime()
 				.getDate() + "?severity=" + sampleEntry.getSeverity() + "#" + sampleEntry.getChecksum() + "'>");
 			out.write(" <img src='./images/link-icon.png' /></a>");

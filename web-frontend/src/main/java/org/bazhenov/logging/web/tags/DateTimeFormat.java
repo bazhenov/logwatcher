@@ -10,8 +10,8 @@ public class DateTimeFormat extends DateFormat {
 
 	private Calendar calendar = Calendar.getInstance();
 
-	private final String[] monthNames = new String[]{"января", "февраля", "марта", "апреля", "мая",
-		"июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"};
+	private final String[] monthNames = new String[]{"january", "february", "march", "april", "may",
+		"june", "july", "august", "september", "october", "november", "december"};
 
 	public synchronized StringBuffer format(Date date, StringBuffer toAppendTo,
 	                                        FieldPosition fieldPosition) {
@@ -58,7 +58,7 @@ public class DateTimeFormat extends DateFormat {
 		int hours = calendar.get(Calendar.HOUR_OF_DAY);
 		int minutes = calendar.get(Calendar.MINUTE);
 
-		toAppendTo.append("в ");
+		toAppendTo.append("at ");
 		fp.setBeginIndex(toAppendTo.length());
 		toAppendTo.
 			append(String.format("%02d", hours)).
@@ -71,7 +71,7 @@ public class DateTimeFormat extends DateFormat {
 	private void formatLessThanMinuteDate(Calendar calendar, StringBuffer toAppendTo,
 	                                      FieldPosition fp) {
 		fp.setBeginIndex(toAppendTo.length());
-		toAppendTo.append("менее минуты назад");
+		toAppendTo.append("less than a minute ago");
 		fp.setEndIndex(toAppendTo.length());
 	}
 
