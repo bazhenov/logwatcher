@@ -40,10 +40,7 @@ public class EntryTag extends TagSupport {
 		int count = entry.getCount();
 
 		boolean withStacktrace = sampleEntry.getCause() != null;
-		boolean isTitleTooLong = title.length() > MAX_LENGTH + "...".length();
-		if ( isTitleTooLong ) {
-			title = title.substring(0, MAX_LENGTH) + "...";
-		}
+		boolean isTitleTooLong = title.length() > MAX_LENGTH;
 		boolean hasMessage = withStacktrace || isTitleTooLong;
 		String message = (!withStacktrace && isTitleTooLong)
 			? sampleEntry.getMessage()
@@ -108,8 +105,9 @@ public class EntryTag extends TagSupport {
 			out.write("<div class='entryHeader'>");
 			out.write("<span class='" + join(markerClasses, " ") + "'>" + (hasMessage
 				? "•"
-				: "∅") + "</span>");
-			out.write("<span class='message'>" + title + "</span>");
+				: "") + "</span>");
+			out.write("<div class='message'>" + title + "</div>");
+			out.write("<div class='messageOverlay'></div>");
 			out.write("<div class='times'>");
 			out.write("<span class='applicationId'>" + applicationId + "</span> &mdash ");
 			out.write((count > 1

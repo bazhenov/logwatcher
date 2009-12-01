@@ -11,6 +11,8 @@ import org.bazhenov.logging.storage.LogStorageException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.View;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -34,6 +36,11 @@ public class FeedController {
 
 	public void setStorage(LogStorage storage) {
 		this.storage = storage;
+	}
+
+	@RequestMapping(value = "/")
+	public View handleRoot() {
+		return new RedirectView("/feed", true);
 	}
 
 	@RequestMapping(value = "/feed")
@@ -69,7 +76,13 @@ public class FeedController {
 			date(date).
 			severity(Severity.forName(severity)).
 			find(storage);
+
+		int times = 0;
+		for ( AggregatedLogEntry entry : entries ) {
+			times += entry.getCount();
+		}
 		map.addAttribute("entries", entries);
+		map.addAttribute("times", times);
 
 		return "feed";
 	}

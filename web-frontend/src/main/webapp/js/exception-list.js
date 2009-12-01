@@ -4,7 +4,9 @@ $(document).ready(function() {
 
 	$('.message').click(function() {
 		$(this).parents(".entry").toggleClass('selectedEntry')
-	})
+	});
+
+	$('#searchInput').focus();
 
 	$('a.removeEntry').click(function() {
 		var entry = $(this).parents(".entry")

@@ -19,4 +19,10 @@
 			<type>org.bazhenov.logging.AggregatedLogEntry</type>
 		</attribute>
 	</tag>
+
+	<function>
+		<name>pluralize</name>
+		<function-class>org.bazhenov.logging.web.tags.EntryTag</function-class>
+		<function-signature>java.lang.String pluralize(int, java.lang.String)</function-signature>
+	</function>
 </taglib>

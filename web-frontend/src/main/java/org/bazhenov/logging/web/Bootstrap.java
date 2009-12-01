@@ -27,7 +27,7 @@ public class Bootstrap {
 			"  5 : AdvertAbstractFinder.class.php:35 AdvertAbstractFinder->fetchResults()\n" +
 			"  4 : AdvertRemoteAdvertisement.class.php:118 AdvertAbstractFinder->results()\n" +
 			"  3 : advertUnpopularDeactivationService.class.php:34 AdvertRemoteAdvertisement->getLinks(true)\n" +
-			"  2 : advertUnpopularDeactivationService.class.php:23 advertUnpopularDeactivationService->deactivateByMaxViews([849])\n" +
+			"  2 : advertUnpopularDeactivationService.class.php:23 advertUnpopularDeactivationService->deactivateByMaxViews([849])advertUnpopularDeactivationService.class.php:23 advertUnpopularDeactivationService->deactivateByMaxViews([849])advertUnpopularDeactivationService.class.php:23 advertUnpopularDeactivationService->deactivateByMaxViews([849])\n" +
 			"  1 : service_runner.php:38 advertUnpopularDeactivationService->run()");
 		storage.writeEntry(new LogEntry(DateTime.now().minusHour(2), "group", "OverflowFundsException", Severity.warning, "sum2", cause, "billing"));
 		storage.writeEntry(new LogEntry(DateTime.now().minusHour(2), "group", "OverflowFundsException", Severity.warning, "sum2", cause, "billing"));

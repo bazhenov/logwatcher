@@ -5,10 +5,11 @@ img                             { border: 0 }
 #thirdDot                       { color: #009900; font-size: 180%; position: absolute; left: 20px }
 
 h1                              { font-size: 18px; font-weight: normal; margin: 0 0 10px 10px }
-h2                              { font-size: 24px; font-weight: normal; color: #555; margin-left: 25px; }
+h2                              { font-size: 24px; font-weight: normal; color: #555; margin-top: 0; }
 h2 a                            { text-decoration:none !important; }
 h2 a:visited                    { color: rgb(0, 153, 255) }
-#header                         { background-color: rgb(247, 247, 247); padding:0; margin:0 }
+#header                         { background-color: rgb(247, 247, 247); padding:0; margin:0;
+																	position: relative; height: 70px; min-width: 995px; }
 
 #footer                         { font-size: 12px; margin-top: 20px; color: gray; text-align: center; }
 
@@ -16,7 +17,7 @@ a					                      { color: #0099ff; text-decoration: none }
 a:hover				                  { color: red; text-decoration: underline }
 a:visited			                  { color: brown; text-decoration: underline }
 
-.entry				                  { position: relative }
+.entry				                  { position: relative; }
 .entry a			                  { display: inline; text-align: right; }
 
 .entry                          {	border-top: 1px dotted gray; padding-bottom: 10px;
@@ -26,17 +27,23 @@ a:visited			                  { color: brown; text-decoration: underline }
 .entry:hover                    { background-color: #ffd }
 
 .entry:hover .operations        { display: inline }
+.entry:hover .messageOverlay    { display: none; }
 .operations                     { display: none; position: absolute; top: 20px; right: 20px;
 																	font-size: 70% }
 
-.message                        { color: black; margin-left: 2px; }
-.withStacktrace .message        { cursor: pointer;  }
+.message                        { color: black; margin-left: 17px; margin-right: 225px;
+																	overflow: hidden; height: 28px; white-space: nowrap; }
+
+.messageOverlay                 { position: absolute; height: 28px; width:50px; top: 10px; right: 225px;
+																	background: url("../images/sha.png") repeat-y;}
+
+.withStacktrace .message        { cursor: pointer; }
 
 
 .asynchronous                   { color: #0099ff !important; text-decoration: none !important;
 																	border-bottom: 1px dashed !important }
 
-#mainPanel                      { margin: 25px; padding-top: 10px; }
+#mainPanel                      { margin: 25px; min-width: 995px; position: relative; }
 
 #notificationPanel              { text-align: center; font-size: 150%; color: #666; font-family: serif !important; }
 
@@ -51,11 +58,12 @@ a:visited			                  { color: brown; text-decoration: underline }
 .spinner                        { position: absolute; top: 25px; left: 8px;
 																	background: url("../images/sp.gif") no-repeat;
 																	width: 16px; height: 16px; display: none }
+
 .removing .spinner              { display: inline !important }
 
 .applicationId                  { font-variant:small-caps; color: black; margin-left: 17px }
 
-.marker                         { margin-right: 5px; }
+.marker                         { position: absolute; left: 12px; top: 20px; }
 .emptyMarker                    { font-size: 60% }
 .error .marker                  { color: #c90000 }
 .info .marker                   { color: #3366ff; }
@@ -65,19 +73,25 @@ a:visited			                  { color: brown; text-decoration: underline }
 .additionalInfo                 {	border-bottom: 1px dashed; cursor: default }
 .warningMarker                  { color: #990000; }
 
-#menuBar            { border-bottom: 1px solid #999; padding-left: 25px; padding-top: 10px; margin:0 }
-#menuBar a          { border: 1px solid #ddd; border-bottom: none; padding-top: 5px; padding-left: 15px;
-											padding-right: 15px; margin: 5px;
-											text-decoration: none; color: #777;	font-size: 14px; background-color:white; vertical-align: bottom }
-#menuBar a.selected { border: 1px solid #777; border-bottom-color: #fff; font-size: 100%; color:black; }
+#menuBar            { border-bottom: 1px solid #999; padding-left: 35px; padding-top: 10px; margin:0;
+											position: absolute; bottom:0; left: 0; right: 0 }
+
+#menuBar a          { border: 1px solid #ddd; border-bottom: none; padding: 3px 15px 3px 15px; margin: 10px 5px 0 5px;
+											text-decoration: none; color: #777;	font-size: 14px;
+											background-color: rgb(252, 252, 252); display: block; float: left;
+											-moz-border-radius: 4px 4px 0 0; -webkit-border-top-left-radius: 4px;
+											-webkit-border-top-right-radius: 4px; border-radius: 4px 4px 0 0 }
+
+#menuBar a.selected { border: 1px solid #777; border-bottom-color: #fff; font-size: 100%; color:black;
+											margin: 0 5px -1px 5px; background-color: white }
 #menuBar div        { border: 1px solid red; width: 300px; display: block; float: right }
 
 
-#searchBox              { position: absolute; left:35%; width: 30%;	top: 83px }
+#searchBox              { position: absolute; left:35%; width: 30%;	top: -10px; }
 
-#searchBox INPUT        { font-size: 16px; color: #666; padding-bottom: 5px; padding-left: 20px;
-													background-image: url("../images/magnifying_glass.png"); background-repeat: no-repeat;
-													background-position:left; margin-bottom: 5px; width: 100% }
+#searchBox INPUT        { font-size: 16px; color: #666; padding: 5px 5px 5px 25px;
+													background: url("../images/magnifying_glass.png") 5px center no-repeat;
+													margin-bottom: 5px; width: 100%; border: 1px inset gray }
 #searchBox INPUT:focus  { color: black; }
 #searchBox span         { font-size: 12px; color: gray; }
 
@@ -87,5 +101,5 @@ span.tag            { font-size: 70%; background-color: #E0EAF1; border-bottom: 
 #slider             { font-size: 50%; width: 100px }
 #sliderValue        { width: 100px; text-align: center; padding-bottom: 5px; font-size: 60%;
 											visibility: hidden; font-variant: small-caps; }
-#sliderContainer    { padding: 10px; position: absolute; right: 20px; top: 0px; }
+#sliderContainer    { padding: 10px; position: absolute; right: 20px; top: 0; }
 #sliderContainer:hover #sliderValue    { visibility: visible; }

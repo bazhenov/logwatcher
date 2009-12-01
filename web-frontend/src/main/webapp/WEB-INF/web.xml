@@ -52,4 +52,8 @@
 			<taglib-location>/WEB-INF/logging.tld</taglib-location>
 		</taglib>
 	</jsp-config>
+
+	<welcome-file-list>
+		<welcome-file>index.jspx</welcome-file>
+	</welcome-file-list>
 </web-app>
