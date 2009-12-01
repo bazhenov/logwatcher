@@ -27,7 +27,10 @@ a:visited			                  { color: brown; text-decoration: underline }
 .entry:hover                    { background-color: #ffd }
 
 .entry:hover .operations        { display: inline }
-.entry:hover .messageOverlay    { display: none; }
+
+.entry:hover .messageOverlay,
+.selectedEntry .messageOverlay  { background: url("../images/sha-hover.png") repeat-y; }
+
 .operations                     { display: none; position: absolute; top: 20px; right: 20px;
 																	font-size: 70% }
 
@@ -89,10 +92,9 @@ a:visited			                  { color: brown; text-decoration: underline }
 
 #searchBox              { position: absolute; left:35%; width: 30%;	top: -10px; }
 
-#searchBox INPUT        { font-size: 16px; color: #666; padding: 5px 5px 5px 25px;
+#searchBox INPUT        { font-size: 16px; color: black; padding: 5px 5px 5px 25px;
 													background: url("../images/magnifying_glass.png") 5px center no-repeat;
-													margin-bottom: 5px; width: 100%; border: 1px inset gray }
-#searchBox INPUT:focus  { color: black; }
+													margin-bottom: 5px; width: 100%; border: 1px inset gray; }
 #searchBox span         { font-size: 12px; color: gray; }
 
 span.tag            { font-size: 70%; background-color: #E0EAF1; border-bottom: 1px solid #3E6D8E;
