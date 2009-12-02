@@ -109,7 +109,7 @@ public class EntryTag extends TagSupport {
 			out.write("<div class='message'>" + title + "</div>");
 			out.write("<div class='messageOverlay'></div>");
 			out.write("<div class='times'>");
-			out.write("<span class='applicationId'>" + applicationId + "</span> &mdash ");
+			out.write("<span class='applicationId'>" + applicationId + "</span> &mdash; ");
 			out.write((count > 1
 				? timesInfo + ", last time "
 				: ""));
