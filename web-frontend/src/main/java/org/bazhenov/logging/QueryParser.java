@@ -2,6 +2,12 @@ package org.bazhenov.logging;
 
 import java.util.*;
 
+/**
+ * {@code QueryParser} парсит строчки типа "at: frontend severity: error" в <code>Map</code> где
+ * ключом является имя операции ("at", "severity") а значением соответстенно операнд.
+ * <p/>
+ * Потокобезопасен, конкурентная имплементация обусловлена отсутствием разделяемого состояния.
+ */
 public class QueryParser {
 
 	public Map<String, String> parse(String query) throws InvalidQueryException {
