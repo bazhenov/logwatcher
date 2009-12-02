@@ -20,11 +20,6 @@ import static com.farpost.timepoint.Date.january;
 
 public class EntryTagTest {
 
-	@BeforeMethod
-	public void setUp() {
-		Locale.setDefault(new Locale("RU"));
-	}
-
 	@Test
 	public void tagCanFormatNormalEntries() throws JspException {
 		DateTime time = january(15, 2008).at(15, 03);
@@ -42,9 +37,9 @@ public class EntryTagTest {
 		assertThat(result, containsString("frontend"));
 		assertThat(result, containsString("error"));
 		assertThat(result, containsString(
-			"<span class='additionalInfo' title='15 Январь 2008, 15:03:00 VLAT'>15 января, 15:03</span>"));
+			"<span class='additionalInfo' title='15 January 2008, 15:03:00 VLAT'>15 january, 15:03</span>"));
 		assertThat(result,
-			containsString("<span class='additionalInfo' title='5232 раза'>более 5 000 раз</span>"));
+			containsString("<span class='additionalInfo' title='5232 times'>more than 5 000 times</span>"));
 
 		assertThat(result, containsString("<pre class='stacktrace'>"));
 
@@ -82,7 +77,6 @@ public class EntryTagTest {
 
 		String result = renderTag(tag);
 		assertThat(result, containsString("OutOfMemoryException"));
-		assertThat(result, containsString("∅"));
 		assertThat(result, not(containsString("<pre")));
 	}
 
