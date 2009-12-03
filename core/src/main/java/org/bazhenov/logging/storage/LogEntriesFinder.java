@@ -39,6 +39,11 @@ public class LogEntriesFinder {
 		return this;
 	}
 
+	public LogEntriesFinder withCriteria(Collection<LogEntryMatcher> matchers) {
+		criterias.addAll(matchers);
+		return this;
+	}
+
 	/**
 	 * Возвращает первую запись с данными условиями отбора или {@code null}, если таких записей
 	 * не существует.

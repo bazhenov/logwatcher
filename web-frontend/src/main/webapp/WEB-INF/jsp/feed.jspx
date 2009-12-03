@@ -81,7 +81,7 @@
 
 		<div id="searchBox">
 			<form method="get" action="">
-				<input type="text" name="query" id="searchInput" accesskey="S"/>
+				<input type="text" name="query" id="searchInput" accesskey="S" value="${query}"/>
 			</form>
 			<span>Try: <a href="#" class="asynchronous"
 			                   onclick="$('#searchInput').val($(this).text()); return false;">at: frontend occurred: last 2 days</a></span>

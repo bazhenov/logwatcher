@@ -2,12 +2,9 @@ package org.bazhenov.logging.web;
 
 import com.farpost.timepoint.Date;
 import static com.farpost.timepoint.Date.today;
-import org.bazhenov.logging.AggregatedLogEntry;
-import org.bazhenov.logging.Severity;
-import org.bazhenov.logging.storage.InvalidCriteriaException;
+import org.bazhenov.logging.*;
 import static org.bazhenov.logging.storage.LogEntries.entries;
-import org.bazhenov.logging.storage.LogStorage;
-import org.bazhenov.logging.storage.LogStorageException;
+import org.bazhenov.logging.storage.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +36,7 @@ public class FeedController {
 		}
 	};
 	private LogStorage storage;
+	private QueryTranslator translator = new AnnotationDrivenQueryTranslator(new TranslationRulesImpl());
 
 	public void setStorage(LogStorage storage) {
 		this.storage = storage;
@@ -56,8 +54,9 @@ public class FeedController {
 	}
 
 	@RequestMapping("/feed")
-	public String handleFeed(ModelMap map, HttpServletRequest request, HttpServletResponse response)
-		throws ParseException, LogStorageException, InvalidCriteriaException {
+	public String handleFeed(@RequestParam(value = "query", required = false) String query, ModelMap map,
+	                         HttpServletRequest request, HttpServletResponse response)
+		throws ParseException, LogStorageException, InvalidCriteriaException, InvalidQueryException {
 
 		response.setContentType("text/html");
 		response.setCharacterEncoding("UTF-8");
@@ -84,12 +83,21 @@ public class FeedController {
 		if ( date.lessThan(today()) ) {
 			map.addAttribute("nextDate", date.plusDay(1).asDate());
 		}
-		String severity = getSeverity(request);
-		map.addAttribute("severity", severity);
-		List<AggregatedLogEntry> entries = entries().
-			date(date).
-			severity(Severity.forName(severity)).
-			find(storage);
+		List<AggregatedLogEntry> entries;
+		if ( query != null && query.trim().length() > 0 ) {
+			List<LogEntryMatcher> matchers = translator.translate(query.trim());
+			entries = entries().
+				withCriteria(matchers).
+				find(storage);
+		}else{
+			String severity = getSeverity(request);
+			map.addAttribute("severity", severity);
+			entries = entries().
+				date(date).
+				severity(Severity.forName(severity)).
+				find(storage);
+		}
+		map.addAttribute("query", query);
 
 		int times = 0;
 		for ( AggregatedLogEntry entry : entries ) {
