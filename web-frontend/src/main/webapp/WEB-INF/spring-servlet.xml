@@ -8,7 +8,7 @@
 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
 
 	<bean class="org.bazhenov.logging.web.FeedController">
-		<property name="storage" ref="storage" />
+		<property name="storage" ref="storage"/>
 	</bean>
 	<bean class="org.bazhenov.logging.web.SessionController"/>
 

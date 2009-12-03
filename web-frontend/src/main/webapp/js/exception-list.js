@@ -15,7 +15,7 @@ $(document).ready(function() {
 			entry.addClass('removing');
 			$.ajax({
 				type: "GET",
-				url: './remove-entry/' + checksum,
+				url: './entry/remove?checksum=' + checksum,
 				complete: function() {
 					entry.removeClass('removing');
 				},

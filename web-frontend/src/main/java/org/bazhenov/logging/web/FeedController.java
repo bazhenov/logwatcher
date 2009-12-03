@@ -11,6 +11,7 @@ import org.bazhenov.logging.storage.LogStorageException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -31,28 +32,32 @@ public class FeedController {
 			return new SimpleDateFormat("yyyy-MM-dd");
 		}
 	};
-
 	private final ThreadLocal<DateFormat> fullFormat = new ThreadLocal<DateFormat>() {
 		@Override
 		protected DateFormat initialValue() {
 			return new SimpleDateFormat("d MMMM");
 		}
 	};
-
 	private LogStorage storage;
 
 	public void setStorage(LogStorage storage) {
 		this.storage = storage;
 	}
 
-	@RequestMapping(value = "/")
+	@RequestMapping("/")
 	public View handleRoot() {
 		return new RedirectView("/feed", true);
 	}
 
-	@RequestMapping(value = "/feed")
-	public String handleFeed(ModelMap map, HttpServletRequest request, HttpServletResponse response) throws ParseException,
-		LogStorageException, InvalidCriteriaException {
+	@RequestMapping("/entry/remove")
+	public View removeEntry(@RequestParam("checksum") String checksum) throws LogStorageException {
+		storage.removeEntries(checksum, today());
+		return new BufferView("Ok");
+	}
+
+	@RequestMapping("/feed")
+	public String handleFeed(ModelMap map, HttpServletRequest request, HttpServletResponse response)
+		throws ParseException, LogStorageException, InvalidCriteriaException {
 
 		response.setContentType("text/html");
 		response.setCharacterEncoding("UTF-8");
