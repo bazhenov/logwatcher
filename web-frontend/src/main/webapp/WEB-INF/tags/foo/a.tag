@@ -1,4 +1,4 @@
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@attribute name="entry" type="org.bazhenov.logging.AggregatedLogEntry" required="true" %>
 
 <c:set var="sample" value="${entry.sampleEntry}"/>

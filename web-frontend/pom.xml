@@ -84,6 +84,7 @@
 				<artifactId>maven-jetty-plugin</artifactId>
 				<configuration>
 					<overrideWebXml>src/test/resources/web.xml</overrideWebXml>
+					<contextPath>/</contextPath>
 				</configuration>
 			</plugin>
 		</plugins>

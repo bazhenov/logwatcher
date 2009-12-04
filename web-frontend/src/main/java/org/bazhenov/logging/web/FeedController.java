@@ -11,6 +11,7 @@ import org.bazhenov.logging.storage.LogStorageException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -94,6 +95,20 @@ public class FeedController {
 		map.addAttribute("times", times);
 
 		return "feed";
+	}
+
+	@RequestMapping("/feed/rss")
+	public String handleRss(ModelMap map, @RequestParam("severity") String severity) throws
+		LogStorageException, InvalidCriteriaException {
+
+		List<AggregatedLogEntry> entries = entries().
+			date(today()).
+			severity(Severity.forName(severity)).
+			find(storage);
+
+		map.addAttribute("entries", entries);
+
+		return "feed-rss";
 	}
 
 	private String getSeverity(HttpServletRequest request) {
