@@ -103,9 +103,7 @@ public class EntryTag extends TagSupport {
 			out.write(
 				"<div class='" + join(classes, " ") + "' checksum='" + sampleEntry.getChecksum() + "'>");
 			out.write("<div class='entryHeader'>");
-			out.write("<span class='" + join(markerClasses, " ") + "'>" + (hasMessage
-				? "&bull;"
-				: "") + "</span>");
+			out.write("<span class='" + join(markerClasses, " ") + "'></span>");
 			out.write("<div class='message'>" + title + "</div>");
 			out.write("<div class='messageOverlay'></div>");
 			out.write("<div class='times'>");

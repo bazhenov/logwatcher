@@ -29,7 +29,7 @@ a:visited			                  { color: brown; text-decoration: underline }
 .entry:hover .operations        { display: inline }
 
 .entry:hover .messageOverlay,
-.selectedEntry .messageOverlay  { background: url("../images/sha-hover.png") repeat-y; }
+.selectedEntry .messageOverlay  { background: url("/images/sha-hover.png") repeat-y; }
 
 .operations                     { display: none; position: absolute; top: 20px; right: 20px;
 																	font-size: 70% }
@@ -38,7 +38,7 @@ a:visited			                  { color: brown; text-decoration: underline }
 																	overflow: hidden; height: 28px; white-space: nowrap; }
 
 .messageOverlay                 { position: absolute; height: 28px; width:50px; top: 10px; right: 225px;
-																	background: url("../images/sha.png") repeat-y;}
+																	background: url("/images/sha.png") repeat-y;}
 
 .withStacktrace .message        { cursor: pointer; }
 
@@ -59,18 +59,22 @@ a:visited			                  { color: brown; text-decoration: underline }
 .selectedEntry .entryContent    { display: block !important }
 
 .spinner                        { position: absolute; top: 25px; left: 8px;
-																	background: url("../images/sp.gif") no-repeat;
+																	background: url("/images/sp.gif") no-repeat;
 																	width: 16px; height: 16px; display: none }
 
 .removing .spinner              { display: inline !important }
 
 .applicationId                  { font-variant:small-caps; color: black; margin-left: 17px }
 
-.marker                         { position: absolute; left: 12px; top: 20px; }
-.emptyMarker                    { font-size: 60% }
-.error .marker                  { color: #c90000 }
-.info .marker                   { color: #3366ff; }
-.warning .marker                { color: #ff9900; }
+.marker                         { position: absolute; left: 12px; top: 28px; width: 11px; height: 11px;
+																	background: url("/images/empty-overlay-white.png") no-repeat;
+}
+
+.withStacktrace .marker         { cursor: pointer; background-image: url("/images/bull-overlay-white.png") }
+
+.error .marker                  { background-color: #c90000 }
+.warning .marker                { background-color: #ff9900; }
+.info .marker                   { background-color: #3366ff; }
 .removing .marker               { visibility: hidden; }
 
 .additionalInfo                 {	border-bottom: 1px dashed; cursor: default }
@@ -95,7 +99,7 @@ a:visited			                  { color: brown; text-decoration: underline }
 #searchBox              { position: absolute; left:35%; width: 30%;	top: -10px; }
 
 #searchBox INPUT        { font-size: 16px; color: black; padding: 5px 5px 5px 25px;
-													background: url("../images/magnifying_glass.png") 5px center no-repeat;
+													background: url("/images/magnifying_glass.png") 5px center no-repeat;
 													margin-bottom: 5px; width: 100%; border: 1px inset gray; }
 #searchBox span         { font-size: 12px; color: gray; }
 

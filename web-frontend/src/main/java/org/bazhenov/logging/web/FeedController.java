@@ -109,6 +109,20 @@ public class FeedController {
 		return "feed";
 	}
 
+	@RequestMapping("/feed/rss")
+	public String handleRss(ModelMap map, @RequestParam("severity") String severity) throws
+		LogStorageException, InvalidCriteriaException {
+
+		List<AggregatedLogEntry> entries = entries().
+			date(today()).
+			severity(Severity.forName(severity)).
+			find(storage);
+
+		map.addAttribute("entries", entries);
+
+		return "feed-rss";
+	}
+
 	private String getSeverity(HttpServletRequest request) {
 		String get = request.getParameter("severity");
 		if ( get != null ) {
