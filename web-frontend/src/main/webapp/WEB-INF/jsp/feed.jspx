@@ -1,11 +1,15 @@
+<!--<%@page contentType="text/html"%>
+<%@page pageEncoding="UTF-8" %>
+<%@taglib prefix=""%>-->
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns="http://www.w3.org/1999/xhtml"
           version="2.1"
           xmlns:c="http://java.sun.com/jsp/jstl/core"
           xmlns:l="http://bazhenov.org/logging"
           xmlns:f="http://java.sun.com/jsp/jstl/functions"
-					xmlns:fmt="http://java.sun.com/jsp/jstl/fmt">
-	<jsp:directive.page contentType="text/html" />
-	<jsp:directive.page pageEncoding="UTF-8" />
+          xmlns:fmt="http://java.sun.com/jsp/jstl/fmt">
+
+	<jsp:directive.page contentType="text/html"/>
+	<jsp:directive.page pageEncoding="UTF-8"/>
 
 	&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"&gt;
 	<html>
@@ -68,7 +72,7 @@
 				</c:url>
 				<a href="${url}">&amp;larr;</a>&amp;nbsp;
 			</c:if>
-			<fmt:formatDate value="${date}" pattern="d MMMM, yyyy" />
+			<fmt:formatDate value="${date}" pattern="d MMMM, yyyy"/>
 			<c:if test="${prevDate != null}">
 				<c:url var="url" value="/feed">
 					<c:param name="date">
@@ -84,7 +88,7 @@
 				<input type="text" name="query" id="searchInput" accesskey="S"/>
 			</form>
 			<span>Try: <a href="#" class="asynchronous"
-			                   onclick="$('#searchInput').val($(this).text()); return false;">at: frontend occurred: last 2 days</a></span>
+			              onclick="$('#searchInput').val($(this).text()); return false;">at: frontend occurred: last 2 days</a></span>
 		</div>
 
 		<c:choose>

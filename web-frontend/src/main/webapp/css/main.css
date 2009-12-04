@@ -66,11 +66,15 @@ a:visited			                  { color: brown; text-decoration: underline }
 
 .applicationId                  { font-variant:small-caps; color: black; margin-left: 17px }
 
-.marker                         { position: absolute; left: 12px; top: 20px; }
-.emptyMarker                    { font-size: 60% }
-.error .marker                  { color: #c90000 }
-.info .marker                   { color: #3366ff; }
-.warning .marker                { color: #ff9900; }
+.marker                         { position: absolute; left: 12px; top: 28px; width: 11px; height: 11px;
+																	background: url("../images/empty-overlay-white.png") no-repeat;
+}
+
+.withStacktrace .marker         { cursor: pointer; background-image: url("../images/bull-overlay-white.png") }
+
+.error .marker                  { background-color: #c90000 }
+.warning .marker                { background-color: #ff9900; }
+.info .marker                   { background-color: #3366ff; }
 .removing .marker               { visibility: hidden; }
 
 .additionalInfo                 {	border-bottom: 1px dashed; cursor: default }

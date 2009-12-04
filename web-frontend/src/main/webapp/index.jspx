@@ -1,3 +1,0 @@
-<root xmlns="http://java.sun.com/JSP/Page" version="2.0">
-	<forward page="/feed" />
-</root>
