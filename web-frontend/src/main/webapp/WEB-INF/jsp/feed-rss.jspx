@@ -5,25 +5,25 @@
           xmlns:f="http://java.sun.com/jsp/jstl/functions"
           xmlns:fmt="http://java.sun.com/jsp/jstl/fmt">
 
-	<jsp:directive.page contentType="text/xml"/>
+	<jsp:directive.page contentType="application/rss+xml"/>
 	<jsp:directive.page pageEncoding="UTF-8"/>
-	<?xml version="1.0" encoding="UTF-8" ?>
+
 	<rss version="2.0">
-
 		<channel>
-			<title>RSS Example</title>
-			<description>This is an example of an RSS feed</description>
-			<link>http://www.domain.com/link.htm</link>
-			<lastBuildDate>Mon, 28 Aug 2006 11:12:55 -0400</lastBuildDate>
-			<pubDate>Tue, 29 Aug 2006 09:00:00 -0400</pubDate>
+			<title>LogViewer feed</title>
+			<description>Feed of recently happended errors</description>
+			<link>http://localhost:8080<c:url value="/"/></link>
 
-			<item>
-				<title>Item Example</title>
-				<description>This is an example of an Item</description>
-				<link>http://www.domain.com/link.htm</link>
-				<guid isPermaLink="false"> 1102345</guid>
-				<pubDate>Tue, 29 Aug 2006 09:00:00 -0400</pubDate>
-			</item>
+			<c:forEach var="item" items="${entries}">
+				<item>
+					<title>${item.sampleEntry.message}</title>
+					<description><pre>${l:formatCause(item.sampleEntry.cause)}</pre></description>
+					<link><c:url value="http://localhost:8080/feed">
+						<c:param name="severity" value="${item.sampleEntry.severity}" />
+					</c:url>#${item.sampleEntry.checksum}</link>
+					<pubDate><fmt:formatDate value="${date}" pattern="EE, d MMM yyyy HH:mm:ss ZZZZ" /></pubDate>
+				</item>
+			</c:forEach>
 
 		</channel>
 	</rss>

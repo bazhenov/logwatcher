@@ -21,6 +21,14 @@
 	</tag>
 
 	<function>
+		<description>Форматирует Cause объект</description>
+		<name>formatCause</name>
+		<function-class>org.bazhenov.logging.web.tags.EntryTag</function-class>
+		<function-signature>java.lang.String formatCause(org.bazhenov.logging.Cause)</function-signature>
+		<example>formatCause(cause)</example>
+	</function>
+
+	<function>
 		<name>pluralize</name>
 		<function-class>org.bazhenov.logging.web.tags.EntryTag</function-class>
 		<function-signature>java.lang.String pluralize(int, java.lang.String)</function-signature>

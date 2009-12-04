@@ -136,7 +136,10 @@ public class EntryTag extends TagSupport {
 		return EVAL_PAGE;
 	}
 
-	private static String formatCause(Cause rootCause) {
+	public static String formatCause(Cause rootCause) {
+		if ( rootCause == null ) {
+			return "";
+		}
 		StringBuilder prefix = new StringBuilder();
 		StringBuilder stackTrace = new StringBuilder();
 

@@ -110,15 +110,19 @@ public class FeedController {
 	}
 
 	@RequestMapping("/feed/rss")
-	public String handleRss(ModelMap map, @RequestParam("severity") String severity) throws
+	public String handleRss(ModelMap map, @RequestParam(value = "severity", required = false) String s) throws
 		LogStorageException, InvalidCriteriaException {
 
+		Severity severity = s == null
+			? Severity.error
+			: Severity.forName(s);
 		List<AggregatedLogEntry> entries = entries().
 			date(today()).
-			severity(Severity.forName(severity)).
+			severity(severity).
 			find(storage);
 
 		map.addAttribute("entries", entries);
+		map.addAttribute("date", new java.util.Date());
 
 		return "feed-rss";
 	}

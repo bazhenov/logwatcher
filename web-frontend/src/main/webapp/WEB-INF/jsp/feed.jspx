@@ -28,6 +28,9 @@
 		<script type="text/javascript" src="${jsUrl}">/**/</script>
 		<c:url value="/js/exception-list.js" var="jsUrl"/>
 		<script type="text/javascript" src="${jsUrl}">/**/</script>
+
+		<c:url value="/feed/rss" var="rssUrl" />
+		<link rel="alternate" type="application/rss+xml" title="Суровая реальность - RSS" href="${rssUrl}?severity=${severity}" />
 	</head>
 
 	<body>
