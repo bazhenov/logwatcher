@@ -1,6 +1,7 @@
 package org.bazhenov.logging.storage;
 
 import com.farpost.timepoint.Date;
+import com.sun.xml.internal.bind.v2.runtime.output.NamespaceContextImpl;
 
 import java.util.*;
 
@@ -22,10 +23,28 @@ public class LogEntriesFinder {
 		return this;
 	}
 
+	/**
+	 * Добавляет критерий поиска по диапазону дат.
+	 * @param from начало диапазона (исключая саму дату)
+	 * @param to конец диапазона (включительно)
+	 */
+	public LogEntriesFinder date(Date from, Date to) {
+		criterias.add(new DateMatcher(from, to));
+		return this;
+	}
+
+	/**
+	 * Добавляет критерий по идентификатору приложения
+	 * @param applicationId идентификатор приложения
+	 */
 	public LogEntriesFinder applicationId(String applicationId) {
 		return withCriteria(new ApplicationIdMatcher(applicationId));
 	}
 
+	/**
+	 * Добавляет критерий по контрольной сумме
+	 * @param checksum контрольная сумма
+	 */
 	public LogEntriesFinder checksum(String checksum) {
 		return withCriteria(new ChecksumMatcher(checksum));
 	}

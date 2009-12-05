@@ -101,6 +101,37 @@ abstract public class LogStorageTest {
 	}
 
 	@Test
+	public void storageCanFilterEntriesByDate() throws LogStorageException, InvalidCriteriaException {
+		entry().
+			occured(today().at("12:22")).
+			saveIn(storage);
+
+		entry().
+			occured(yesterday().at("10:00")).
+			saveIn(storage);
+
+		int count = entries()
+			.date(today(), today()).
+			count(storage);
+		assertThat(count, equalTo(1));
+
+		count = entries()
+			.date(yesterday(), today()).
+			count(storage);
+		assertThat(count, equalTo(1));
+
+		count = entries()
+			.date(today().minusDay(2), today()).
+			count(storage);
+		assertThat(count, equalTo(2));
+
+		count = entries()
+			.date(today(), tomorrow()).
+			count(storage);
+		assertThat(count, equalTo(0));
+	}
+
+	@Test
 	public void storageCanMaintainChecksumAliases() throws LogStorageException,
 		InvalidCriteriaException {
 		entry().
