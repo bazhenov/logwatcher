@@ -58,14 +58,6 @@ public class SqlLogStorage implements LogStorage {
 		}
 	}
 
-	public List<AggregatedLogEntry> getEntries(Date date) throws LogStorageException {
-		try {
-			return jdbc.query("SELECT * FROM log_entry WHERE date = ?", entryCreator, date(date));
-		} catch ( DataAccessException e ) {
-			throw new LogStorageException(e);
-		}
-	}
-
 	public List<AggregatedLogEntry> getEntries(Collection<LogEntryMatcher> criterias)
 		throws LogStorageException, InvalidCriteriaException {
 		StringBuilder sql = new StringBuilder("SELECT * FROM `log_entry` l");

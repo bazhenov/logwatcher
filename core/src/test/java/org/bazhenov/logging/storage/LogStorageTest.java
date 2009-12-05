@@ -2,6 +2,7 @@ package org.bazhenov.logging.storage;
 
 import com.farpost.timepoint.Date;
 import static com.farpost.timepoint.Date.*;
+import static com.farpost.timepoint.Date.today;
 import com.farpost.timepoint.DateTime;
 import org.bazhenov.logging.AggregatedLogEntry;
 import org.bazhenov.logging.LogEntry;
@@ -68,8 +69,9 @@ abstract public class LogStorageTest {
 
 	@Test
 	public void storageCanGetAggregatedEntries() throws Exception {
-		DateTime morning = november(12, 2008).at("11:00");
-		DateTime evening = november(12, 2008).at("18:05");
+		Date date = november(12, 2008);
+		DateTime morning = date.at("11:00");
+		DateTime evening = date.at("18:05");
 
 		entry().
 			occured(morning).
@@ -78,7 +80,9 @@ abstract public class LogStorageTest {
 			occured(evening).
 			saveIn(storage);
 
-		List<AggregatedLogEntry> list = storage.getEntries(morning.getDate());
+		List<AggregatedLogEntry> list = entries().
+			date(date).
+			find(storage);
 		assertThat(list.size(), equalTo(1));
 	}
 
@@ -159,7 +163,9 @@ abstract public class LogStorageTest {
 			checksum("FE").
 			saveIn(storage);
 
-		List<AggregatedLogEntry> list = storage.getEntries(today());
+		List<AggregatedLogEntry> list = entries().
+			date(today()).
+			find(storage);
 		assertThat(list.size(), equalTo(2));
 	}
 

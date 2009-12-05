@@ -1,7 +1,6 @@
 package org.bazhenov.logging.storage;
 
 import com.farpost.timepoint.Date;
-import com.sun.xml.internal.bind.v2.runtime.output.NamespaceContextImpl;
 
 import java.util.*;
 
@@ -11,14 +10,8 @@ import org.bazhenov.logging.Severity;
 public class LogEntriesFinder {
 
 	private final List<LogEntryMatcher> criterias = new LinkedList<LogEntryMatcher>();
-	@Deprecated
-	private Date date;
-
-	public LogEntriesFinder() {
-	}
 
 	public LogEntriesFinder date(Date date) {
-		this.date = date;
 		criterias.add(new DateMatcher(date));
 		return this;
 	}
@@ -73,8 +66,9 @@ public class LogEntriesFinder {
 	 * @throws LogStorageException в случае возникновения внутренней ошибки
 	 * @param storage
 	 */
-	public AggregatedLogEntry findFirst(LogStorage storage) throws LogStorageException {
-		List<AggregatedLogEntry> entries = storage.getEntries(date);
+	public AggregatedLogEntry findFirst(LogStorage storage) throws LogStorageException,
+		InvalidCriteriaException {
+		List<AggregatedLogEntry> entries = find(storage);
 		return entries.size() > 0
 			? entries.get(0)
 			: null;
