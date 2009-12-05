@@ -2,11 +2,27 @@ severity = ['all', 'trace', 'debug', 'info', 'warning', 'error'];
 
 $(document).ready(function() {
 
+	$('#searchInput').focus();
+
 	$('.message').click(function() {
 		$(this).parents(".entry").toggleClass('selectedEntry')
 	});
 
-	$('#searchInput').focus();
+	$('#legend #question').click(function() {
+		$(this).parents("#legend").toggleClass('selected');
+	});
+
+	$('#legend a').click(function() {
+		var input = $('#searchInput');
+		var value = $(this).text();
+		if ( input.val().length > 0 && input.val().substr(-1, 1) != ' ' ) {
+			value = " " + value;
+		}
+		input.val(input.val() + value);
+		input.focus();
+	});
+
+
 
 	$('a.removeEntry').click(function() {
 		var entry = $(this).parents(".entry")
