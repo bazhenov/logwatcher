@@ -30,7 +30,7 @@ public class LogEntryBuilder {
 	private String applicationId = "some-application";
 
 	public LogEntry create() {
-		return new LogEntry(time, group, message, severity, checksum, cause, applicationId);
+		return new LogEntry(time, group, message, severity, checksum, applicationId, null, cause);
 	}
 
 	/**

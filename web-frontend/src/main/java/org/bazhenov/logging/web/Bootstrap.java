@@ -29,15 +29,22 @@ public class Bootstrap {
 			"  3 : advertUnpopularDeactivationService.class.php:34 AdvertRemoteAdvertisement->getLinks(true)\n" +
 			"  2 : advertUnpopularDeactivationService.class.php:23 advertUnpopularDeactivationService->deactivateByMaxViews([849])advertUnpopularDeactivationService.class.php:23 advertUnpopularDeactivationService->deactivateByMaxViews([849])advertUnpopularDeactivationService.class.php:23 advertUnpopularDeactivationService->deactivateByMaxViews([849])\n" +
 			"  1 : service_runner.php:38 advertUnpopularDeactivationService->run()");
-		storage.writeEntry(new LogEntry(DateTime.now().minusHour(2), "group", "OverflowFundsException", Severity.warning, "sum2", cause, "billing"));
-		storage.writeEntry(new LogEntry(DateTime.now().minusHour(2), "group", "OverflowFundsException", Severity.warning, "sum2", cause, "billing"));
+		storage.writeEntry(new LogEntry(DateTime.now().minusHour(2), "group", "OverflowFundsException", Severity.warning, "sum2",
+			"billing", null, cause));
+		storage.writeEntry(new LogEntry(DateTime.now().minusHour(2), "group", "OverflowFundsException", Severity.warning, "sum2",
+			"billing", null, cause));
 		storage.writeEntry(new LogEntry(DateTime.now().minusMinute(18), "group", "java.lang.OutOfMemoryException", Severity.info, "sum3", "search"));
 
-		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4", cause, "searcha"));
-		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4", cause, "searcha"));
-		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4", cause, "searcha"));
-		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long longvery very very long long Exceptionvery very very very long longvery very long longvery very very long long Exception", Severity.error, "sum4", cause, "searcha"));
+		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
+			"searcha", null, cause));
+		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
+			"searcha", null, cause));
+		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
+			"searcha", null, cause));
+		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long longvery very very long long Exceptionvery very very very long longvery very long longvery very very long long Exception", Severity.error, "sum4",
+			"searcha", null, cause));
 
-		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum5", null, "searcha"));
+		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum5",
+			"searcha", null, null));
 	}
 }

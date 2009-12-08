@@ -2,6 +2,8 @@ package org.bazhenov.logging;
 
 import com.farpost.timepoint.DateTime;
 
+import java.util.*;
+
 /**
  * Обьект представляющий собой запись лога. Запись лога описывается датой, группой, описанием,
  * важностью ({@link Severity}), контрольной суммой и причиной ({@link Cause}).
@@ -14,28 +16,32 @@ import com.farpost.timepoint.DateTime;
  */
 public class LogEntry {
 
-	private DateTime date;
-	private String message;
-	private Severity severity;
-	private String group;
-	private String checksum;
-	private String applicationId;
-	private Cause cause;
+	private final DateTime date;
+	private final String message;
+	private final Severity severity;
+	private final String group;
+	private final String checksum;
+	private final String applicationId;
+	private final Map<String, String> attributes;
+	private final Cause cause;
 
 	public LogEntry(DateTime date, String group, String message, Severity severity, String checksum,
-	                String applicationId) {
+	                String applicationId, Map<String, String> attributes) {
+		this(date, group, message, severity, checksum, applicationId, attributes, null);
+	}
+
+	public LogEntry(DateTime date, String group, String message, Severity severity, String checksum,
+	                String applicationId, Map<String, String> attributes, Cause cause) {
 		this.date = date;
 		this.group = group;
 		this.message = message;
 		this.severity = severity;
 		this.checksum = checksum;
 		this.applicationId = applicationId;
-	}
-
-	public LogEntry(DateTime date, String group, String message, Severity severity, String checksum,
-	                Cause cause, String applicationId) {
-		this(date, group, message, severity, checksum, applicationId);
 		this.cause = cause;
+		this.attributes = attributes == null
+			? new HashMap<String, String>()
+			: new HashMap<String, String>(attributes);
 	}
 
 	public DateTime getDate() {
@@ -66,6 +72,11 @@ public class LogEntry {
 		return applicationId;
 	}
 
+	public Map<String, String> getAttributes() {
+		return attributes;
+	}
+
+	@Override
 	public boolean equals(Object o) {
 		if ( this == o ) {
 			return true;
@@ -74,39 +85,44 @@ public class LogEntry {
 			return false;
 		}
 
-		LogEntry entry = (LogEntry) o;
+		LogEntry logEntry = (LogEntry) o;
 
+		if ( applicationId != null
+			? !applicationId.equals(logEntry.applicationId)
+			: logEntry.applicationId != null ) {
+			return false;
+		}
+		if ( attributes != null
+			? !attributes.equals(logEntry.attributes)
+			: logEntry.attributes != null ) {
+			return false;
+		}
 		if ( cause != null
-			? !cause.equals(entry.cause)
-			: entry.cause != null ) {
+			? !cause.equals(logEntry.cause)
+			: logEntry.cause != null ) {
 			return false;
 		}
 		if ( checksum != null
-			? !checksum.equals(entry.checksum)
-			: entry.checksum != null ) {
+			? !checksum.equals(logEntry.checksum)
+			: logEntry.checksum != null ) {
 			return false;
 		}
 		if ( date != null
-			? !date.equals(entry.date)
-			: entry.date != null ) {
+			? !date.equals(logEntry.date)
+			: logEntry.date != null ) {
 			return false;
 		}
 		if ( group != null
-			? !group.equals(entry.group)
-			: entry.group != null ) {
+			? !group.equals(logEntry.group)
+			: logEntry.group != null ) {
 			return false;
 		}
 		if ( message != null
-			? !message.equals(entry.message)
-			: entry.message != null ) {
+			? !message.equals(logEntry.message)
+			: logEntry.message != null ) {
 			return false;
 		}
-		if ( applicationId != null
-			? !applicationId.equals(entry.applicationId)
-			: entry.applicationId != null ) {
-			return false;
-		}
-		if ( severity != entry.severity ) {
+		if ( severity != logEntry.severity ) {
 			return false;
 		}
 
@@ -132,6 +148,9 @@ public class LogEntry {
 			: 0);
 		result = 31 * result + (applicationId != null
 			? applicationId.hashCode()
+			: 0);
+		result = 31 * result + (attributes != null
+			? attributes.hashCode()
 			: 0);
 		result = 31 * result + (cause != null
 			? cause.hashCode()

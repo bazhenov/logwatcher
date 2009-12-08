@@ -6,14 +6,12 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockPageContext;
 import org.springframework.mock.web.MockServletContext;
 import org.testng.annotations.Test;
-import org.testng.annotations.BeforeMethod;
 import org.bazhenov.logging.*;
 import static org.bazhenov.logging.web.tags.EntryTag.pluralize;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.Tag;
 import java.io.UnsupportedEncodingException;
-import java.util.Locale;
 
 import com.farpost.timepoint.DateTime;
 import static com.farpost.timepoint.Date.january;
@@ -27,7 +25,7 @@ public class EntryTagTest {
 			new Cause("NotRuntimeException", "Ooops#2", "stacktrace#2"));
 
 		LogEntry logEntry = new LogEntry(time, "SomeGroup", "RuntimeFailure", Severity.error, "ae23",
-			cause, "frontend");
+			"frontend", null, cause);
 		AggregatedLogEntry aggregatedEntry = new AggregatedLogEntryImpl(logEntry, time, 5232);
 
 		EntryTag tag = new EntryTag();
@@ -56,7 +54,8 @@ public class EntryTagTest {
 	void testTagLibShouldFormatLongEntries() throws JspException {
 		String title = "very very very very very very very very very very very very very very very very very very very very very very very very very very very very very very long text";
 		DateTime time = january(2008, 12).at(12, 02);
-		LogEntry logEntry = new LogEntry(time, "group", title, Severity.error, "as", null, "frontend");
+		LogEntry logEntry = new LogEntry(time, "group", title, Severity.error, "as", "frontend", null,
+			null);
 		AggregatedLogEntry aggregatedEntry = new AggregatedLogEntryImpl(logEntry, time, 5232);
 
 		EntryTag tag = new EntryTag();

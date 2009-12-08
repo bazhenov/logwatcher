@@ -87,28 +87,29 @@
 
 		<div id="searchBox">
 			<form method="get" action="">
-				<input type="search" name="query" id="searchInput" accesskey="S" value="${query}"/>
+				<input type="text" name="query" id="searchInput" accesskey="S" value="${query}"/>
 
-				<!--<div id="legend">-->
-					 <!--<div id="question">?</div>-->
-					 <!--<div id="content">-->
-						 <!--<ul>-->
-							 <!--<li>-->
-								 <!--<a href="#" class="asynchronous">at:</a> &amp;mdash; location of error;-->
-								 <!--Ex: <span>at:frontend</span>-->
-							 <!--</li>-->
-							 <!--<li>-->
-								 <!--<a href="#" class="asynchronous">occurred:</a> &amp;mdash; time of error;-->
-								 <!--Ex: <span>occurred:last 2 days</span>, <span>occurred:2009-11-26</span>-->
-							 <!--</li>-->
-							 <!--<li>-->
-								 <!--<a href="#" class="asynchronous">stack-contains:</a> &amp;mdash; search by stack;-->
-								 <!--<span>stack-contains:AdvertRemoteProvider</span>-->
-							 <!--</li>-->
-						 <!--</ul>-->
-					 <!--</div>-->
-				 <!--</div>-->
+				<div id="legend">
+					<div id="question">?</div>
+					<div id="content">
+						<ul>
+							<li>
+								<a href="#" class="asynchronous">at:</a> &amp;mdash; location of error;
+								Ex: <span>at:frontend</span>
+							</li>
+							<li>
+								<a href="#" class="asynchronous">occurred:</a> &amp;mdash; time of error;
+								Ex: <span>occurred:last 2 days</span>, <span>occurred:2009-11-26</span>
+							</li>
+							<li>
+								<a href="#" class="asynchronous">stack-contains:</a> &amp;mdash; search by stack;
+								<span>stack-contains:AdvertRemoteProvider</span>
+							</li>
+						</ul>
+					</div>
+				</div>
 			</form>
+
 			<span>Try: <a href="#" class="asynchronous"
 			              onclick="$('#searchInput').val($(this).text()); return false;">at: frontend occurred: last 2 days</a></span>
 		</div>

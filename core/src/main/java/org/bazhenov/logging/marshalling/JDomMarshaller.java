@@ -10,6 +10,7 @@ import org.jdom.output.XMLOutputter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.text.*;
+import java.util.*;
 
 public class JDomMarshaller implements Marshaller {
 
@@ -25,7 +26,8 @@ public class JDomMarshaller implements Marshaller {
 			return new XMLOutputter(Format.getPrettyFormat());
 		}
 	};
-	private final Namespace namespace = Namespace.getNamespace("http://logging.farpost.com/schema/v1.1");
+	private final Namespace namespace = Namespace.getNamespace(
+		"http://logging.farpost.com/schema/v1.1");
 	private final DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
 	public String marshall(LogEntry entry) throws MarshallerException {
@@ -38,13 +40,24 @@ public class JDomMarshaller implements Marshaller {
 		root.addContent(element("group").setAttribute("name", entry.getCategory()));
 		root.addContent(element("severity").setAttribute("name", entry.getSeverity().toString()));
 
+		Map<String, String> attributes = entry.getAttributes();
+		if ( attributes.size() > 0 ) {
+			Element attributesNode = element("attributes");
+			root.addContent(attributesNode);
+			for ( Map.Entry<String, String> row : attributes.entrySet() ) {
+				Element node = element("attribute");
+				node.setAttribute("name", row.getKey());
+				node.setAttribute("value", row.getValue());
+				attributesNode.addContent(node);
+			}
+		}
+
 		Cause cause = entry.getCause();
 		if ( cause != null ) {
 			marshalCause(cause, root);
 		}
 
 		Document doc = new Document(root);
-
 		return out.get().outputString(doc);
 	}
 
@@ -78,7 +91,7 @@ public class JDomMarshaller implements Marshaller {
 			Element root = doc.getRootElement();
 			String message = root.getChildText("message", namespace);
 			String application = root.getChild("application", namespace).getAttributeValue("id");
-			if(application == null){
+			if ( application == null ) {
 				application = "default";
 			}
 			String checksum = root.getAttributeValue("checksum");
@@ -92,7 +105,19 @@ public class JDomMarshaller implements Marshaller {
 			if ( causeNode != null ) {
 				cause = parseCause(causeNode);
 			}
-			return new LogEntry(dateTime, group, message, severity, checksum, cause, application);
+
+			Map<String, String> attributes = null;
+			Element attributesNode = root.getChild("attributes", namespace);
+			if ( attributesNode != null ) {
+				attributes = new HashMap<String, String>();
+				for ( Object node : attributesNode.getChildren("attribute", namespace) ) {
+					Element el = (Element) node;
+					attributes.put(el.getAttributeValue("name"), el.getAttributeValue("value"));
+				}
+			}
+
+			return new LogEntry(dateTime, group, message, severity, checksum, application, attributes,
+				cause);
 		} catch ( JDOMException e ) {
 			throw new MarshallerException(e);
 		} catch ( IOException e ) {
