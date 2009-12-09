@@ -20,11 +20,11 @@ import java.util.TreeSet;
 
 public class EntryTag extends TagSupport {
 
-	private final int MAX_LENGTH = 80;
+	public static final int MAX_LENGTH = 80;
 	private AggregatedLogEntry entry;
-	DateFormat shortFormat = new DateTimeFormat();
-	DateFormat fullFormat = new SimpleDateFormat("d MMMM yyyy, HH:mm:ss zz");
-	private static final String JIRA_LINK_FORMAT = "http://jira.dev.loc/jira/secure/CreateIssueDetails.jspa?pid=10000&issuetype=1&summary={0}&description={1}&priority=3";
+	public static DateFormat shortFormat = new DateTimeFormat();
+	public static DateFormat fullFormat = new SimpleDateFormat("d MMMM yyyy, HH:mm:ss zz");
+	public static final String JIRA_LINK_FORMAT = "http://jira.dev.loc/jira/secure/CreateIssueDetails.jspa?pid=10000&issuetype=1&summary={0}&description={1}&priority=3";
 
 	public void setEntry(AggregatedLogEntry entry) {
 		this.entry = entry;

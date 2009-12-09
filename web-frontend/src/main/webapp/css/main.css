@@ -54,6 +54,11 @@ a:visited			                  { color: brown; text-decoration: underline }
 .entryContent .stacktrace       { font-family: monospace; margin-bottom: 5px; margin-top: 10px;
 																	white-space:pre-wrap; margin-right: 40px; }
 
+.entryContent .attributes       { list-style: none; padding: 0; }
+.entryContent .attributes label { font-weight: bold; }
+.entryContent .attributes span  { color: gray; font-size: 80%; }
+abbr                            { cursor: default; border-bottom: 1px dashed }
+
 .entryContent ul                { list-style-type: none; padding: 0; color: gray }
 .entryContent li span           { color: black }
 .selectedEntry .entryContent    { display: block !important }
