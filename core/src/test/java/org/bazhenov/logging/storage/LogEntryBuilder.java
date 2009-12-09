@@ -4,6 +4,8 @@ import org.bazhenov.logging.*;
 import com.farpost.timepoint.DateTime;
 import static com.farpost.timepoint.DateTime.now;
 
+import java.util.*;
+
 /**
  * Просто builder новых записей, которые записываются в хранилище.
  * <p/>
@@ -28,9 +30,10 @@ public class LogEntryBuilder {
 	private String checksum = "2fde43";
 	private Cause cause;
 	private String applicationId = "some-application";
+	private Map<String, String> attributes = new HashMap<String, String>();
 
 	public LogEntry create() {
-		return new LogEntry(time, group, message, severity, checksum, applicationId, null, cause);
+		return new LogEntry(time, group, message, severity, checksum, applicationId, attributes, cause);
 	}
 
 	/**
@@ -60,6 +63,11 @@ public class LogEntryBuilder {
 
 	public LogEntryBuilder severity(Severity severity) {
 		this.severity = severity;
+		return this;
+	}
+
+	public LogEntryBuilder attribute(String name, String value) {
+		attributes.put(name, value);
 		return this;
 	}
 }

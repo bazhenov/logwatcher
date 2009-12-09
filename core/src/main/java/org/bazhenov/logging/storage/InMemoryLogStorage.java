@@ -34,8 +34,7 @@ public class InMemoryLogStorage implements LogStorage {
 
 			if ( dayEntries.containsKey(checksum) ) {
 				AggregatedLogEntryImpl aggregate = dayEntries.get(checksum);
-				aggregate.setLastTime(entry.getDate());
-				aggregate.incrementCount();
+				aggregate.happensAgain(entry);
 			} else {
 				AggregatedLogEntryImpl aggregatedEntry = new AggregatedLogEntryImpl(entry);
 				dayEntries.put(entry.getChecksum(), aggregatedEntry);

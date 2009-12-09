@@ -26,7 +26,7 @@ public class EntryTagTest {
 
 		LogEntry logEntry = new LogEntry(time, "SomeGroup", "RuntimeFailure", Severity.error, "ae23",
 			"frontend", null, cause);
-		AggregatedLogEntry aggregatedEntry = new AggregatedLogEntryImpl(logEntry, time, 5232);
+		AggregatedLogEntry aggregatedEntry = new AggregatedLogEntryImpl(logEntry, time, 5232, null);
 
 		EntryTag tag = new EntryTag();
 		tag.setEntry(aggregatedEntry);
@@ -56,7 +56,7 @@ public class EntryTagTest {
 		DateTime time = january(2008, 12).at(12, 02);
 		LogEntry logEntry = new LogEntry(time, "group", title, Severity.error, "as", "frontend", null,
 			null);
-		AggregatedLogEntry aggregatedEntry = new AggregatedLogEntryImpl(logEntry, time, 5232);
+		AggregatedLogEntry aggregatedEntry = new AggregatedLogEntryImpl(logEntry, time, 5232, null);
 
 		EntryTag tag = new EntryTag();
 		tag.setEntry(aggregatedEntry);
@@ -68,7 +68,7 @@ public class EntryTagTest {
 	void testTagLibCanFormatEmptyEntries() throws JspException {
 		DateTime time = DateTime.now();
 		LogEntry logEntry = new LogEntry(time, "SomeGroup", "OutOfMemoryException", Severity.error,
-			"ae23", "frontend");
+			"ae23", "frontend", null);
 		AggregatedLogEntry aggregatedEntry = new AggregatedLogEntryImpl(logEntry);
 
 		EntryTag tag = new EntryTag();

@@ -136,6 +136,25 @@ abstract public class LogStorageTest {
 	}
 
 	@Test
+	public void storageCanStoreAttributes() throws LogStorageException, InvalidCriteriaException {
+		entry().
+			attribute("machine", "host1").
+			saveIn(storage);
+
+		entry().
+			attribute("machine", "host1").
+			attribute("user", "john-doe").
+			saveIn(storage);
+
+		AggregatedLogEntry entry = entries().
+			date(today()).
+			findFirst(storage);
+		assertThat(entry.getAttributes().size(), equalTo(2));
+		assertThat(entry.getAttributes().get("machine").get("host1"), equalTo(2));
+		assertThat(entry.getAttributes().get("user").get("john-doe"), equalTo(1));
+	}
+
+	@Test
 	public void storageCanMaintainChecksumAliases() throws LogStorageException,
 		InvalidCriteriaException {
 		entry().

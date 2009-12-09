@@ -8,6 +8,7 @@ CREATE TABLE log_entry (
 	severity INT NOT NULL,
 	application_id VARCHAR NOT NULL,
 	text varchar NOT NULL,
+	attributes varchar NOT NULL,
 	count INT NOT NULL DEFAULT 1,
 	last_date TIMESTAMP NOT NULL,
 	PRIMARY KEY(id),

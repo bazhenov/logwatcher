@@ -2,6 +2,8 @@ package org.bazhenov.logging;
 
 import com.farpost.timepoint.DateTime;
 
+import java.util.*;
+
 /**
  * Представляет собой результат аггрегирования нескольких записей {@link LogEntry}
  */
@@ -12,4 +14,6 @@ public interface AggregatedLogEntry {
 	int getCount();
 
 	LogEntry getSampleEntry();
+
+	Map<String, Map<String, Integer>> getAttributes();
 }

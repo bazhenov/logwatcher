@@ -4,10 +4,13 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.bazhenov.logging.marshalling.JDomMarshaller;
 import org.bazhenov.logging.storage.sql.*;
 import static org.bazhenov.logging.storage.sql.SqlLogStorage.loadDump;
+import org.testng.annotations.Test;
 
 import java.io.*;
 import java.sql.SQLException;
 import java.util.*;
+
+import com.farpost.marshaller.*;
 
 public class SqlLogStorageH2Test extends LogStorageTest {
 
@@ -16,7 +19,7 @@ public class SqlLogStorageH2Test extends LogStorageTest {
 		ds.setDriverClassName("org.h2.Driver");
 		ds.setUsername("sa");
 		ds.setPassword("");
-		ds.setUrl("jdbc:h2:./test/as");
+		ds.setUrl("jdbc:h2:./test/database");
 
 		InputStream stream = SqlLogStorage.class.getResourceAsStream("/dump.h2.sql");
 		loadDump(ds, stream);
