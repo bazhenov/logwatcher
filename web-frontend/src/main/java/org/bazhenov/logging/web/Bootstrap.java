@@ -7,6 +7,8 @@ import org.bazhenov.logging.Severity;
 import org.bazhenov.logging.Cause;
 import com.farpost.timepoint.DateTime;
 
+import java.util.*;
+
 public class Bootstrap {
 
 	private LogStorage storage;
@@ -30,9 +32,15 @@ public class Bootstrap {
 			"  2 : advertUnpopularDeactivationService.class.php:23 advertUnpopularDeactivationService->deactivateByMaxViews([849])advertUnpopularDeactivationService.class.php:23 advertUnpopularDeactivationService->deactivateByMaxViews([849])advertUnpopularDeactivationService.class.php:23 advertUnpopularDeactivationService->deactivateByMaxViews([849])\n" +
 			"  1 : service_runner.php:38 advertUnpopularDeactivationService->run()");
 		storage.writeEntry(new LogEntry(DateTime.now().minusHour(2), "group", "OverflowFundsException", Severity.warning, "sum2",
-			"billing", null, cause));
+			"billing", new HashMap<String, String>() {{
+				put("url" ,"/some/foo/bar");
+				put("machine", "aux1.srv.loc");
+			}}, cause));
 		storage.writeEntry(new LogEntry(DateTime.now().minusHour(2), "group", "OverflowFundsException", Severity.warning, "sum2",
-			"billing", null, cause));
+			"billing", new HashMap<String, String>(){{
+				put("url" ,"/some/foo/bar?uri=1");
+				put("machine", "aux1.srv.loc");
+			}}, cause));
 		storage.writeEntry(new LogEntry(DateTime.now().minusMinute(18), "group", "java.lang.OutOfMemoryException", Severity.info, "sum3", "search", null));
 
 		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",

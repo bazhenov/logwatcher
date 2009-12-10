@@ -13,6 +13,7 @@
 <%@ tag import="static org.bazhenov.logging.web.tags.EntryTag.pluralize" %>
 <%@ tag import="static org.bazhenov.logging.web.tags.EntryTag.formatCause" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="l" tagdir="/WEB-INF/tags" %>
 <%@attribute name="entry" type="org.bazhenov.logging.AggregatedLogEntry" required="true" %>
 
 <%
@@ -88,9 +89,11 @@
 		if ( hasMessage ) {
 			out.write("<div class='entryContent'>");
 			out.write("<ol class='attributes'>");
-			out.write(
-				"<li><label>url:</label> /bulletin/351628.html <span>(8 times)</span>, " + "<abbr title='Very long title'>/adding?req...</abbr> <span>(8 times)</span></li>");
-			out.write("<li><label>host:</label> aux1.srv.loc, /adding <span>(18 times)</span></li>");
+			%>
+			<c:forEach var="row" items="${entry.attributes}">
+				<li><l:attribute set="${row.value}" name="${row.key}" /></li>
+			</c:forEach>
+			<%
 			out.write("</ol>");
 			out.write("<pre class='stacktrace'>" + message + "</pre>");
 			out.write("</div>");
@@ -100,7 +103,7 @@
 		out.write(" or ");
 		out.write("<a class='removeEntry asynchronous' href='#'>remove</a> ");
 		out.write(
-			"<a href='/feed?date="+sampleEntry.getDate()+"&severity=" + sampleEntry.getSeverity() + "#" + sampleEntry.getChecksum() + "'>");
+			"<a href='/feed?date="+sampleEntry.getDate().getDate()+"&severity=" + sampleEntry.getSeverity() + "#" + sampleEntry.getChecksum() + "'>");
 		out.write(" <img src='/images/link-icon.png' /></a>");
 		out.write("</div>");
 		out.write("</div>");
