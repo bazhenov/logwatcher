@@ -4,8 +4,10 @@ $(document).ready(function() {
 
 	$('#searchInput').focus();
 
-	$('.message').click(function() {
-		$(this).parents(".entry").toggleClass('selectedEntry')
+	$('.entry').click(function(target) {
+		if ( $(target.srcElement).parents(".noBubble").length <= 0 ) {
+			$(this).toggleClass('selectedEntry')
+		}
 	});
 
 	$('#legend #question').click(function() {

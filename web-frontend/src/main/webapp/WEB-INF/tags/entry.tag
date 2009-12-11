@@ -68,7 +68,7 @@
 
 			<%out.write(lastOccurenceInfo);%>
 		</div>
-		<div class='entryContent'>
+		<div class='entryContent noBubble'>
 			<ol class='attributes'>
 				<c:forEach var="row" items="${entry.attributes}">
 					<li><l:attribute set="${row.value}" name="${row.key}"/></li>
@@ -76,11 +76,11 @@
 			</ol>
 			<%
 				if ( hasMessage ) {
-					out.write("<pre class='stacktrace'>" + message + "</pre>");
+					out.write("<pre class='stacktrace noBubble'>" + message + "</pre>");
 				}
 			%>
 		</div>
-		<div class='operations'>
+		<div class='operations noBubble'>
 			<c:url value="http://jira.dev.loc/jira/secure/CreateIssueDetails.jspa"
 			       var="jiraLink">
 				<c:param name="pid">10000</c:param>
