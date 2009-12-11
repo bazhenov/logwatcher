@@ -1,16 +1,6 @@
 <%@ tag import="org.bazhenov.logging.LogEntry" %>
-<%@ tag import="java.util.*" %>
-<%@ tag import="java.text.FieldPosition" %>
-<%@ tag import="java.text.DateFormat" %>
-<%@ tag import="static org.apache.commons.lang.StringUtils.join" %>
-<%@ tag import="static org.apache.commons.lang.StringEscapeUtils.escapeHtml" %>
-<%@ tag import="static org.apache.commons.lang.StringEscapeUtils.escapeHtml" %>
-<%@ tag import="static java.text.MessageFormat.format" %>
-<%@ tag import="static org.apache.commons.lang.StringUtils.join" %>
-<%@ tag import="static org.apache.commons.lang.StringUtils.*" %>
-<%@ tag import="java.io.IOException" %>
 <%@ tag import="org.bazhenov.logging.web.tags.EntryTag" %>
-<%@ tag import="static org.bazhenov.logging.web.tags.EntryTag.pluralize" %>
+<%@ tag import="java.util.*" %>
 <%@ tag import="static org.bazhenov.logging.web.tags.EntryTag.formatCause" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="lf" uri="http://bazhenov.org/logging" %>

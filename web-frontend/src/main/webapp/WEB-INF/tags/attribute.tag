@@ -7,7 +7,7 @@
 <c:forEach items="${set}" var="row" varStatus="counter">
 	<c:if test="${counter.count lt 5}">
 		<c:choose><c:when
-			test="${fn:length(row.key) gt 15}"><abbr title="${row.key}">${fn:substring(row.key, 0, 12)}...</abbr></c:when><c:otherwise
+			test="${fn:length(row.key) gt 25}"><abbr title="${row.key}">${fn:substring(row.key, 0, 22)}...</abbr></c:when><c:otherwise
 			>${row.key}</c:otherwise></c:choose><c:if
 		test="${row.value gt 1}"> <span>(${row.value} times)</span></c:if><c:if
 		test="${counter.count lt fn:length(set)}">, </c:if>

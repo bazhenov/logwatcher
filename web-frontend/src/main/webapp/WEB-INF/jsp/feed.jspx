@@ -116,8 +116,8 @@
 				</c:forEach>
 
 				<div id="footer">
-					${l:pluralize(times, "message messages messages")},
-					${l:pluralize(f:length(entries), "entry entries entries")}
+					${l:pluralize(f:length(entries), "entry entries entries")},
+					${l:pluralize(times, "message messages messages")}
 				</div>
 			</c:when>
 			<c:otherwise>

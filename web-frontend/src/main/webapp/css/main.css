@@ -1,6 +1,7 @@
 @import url("menubar.css");
+@import url("searchbox.css");
 
-body				                    { font-size: 21px; font-family: tahoma, serif; padding:0; margin:0 }
+body				                    { font-size: 25px; font-family: tahoma, sans-serif; padding:0; margin:0 }
 img                             { border: 0 }
 #firstDot                       { color: #ff3333; font-size: 180%; position: absolute; left: 10px }
 #secondDot                      { color: #ff9900; font-size: 180%; position: absolute; left: 15px }
@@ -13,23 +14,25 @@ h2 a:visited                    { color: rgb(0, 153, 255) }
 #header                         { background-color: rgb(247, 247, 247); padding:0; margin:0;
 																	position: relative; height: 70px; min-width: 995px; }
 
-#footer                         { font-size: 12px; margin-top: 20px; color: gray; text-align: center; }
+#footer                         { font-size: 80%; margin-top: 20px; color: gray; text-align: center; }
 
 a					                      { color: #0099ff; text-decoration: none }
 a:hover				                  { color: red; text-decoration: underline }
 a:visited			                  { color: brown; text-decoration: underline }
 
-.entry				                  { position: relative; }
+.entry				                  { position: relative }
 .entry a			                  { display: inline; text-align: right; }
 
 .entry                          {	border-top: 1px dotted gray; padding-bottom: 10px;
 																	padding-top: 10px; padding-left: 15px }
 .selectedEntry                  { background-color: #ffd; }
-.entryHeader .times             { color: #888; font-size: 60%; line-height: 20px; }
+.entryHeader .times             { color: #666; font-size: 55%; line-height: 20px; }
 .entry:hover                    { background-color: #ffd }
 
 .entry:hover .operations        { display: inline }
 
+.messageOverlay                 { position: absolute; height: 32px; width:50px; top: 10px; right: 224px;
+																	background: url("/images/sha.png") repeat-y;}
 .entry:hover .messageOverlay,
 .selectedEntry .messageOverlay  { background: url("/images/sha-hover.png") repeat-y; }
 
@@ -37,11 +40,7 @@ a:visited			                  { color: brown; text-decoration: underline }
 																	font-size: 70% }
 
 .message                        { color: black; margin-left: 17px; margin-right: 225px;
-																	overflow: hidden; height: 28px; white-space: nowrap; cursor: pointer; }
-
-.messageOverlay                 { position: absolute; height: 28px; width:50px; top: 10px; right: 224px;
-																	background: url("/images/sha.png") repeat-y;}
-
+																	overflow: hidden; height: 32px; white-space: nowrap; cursor: pointer; }
 
 .asynchronous                   { color: #0099ff !important; text-decoration: none !important;
 																	border-bottom: 1px dashed !important }
@@ -52,9 +51,9 @@ a:visited			                  { color: brown; text-decoration: underline }
 
 .entryContent                   { font-size: 12px; margin-left: 17px; display: none }
 .entryContent .stacktrace       { font-family: monospace; margin-bottom: 5px; margin-top: 10px;
-																	white-space:pre-wrap; margin-right: 40px; }
+																	white-space:pre-wrap; margin-right: 40px; font-size:120%; }
 
-.entryContent .attributes       { list-style: none; padding: 0; }
+.entryContent .attributes       { list-style: none; padding: 0; font-size: 120%; }
 .entryContent .attributes label { font-weight: bold; }
 .entryContent .attributes span  { color: gray; font-size: 80%; }
 abbr                            { cursor: default; border-bottom: 1px dashed }
@@ -69,47 +68,22 @@ abbr                            { cursor: default; border-bottom: 1px dashed }
 
 .removing .spinner              { display: inline !important }
 
-.applicationId                  { font-variant:small-caps; color: black; margin-left: 17px }
+.applicationId                  { font-variant:small-caps; font-size: 120%; color: black; margin-left: 17px }
 
 .marker                         { position: absolute; left: 12px; top: 28px; width: 14px; height: 15px;
-																	cursor: pointer; margin: 0; padding: 0; font-size: 140%; line-height: 9px;}
+																	cursor: pointer; margin: 0; padding: 0; line-height: 9px;}
 
 .error .marker                  { color: #c90000 }
 .warning .marker                { color: #ff9900; }
 .info .marker                   { color: #3366ff; }
 .removing .marker               { visibility: hidden; }
 
-.additionalInfo                 {	border-bottom: 1px dashed; cursor: default }
 .warningMarker                  { color: #990000; }
-
-#searchBox              { position: absolute; left:30%; width: 40%;	top: -10px; }
-
-#searchBox INPUT        { font-size: 16px; color: black; padding: 5px 5px 5px 25px;
-													background: url("/images/magnifying_glass.png") 5px center no-repeat;
-													margin-bottom: 5px; width: 80%; border: 1px inset gray; margin-right: 20px }
-#searchBox span         { font-size: 12px; color: gray; }
-
-/* Контекстная подсказка */
-#legend                 { z-index:1; width: 0; height: 0; position: relative; top:-20px; left: -40px}
-#legend span            { font-family: monospace; }
-#legend #question       { font-size: 21px; cursor: pointer; position: absolute; width: 38px; height: 38px;
-													padding: 1px 0 0 10px; z-index:3; }
-#legend #content        { position: relative; top: 28px; left: 27px; font-size: 14px; color: black;
-													width: 400px;-moz-border-radius: 6px 6px 6px 6px;
-													-webkit-border-top-left-radius: 8px; -webkit-border-top-right-radius: 8px;
-													-webkit-border-bottom-left-radius: 8px; -webkit-border-bottom-right-radius: 8px;
-													border-radius: 6px 6px 6px 6px; border: 4px solid #4a4a4a;
-													background-color: white; padding: 0; z-index:2; visibility: hidden;}
-#legend ul                 { padding: 10px 10px 10px 25px; margin:0; }
-#legend.selected #question { background: url("/images/question-mark.png") no-repeat; color: white; }
-#legend.selected #content  { visibility: visible !important; }
-
-
 
 span.tag            { font-size: 70%; background-color: #E0EAF1; border-bottom: 1px solid #3E6D8E;
 											border-right: 1px solid #7F9FB6; color: #3E6D8E; margin: 1px; padding: 1px }
 
-#slider             { font-size: 50%; width: 100px }
+#slider             { font-size: 40%; width: 100px }
 #sliderValue        { width: 100px; text-align: center; padding-bottom: 5px; font-size: 60%;
 											visibility: hidden; font-variant: small-caps; }
 #sliderContainer    { padding: 10px; position: absolute; right: 20px; top: 0; }
