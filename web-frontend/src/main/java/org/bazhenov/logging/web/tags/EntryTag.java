@@ -21,6 +21,8 @@ import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Callable;
 
+import com.farpost.timepoint.Date;
+
 public class EntryTag extends TagSupport {
 
 	public static final int MAX_LENGTH = 80;
@@ -174,5 +176,9 @@ public class EntryTag extends TagSupport {
 			? 2
 			: cases[Math.min(abs % 10, 5)]];
 		return number + " " + result;
+	}
+
+	public static java.util.Date date(Date date) {
+		return date.asDate();
 	}
 }

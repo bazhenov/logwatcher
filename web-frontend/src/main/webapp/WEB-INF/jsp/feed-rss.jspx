@@ -21,7 +21,7 @@
 					<link><c:url value="http://localhost:8080/feed">
 						<c:param name="severity" value="${item.sampleEntry.severity}" />
 					</c:url>#${item.sampleEntry.checksum}</link>
-					<pubDate><fmt:formatDate value="${date}" pattern="EE, d MMM yyyy HH:mm:ss ZZZZ" /></pubDate>
+					<pubDate><fmt:formatDate value="${l:date(item.lastTime)}" pattern="EE, d MMM yyyy HH:mm:ss ZZZZ" /></pubDate>
 				</item>
 			</c:forEach>
 

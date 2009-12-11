@@ -33,4 +33,10 @@
 		<function-class>org.bazhenov.logging.web.tags.EntryTag</function-class>
 		<function-signature>java.lang.String pluralize(int, java.lang.String)</function-signature>
 	</function>
+
+	<function>
+		<name>date</name>
+		<function-class>org.bazhenov.logging.web.tags.EntryTag</function-class>
+		<function-signature>java.util.Date date(com.farpost.timepoint.Date)</function-signature>
+	</function>
 </taglib>
