@@ -3,4 +3,25 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+	<bean id="storage" class="org.bazhenov.logging.storage.sql.SqlLogStorage">
+		<constructor-arg index="0" ref="datasource"/>
+		<constructor-arg index="1">
+			<bean class="org.bazhenov.logging.marshalling.JDomMarshaller"/>
+		</constructor-arg>
+		<constructor-arg index="2">
+			<bean class="org.bazhenov.logging.storage.sql.AnnotationDrivenMatcherMapperImpl">
+				<constructor-arg>
+					<bean class="org.bazhenov.logging.storage.sql.SqlMatcherMapperRules"/>
+				</constructor-arg>
+			</bean>
+		</constructor-arg>
+	</bean>
+
+	<bean id="datasource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="org.h2.Driver" />
+		<property name="url" value="jdbc:h2:database/logging" />
+		<property name="username" value="sa"/>
+		<property name="password" value=""/>
+	</bean>
+
 </beans>
