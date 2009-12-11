@@ -1,7 +1,4 @@
-<%@ tag import="org.bazhenov.logging.LogEntry" %>
 <%@ tag import="org.bazhenov.logging.web.tags.EntryTag" %>
-<%@ tag import="java.util.*" %>
-<%@ tag import="static org.bazhenov.logging.web.tags.EntryTag.formatCause" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="lf" uri="http://bazhenov.org/logging" %>
 <%@taglib prefix="f" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -10,25 +7,6 @@
 
 <c:set var="sampleEntry" value="${entry.sampleEntry}"/>
 <%
-	LogEntry sampleEntry = entry.getSampleEntry();
-	String title = sampleEntry.getMessage();
-
-	boolean withStacktrace = sampleEntry.getCause() != null;
-	boolean isTitleTooLong = title.length() > EntryTag.MAX_LENGTH;
-	boolean hasMessage = withStacktrace || isTitleTooLong;
-	String message = (!withStacktrace && isTitleTooLong)
-		? sampleEntry.getMessage()
-		: formatCause(sampleEntry.getCause());
-
-	Set<String> classes = new TreeSet<String>();
-	classes.add("entry");
-
-	String severety = sampleEntry.getSeverity().toString();
-	classes.add(severety);
-
-	if ( hasMessage ) {
-		classes.add("withStacktrace");
-	}
 	boolean isExceptionNew = entry.getLastTime().plusMinute(30).isInFuture();
 
 	String lastOccurenceInfo = EntryTag.shortFormat.format(entry.getLastTime().asDate());
@@ -74,15 +52,18 @@
 					<li><l:attribute set="${row.value}" name="${row.key}"/></li>
 				</c:forEach>
 			</ol>
-			<%
-				if ( hasMessage ) {
-					out.write("<pre class='stacktrace noBubble'>" + message + "</pre>");
-				}
-			%>
+			<c:choose>
+				<c:when test="${not empty sampleEntry.cause}">
+					<pre class="stacktrace noBubble"><c:out
+						value="${lf:formatCause(sampleEntry.cause)}"/></pre>
+				</c:when>
+				<c:otherwise>
+					<pre class="stacktrace noBubble"><c:out value="${sampleEntry.message}"/></pre>
+				</c:otherwise>
+			</c:choose>
 		</div>
 		<div class='operations noBubble'>
-			<c:url value="http://jira.dev.loc/jira/secure/CreateIssueDetails.jspa"
-			       var="jiraLink">
+			<c:url value="http://jira.dev.loc/jira/secure/CreateIssueDetails.jspa" var="jiraLink">
 				<c:param name="pid">10000</c:param>
 				<c:param name="issuetype">1</c:param>
 				<c:param name="summary" value="${sampleEntry.message}"/>
