@@ -16,8 +16,8 @@
 
 			<c:forEach var="item" items="${entries}">
 				<item>
-					<title>${item.sampleEntry.message}</title>
-					<description><pre>${l:formatCause(item.sampleEntry.cause)}</pre></description>
+					<title><c:out value="${item.sampleEntry.message}" /></title>
+					<description><pre><c:out value="${l:formatCause(item.sampleEntry.cause)}" /></pre></description>
 					<link><c:url value="http://localhost:8080/feed">
 						<c:param name="severity" value="${item.sampleEntry.severity}" />
 					</c:url>#${item.sampleEntry.checksum}</link>

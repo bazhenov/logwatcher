@@ -19,7 +19,7 @@
 
 	<bean id="datasource" class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName" value="org.h2.Driver" />
-		<property name="url" value="jdbc:h2:database/logging" />
+		<property name="url" value="jdbc:h2:file:database/logging" />
 		<property name="username" value="sa"/>
 		<property name="password" value=""/>
 	</bean>

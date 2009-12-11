@@ -57,13 +57,13 @@
 		lastOccurenceInfo = "<abbr title='"+fullDate+"'>" + lastOccurenceInfo + "</abbr>";
 	}
 
-	String timesInfo = pluralize(count, "- times times");
+	String timesInfo = pluralize(count, " times times");
 	if ( count > 10000 ) {
-		timesInfo = "<abbr title='" + timesInfo + "'>more than 10 000 times</span>";
+		timesInfo = "<abbr title='" + timesInfo + "'>more than 10 000 times</abbr>";
 	} else if ( count > 5000 ) {
-		timesInfo = "<abbr title='" + timesInfo + "'>more than 5 000 times</span>";
+		timesInfo = "<abbr title='" + timesInfo + "'>more than 5 000 times</abbr>";
 	} else if ( count > 1000 ) {
-		timesInfo = "<abbr title='" + timesInfo + "'>more than 1 000 times</span>";
+		timesInfo = "<abbr title='" + timesInfo + "'>more than 1 000 times</abbr>";
 	}
 
 	title = escapeHtml(title);

@@ -29,12 +29,16 @@ public class SqlLogStorage implements LogStorage {
 	private final com.farpost.marshaller.Marshaller attributesMarshaller;
 	private final Logger log = Logger.getLogger(SqlLogStorage.class);
 
-	public SqlLogStorage(DataSource dataSource, Marshaller marshaller, SqlMatcherMapper mapper) {
+	public SqlLogStorage(DataSource dataSource, Marshaller marshaller, SqlMatcherMapper mapper) throws
+		IOException, SQLException {
 		this.marshaller = marshaller;
 		this.mapper = mapper;
 		this.jdbc = new SimpleJdbcTemplate(dataSource);
 		entryCreator = new EntryCreator();
 		attributesMarshaller = new DomMarshallerImpl();
+
+		InputStream stream = SqlLogStorage.class.getResourceAsStream("/dump.h2.sql");
+		loadDump(dataSource, stream);
 	}
 
 	public synchronized void writeEntry(LogEntry entry) throws LogStorageException {
@@ -209,8 +213,10 @@ public class SqlLogStorage implements LogStorage {
 		private AggregatedLogEntry createEntry(ResultSet rs) throws MarshallerException, SQLException,
 			MarshallingException {
 			LogEntry sampleEntry = marshaller.unmarshall(rs.getString("text"));
-			Map<String, Object> attributes = attributesMarshaller.unserialize(
-				new StringReader(rs.getString("attributes")));
+			String attributesStr = rs.getString("attributes");
+			Map<String, Object> attributes = attributesStr != null
+				? attributesMarshaller.unserialize(new StringReader(attributesStr))
+				: new HashMap<String, Object>();
 			DateTime lastTime = new DateTime(rs.getTimestamp("last_date"));
 			int count = rs.getInt("count");
 			return new AggregatedLogEntryImpl(sampleEntry, lastTime, count, (Map)attributes);

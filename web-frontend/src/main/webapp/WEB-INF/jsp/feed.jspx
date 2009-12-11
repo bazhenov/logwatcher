@@ -44,9 +44,7 @@
 
 			<c:forEach var="i" items="${dates}">
 				<c:url var="url" value="/feed">
-					<c:param name="date">
-						<jsp:attribute name="value"><fmt:formatDate value="${i.value}" pattern="yyyy-MM-dd"/></jsp:attribute>
-					</c:param>
+					<c:param name="date"><fmt:formatDate value="${i.value}" pattern="yyyy-MM-dd"/></c:param>
 				</c:url>
 				<c:choose>
 					<c:when test="${i.value == date}">
@@ -69,18 +67,14 @@
 		<h2>
 			<c:if test="${nextDate != null}">
 				<c:url var="url" value="/feed">
-					<c:param name="date">
-						<jsp:attribute name="value"><fmt:formatDate value="${nextDate}" pattern="yyyy-MM-dd"/></jsp:attribute>
-					</c:param>
+					<c:param name="date"><fmt:formatDate value="${nextDate}" pattern="yyyy-MM-dd"/></c:param>
 				</c:url>
 				<a href="${url}">&amp;larr;</a>&amp;nbsp;
 			</c:if>
 			<fmt:formatDate value="${date}" pattern="d MMMM, yyyy"/>
 			<c:if test="${prevDate != null}">
 				<c:url var="url" value="/feed">
-					<c:param name="date">
-						<jsp:attribute name="value"><fmt:formatDate value="${prevDate}" pattern="yyyy-MM-dd"/></jsp:attribute>
-					</c:param>
+					<c:param name="date"><fmt:formatDate value="${prevDate}" pattern="yyyy-MM-dd"/></c:param>
 				</c:url>
 				&amp;nbsp;<a href="${url}">&amp;rarr;</a>
 			</c:if>
