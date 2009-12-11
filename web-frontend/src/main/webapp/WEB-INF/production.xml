@@ -5,9 +5,7 @@
 
 	<bean id="storage" class="org.bazhenov.logging.storage.sql.SqlLogStorage">
 		<constructor-arg index="0" ref="datasource"/>
-		<constructor-arg index="1">
-			<bean class="org.bazhenov.logging.marshalling.JDomMarshaller"/>
-		</constructor-arg>
+		<constructor-arg index="1" ref="marshaller" />
 		<constructor-arg index="2">
 			<bean class="org.bazhenov.logging.storage.sql.AnnotationDrivenMatcherMapperImpl">
 				<constructor-arg>
@@ -17,11 +15,25 @@
 		</constructor-arg>
 	</bean>
 
+	<bean id="marshaller" class="org.bazhenov.logging.marshalling.JDomMarshaller"/>
+
 	<bean id="datasource" class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName" value="org.h2.Driver" />
 		<property name="url" value="jdbc:h2:file:database/logging" />
 		<property name="username" value="sa"/>
 		<property name="password" value=""/>
+	</bean>
+
+	<bean class="org.bazhenov.logging.transport.UdpTransport" lazy-init="false" init-method="start"
+		destroy-method="stop">
+		<constructor-arg value="6578" />
+		<constructor-arg>
+			<bean class="org.bazhenov.logging.transport.WriteToStorageTransportListener">
+				<constructor-arg ref="storage" />
+				<constructor-arg ref="marshaller" />
+			</bean>
+		</constructor-arg>
+		<property name="bufferSize" value="120000" />
 	</bean>
 
 </beans>

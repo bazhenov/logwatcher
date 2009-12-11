@@ -59,7 +59,9 @@ public class SqlLogStorage implements LogStorage {
 				String xml = jdbc.queryForObject(
 					"SELECT attributes FROM log_entry WHERE date = ? AND checksum = ?", String.class,
 					date(entry.getDate()), entry.getChecksum());
-				Map<String, Object> map = attributesMarshaller.unserialize(new StringReader(xml));
+				Map<String, Object> map = xml != null
+					? attributesMarshaller.unserialize(new StringReader(xml))
+					: new HashMap<String, Object>();
 				merge((Map) map, entry.getAttributes());
 				jdbc.update("UPDATE log_entry SET attributes = ? WHERE date = ? AND checksum = ?",
 					attributesMarshaller.serialize(map), date(entry.getDate()), entry.getChecksum());
