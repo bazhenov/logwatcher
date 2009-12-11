@@ -1,0 +1,21 @@
+#searchBox              { position: absolute; left:30%; width: 40%;	top: -10px; }
+
+#searchBox INPUT        { font-size: 16px; color: black; padding: 5px 5px 5px 25px;
+													background: url("/images/magnifying_glass.png") 5px center no-repeat;
+													margin-bottom: 5px; width: 80%; border: 1px inset gray; margin-right: 20px }
+#searchBox span         { font-size: 12px; color: gray; }
+
+/* Контекстная подсказка */
+#legend                 { z-index:1; width: 0; height: 0; position: relative; top:-20px; left: -40px}
+#legend span            { font-family: monospace; }
+#legend #question       { font-size: 21px; cursor: pointer; position: absolute; width: 38px; height: 38px;
+													padding: 1px 0 0 10px; z-index:3; }
+#legend #content        { position: relative; top: 28px; left: 27px; font-size: 14px; color: black;
+													width: 400px;-moz-border-radius: 6px 6px 6px 6px;
+													-webkit-border-top-left-radius: 8px; -webkit-border-top-right-radius: 8px;
+													-webkit-border-bottom-left-radius: 8px; -webkit-border-bottom-right-radius: 8px;
+													border-radius: 6px 6px 6px 6px; border: 4px solid #4a4a4a;
+													background-color: white; padding: 0; z-index:2; visibility: hidden;}
+#legend ul                 { padding: 10px 10px 10px 25px; margin:0; }
+#legend.selected #question { background: url("/images/question-mark.png") no-repeat; color: white; }
+#legend.selected #content  { visibility: visible !important; }
