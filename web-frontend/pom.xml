@@ -7,11 +7,11 @@
 	<parent>
 		<artifactId>logging</artifactId>
 		<groupId>org.bazhenov</groupId>
-		<version>1.1-SNAPSHOT</version>
+		<version>1.2-SNAPSHOT</version>
 	</parent>
 	<groupId>org.bazhenov.logging</groupId>
 	<artifactId>web-frontend</artifactId>
-	<version>1.1-SNAPSHOT</version>
+	<version>1.2</version>
 	<packaging>war</packaging>
 	<name>web-frontend Maven Webapp</name>
 	<url>http://maven.apache.org</url>

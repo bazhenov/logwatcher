@@ -8,9 +8,9 @@
 	<parent>
 		<groupId>org.bazhenov</groupId>
 		<artifactId>logging</artifactId>
-		<version>1.1-SNAPSHOT</version>
+		<version>1.2-SNAPSHOT</version>
 	</parent>
-	<version>1.1-SNAPSHOT</version>
+	<version>1.2</version>
 	<name>core</name>
 	<url>http://maven.apache.org</url>
 	<dependencies>

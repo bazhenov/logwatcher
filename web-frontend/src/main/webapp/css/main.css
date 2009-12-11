@@ -1,3 +1,5 @@
+@import url("menubar.css");
+
 body				                    { font-size: 21px; font-family: tahoma, serif; padding:0; margin:0 }
 img                             { border: 0 }
 #firstDot                       { color: #ff3333; font-size: 180%; position: absolute; left: 10px }
@@ -37,7 +39,7 @@ a:visited			                  { color: brown; text-decoration: underline }
 .message                        { color: black; margin-left: 17px; margin-right: 225px;
 																	overflow: hidden; height: 28px; white-space: nowrap; }
 
-.messageOverlay                 { position: absolute; height: 28px; width:50px; top: 10px; right: 225px;
+.messageOverlay                 { position: absolute; height: 28px; width:50px; top: 10px; right: 224px;
 																	background: url("/images/sha.png") repeat-y;}
 
 .withStacktrace .message        { cursor: pointer; }
@@ -84,22 +86,6 @@ abbr                            { cursor: default; border-bottom: 1px dashed }
 
 .additionalInfo                 {	border-bottom: 1px dashed; cursor: default }
 .warningMarker                  { color: #990000; }
-
-#menuBar            { border-bottom: 1px solid #999; padding-left: 35px; padding-top: 10px; margin:0;
-											position: absolute; bottom:0; left: 0; right: 0 }
-
-#menuBar a          { border: 1px solid #ddd; border-bottom: none; padding: 3px 15px 3px 15px; margin: 10px 5px 0 5px;
-											text-decoration: none; color: #777;	font-size: 14px;
-											background-color: rgb(252, 252, 252); display: block; float: left;
-											-moz-border-radius: 4px 4px 0 0; -webkit-border-top-left-radius: 4px;
-											-webkit-border-top-right-radius: 4px; border-radius: 4px 4px 0 0 }
-
-#menuBar a.selected { border: 1px solid #777; border-bottom-color: #fff; font-size: 100%; color:black;
-											margin: 2px 5px -1px 5px; background-color: white; line-height:25px }
-
-
-#menuBar div        { border: 1px solid red; width: 300px; display: block; float: right }
-
 
 #searchBox              { position: absolute; left:30%; width: 40%;	top: -10px; }
 

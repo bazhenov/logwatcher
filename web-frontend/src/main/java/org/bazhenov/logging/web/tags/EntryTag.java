@@ -17,6 +17,9 @@ import static java.text.MessageFormat.format;
 import java.text.SimpleDateFormat;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.Collection;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Callable;
 
 public class EntryTag extends TagSupport {
 
