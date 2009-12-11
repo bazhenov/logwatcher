@@ -12,13 +12,13 @@
 		<channel>
 			<title>LogViewer feed</title>
 			<description>Feed of recently happended errors</description>
-			<link>http://localhost:8080<c:url value="/"/></link>
+			<link>http://${pageContext.request.serverName}:${pageContext.request.serverPort}<c:url value="/feed" /></link>
 
 			<c:forEach var="item" items="${entries}">
 				<item>
 					<title><c:out value="${item.sampleEntry.message}" /></title>
 					<description><pre><c:out value="${l:formatCause(item.sampleEntry.cause)}" /></pre></description>
-					<link><c:url value="http://localhost:8080/feed">
+					<link><c:url value="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/feed">
 						<c:param name="severity" value="${item.sampleEntry.severity}" />
 					</c:url>#${item.sampleEntry.checksum}</link>
 					<pubDate><fmt:formatDate value="${l:date(item.lastTime)}" pattern="EE, d MMM yyyy HH:mm:ss ZZZZ" /></pubDate>
