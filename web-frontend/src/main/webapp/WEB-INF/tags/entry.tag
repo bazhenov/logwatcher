@@ -49,7 +49,7 @@
 		<div class='entryContent noBubble'>
 			<ol class='attributes'>
 				<c:forEach var="row" items="${entry.attributes}">
-					<li><l:attribute set="${row.value}" name="${row.key}"/></li>
+					<li><l:attribute attribute="${row.value}" name="${row.key}"/></li>
 				</c:forEach>
 			</ol>
 			<c:choose>

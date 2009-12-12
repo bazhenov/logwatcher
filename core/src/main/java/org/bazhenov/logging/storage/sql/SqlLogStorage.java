@@ -5,8 +5,7 @@ import com.farpost.timepoint.DateTime;
 import com.farpost.marshaller.DomMarshallerImpl;
 import com.farpost.marshaller.MarshallingException;
 import org.bazhenov.logging.*;
-import static org.bazhenov.logging.AggregatedLogEntryImpl.merge;
-import static org.bazhenov.logging.AggregatedLogEntryImpl.aggregate;
+import static org.bazhenov.logging.AggregatedLogEntryImpl.*;
 import org.bazhenov.logging.storage.*;
 import org.bazhenov.logging.marshalling.Marshaller;
 import org.bazhenov.logging.marshalling.MarshallerException;
@@ -50,10 +49,13 @@ public class SqlLogStorage implements LogStorage {
 				String sql = "INSERT INTO log_entry (date, checksum, category, text, count, last_date, application_id, severity, attributes) " + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 				DateTime date = entry.getDate();
+
+				Map<String, Map<String, Integer>> aggregatedAttributes = new HashMap<String, Map<String, Integer>>();
+				mergeMap(aggregatedAttributes, entry.getAttributes());
 				Object[] args = new Object[]{date(date.getDate()), entry.getChecksum(), entry.getCategory(),
 					marshaller.marshall(entry), 1, timestamp(date), entry.getApplicationId(),
 					entry.getSeverity().getCode(),
-					attributesMarshaller.serialize((Map) aggregate(entry.getAttributes()))};
+					attributesMarshaller.serialize((Map)aggregatedAttributes)};
 				jdbc.update(sql, args);
 			} else {
 				String xml = jdbc.queryForObject(
@@ -62,7 +64,7 @@ public class SqlLogStorage implements LogStorage {
 				Map<String, Object> map = xml != null
 					? attributesMarshaller.unserialize(new StringReader(xml))
 					: new HashMap<String, Object>();
-				merge((Map) map, entry.getAttributes());
+				mergeMap((Map) map, entry.getAttributes());
 				jdbc.update("UPDATE log_entry SET attributes = ? WHERE date = ? AND checksum = ?",
 					attributesMarshaller.serialize(map), date(entry.getDate()), entry.getChecksum());
 			}
@@ -219,6 +221,10 @@ public class SqlLogStorage implements LogStorage {
 			Map<String, Object> attributes = attributesStr != null
 				? attributesMarshaller.unserialize(new StringReader(attributesStr))
 				: new HashMap<String, Object>();
+			for ( Map.Entry<String, Object> row : attributes.entrySet() ) {
+				Map aggregatedAttributes = (Map) row.getValue();
+				attributes.put(row.getKey(), new AggregatedAttribute(aggregatedAttributes));
+			}
 			DateTime lastTime = new DateTime(rs.getTimestamp("last_date"));
 			int count = rs.getInt("count");
 			return new AggregatedLogEntryImpl(sampleEntry, lastTime, count, (Map)attributes);

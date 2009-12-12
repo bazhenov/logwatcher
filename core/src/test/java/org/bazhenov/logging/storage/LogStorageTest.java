@@ -4,16 +4,15 @@ import com.farpost.timepoint.Date;
 import static com.farpost.timepoint.Date.*;
 import static com.farpost.timepoint.Date.today;
 import com.farpost.timepoint.DateTime;
-import org.bazhenov.logging.AggregatedLogEntry;
-import org.bazhenov.logging.LogEntry;
-import org.bazhenov.logging.Severity;
+import org.bazhenov.logging.*;
 import static org.bazhenov.logging.TestSupport.entry;
 import static org.bazhenov.logging.storage.LogEntries.entries;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import javax.accessibility.AccessibleValue;
 import java.util.*;
 
 abstract public class LogStorageTest {
@@ -138,20 +137,29 @@ abstract public class LogStorageTest {
 	@Test
 	public void storageCanStoreAttributes() throws LogStorageException, InvalidCriteriaException {
 		entry().
+			attribute("user", "john").
 			attribute("machine", "host1").
 			saveIn(storage);
 
 		entry().
-			attribute("machine", "host1").
-			attribute("user", "john-doe").
+			attribute("user", "john").
+			saveIn(storage);
+		entry().
+			attribute("user", "christin").
 			saveIn(storage);
 
 		AggregatedLogEntry entry = entries().
 			date(today()).
 			findFirst(storage);
 		assertThat(entry.getAttributes().size(), equalTo(2));
-		assertThat(entry.getAttributes().get("machine").get("host1"), equalTo(2));
-		assertThat(entry.getAttributes().get("user").get("john-doe"), equalTo(1));
+		assertThat(entry.getAttributes().get("machine").getCountFor("host1"), equalTo(1));
+		assertThat(entry.getAttributes().get("user").getCountFor("john"), equalTo(2));
+
+		AttributeValue[] array = entry.getAttributes().get("user").toArray();
+		assertThat(array, equalTo(new AttributeValue[] {
+			new AttributeValue("john", 2),
+			new AttributeValue("christin", 1)}));
+
 	}
 
 	@Test

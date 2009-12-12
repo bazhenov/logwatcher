@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>org.bazhenov.logging</groupId>
 	<artifactId>web-frontend</artifactId>
-	<version>1.2</version>
+	<version>1.2.5</version>
 	<packaging>war</packaging>
 	<name>web-frontend Maven Webapp</name>
 	<url>http://maven.apache.org</url>

@@ -10,17 +10,18 @@ public class AggregatedLogEntryImpl implements AggregatedLogEntry {
 	private volatile DateTime lastTime;
 	private final LogEntry sampleEntry;
 	private final AtomicInteger count;
-	private final Map<String, Map<String, Integer>> attributes;
+	private final Map<String, AggregatedAttribute> attributes;
 
 	public AggregatedLogEntryImpl(LogEntry sampleEntry) {
 		this.sampleEntry = sampleEntry;
 		this.lastTime = sampleEntry.getDate();
 		count = new AtomicInteger(1);
-		attributes = aggregate(sampleEntry.getAttributes());
+		attributes = new HashMap<String, AggregatedAttribute>();
+		merge(sampleEntry.getAttributes(), attributes);
 	}
 
 	public AggregatedLogEntryImpl(LogEntry sampleEntry, DateTime lastTime, int count,
-	                              Map<String, Map<String, Integer>> attributes) {
+	                              Map<String, AggregatedAttribute> attributes) {
 		this.sampleEntry = sampleEntry;
 		this.lastTime = lastTime;
 		this.attributes = attributes;
@@ -39,7 +40,7 @@ public class AggregatedLogEntryImpl implements AggregatedLogEntry {
 		return sampleEntry;
 	}
 
-	public Map<String, Map<String, Integer>> getAttributes() {
+	public Map<String, AggregatedAttribute> getAttributes() {
 		return attributes;
 	}
 
@@ -53,17 +54,15 @@ public class AggregatedLogEntryImpl implements AggregatedLogEntry {
 		if ( time.greaterThan(lastTime) ) {
 			lastTime = time;
 		}
-		Map<String, String> attributes = entry.getAttributes();
-		Map<String, Map<String, Integer>> map = this.attributes;
-		merge(map, attributes);
+		merge(entry.getAttributes(), attributes);
 	}
 
-	public static void merge(Map<String, Map<String, Integer>> map, Map<String, String> attributes) {
+	public static void mergeMap(Map<String, Map<String, Integer>> map, Map<String, String> attributes) {
 		for ( Map.Entry<String, String> row : attributes.entrySet() ) {
 			Map<String, Integer> counts;
 			if ( map.containsKey(row.getKey()) ) {
 				counts = map.get(row.getKey());
-			}else{
+			} else {
 				counts = new HashMap<String, Integer>();
 				map.put(row.getKey(), counts);
 			}
@@ -74,13 +73,13 @@ public class AggregatedLogEntryImpl implements AggregatedLogEntry {
 		}
 	}
 
-	public static Map<String, Map<String, Integer>> aggregate(Map<String, String> attributes) {
-		HashMap<String, Map<String, Integer>> ret = new HashMap<String, Map<String, Integer>>();
+	public static void merge(Map<String, String> attributes, Map<String, AggregatedAttribute> map) {
 		for ( Map.Entry<String, String> row : attributes.entrySet() ) {
-			Map<String, Integer> counts = new HashMap<String, Integer>();
-			counts.put(row.getValue(), 1);
-			ret.put(row.getKey(), counts);
+			if ( map.containsKey(row.getKey()) ) {
+				map.get(row.getKey()).incrementCountFor(row.getValue());
+			}else{
+				map.put(row.getKey(), new AggregatedAttribute(row.getValue()));
+			}
 		}
-		return ret;
 	}
 }
