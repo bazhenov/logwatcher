@@ -42,6 +42,7 @@ public class SqlLogStorage implements LogStorage {
 
 	public synchronized void writeEntry(LogEntry entry) throws LogStorageException {
 		try {
+			String marshalledEntry = marshaller.marshall(entry);
 			int rowsUpdated = jdbc.update(
 				"UPDATE log_entry SET count = count + 1, last_date = ? WHERE date = ? AND checksum = ?",
 				timestamp(entry.getDate()), date(entry.getDate()), entry.getChecksum());
@@ -52,8 +53,10 @@ public class SqlLogStorage implements LogStorage {
 
 				Map<String, Map<String, Integer>> aggregatedAttributes = new HashMap<String, Map<String, Integer>>();
 				mergeMap(aggregatedAttributes, entry.getAttributes());
+
+
 				Object[] args = new Object[]{date(date.getDate()), entry.getChecksum(), entry.getCategory(),
-					marshaller.marshall(entry), 1, timestamp(date), entry.getApplicationId(),
+					marshalledEntry, 1, timestamp(date), entry.getApplicationId(),
 					entry.getSeverity().getCode(),
 					attributesMarshaller.serialize((Map)aggregatedAttributes)};
 				jdbc.update(sql, args);
@@ -68,6 +71,13 @@ public class SqlLogStorage implements LogStorage {
 				jdbc.update("UPDATE log_entry SET attributes = ? WHERE date = ? AND checksum = ?",
 					attributesMarshaller.serialize(map), date(entry.getDate()), entry.getChecksum());
 			}
+
+			/**
+			 * Пишем запись в новом формате без аггрегации
+			 */
+			jdbc.update("INSERT INTO entry (time, date, checksum, category, severity, application_id, content) VALUES (?, ?, ?, ?, ?, ?, ?)",
+				timestamp(entry.getDate()), date(entry.getDate()), entry.getChecksum(), entry.getCategory(),
+				entry.getSeverity().getCode(), entry.getApplicationId(), marshalledEntry);
 
 			if ( log.isDebugEnabled() ) {
 				log.debug("Entry with checksum: " + entry.getChecksum() + " wrote to database");
