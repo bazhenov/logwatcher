@@ -147,19 +147,28 @@ abstract public class LogStorageTest {
 		entry().
 			attribute("user", "christin").
 			saveIn(storage);
+		entry().
+			attribute("machine", "host2").
+			attribute("user", "david").
+			saveIn(storage);
 
 		AggregatedLogEntry entry = entries().
 			date(today()).
 			findFirst(storage);
 		assertThat(entry.getAttributes().size(), equalTo(2));
-		assertThat(entry.getAttributes().get("machine").getCountFor("host1"), equalTo(1));
-		assertThat(entry.getAttributes().get("user").getCountFor("john"), equalTo(2));
 
 		AttributeValue[] array = entry.getAttributes().get("user").toArray();
 		assertThat(array, equalTo(new AttributeValue[] {
 			new AttributeValue("john", 2),
-			new AttributeValue("christin", 1)}));
+			new AttributeValue("christin", 1),
+			new AttributeValue("david", 1)
+		}));
 
+		array = entry.getAttributes().get("machine").toArray();
+		assertThat(array, equalTo(new AttributeValue[] {
+			new AttributeValue("host1", 1),
+			new AttributeValue("host2", 1)
+		}));
 	}
 
 	@Test

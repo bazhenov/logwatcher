@@ -6,10 +6,13 @@
 <label>${name}:</label>
 <c:forEach items="${attribute.values}" var="row" varStatus="counter">
 	<c:if test="${counter.count lt 5}">
-		<c:choose><c:when
-			test="${fn:length(row.value) gt 25}"><abbr title="${row.value}">${fn:substring(row.value, 0, 22)}...</abbr></c:when><c:otherwise
-			>${row.value}</c:otherwise></c:choose><c:if
-		test="${row.count gt 1}"> <span>(${row.count} times)</span></c:if><c:if
-		test="${counter.count lt fn:length(attribute.values)}">, </c:if>
+		<c:choose>
+			<c:when test="${fn:length(row.value) gt 20}">
+				<abbr title="${row.value}"><code class="value">${fn:substring(row.value, 0, 17)}&hellip;<c:if test="${row.count gt 1}"><span>${row.count}</span></c:if></code></abbr>
+			</c:when>
+			<c:otherwise>
+				<code class="value">${row.value}<c:if test="${row.count gt 1}"><span>${row.count}</span></c:if></code>
+			</c:otherwise>
+		</c:choose>
 	</c:if>
 </c:forEach>

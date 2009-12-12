@@ -33,13 +33,23 @@ public class Bootstrap {
 			"  1 : service_runner.php:38 advertUnpopularDeactivationService->run()");
 		storage.writeEntry(new LogEntry(DateTime.now().minusHour(2), "group", "OverflowFundsException", Severity.warning, "sum2",
 			"billing", new HashMap<String, String>() {{
-				put("url" ,"/some/foo/bar");
+				put("url" ,"/some/foo");
 				put("machine", "aux1.srv.loc");
 			}}, cause));
 		storage.writeEntry(new LogEntry(DateTime.now().minusHour(2), "group", "OverflowFundsException", Severity.warning, "sum2",
 			"billing", new HashMap<String, String>(){{
 				put("url" ,"/some/foo/bar?uri=1");
 				put("machine", "aux1.srv.loc");
+			}}, cause));
+		storage.writeEntry(new LogEntry(DateTime.now().minusHour(2), "group", "OverflowFundsException", Severity.warning, "sum2",
+			"billing", new HashMap<String, String>(){{
+				put("url" ,"/some/foo/bar?uri=2");
+				put("machine", "aux4.srv.loc");
+			}}, cause));
+		storage.writeEntry(new LogEntry(DateTime.now().minusHour(2), "group", "OverflowFundsException", Severity.warning, "sum2",
+			"billing", new HashMap<String, String>(){{
+				put("url" ,"/some/foo/bar?uri=3");
+				put("machine", "aux5.srv.loc");
 			}}, cause));
 		storage.writeEntry(new LogEntry(DateTime.now().minusMinute(18), "group", "java.lang.OutOfMemoryException", Severity.info, "sum3", "search", null));
 

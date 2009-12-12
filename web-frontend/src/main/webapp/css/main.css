@@ -55,10 +55,13 @@ a:visited			                  { color: brown; text-decoration: underline }
 .entryContent .stacktrace       { font-family: monospace; margin-bottom: 5px; margin-top: 10px;
 																	white-space:pre-wrap; margin-right: 40px; font-size:120%; cursor:text }
 
-.entryContent .attributes       { list-style: none; padding: 0; font-size: 120%; }
-.entryContent .attributes label { font-weight: bold; }
-.entryContent .attributes span  { color: gray; font-size: 80%; }
-abbr                            { cursor: default; border-bottom: 1px dashed }
+.attributes                     { list-style: none; padding: 0; line-height: 18px; }
+.attributes label               {  }
+.attributes span                { border-left: 1px dotted #997; margin-left: 4px;
+																	padding-left: 4px; padding-right: 2px; color: #777 !important; font-family: monospace; }
+.attributes code                { background-color: #eec; border: 1px dotted #997; padding: 0 2px; font-family: monospace; }
+
+abbr                            { cursor: default; border-bottom: 1px dashed black !important }
 
 .entryContent ul                { list-style-type: none; padding: 0; color: gray }
 .entryContent li span           { color: black }
