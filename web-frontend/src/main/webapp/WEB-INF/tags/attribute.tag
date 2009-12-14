@@ -4,7 +4,7 @@
 <%@taglib prefix="l" uri="http://bazhenov.org/logging" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <label>${name}:</label>
-<c:set var="valuesLimit" value="3" />
+<c:set var="valuesLimit" value="6" />
 <c:forEach items="${attribute.values}" var="row" varStatus="counter">
 	<c:if test="${counter.count le valuesLimit}">
 		<c:choose>
