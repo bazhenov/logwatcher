@@ -2,6 +2,7 @@ package org.bazhenov.logging.storage;
 
 import com.farpost.timepoint.Date;
 import org.bazhenov.logging.AggregatedLogEntry;
+import org.bazhenov.logging.LogEntry;
 
 /**
  * Matcher по дате возникновения ошибки.
@@ -46,6 +47,15 @@ public class DateMatcher implements LogEntryMatcher {
 
 	public boolean isMatch(AggregatedLogEntry entry) {
 		Date date = entry.getLastTime().getDate();
+		if ( from.equals(to) ) {
+			return date.equals(from);
+		}else{
+			return date.greaterThan(from) && date.lessOrEqualThan(to);
+		}
+	}
+
+	public boolean isMatch(LogEntry entry) {
+		Date date = entry.getDate();
 		if ( from.equals(to) ) {
 			return date.equals(from);
 		}else{

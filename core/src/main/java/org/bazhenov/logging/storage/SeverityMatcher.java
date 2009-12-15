@@ -1,9 +1,8 @@
 package org.bazhenov.logging.storage;
 
-import org.bazhenov.logging.Severity;
 import org.bazhenov.logging.AggregatedLogEntry;
 import org.bazhenov.logging.LogEntry;
-import org.w3c.dom.html.HTMLObjectElement;
+import org.bazhenov.logging.Severity;
 
 public class SeverityMatcher implements LogEntryMatcher {
 
@@ -16,6 +15,10 @@ public class SeverityMatcher implements LogEntryMatcher {
 	public boolean isMatch(AggregatedLogEntry entry) {
 		LogEntry sampleEntry = entry.getSampleEntry();
 		return sampleEntry.getSeverity().isMoreImportantThan(severity);
+	}
+
+	public boolean isMatch(LogEntry entry) {
+		return entry.getSeverity().isMoreImportantThan(severity);
 	}
 
 	public Severity getSeverity() {

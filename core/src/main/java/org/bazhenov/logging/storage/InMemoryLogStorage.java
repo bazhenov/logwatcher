@@ -2,6 +2,7 @@ package org.bazhenov.logging.storage;
 
 import com.farpost.timepoint.Date;
 import org.bazhenov.logging.*;
+import static org.bazhenov.logging.storage.MatcherUtils.isMatching;
 
 import java.util.*;
 import java.util.concurrent.locks.*;
@@ -117,14 +118,5 @@ public class InMemoryLogStorage implements LogStorage {
 		} finally {
 			writeLock.unlock();
 		}
-	}
-
-	private boolean isMatching(AggregatedLogEntry entry, Collection<LogEntryMatcher> criterias) {
-		for ( LogEntryMatcher matcher : criterias ) {
-			if ( !matcher.isMatch(entry) ) {
-				return false;
-			}
-		}
-		return true;
 	}
 }

@@ -1,6 +1,7 @@
 package org.bazhenov.logging.storage;
 
 import org.bazhenov.logging.AggregatedLogEntry;
+import org.bazhenov.logging.LogEntry;
 
 public class ApplicationIdMatcher implements LogEntryMatcher {
 
@@ -12,6 +13,10 @@ public class ApplicationIdMatcher implements LogEntryMatcher {
 
 	public boolean isMatch(AggregatedLogEntry entry) {
 		return entry.getSampleEntry().getApplicationId().equals(applicationId);
+	}
+
+	public boolean isMatch(LogEntry entry) {
+		return applicationId.equals(entry.getApplicationId());
 	}
 
 	public String getApplicationId() {

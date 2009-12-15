@@ -1,6 +1,7 @@
 package org.bazhenov.logging.storage;
 
 import org.bazhenov.logging.AggregatedLogEntry;
+import org.bazhenov.logging.LogEntry;
 
 public class ChecksumMatcher implements LogEntryMatcher {
 
@@ -15,6 +16,10 @@ public class ChecksumMatcher implements LogEntryMatcher {
 
 	public boolean isMatch(AggregatedLogEntry entry) {
 		return checksum.equals(entry.getSampleEntry().getChecksum());
+	}
+
+	public boolean isMatch(LogEntry entry) {
+		return checksum.equals(entry.getChecksum());
 	}
 
 	public String getChecksum() {
