@@ -80,6 +80,12 @@
 			</c:if>
 		</h2>
 
+		<div id="severitySelector">
+			<span><span><span>trace</span> &amp;rarr;
+				info</span> &amp;rarr;
+					warning</span>
+		</div>
+
 		<!--<div id="searchBox">
 			<form method="get" action="">
 				<input type="text" name="query" id="searchInput" accesskey="S" value="${query}"/>

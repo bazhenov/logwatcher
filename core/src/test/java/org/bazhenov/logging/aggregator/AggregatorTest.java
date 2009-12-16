@@ -14,6 +14,8 @@ import org.testng.annotations.Test;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class AggregatorTest {
 
@@ -27,9 +29,10 @@ public class AggregatorTest {
 	@Test
 	public void testAggregatorCanFilterEntries() {
 		DateTime date = november(12, 2009).at(15, 12);
-		List<LogEntry> entries = new LinkedList<LogEntry>();
+		int times = 500000;
+		List<LogEntry> entries = new ArrayList<LogEntry>(times);
 		long start = System.currentTimeMillis();
-		for ( int i = 0; i < 500000; i++ ) {
+		for ( int i = 0; i < times; i++ ) {
 			LogEntry entry = entry().
 				occured(date).
 				attribute("machine", "aux" + (i % 10) + ".srv.loc").
@@ -52,7 +55,9 @@ public class AggregatorTest {
 		//assertThat(aggregated.size(), equalTo(1));
 	}
 
-	private SimpleAggregator createAggregator() {
-		return new SimpleAggregator();
+	private Aggregator createAggregator() {
+		ExecutorService service = Executors.newFixedThreadPool(2);
+		return new ExecutorServiceAggregator(service);
+		//return new SimpleAggregator();
 	}
 }

@@ -55,6 +55,9 @@ a:visited			                  { color: brown; text-decoration: underline }
 .entryContent .stacktrace       { font-family: monospace; margin-bottom: 5px; margin-top: 10px;
 																	white-space:pre-wrap; margin-right: 40px; font-size:120%; cursor:text }
 
+#severitySelector               { font-size: 60%; font-family: serif }
+#severitySelector span:hover    { font-weight: bold; }
+#severitySelector span:hover span { font-weight: normal; }
 .attributes                     { list-style: none; padding: 0; line-height: 18px; }
 .attributes label               {  }
 .attributes span                { border-left: 1px dotted #997; margin-left: 4px;
