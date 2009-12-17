@@ -37,8 +37,7 @@
 
 	<body>
 	<div id="header">
-		<h1><span id="firstDot">&amp;bull;</span><span id="secondDot">&amp;bull;</span><span
-			id="thirdDot">&amp;bull;</span><span>&amp;nbsp;f</span></h1>
+		<h1><span id="firstDot">&amp;bull;</span><span id="secondDot">&amp;bull;</span><span id="thirdDot">&amp;bull;</span><span>&amp;nbsp;</span></h1>
 
 		<div id="menuBar">
 
