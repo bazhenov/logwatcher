@@ -8,5 +8,5 @@ import java.util.*;
 
 public interface Aggregator {
 
-	List<AggregatedLogEntry> aggregate(Iterable<LogEntry> entries, Collection<LogEntryMatcher> matchers);
+	Collection<AggregatedLogEntry> aggregate(Iterable<LogEntry> entries, Collection<LogEntryMatcher> matchers);
 }

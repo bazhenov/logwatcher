@@ -13,7 +13,11 @@ public class AggregatedAttribute {
 	}
 
 	public AggregatedAttribute(String value) {
-		values.add(new AttributeValue(value, 1));
+		this(value, 1);
+	}
+
+	public AggregatedAttribute(String value, int count) {
+		values.add(new AttributeValue(value, count));
 	}
 
 	public int getCountFor(String value) {
@@ -47,5 +51,20 @@ public class AggregatedAttribute {
 
 	public Set<AttributeValue> getValues() {
 		return values;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append('{');
+		for ( AttributeValue value : values ) {
+			builder.append(value);
+		}
+		builder.append('}');
+		return builder.toString();
+	}
+
+	public void merge(AggregatedAttribute value) {
+		throw new UnsupportedOperationException();
 	}
 }

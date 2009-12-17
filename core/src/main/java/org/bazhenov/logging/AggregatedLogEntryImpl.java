@@ -48,6 +48,14 @@ public class AggregatedLogEntryImpl implements AggregatedLogEntry {
 		count.addAndGet(times);
 	}
 
+	public void merge(AggregatedLogEntry entry) {
+		count.addAndGet(entry.getCount());
+		if ( lastTime.lessThan(entry.getLastTime()) ) {
+			lastTime = entry.getLastTime();
+		}
+		mergeAttributes(entry.getAttributes(), attributes);
+	}
+
 	public synchronized void happensAgain(LogEntry entry) {
 		count.incrementAndGet();
 		DateTime time = entry.getDate();
@@ -79,6 +87,17 @@ public class AggregatedLogEntryImpl implements AggregatedLogEntry {
 				map.get(row.getKey()).incrementCountFor(row.getValue());
 			}else{
 				map.put(row.getKey(), new AggregatedAttribute(row.getValue()));
+			}
+		}
+	}
+
+	private void mergeAttributes(Map<String, AggregatedAttribute> from,
+	                   Map<String, AggregatedAttribute> to) {
+		for ( Map.Entry<String, AggregatedAttribute> row : from.entrySet() ) {
+			if ( to.containsKey(row.getKey()) ) {
+				from.get(row.getKey()).merge(row.getValue());
+			}else{
+				from.put(row.getKey(), row.getValue());
 			}
 		}
 	}

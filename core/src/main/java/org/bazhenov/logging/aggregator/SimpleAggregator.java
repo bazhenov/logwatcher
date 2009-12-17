@@ -8,7 +8,7 @@ import java.util.*;
 
 public class SimpleAggregator implements Aggregator {
 
-	public List<AggregatedLogEntry> aggregate(Iterable<LogEntry> entries, Collection<LogEntryMatcher> matchers) {
+	public Collection<AggregatedLogEntry> aggregate(Iterable<LogEntry> entries, Collection<LogEntryMatcher> matchers) {
 		Map<String, AggregatedLogEntry> result = new HashMap<String, AggregatedLogEntry>();
 		for ( LogEntry entry : entries ) {
 			if ( isMatching(entry, matchers) ) {

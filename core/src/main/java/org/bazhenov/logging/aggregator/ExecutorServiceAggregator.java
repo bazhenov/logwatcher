@@ -17,9 +17,9 @@ public class ExecutorServiceAggregator implements Aggregator {
 		this.service = service;
 	}
 
-	public List<AggregatedLogEntry> aggregate(Iterable<LogEntry> entries,
+	public Collection<AggregatedLogEntry> aggregate(Iterable<LogEntry> entries,
 	                                          Collection<LogEntryMatcher> matchers) {
-		LinkedList<Future<Map<String, AggregatedLogEntry>>> futures = new LinkedList<Future<Map<String, AggregatedLogEntry>>>();
+		LinkedList<Future<Collection<AggregatedLogEntry>>> futures = new LinkedList<Future<Collection<AggregatedLogEntry>>>();
 		Iterator<LogEntry> iterator = entries.iterator();
 		while ( iterator.hasNext() ) {
 			LogEntry[] batch = new LogEntry[batchSize];
@@ -29,25 +29,33 @@ public class ExecutorServiceAggregator implements Aggregator {
 			}
 			futures.add(emit(batch, matchers));
 		}
-		LinkedList<LogEntry> result = new LinkedList<LogEntry>();
-		for ( Future<Map<String, AggregatedLogEntry>> future : futures ) {
+		Map<String, AggregatedLogEntry> result = new HashMap<String, AggregatedLogEntry>();
+		for ( Future<Collection<AggregatedLogEntry>> future : futures ) {
 			try {
-				future.get();
+				Collection<AggregatedLogEntry> aggregatedEntries = future.get();
+				for ( AggregatedLogEntry entry : aggregatedEntries ) {
+					String checksum = entry.getSampleEntry().getChecksum();
+					if ( result.containsKey(checksum) ) {
+						((AggregatedLogEntryImpl)result.get(checksum)).merge(entry);
+					}else{
+						result.put(checksum, entry);
+					}
+				}
 			} catch ( InterruptedException e ) {
 				interrupted();
 			} catch ( ExecutionException e ) {
 				throw new RuntimeException(e);
 			}
 		}
-		return null;
+		return result.values();
 	}
 
-	private Future<Map<String, AggregatedLogEntry>> emit(LogEntry[] batch, Collection<LogEntryMatcher> matchers) {
+	private Future<Collection<AggregatedLogEntry>> emit(LogEntry[] batch, Collection<LogEntryMatcher> matchers) {
 		return service.submit(new Task(batch, matchers));
 	}
 }
 
-class Task implements Callable<Map<String, AggregatedLogEntry>> {
+class Task implements Callable<Collection<AggregatedLogEntry>> {
 
 	private final LogEntry[] batch;
 	private final Collection<LogEntryMatcher> matchers;
@@ -57,9 +65,12 @@ class Task implements Callable<Map<String, AggregatedLogEntry>> {
 		this.matchers = matchers;
 	}
 
-	public Map<String, AggregatedLogEntry> call() throws Exception {
+	public Collection<AggregatedLogEntry> call() throws Exception {
 		Map<String, AggregatedLogEntry> result = new HashMap<String, AggregatedLogEntry>();
 		for ( LogEntry entry : batch ) {
+			if ( entry == null ) {
+				continue;
+			}
 			if ( isMatching(entry, matchers) ) {
 				if ( result.containsKey(entry.getChecksum()) ) {
 					AggregatedLogEntryImpl aggregated = (AggregatedLogEntryImpl) result.get(entry.getChecksum());
@@ -69,6 +80,6 @@ class Task implements Callable<Map<String, AggregatedLogEntry>> {
 				}
 			}
 		}
-		return result;
+		return result.values();
 	}
 }

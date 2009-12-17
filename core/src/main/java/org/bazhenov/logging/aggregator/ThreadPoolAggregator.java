@@ -24,7 +24,7 @@ public class ThreadPoolAggregator implements Aggregator {
 		}
 	}
 
-	public List<AggregatedLogEntry> aggregate(Iterable<LogEntry> entries,
+	public Collection<AggregatedLogEntry> aggregate(Iterable<LogEntry> entries,
 	                                          Collection<LogEntryMatcher> matchers) {
 		FilterTask task = null;
 		for ( LogEntry entry : entries ) {
