@@ -8,4 +8,13 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value>/WEB-INF/development.xml</param-value>
 	</context-param>
+
+	<servlet>
+		<servlet-name>jsp</servlet-name>
+		<servlet-class>org.apache.jasper.servlet.JspServlet</servlet-class>
+		<init-param>
+			<param-name>development</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</servlet>
 </web-app>
