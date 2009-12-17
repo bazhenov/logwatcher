@@ -9,10 +9,8 @@ import org.bazhenov.logging.storage.AttributeValueMatcher;
 import org.bazhenov.logging.storage.DateMatcher;
 import org.bazhenov.logging.storage.LogEntryMatcher;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -26,7 +24,6 @@ public class AggregatorTest {
 		aggregator = createAggregator();
 	}
 
-	@Test
 	public void testAggregatorCanFilterEntries() {
 		DateTime date = november(12, 2009).at(15, 12);
 		int times = 500000;

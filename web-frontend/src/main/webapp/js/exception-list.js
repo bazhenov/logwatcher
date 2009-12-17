@@ -5,7 +5,7 @@ $(document).ready(function() {
 	$('#searchInput').focus();
 
 	$('.entry').click(function(target) {
-		if ( $(target.srcElement).parents(".noBubble").length <= 0 ) {
+		if ( $(target.target).parents(".noBubble").length <= 0 ) {
 			$(this).toggleClass('selectedEntry')
 		}
 	});
