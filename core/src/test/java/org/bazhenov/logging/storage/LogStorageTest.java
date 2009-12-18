@@ -157,18 +157,14 @@ abstract public class LogStorageTest {
 			findFirst(storage);
 		assertThat(entry.getAttributes().size(), equalTo(2));
 
-		AttributeValue[] array = entry.getAttributes().get("user").toArray();
-		assertThat(array, equalTo(new AttributeValue[] {
-			new AttributeValue("john", 2),
-			new AttributeValue("christin", 1),
-			new AttributeValue("david", 1)
-		}));
+		AggregatedAttribute attr = entry.getAttributes().get("user");
+		assertThat(attr.getCountFor("john"), equalTo(2));
+		assertThat(attr.getCountFor("christin"), equalTo(1));
+		assertThat(attr.getCountFor("david"), equalTo(1));
 
-		array = entry.getAttributes().get("machine").toArray();
-		assertThat(array, equalTo(new AttributeValue[] {
-			new AttributeValue("host1", 1),
-			new AttributeValue("host2", 1)
-		}));
+		attr = entry.getAttributes().get("machine");
+		assertThat(attr.getCountFor("host1"), equalTo(1));
+		assertThat(attr.getCountFor("host2"), equalTo(1));
 	}
 
 	@Test
