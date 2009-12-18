@@ -11,15 +11,13 @@ import org.testng.annotations.Test;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static com.farpost.timepoint.Date.november;
 import static org.bazhenov.logging.TestSupport.entry;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-public class AggregatorTest {
+abstract public class AggregatorTestCase {
 
 	private Aggregator aggregator;
 
@@ -51,8 +49,5 @@ public class AggregatorTest {
 		assertThat(arr[0].getAttributes().get("machine").getCountFor("aux1.srv.loc"), equalTo(1111));
 	}
 
-	private Aggregator createAggregator() {
-		ExecutorService service = Executors.newFixedThreadPool(2);
-		return new ExecutorServiceAggregator(service);
-	}
+	abstract protected Aggregator createAggregator();
 }

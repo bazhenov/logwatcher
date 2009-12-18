@@ -20,6 +20,6 @@ public class SimpleAggregator implements Aggregator {
 				}
 			}
 		}
-		return null;
+		return result.values();
 	}
 }

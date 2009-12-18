@@ -1,19 +1,21 @@
 package org.bazhenov.logging.storage;
 
 import com.farpost.timepoint.Date;
-import static com.farpost.timepoint.Date.*;
-import static com.farpost.timepoint.Date.today;
 import com.farpost.timepoint.DateTime;
-import org.bazhenov.logging.*;
-import static org.bazhenov.logging.TestSupport.entry;
-import static org.bazhenov.logging.storage.LogEntries.entries;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import org.bazhenov.logging.AggregatedAttribute;
+import org.bazhenov.logging.AggregatedLogEntry;
+import org.bazhenov.logging.LogEntry;
+import org.bazhenov.logging.Severity;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import javax.accessibility.AccessibleValue;
-import java.util.*;
+import java.util.List;
+
+import static com.farpost.timepoint.Date.*;
+import static org.bazhenov.logging.TestSupport.entry;
+import static org.bazhenov.logging.storage.LogEntries.entries;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
 abstract public class LogStorageTest {
 

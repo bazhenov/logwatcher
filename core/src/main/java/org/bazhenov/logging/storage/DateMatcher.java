@@ -55,7 +55,7 @@ public class DateMatcher implements LogEntryMatcher {
 	}
 
 	public boolean isMatch(LogEntry entry) {
-		Date date = entry.getDate();
+		Date date = entry.getDate().getDate();
 		if ( from.equals(to) ) {
 			return date.equals(from);
 		}else{
