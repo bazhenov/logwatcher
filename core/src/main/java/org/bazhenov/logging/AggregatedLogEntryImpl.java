@@ -86,7 +86,9 @@ public class AggregatedLogEntryImpl implements AggregatedLogEntry {
 			if ( map.containsKey(row.getKey()) ) {
 				map.get(row.getKey()).incrementCountFor(row.getValue());
 			}else{
-				map.put(row.getKey(), new AggregatedAttribute(row.getValue()));
+				AggregatedAttribute attribute = new AggregatedAttribute(row.getKey());
+				attribute.add(new AttributeValue(row.getValue(), 1));
+				map.put(row.getKey(), attribute);
 			}
 		}
 	}

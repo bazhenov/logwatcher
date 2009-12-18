@@ -4,67 +4,61 @@ import java.util.*;
 
 public class AggregatedAttribute {
 
-	Set<AttributeValue> values = new TreeSet<AttributeValue>(new ByValueComparator());
+	private final String name;
+	Map<String, AttributeValue> values = new HashMap<String, AttributeValue>();
 
-	public AggregatedAttribute(Map<String, Integer> counts) {
+	public AggregatedAttribute(String name, Map<String, Integer> counts) {
+		this.name = name;
 		for ( Map.Entry<String, Integer> row : counts.entrySet() ) {
-			values.add(new AttributeValue(row.getKey(), row.getValue()));
+			add(new AttributeValue(row.getKey(), row.getValue()));
 		}
 	}
 
-	public AggregatedAttribute(String value) {
-		this(value, 1);
-	}
-
-	public AggregatedAttribute(String value, int count) {
-		values.add(new AttributeValue(value, count));
+	public AggregatedAttribute(String name) {
+		this.name = name;
 	}
 
 	public int getCountFor(String value) {
-		AttributeValue v = findValue(value);
+		AttributeValue v = values.get(value);
 		return v == null
 			? 0
 			: v.getCount();
 	}
 
 	public AttributeValue[] toArray() {
-		return values.toArray(new AttributeValue[values.size()]);
+		return values.values().toArray(new AttributeValue[values.size()]);
 	}
 
 	public void incrementCountFor(String value) {
-		AttributeValue v = findValue(value);
+		AttributeValue v = values.get(value);
 		if ( v == null ) {
-			values.add(new AttributeValue(value, 1));
+			values.put(value, new AttributeValue(value, 1));
 		}else{
 			v.increment();
 		}
 	}
 
-	private AttributeValue findValue(String value) {
-		for ( AttributeValue v : values ) {
-			if ( v.getValue().equals(value) ) {
-				return v;
-			}
+	public void add(AttributeValue value) {
+		AttributeValue savedValue = values.get(value.getValue());
+		if ( savedValue == null ) {
+			values.put(value.getValue(), value);
+		}else{
+			savedValue.add(value);
 		}
-		return null;
 	}
 
-	public Set<AttributeValue> getValues() {
-		return values;
+	public void merge(AggregatedAttribute value) {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append('{');
-		for ( AttributeValue value : values ) {
+		for ( AttributeValue value : values.values() ) {
 			builder.append(value);
 		}
 		builder.append('}');
 		return builder.toString();
-	}
-
-	public void merge(AggregatedAttribute value) {
-		throw new UnsupportedOperationException();
 	}
 }

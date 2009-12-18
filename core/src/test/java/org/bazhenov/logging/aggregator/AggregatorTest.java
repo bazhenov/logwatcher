@@ -2,9 +2,10 @@ package org.bazhenov.logging.aggregator;
 
 import static com.farpost.timepoint.Date.november;
 import com.farpost.timepoint.DateTime;
-import org.bazhenov.logging.AggregatedAttribute;
+import org.bazhenov.logging.AggregatedAttributeTest;
 import org.bazhenov.logging.AggregatedLogEntry;
 import org.bazhenov.logging.LogEntry;
+import org.bazhenov.logging.AggregatedAttribute;
 import static org.bazhenov.logging.TestSupport.entry;
 import org.bazhenov.logging.storage.AttributeValueMatcher;
 import org.bazhenov.logging.storage.LogEntryMatcher;
@@ -46,7 +47,7 @@ public class AggregatorTest {
 		assertThat(aggregated.size(), equalTo(1));
 
 		AggregatedLogEntry[] arr = aggregated.toArray(new AggregatedLogEntry[aggregated.size()]);
-		assertThat(arr[0].getAttributes().get("machine"), equalTo(new AggregatedAttribute("aux1.srv.loc", 1111)));
+		assertThat(arr[0].getAttributes().get("machine").getCountFor("aux1.srv.loc"), equalTo(1111));
 	}
 
 	private Aggregator createAggregator() {

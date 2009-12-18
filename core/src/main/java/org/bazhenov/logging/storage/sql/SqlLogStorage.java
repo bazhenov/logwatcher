@@ -233,7 +233,7 @@ public class SqlLogStorage implements LogStorage {
 				: new HashMap<String, Object>();
 			for ( Map.Entry<String, Object> row : attributes.entrySet() ) {
 				Map aggregatedAttributes = (Map) row.getValue();
-				attributes.put(row.getKey(), new AggregatedAttribute(aggregatedAttributes));
+				attributes.put(row.getKey(), new AggregatedAttribute(row.getKey(), aggregatedAttributes));
 			}
 			DateTime lastTime = new DateTime(rs.getTimestamp("last_date"));
 			int count = rs.getInt("count");
