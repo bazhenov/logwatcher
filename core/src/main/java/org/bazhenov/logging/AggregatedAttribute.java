@@ -25,7 +25,7 @@ public class AggregatedAttribute {
 			: v.getCount();
 	}
 
-	public AttributeValue[] toArray() {
+	public AttributeValue[] getValues() {
 		return values.values().toArray(new AttributeValue[values.size()]);
 	}
 
