@@ -47,8 +47,10 @@ public class AggregatedAttribute {
 		}
 	}
 
-	public void merge(AggregatedAttribute value) {
-		throw new UnsupportedOperationException();
+	public void merge(AggregatedAttribute attribute) {
+		for ( AttributeValue value : attribute.values.values() ) {
+			add(value);
+		}
 	}
 
 	@Override

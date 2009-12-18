@@ -97,9 +97,9 @@ public class AggregatedLogEntryImpl implements AggregatedLogEntry {
 	                   Map<String, AggregatedAttribute> to) {
 		for ( Map.Entry<String, AggregatedAttribute> row : from.entrySet() ) {
 			if ( to.containsKey(row.getKey()) ) {
-				from.get(row.getKey()).merge(row.getValue());
+				to.get(row.getKey()).merge(row.getValue());
 			}else{
-				from.put(row.getKey(), row.getValue());
+				to.put(row.getKey(), row.getValue());
 			}
 		}
 	}

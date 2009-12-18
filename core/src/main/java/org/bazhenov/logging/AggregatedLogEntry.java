@@ -15,5 +15,5 @@ public interface AggregatedLogEntry {
 
 	LogEntry getSampleEntry();
 
-	Map<String,AggregatedAttribute> getAttributes();
+	Map<String, AggregatedAttribute> getAttributes();
 }
