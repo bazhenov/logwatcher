@@ -1,23 +1,23 @@
 package org.bazhenov.logging.aggregator;
 
-import static com.farpost.timepoint.Date.november;
 import com.farpost.timepoint.DateTime;
-import org.bazhenov.logging.AggregatedAttributeTest;
 import org.bazhenov.logging.AggregatedLogEntry;
 import org.bazhenov.logging.LogEntry;
-import org.bazhenov.logging.AggregatedAttribute;
-import static org.bazhenov.logging.TestSupport.entry;
 import org.bazhenov.logging.storage.AttributeValueMatcher;
 import org.bazhenov.logging.storage.LogEntryMatcher;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import static com.farpost.timepoint.Date.november;
+import static org.bazhenov.logging.TestSupport.entry;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
 public class AggregatorTest {
 
@@ -28,6 +28,7 @@ public class AggregatorTest {
 		aggregator = createAggregator();
 	}
 
+	@Test
 	public void testAggregatorCanFilterEntries() {
 		DateTime date = november(12, 2009).at(15, 12);
 		int problemSize = 3333;
