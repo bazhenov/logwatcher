@@ -1,5 +1,6 @@
 package org.bazhenov.logging.aggregator;
 
+import org.apache.log4j.Logger;
 import org.bazhenov.logging.*;
 import org.bazhenov.logging.storage.LogEntryMatcher;
 import static org.bazhenov.logging.storage.MatcherUtils.isMatching;
@@ -12,20 +13,28 @@ public class ExecutorServiceAggregator implements Aggregator {
 
 	private final ExecutorService service;
 	private final int batchSize = 500;
+	private final Logger log = Logger.getLogger(ExecutorServiceAggregator.class);
 
 	public ExecutorServiceAggregator(ExecutorService service) {
 		this.service = service;
 	}
 
+	public ExecutorServiceAggregator() {
+		this(Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()));
+	}
+
 	public Collection<AggregatedLogEntry> aggregate(Iterable<LogEntry> entries,
 	                                          Collection<LogEntryMatcher> matchers) {
+		long start = System.currentTimeMillis();
 		LinkedList<Future<Collection<AggregatedLogEntry>>> futures = new LinkedList<Future<Collection<AggregatedLogEntry>>>();
 		Iterator<LogEntry> iterator = entries.iterator();
+		int size = 0;
 		while ( iterator.hasNext() ) {
 			LogEntry[] batch = new LogEntry[batchSize];
 			int batchIndex = 0;
 			while ( batchIndex < batchSize && iterator.hasNext() ) {
 				batch[batchIndex++] = iterator.next();
+				size++;
 			}
 			futures.add(emit(batch, matchers));
 		}
@@ -46,6 +55,10 @@ public class ExecutorServiceAggregator implements Aggregator {
 			} catch ( ExecutionException e ) {
 				throw new RuntimeException(e);
 			}
+		}
+		long end = System.currentTimeMillis();
+		if ( log.isInfoEnabled() ) {
+			log.info("Processing of " + size + " entries done in " + (end - start) + "ms.");
 		}
 		return result.values();
 	}

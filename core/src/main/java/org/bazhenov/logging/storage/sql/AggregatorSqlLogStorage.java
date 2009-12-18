@@ -1,13 +1,9 @@
 package org.bazhenov.logging.storage.sql;
 
-import com.farpost.marshaller.DomMarshallerImpl;
-import com.farpost.marshaller.MarshallingException;
 import com.farpost.timepoint.Date;
 import com.farpost.timepoint.DateTime;
 import org.apache.log4j.Logger;
-import org.bazhenov.logging.AggregatedAttribute;
 import org.bazhenov.logging.AggregatedLogEntry;
-import org.bazhenov.logging.AggregatedLogEntryImpl;
 import org.bazhenov.logging.LogEntry;
 import org.bazhenov.logging.aggregator.Aggregator;
 import org.bazhenov.logging.marshalling.Marshaller;
@@ -17,15 +13,17 @@ import org.bazhenov.logging.storage.LogEntryMatcher;
 import org.bazhenov.logging.storage.LogStorage;
 import org.bazhenov.logging.storage.LogStorageException;
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
 import javax.sql.DataSource;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.*;
 import java.util.*;
 
-import static org.bazhenov.logging.AggregatedLogEntryImpl.mergeMap;
+import com.farpost.timepoint.Date;
 
 public class AggregatorSqlLogStorage implements LogStorage {
 
@@ -34,19 +32,16 @@ public class AggregatorSqlLogStorage implements LogStorage {
 	private final Marshaller marshaller;
 	private final SqlMatcherMapper mapper;
 	private final SimpleJdbcTemplate jdbc;
-	private final ParameterizedRowMapper<AggregatedLogEntry> entryCreator;
-	private final com.farpost.marshaller.Marshaller attributesMarshaller;
 	private final Logger log = Logger.getLogger(AggregatorSqlLogStorage.class);
 
-	public AggregatorSqlLogStorage(Aggregator aggregator, DataSource datasource, Marshaller marshaller, SqlMatcherMapper mapper) throws
-		IOException, SQLException {
+	public AggregatorSqlLogStorage(Aggregator aggregator, DataSource datasource,
+	                               Marshaller marshaller, SqlMatcherMapper mapper)
+		throws IOException, SQLException {
 		this.aggregator = aggregator;
 		this.marshaller = marshaller;
 		this.mapper = mapper;
 		this.datasource = datasource;
 		this.jdbc = new SimpleJdbcTemplate(datasource);
-		entryCreator = new EntryCreator();
-		attributesMarshaller = new DomMarshallerImpl();
 
 		InputStream stream = AggregatorSqlLogStorage.class.getResourceAsStream("/dump.h2.sql");
 		loadDump(datasource, stream);
@@ -55,39 +50,8 @@ public class AggregatorSqlLogStorage implements LogStorage {
 	public synchronized void writeEntry(LogEntry entry) throws LogStorageException {
 		try {
 			String marshalledEntry = marshaller.marshall(entry);
-			int rowsUpdated = jdbc.update(
-				"UPDATE log_entry SET count = count + 1, last_date = ? WHERE date = ? AND checksum = ?",
-				timestamp(entry.getDate()), date(entry.getDate()), entry.getChecksum());
-			if ( rowsUpdated <= 0 ) {
-				String sql = "INSERT INTO log_entry (date, checksum, category, text, count, last_date, application_id, severity, attributes) " + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-				DateTime date = entry.getDate();
-
-				Map<String, Map<String, Integer>> aggregatedAttributes = new HashMap<String, Map<String, Integer>>();
-				mergeMap(aggregatedAttributes, entry.getAttributes());
-
-
-				Object[] args = new Object[]{date(date.getDate()), entry.getChecksum(), entry.getCategory(),
-					marshalledEntry, 1, timestamp(date), entry.getApplicationId(),
-					entry.getSeverity().getCode(),
-					attributesMarshaller.serialize((Map)aggregatedAttributes)};
-				jdbc.update(sql, args);
-			} else {
-				String xml = jdbc.queryForObject(
-					"SELECT attributes FROM log_entry WHERE date = ? AND checksum = ?", String.class,
-					date(entry.getDate()), entry.getChecksum());
-				Map<String, Object> map = xml != null
-					? attributesMarshaller.unserialize(new StringReader(xml))
-					: new HashMap<String, Object>();
-				mergeMap((Map) map, entry.getAttributes());
-				jdbc.update("UPDATE log_entry SET attributes = ? WHERE date = ? AND checksum = ?",
-					attributesMarshaller.serialize(map), date(entry.getDate()), entry.getChecksum());
-			}
-
-			/**
-			 * Пишем запись в новом формате без аггрегации
-			 */
-			jdbc.update("INSERT INTO entry (time, date, checksum, category, severity, application_id, content) VALUES (?, ?, ?, ?, ?, ?, ?)",
+			jdbc.update(
+				"INSERT INTO entry (time, date, checksum, category, severity, application_id, content) VALUES (?, ?, ?, ?, ?, ?, ?)",
 				timestamp(entry.getDate()), date(entry.getDate()), entry.getChecksum(), entry.getCategory(),
 				entry.getSeverity().getCode(), entry.getApplicationId(), marshalledEntry);
 
@@ -98,8 +62,6 @@ public class AggregatorSqlLogStorage implements LogStorage {
 			throw new LogStorageException(e);
 		} catch ( DataAccessException e ) {
 			throw new LogStorageException(e);
-		} catch ( MarshallingException e ) {
-			throw new LogStorageException(e);
 		}
 	}
 
@@ -109,13 +71,28 @@ public class AggregatorSqlLogStorage implements LogStorage {
 		PreparedStatement statement = null;
 		ResultSet result = null;
 		try {
+			StringBuilder sql = new StringBuilder("SELECT content FROM `entry` l");
+
+			List arguments = new LinkedList();
+			StringBuilder whereClause = new StringBuilder();
+			Collection<LogEntryMatcher> lateBoundMatchers = fillWhereClause(criterias, whereClause,
+				arguments);
+			if ( lateBoundMatchers.size() > 0 ) {
+				throw new InvalidCriteriaException(lateBoundMatchers);
+			}
+
+			sql.append(" WHERE ").append(whereClause);
 			connection = datasource.getConnection();
-			statement = connection.prepareStatement("SELECT content FROM entry");
+			statement = connection.prepareStatement(sql.toString());
+			fill(statement, arguments);
+
 			result = statement.executeQuery();
 			Collection<AggregatedLogEntry> aggregated = aggregator.aggregate(
 				new ResultSetIterable(result, marshaller), criterias);
 			return new ArrayList<AggregatedLogEntry>(aggregated);
 		} catch ( SQLException e ) {
+			throw new LogStorageException(e);
+		} catch ( MatcherMapperException e ) {
 			throw new LogStorageException(e);
 		} finally {
 			close(result);
@@ -124,45 +101,31 @@ public class AggregatorSqlLogStorage implements LogStorage {
 		}
 	}
 
-	private void close(Connection connection) {
-		if ( connection != null ) {
-			try {
-				connection.close();
-			} catch ( SQLException e ) {
-				log.error("Error occured while closing connection", e);
+	private void fill(PreparedStatement statement, List arguments) throws SQLException {
+		int i = 1;
+		for ( Object obj : arguments ) {
+			if ( obj instanceof String ) {
+				statement.setString(i++, (String) obj);
+			} else if ( obj instanceof java.sql.Date ) {
+				statement.setDate(i++, (java.sql.Date) obj);
+			} else if ( obj instanceof Timestamp ) {
+				statement.setTimestamp(i++, (Timestamp) obj);
+			} else if ( obj instanceof Integer ) {
+				statement.setInt(i++, (Integer) obj);
+			} else {
+				throw new RuntimeException("Unknown argument type: " + obj.getClass().getName());
 			}
 		}
 	}
-
-	private void close(Statement statement) {
-		if ( statement != null ) {
-			try {
-				statement.close();
-			} catch ( SQLException e ) {
-				log.error("Error occured while closing statement", e);
-			}
-		}
-	}
-
-	private void close(ResultSet resultSet) {
-		if ( resultSet != null ) {
-			try {
-				resultSet.close();
-			} catch ( SQLException e ) {
-				log.error("Error occured while closing result set", e);
-			}
-		}
-	}
-
 
 	public void createChecksumAlias(String checksum, String alias) {
-		jdbc.update("DELETE FROM log_entry WHERE checksum = ?", checksum);
+		jdbc.update("UPDATE entry SET checksum = ? WHERE checksum = ?", alias, checksum);
 	}
 
 	public int countEntries(Collection<LogEntryMatcher> criterias)
 		throws LogStorageException, InvalidCriteriaException {
 
-		StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM `log_entry` l");
+		StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM `entry` l");
 		if ( criterias == null || criterias.size() <= 0 ) {
 			return jdbc.queryForInt(sql.toString());
 		} else {
@@ -186,7 +149,7 @@ public class AggregatorSqlLogStorage implements LogStorage {
 
 	public void removeEntries(String checksum, Date date) throws LogStorageException {
 		try {
-			jdbc.update("DELETE FROM log_entry WHERE date = ? AND checksum = ?", date(date), checksum);
+			jdbc.update("DELETE FROM entry WHERE date = ? AND checksum = ?", date(date), checksum);
 		} catch ( DataAccessException e ) {
 			throw new LogStorageException(e);
 		}
@@ -220,6 +183,36 @@ public class AggregatorSqlLogStorage implements LogStorage {
 		return new java.sql.Date(date.asTimestamp());
 	}
 
+	private void close(Connection connection) {
+		if ( connection != null ) {
+			try {
+				connection.close();
+			} catch ( SQLException e ) {
+				log.error("Error occured while closing connection", e);
+			}
+		}
+	}
+
+	private void close(Statement statement) {
+		if ( statement != null ) {
+			try {
+				statement.close();
+			} catch ( SQLException e ) {
+				log.error("Error occured while closing statement", e);
+			}
+		}
+	}
+
+	private void close(ResultSet resultSet) {
+		if ( resultSet != null ) {
+			try {
+				resultSet.close();
+			} catch ( SQLException e ) {
+				log.error("Error occured while closing result set", e);
+			}
+		}
+	}
+
 	public static void loadDump(DataSource ds, InputStream stream) throws IOException, SQLException {
 		StringBuffer buffer = new StringBuffer();
 		BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
@@ -238,38 +231,5 @@ public class AggregatorSqlLogStorage implements LogStorage {
 
 	static Timestamp timestamp(DateTime date) {
 		return new Timestamp(date.asTimestamp());
-	}
-
-	/**
-	 * Имплементация {@link org.springframework.jdbc.core.simple.ParameterizedRowMapper}, которая из {@link java.sql.ResultSet}'а создает
-	 * обьекты типа {@link org.bazhenov.logging.AggregatedLogEntry}.
-	 */
-	private class EntryCreator implements ParameterizedRowMapper<AggregatedLogEntry> {
-
-		public AggregatedLogEntry mapRow(ResultSet rs, int rowNum) throws SQLException {
-			try {
-				return createEntry(rs);
-			} catch ( MarshallerException e ) {
-				throw new SQLException(e);
-			} catch ( MarshallingException e ) {
-				throw new SQLException(e);
-			}
-		}
-
-		private AggregatedLogEntry createEntry(ResultSet rs) throws MarshallerException, SQLException,
-			MarshallingException {
-			LogEntry sampleEntry = marshaller.unmarshall(rs.getString("text"));
-			String attributesStr = rs.getString("attributes");
-			Map<String, Object> attributes = attributesStr != null
-				? attributesMarshaller.unserialize(new StringReader(attributesStr))
-				: new HashMap<String, Object>();
-			for ( Map.Entry<String, Object> row : attributes.entrySet() ) {
-				Map aggregatedAttributes = (Map) row.getValue();
-				attributes.put(row.getKey(), new AggregatedAttribute(row.getKey(), aggregatedAttributes));
-			}
-			DateTime lastTime = new DateTime(rs.getTimestamp("last_date"));
-			int count = rs.getInt("count");
-			return new AggregatedLogEntryImpl(sampleEntry, lastTime, count, (Map)attributes);
-		}
 	}
 }
