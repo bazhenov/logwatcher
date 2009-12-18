@@ -25,16 +25,6 @@ public interface LogStorage {
 	void writeEntry(LogEntry entry) throws LogStorageException;
 
 	/**
-	 * Возвращает колличество записей в хранилище за указанную дату
-	 *
-	 * @param date дата
-	 * @return колличество записей
-	 * @throws LogStorageException в случае внутренней ошибки
-	 * @deprecated
-	 */
-	int getEntryCount(Date date) throws LogStorageException;
-
-	/**
 	 * Подсчитывает колличество записей в хранилище с заданными условиями.
 	 *
 	 * @param criterias условия отбора записей или {@code null} если интересует общее количество

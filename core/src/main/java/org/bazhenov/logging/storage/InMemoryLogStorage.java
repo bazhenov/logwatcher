@@ -77,18 +77,6 @@ public class InMemoryLogStorage implements LogStorage {
 		return result;
 	}
 
-	public int getEntryCount(Date date) throws LogStorageException {
-		readLock.lock();
-		try {
-			Map<String, AggregatedLogEntryImpl> dayEntries = entriesByDay.get(date);
-			return dayEntries == null
-				? 0
-				: dayEntries.size();
-		} finally {
-			readLock.unlock();
-		}
-	}
-
 	public int countEntries(Collection<LogEntryMatcher> criterias) throws LogStorageException {
 		readLock.lock();
 		try {

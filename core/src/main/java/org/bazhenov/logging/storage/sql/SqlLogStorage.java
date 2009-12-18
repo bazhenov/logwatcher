@@ -119,14 +119,6 @@ public class SqlLogStorage implements LogStorage {
 		jdbc.update("DELETE FROM log_entry WHERE checksum = ?", checksum);
 	}
 
-	public int getEntryCount(Date date) throws LogStorageException {
-		try {
-			return jdbc.queryForInt("SELECT SUM(count) FROM log_entry WHERE date = ?", date(date));
-		} catch ( DataAccessException e ) {
-			throw new LogStorageException(e);
-		}
-	}
-
 	public int countEntries(Collection<LogEntryMatcher> criterias)
 		throws LogStorageException, InvalidCriteriaException {
 
