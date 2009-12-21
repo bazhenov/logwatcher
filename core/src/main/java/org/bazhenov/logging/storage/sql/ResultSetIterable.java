@@ -1,28 +1,22 @@
 package org.bazhenov.logging.storage.sql;
 
-import org.bazhenov.logging.LogEntry;
-import org.bazhenov.logging.marshalling.Marshaller;
-import org.bazhenov.logging.marshalling.MarshallerException;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
 
-public class ResultSetIterable implements Iterable<LogEntry> {
+public class ResultSetIterable implements Iterable<String> {
 
 	private final ResultSet result;
-	private final Marshaller marshaller;
 
-	public ResultSetIterable(ResultSet result, Marshaller marshaller) {
+	public ResultSetIterable(ResultSet result) {
 		this.result = result;
-		this.marshaller = marshaller;
 	}
 
-	public Iterator<LogEntry> iterator() {
+	public Iterator<String> iterator() {
 		return new ResultIterator();
 	}
 
-	public class ResultIterator implements Iterator<LogEntry> {
+	public class ResultIterator implements Iterator<String> {
 
 		public boolean hasNext() {
 			try {
@@ -32,14 +26,11 @@ public class ResultSetIterable implements Iterable<LogEntry> {
 			}
 		}
 
-		public LogEntry next() {
+		public String next() {
 			try {
 				result.next();
-				String xml = result.getString(1);
-				return marshaller.unmarshall(xml);
+				return result.getString(1);
 			} catch ( SQLException e ) {
-				throw new RuntimeException(e);
-			} catch ( MarshallerException e ) {
 				throw new RuntimeException(e);
 			}
 		}

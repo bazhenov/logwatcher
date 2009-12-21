@@ -2,6 +2,7 @@ package org.bazhenov.logging.aggregator;
 
 import org.apache.log4j.Logger;
 import org.bazhenov.logging.*;
+import org.bazhenov.logging.marshalling.Marshaller;
 import org.bazhenov.logging.storage.LogEntryMatcher;
 
 import static java.lang.System.currentTimeMillis;
@@ -14,19 +15,21 @@ import static java.lang.Thread.interrupted;
 
 public class ExecutorServiceAggregator implements Aggregator {
 
+	private final Marshaller marshaller;
 	private final ExecutorService service;
 	private final int batchSize = 500;
 	private final Logger log = Logger.getLogger(ExecutorServiceAggregator.class);
 
-	public ExecutorServiceAggregator(ExecutorService service) {
+	public ExecutorServiceAggregator(Marshaller marshaller, ExecutorService service) {
+		this.marshaller = marshaller;
 		this.service = service;
 	}
 
-	public ExecutorServiceAggregator() {
-		this(Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()));
+	public ExecutorServiceAggregator(Marshaller marshaller) {
+		this(marshaller, Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()));
 	}
 
-	public Collection<AggregatedLogEntry> aggregate(Iterable<LogEntry> entries,
+	public Collection<AggregatedLogEntry> aggregate(Iterable<String> entries,
 	                                                Collection<LogEntryMatcher> matchers) {
 		long start = currentTimeMillis();
 		List<Future<Collection<AggregatedLogEntry>>> futures = emitTasks(entries, matchers);
@@ -66,14 +69,14 @@ public class ExecutorServiceAggregator implements Aggregator {
 		return result;
 	}
 
-	private List<Future<Collection<AggregatedLogEntry>>> emitTasks(Iterable<LogEntry> entries,
+	private List<Future<Collection<AggregatedLogEntry>>> emitTasks(Iterable<String> entries,
 	                                                               Collection<LogEntryMatcher> matchers) {
 		LinkedList<Future<Collection<AggregatedLogEntry>>> futures = new LinkedList<Future<Collection<AggregatedLogEntry>>>();
-		Iterator<LogEntry> iterator = entries.iterator();
+		Iterator<String> iterator = entries.iterator();
 		int size = 0;
 		long start = currentTimeMillis();
 		while ( iterator.hasNext() ) {
-			LogEntry[] batch = new LogEntry[batchSize];
+			String[] batch = new String[batchSize];
 			int batchIndex = 0;
 			while ( batchIndex < batchSize && iterator.hasNext() ) {
 				batch[batchIndex++] = iterator.next();
@@ -88,12 +91,12 @@ public class ExecutorServiceAggregator implements Aggregator {
 		return futures;
 	}
 
-	class Task implements Callable<Collection<AggregatedLogEntry>> {
+	private class Task implements Callable<Collection<AggregatedLogEntry>> {
 
-		private final LogEntry[] batch;
+		private final String[] batch;
 		private final Collection<LogEntryMatcher> matchers;
 
-		public Task(LogEntry[] batch, Collection<LogEntryMatcher> matchers) {
+		public Task(String[] batch, Collection<LogEntryMatcher> matchers) {
 			this.batch = batch;
 			this.matchers = matchers;
 		}
@@ -102,10 +105,11 @@ public class ExecutorServiceAggregator implements Aggregator {
 			Map<String, AggregatedLogEntry> result = new HashMap<String, AggregatedLogEntry>();
 			long start = currentTimeMillis();
 			int processedCnt = 0;
-			for ( LogEntry entry : batch ) {
-				if ( entry == null ) {
+			for ( String marshalledEntry : batch ) {
+				if ( marshalledEntry == null ) {
 					continue;
 				}
+				LogEntry entry = marshaller.unmarshall(marshalledEntry);
 				if ( isMatching(entry, matchers) ) {
 					if ( result.containsKey(entry.getChecksum()) ) {
 						AggregatedLogEntryImpl aggregated = (AggregatedLogEntryImpl) result.get(

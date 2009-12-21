@@ -28,7 +28,13 @@ public class JDomMarshaller implements Marshaller {
 	};
 	private final Namespace namespace = Namespace.getNamespace(
 		"http://logging.farpost.com/schema/v1.1");
-	private final DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+
+	private final ThreadLocal<DateFormat> format = new ThreadLocal<DateFormat>() {
+		@Override
+		protected DateFormat initialValue() {
+			return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+		}
+	};
 
 	public String marshall(LogEntry entry) throws MarshallerException {
 		Element root = element("logEntry");
@@ -62,7 +68,7 @@ public class JDomMarshaller implements Marshaller {
 	}
 
 	private String dateToString(LogEntry entry) {
-		String date = format.format(entry.getDate().asDate());
+		String date = format.get().format(entry.getDate().asDate());
 		StringBuilder builder = new StringBuilder(date);
 		builder.insert(22, ':');
 		return builder.toString();
@@ -142,7 +148,7 @@ public class JDomMarshaller implements Marshaller {
 	private DateTime dateTime(String value) throws ParseException {
 		StringBuilder builder = new StringBuilder(value);
 		builder.deleteCharAt(22);
-		return new DateTime(format.parse(builder.toString()));
+		return new DateTime(format.get().parse(builder.toString()));
 	}
 
 	private Element element(String name) {

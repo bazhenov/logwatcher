@@ -3,6 +3,9 @@ package org.bazhenov.logging.aggregator;
 import com.farpost.timepoint.DateTime;
 import org.bazhenov.logging.AggregatedLogEntry;
 import org.bazhenov.logging.LogEntry;
+import org.bazhenov.logging.marshalling.JDomMarshaller;
+import org.bazhenov.logging.marshalling.Marshaller;
+import org.bazhenov.logging.marshalling.MarshallerException;
 import org.bazhenov.logging.storage.AttributeValueMatcher;
 import org.bazhenov.logging.storage.LogEntryMatcher;
 import org.testng.annotations.BeforeMethod;
@@ -20,24 +23,25 @@ import static org.hamcrest.Matchers.equalTo;
 abstract public class AggregatorTestCase {
 
 	private Aggregator aggregator;
+	private Marshaller marshaller = new JDomMarshaller();
 
 	@BeforeMethod
 	protected void setUp() throws Exception {
-		aggregator = createAggregator();
+		aggregator = createAggregator(marshaller);
 	}
 
 	@Test
-	public void testAggregatorCanFilterEntries() {
+	public void testAggregatorCanFilterEntries() throws MarshallerException {
 		DateTime date = november(12, 2009).at(15, 12);
 		int problemSize = 3333;
-		List<LogEntry> entries = new ArrayList<LogEntry>(problemSize);
+		List<String> entries = new ArrayList<String>(problemSize);
 
 		for ( int i = 0; i < problemSize; i++ ) {
 			LogEntry entry = entry().
 				occured(date).
 				attribute("machine", "aux" + (i % 3) + ".srv.loc").
 				create();
-			entries.add(entry);
+			entries.add(marshaller.marshall(entry));
 		}
 		List<LogEntryMatcher> matchers = new ArrayList<LogEntryMatcher>();
 
@@ -49,5 +53,5 @@ abstract public class AggregatorTestCase {
 		assertThat(arr[0].getAttributes().get("machine").getCountFor("aux1.srv.loc"), equalTo(1111));
 	}
 
-	abstract protected Aggregator createAggregator();
+	abstract protected Aggregator createAggregator(Marshaller marshaller);
 }

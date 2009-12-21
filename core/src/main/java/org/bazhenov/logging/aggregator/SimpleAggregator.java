@@ -5,6 +5,8 @@ import org.bazhenov.logging.*;
 
 import static org.bazhenov.logging.storage.MatcherUtils.isMatching;
 
+import org.bazhenov.logging.marshalling.Marshaller;
+import org.bazhenov.logging.marshalling.MarshallerException;
 import org.bazhenov.logging.storage.LogEntryMatcher;
 
 import java.util.*;
@@ -12,13 +14,22 @@ import java.util.*;
 public class SimpleAggregator implements Aggregator {
 
 	private final Logger log = Logger.getLogger(SimpleAggregator.class);
+	private final Marshaller marshaller;
 
-	public Collection<AggregatedLogEntry> aggregate(Iterable<LogEntry> entries,
-	                                                Collection<LogEntryMatcher> matchers) {
+	public SimpleAggregator(Marshaller marshaller) {
+
+		this.marshaller = marshaller;
+	}
+
+	public Collection<AggregatedLogEntry> aggregate(Iterable<String> entries,
+	                                                Collection<LogEntryMatcher> matchers) throws
+		MarshallerException {
+
 		Map<String, AggregatedLogEntry> result = new HashMap<String, AggregatedLogEntry>();
 		long start = System.currentTimeMillis();
 		int size = 0;
-		for ( LogEntry entry : entries ) {
+		for ( String marshalledEntry : entries ) {
+			LogEntry entry = marshaller.unmarshall(marshalledEntry);
 			if ( isMatching(entry, matchers) ) {
 				if ( result.containsKey(entry.getChecksum()) ) {
 					AggregatedLogEntryImpl aggregated = (AggregatedLogEntryImpl) result.get(

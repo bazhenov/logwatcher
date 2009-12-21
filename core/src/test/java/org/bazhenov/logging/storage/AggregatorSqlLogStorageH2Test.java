@@ -19,7 +19,8 @@ public class AggregatorSqlLogStorageH2Test extends LogStorageTestCase {
 		ds.setUrl("jdbc:h2:mem:");
 
 		SqlMatcherMapper mapper = new AnnotationDrivenMatcherMapperImpl(new SqlMatcherMapperRules());
-		Aggregator aggregator = new SimpleAggregator();
-		return new AggregatorSqlLogStorage(aggregator, ds, new JDomMarshaller(), mapper);
+		JDomMarshaller marshaller = new JDomMarshaller();
+		Aggregator aggregator = new SimpleAggregator(marshaller);
+		return new AggregatorSqlLogStorage(aggregator, ds, marshaller, mapper);
 	}
 }

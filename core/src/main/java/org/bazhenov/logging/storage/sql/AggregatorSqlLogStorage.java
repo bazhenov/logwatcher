@@ -23,8 +23,6 @@ import java.io.InputStreamReader;
 import java.sql.*;
 import java.util.*;
 
-import com.farpost.timepoint.Date;
-
 public class AggregatorSqlLogStorage implements LogStorage {
 
 	private final Aggregator aggregator;
@@ -88,11 +86,13 @@ public class AggregatorSqlLogStorage implements LogStorage {
 
 			result = statement.executeQuery();
 			Collection<AggregatedLogEntry> aggregated = aggregator.aggregate(
-				new ResultSetIterable(result, marshaller), criterias);
+				new ResultSetIterable(result), criterias);
 			return new ArrayList<AggregatedLogEntry>(aggregated);
 		} catch ( SQLException e ) {
 			throw new LogStorageException(e);
 		} catch ( MatcherMapperException e ) {
+			throw new LogStorageException(e);
+		} catch ( MarshallerException e ) {
 			throw new LogStorageException(e);
 		} finally {
 			close(result);
