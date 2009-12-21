@@ -16,6 +16,7 @@ import static org.bazhenov.logging.TestSupport.entry;
 import static org.bazhenov.logging.storage.LogEntries.entries;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.nullValue;
 
 abstract public class LogStorageTestCase {
 
@@ -40,6 +41,14 @@ abstract public class LogStorageTestCase {
 			findFirst(storage);
 
 		assertThat(aggreagatedEntry.getSampleEntry(), equalTo(entry));
+	}
+
+	@Test
+	public void storageShouldReturnNullIfEntryNotFound()
+		throws LogStorageException, InvalidCriteriaException {
+
+		AggregatedLogEntry entry = entries().applicationId("foo").findFirst(storage);
+		assertThat(entry, nullValue());
 	}
 
 	@Test
