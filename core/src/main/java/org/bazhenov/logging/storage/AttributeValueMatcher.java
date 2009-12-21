@@ -14,6 +14,9 @@ public class AttributeValueMatcher implements LogEntryMatcher {
 	private final String value;
 
 	public AttributeValueMatcher(String name, String value) {
+		if ( name == null || value == null ) {
+			throw new NullPointerException("Name and value should not be null");
+		}
 		this.name = name;
 		this.value = value;
 	}
@@ -25,5 +28,29 @@ public class AttributeValueMatcher implements LogEntryMatcher {
 	public boolean isMatch(LogEntry entry) {
 		Map<String,String> map = entry.getAttributes();
 		return map.containsKey(name) && map.get(name).equals(value);
+	}
+
+	@Override
+	public String toString() {
+		return "@"+name+":"+value;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if ( this == o ) {
+			return true;
+		}
+		if ( o == null || getClass() != o.getClass() ) {
+			return false;
+		}
+
+		AttributeValueMatcher that = (AttributeValueMatcher) o;
+
+		return name.equals(that.name) && value.equals(that.value);
+	}
+
+	@Override
+	public int hashCode() {
+		return 31 * name.hashCode() + value.hashCode();
 	}
 }

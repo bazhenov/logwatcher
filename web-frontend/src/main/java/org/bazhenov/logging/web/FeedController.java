@@ -86,6 +86,9 @@ public class FeedController {
 		List<AggregatedLogEntry> entries;
 		if ( query != null && query.trim().length() > 0 ) {
 			List<LogEntryMatcher> matchers = translator.translate(query.trim());
+			if ( !contains(matchers, DateMatcher.class) ) {
+				matchers.add(new DateMatcher(today()));
+			}
 			entries = entries().
 				withCriteria(matchers).
 				find(storage);
@@ -107,6 +110,15 @@ public class FeedController {
 		map.addAttribute("times", times);
 
 		return "feed";
+	}
+
+	private boolean contains(List<LogEntryMatcher> matchers, Class<? extends LogEntryMatcher> type) {
+		for ( LogEntryMatcher matcher : matchers ) {
+			if ( matcher.getClass().equals(type) ) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@RequestMapping("/feed/rss")

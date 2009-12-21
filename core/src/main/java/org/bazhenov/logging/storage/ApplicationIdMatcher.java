@@ -8,6 +8,9 @@ public class ApplicationIdMatcher implements LogEntryMatcher {
 	private final String applicationId;
 
 	public ApplicationIdMatcher(String applicationId) {
+		if ( applicationId == null ) {
+			throw new NullPointerException("Application id must not be null");
+		}
 		this.applicationId = applicationId;
 	}
 
@@ -21,5 +24,29 @@ public class ApplicationIdMatcher implements LogEntryMatcher {
 
 	public String getApplicationId() {
 		return applicationId;
+	}
+
+	@Override
+	public String toString() {
+		return "at:"+applicationId;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if ( this == o ) {
+			return true;
+		}
+		if ( o == null || getClass() != o.getClass() ) {
+			return false;
+		}
+
+		ApplicationIdMatcher that = (ApplicationIdMatcher) o;
+
+		return applicationId.equals(that.applicationId);
+	}
+
+	@Override
+	public int hashCode() {
+		return applicationId.hashCode();
 	}
 }

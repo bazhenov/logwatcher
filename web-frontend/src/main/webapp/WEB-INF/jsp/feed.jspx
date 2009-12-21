@@ -79,6 +79,8 @@
 			</c:if>
 		</h2>
 
+		<jsp:include page="/widgets/searchBox.jsp" />
+
 		<c:choose>
 			<c:when test="${f:length(entries) > 0}">
 				<c:forEach var="entry" items="${entries}">

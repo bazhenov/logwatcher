@@ -75,9 +75,6 @@ public class AggregatorSqlLogStorage implements LogStorage {
 			StringBuilder whereClause = new StringBuilder();
 			Collection<LogEntryMatcher> lateBoundMatchers = fillWhereClause(criterias, whereClause,
 				arguments);
-			if ( lateBoundMatchers.size() > 0 ) {
-				throw new InvalidCriteriaException(lateBoundMatchers);
-			}
 
 			sql.append(" WHERE ").append(whereClause);
 			connection = datasource.getConnection();
@@ -86,7 +83,7 @@ public class AggregatorSqlLogStorage implements LogStorage {
 
 			result = statement.executeQuery();
 			Collection<AggregatedLogEntry> aggregated = aggregator.aggregate(
-				new ResultSetIterable(result), criterias);
+				new ResultSetIterable(result), lateBoundMatchers);
 			return new ArrayList<AggregatedLogEntry>(aggregated);
 		} catch ( SQLException e ) {
 			throw new LogStorageException(e);

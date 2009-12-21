@@ -49,7 +49,8 @@ a:visited			                  { color: brown; text-decoration: underline }
 
 #mainPanel                      { margin: 25px; min-width: 995px; position: relative; }
 
-#notificationPanel              { text-align: center; font-size: 150%; color: #666; font-family: serif !important; }
+#notificationPanel              { text-align: center; font-size: 150%; color: #666;
+																	font-family: serif !important; padding-top: 40px; padding-bottom: 40px; }
 
 .entryContent                   { font-size: 12px; margin-left: 17px; display: none }
 .entryContent .stacktrace       { font-family: monospace; margin-bottom: 5px; margin-top: 10px;
@@ -96,3 +97,5 @@ span.tag            { font-size: 70%; background-color: #E0EAF1; border-bottom: 
 											visibility: hidden; font-variant: small-caps; }
 #sliderContainer    { padding: 10px; position: absolute; right: 20px; top: 0; }
 #sliderContainer:hover #sliderValue    { visibility: visible; }
+
+p                   { font-size: 14px; }

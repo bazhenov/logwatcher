@@ -10,12 +10,7 @@ import static org.hamcrest.Matchers.hasEntry;
 
 public class QueryParserTest {
 
-	QueryParser parser;
-
-	@BeforeMethod
-	public void setUp() {
-		parser = new QueryParser();
-	}
+	QueryParser parser = new QueryParser();
 
 	@Test
 	public void parserCanParseSimpleQueries() throws InvalidQueryException {
