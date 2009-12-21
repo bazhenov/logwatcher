@@ -3,16 +3,21 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="storage" class="org.bazhenov.logging.storage.sql.SqlLogStorage">
-		<constructor-arg index="0" ref="datasource"/>
-		<constructor-arg index="1" ref="marshaller" />
-		<constructor-arg index="2">
+	<bean id="storage" class="org.bazhenov.logging.storage.sql.AggregatorSqlLogStorage">
+		<constructor-arg index="0" ref="aggregator" />
+		<constructor-arg index="1" ref="datasource"/>
+		<constructor-arg index="2" ref="marshaller" />
+		<constructor-arg index="3">
 			<bean class="org.bazhenov.logging.storage.sql.AnnotationDrivenMatcherMapperImpl">
 				<constructor-arg>
 					<bean class="org.bazhenov.logging.storage.sql.SqlMatcherMapperRules"/>
 				</constructor-arg>
 			</bean>
 		</constructor-arg>
+	</bean>
+
+	<bean id="aggregator" class="org.bazhenov.logging.aggregator.ExecutorServiceAggregator">
+		<constructor-arg ref="marshaller" />
 	</bean>
 
 	<bean id="marshaller" class="org.bazhenov.logging.marshalling.JDomMarshaller"/>

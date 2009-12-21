@@ -8,5 +8,5 @@
 											-moz-border-radius: 4px 4px 0 0; -webkit-border-top-left-radius: 4px;
 											-webkit-border-top-right-radius: 4px; border-radius: 4px 4px 0 0 }
 
-#menuBar a.selected { border: 1px solid #777; border-bottom-color: #fff; font-size: 21px; color:black;
-											margin-bottom: -1px; background-color: white; line-height:26px }
+#menuBar a.selected { border: 1px solid #777; border-bottom-color: #fff; font-size: 19px; color:black;
+											margin-bottom: -1px; background-color: white; }

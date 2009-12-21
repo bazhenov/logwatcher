@@ -17,7 +17,7 @@ public class ExecutorServiceAggregator implements Aggregator {
 
 	private final Marshaller marshaller;
 	private final ExecutorService service;
-	private final int batchSize = 500;
+	private volatile int batchSize = 500;
 	private final Logger log = Logger.getLogger(ExecutorServiceAggregator.class);
 
 	public ExecutorServiceAggregator(Marshaller marshaller, ExecutorService service) {
@@ -39,6 +39,10 @@ public class ExecutorServiceAggregator implements Aggregator {
 			log.info("Filtering and aggregating complete in " + (end - start) + "ms.");
 		}
 		return result.values();
+	}
+
+	public void setBatchSize(int batchSize) {
+		this.batchSize = batchSize;
 	}
 
 	private Map<String, AggregatedLogEntry> aggregateResults(
