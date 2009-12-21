@@ -5,6 +5,9 @@ import org.bazhenov.logging.LogEntry;
 
 import java.util.Map;
 
+/**
+ * Имплементация {@link LogEntryMatcher} тестирующая значение аттрибута записи.
+ */
 public class AttributeValueMatcher implements LogEntryMatcher {
 
 	private final String name;
@@ -16,7 +19,7 @@ public class AttributeValueMatcher implements LogEntryMatcher {
 	}
 
 	public boolean isMatch(AggregatedLogEntry entry) {
-		return false;
+		throw new UnsupportedOperationException();
 	}
 
 	public boolean isMatch(LogEntry entry) {

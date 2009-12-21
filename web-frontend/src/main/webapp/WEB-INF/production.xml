@@ -16,8 +16,21 @@
 		</constructor-arg>
 	</bean>
 
+	<bean id="oldStorage" class="org.bazhenov.logging.storage.sql.SqlLogStorage">
+		<constructor-arg ref="datasource"/>
+		<constructor-arg ref="marshaller" />
+		<constructor-arg>
+			<bean class="org.bazhenov.logging.storage.sql.AnnotationDrivenMatcherMapperImpl">
+				<constructor-arg>
+					<bean class="org.bazhenov.logging.storage.sql.SqlMatcherMapperRules"/>
+				</constructor-arg>
+			</bean>
+		</constructor-arg>
+	</bean>
+
 	<bean id="aggregator" class="org.bazhenov.logging.aggregator.ExecutorServiceAggregator">
 		<constructor-arg ref="marshaller" />
+		<property name="batchSize" value="200" />
 	</bean>
 
 	<bean id="marshaller" class="org.bazhenov.logging.marshalling.JDomMarshaller"/>
@@ -34,7 +47,7 @@
 		<constructor-arg value="6578" />
 		<constructor-arg>
 			<bean class="org.bazhenov.logging.transport.WriteToStorageTransportListener">
-				<constructor-arg ref="storage" />
+				<constructor-arg ref="oldStorage" />
 				<constructor-arg ref="marshaller" />
 			</bean>
 		</constructor-arg>
