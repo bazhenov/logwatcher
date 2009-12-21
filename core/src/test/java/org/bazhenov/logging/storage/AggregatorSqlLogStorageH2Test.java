@@ -9,7 +9,7 @@ import org.bazhenov.logging.storage.sql.*;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class AggregatorSqlLogStorageH2Test extends LogStorageTest {
+public class AggregatorSqlLogStorageH2Test extends LogStorageTestCase {
 
 	protected LogStorage createStorage() throws IOException, SQLException {
 		BasicDataSource ds = new BasicDataSource();

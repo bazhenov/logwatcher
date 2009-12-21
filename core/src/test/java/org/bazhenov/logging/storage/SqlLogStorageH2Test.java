@@ -10,7 +10,7 @@ import org.bazhenov.logging.storage.sql.SqlMatcherMapperRules;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class SqlLogStorageH2Test extends LogStorageTest {
+public class SqlLogStorageH2Test extends LogStorageTestCase {
 
 	protected LogStorage createStorage() throws IOException, SQLException {
 		BasicDataSource ds = new BasicDataSource();
