@@ -16,7 +16,7 @@ public class UdpTransport implements Transport {
 	}
 
 	public void start() throws TransportException {
-		new Thread(thread).start();
+		new Thread(thread, "UDP Transport thread").start();
 	}
 
 	public void stop() throws TransportException {

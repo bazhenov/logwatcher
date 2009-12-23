@@ -28,8 +28,10 @@ public class ExecutorServiceAggregator implements Aggregator {
 	public ExecutorServiceAggregator(Marshaller marshaller) {
 		this.marshaller = marshaller;
 		int threads = Runtime.getRuntime().availableProcessors();
-		this.service = new ThreadPoolExecutor(threads, threads, 0L, TimeUnit.MILLISECONDS,
-			new LinkedBlockingQueue<Runnable>(100));
+		ThreadPoolExecutor executor = new ThreadPoolExecutor(threads, threads, 0L,
+			TimeUnit.MILLISECONDS, new SynchronousQueue<Runnable>());
+		executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+		this.service = executor;
 	}
 
 	public Collection<AggregatedLogEntry> aggregate(Iterable<String> entries,

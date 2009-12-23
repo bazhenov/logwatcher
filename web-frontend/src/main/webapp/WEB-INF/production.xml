@@ -3,7 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="storage" class="org.bazhenov.logging.storage.sql.AggregatorSqlLogStorage">
+	<bean id="newStorage" class="org.bazhenov.logging.storage.sql.AggregatorSqlLogStorage">
 		<constructor-arg index="0" ref="aggregator" />
 		<constructor-arg index="1" ref="datasource"/>
 		<constructor-arg index="2" ref="marshaller" />
@@ -27,6 +27,8 @@
 			</bean>
 		</constructor-arg>
 	</bean>
+
+	<alias name="oldStorage" alias="storage" />
 
 	<bean id="aggregator" class="org.bazhenov.logging.aggregator.ExecutorServiceAggregator">
 		<constructor-arg ref="marshaller" />
