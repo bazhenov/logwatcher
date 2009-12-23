@@ -66,8 +66,8 @@
 			<c:url value="http://jira.dev.loc/jira/secure/CreateIssueDetails.jspa" var="jiraLink">
 				<c:param name="pid">10000</c:param>
 				<c:param name="issuetype">1</c:param>
-				<c:param name="summary" value="${sampleEntry.message}"/>
-				<c:param name="description" value="${lf:formatCause(sampleEntry.cause)}"/>
+				<c:param name="summary"><c:out value="${sampleEntry.message}" /></c:param>
+				<c:param name="description"><c:out value="${lf:formatCause(sampleEntry.cause)}" /></c:param>
 				<c:param name="priority">3</c:param>
 			</c:url>
 			<a href='${jiraLink}' target='_blank'>create task</a> or
