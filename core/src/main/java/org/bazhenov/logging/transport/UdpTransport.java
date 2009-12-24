@@ -50,6 +50,9 @@ public class UdpTransport implements Transport {
 					socket.receive(packet);
 					byte[] data = packet.getData();
 					message = new String(data, 0, packet.getLength());
+					if ( log.isDebugEnabled() ) {
+						log.debug("Packet received: " + message);
+					}
 					listener.onMessage(message);
 				} catch ( IOException e ) {
 					log.warn("Stopping transport thread", e);

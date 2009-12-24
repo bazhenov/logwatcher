@@ -19,7 +19,7 @@ public class Bootstrap {
 
 	public void load() throws LogStorageException {
 		storage.writeEntry(new LogEntry(DateTime.now(), "group", "AdvertServiceException: Error Fetching http headers", Severity.error, "sum", "advert", null));
-		Cause cause = new Cause("RuntimeException", "Devision by zero", "AdvertServiceException: Error Fetching http headers\n" +
+		Cause cause = new Cause("RuntimeException", "Devision by zero", "AdvertServiceException: 'Error' Fetching http headers\n" +
 			"  at /var/www/baza.farpost.ru/rev/20090817-1520/slr/advert/src/remote/AdvertSoapDecorator.class.php:16\n" +
 			"  10 : slrSoapDecorator.class.php:94 AdvertSoapDecorator->handleException(\"Error Fetc...\", SoapFault)\n" +
 			"  9 : unknown:0 slrSoapDecorator->__call(\"findLinks\", [1])\n" +
@@ -53,16 +53,16 @@ public class Bootstrap {
 			}}, cause));
 		storage.writeEntry(new LogEntry(DateTime.now().minusMinute(18), "group", "java.lang.OutOfMemoryException", Severity.info, "sum3", "search", null));
 
-		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
+		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
 			"searcha", null, cause));
-		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
+		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
 			"searcha", null, cause));
-		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
+		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
 			"searcha", null, cause));
-		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long longvery very very long long Exceptionvery very very very long longvery very long longvery very very long long Exception", Severity.error, "sum4",
+		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very very long longvery very long longvery very very long long Exception", Severity.error, "sum4",
 			"searcha", null, cause));
 
-		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "very very very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum5",
+		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum5",
 			"searcha", null, null));
 	}
 }
