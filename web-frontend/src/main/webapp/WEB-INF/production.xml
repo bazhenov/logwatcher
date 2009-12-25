@@ -4,9 +4,9 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<bean id="storage" class="org.bazhenov.logging.storage.sql.AggregatorSqlLogStorage">
-		<constructor-arg index="0" ref="aggregator" />
+		<constructor-arg index="0" ref="aggregator"/>
 		<constructor-arg index="1" ref="datasource"/>
-		<constructor-arg index="2" ref="marshaller" />
+		<constructor-arg index="2" ref="marshaller"/>
 		<constructor-arg index="3">
 			<bean class="org.bazhenov.logging.storage.sql.AnnotationDrivenMatcherMapperImpl">
 				<constructor-arg>
@@ -17,29 +17,34 @@
 	</bean>
 
 	<bean id="aggregator" class="org.bazhenov.logging.aggregator.ExecutorServiceAggregator">
-		<constructor-arg ref="marshaller" />
-		<property name="batchSize" value="200" />
+		<constructor-arg ref="marshaller"/>
+		<property name="batchSize" value="200"/>
 	</bean>
 
 	<bean id="marshaller" class="org.bazhenov.logging.marshalling.JDomMarshaller"/>
 
 	<bean id="datasource" class="org.apache.commons.dbcp.BasicDataSource">
-		<property name="driverClassName" value="org.h2.Driver" />
-		<property name="url" value="jdbc:mysql:umbriel.baza.loc/logwatcher" />
+		<property name="driverClassName" value="org.h2.Driver"/>
+		<property name="url" value="jdbc:mysql://umbriel.baza.loc/logwatcher?allowMultiQueries=true"/>
 		<property name="username" value="logwatcher"/>
 		<property name="password" value="Goolii8c"/>
 	</bean>
 
 	<bean class="org.bazhenov.logging.transport.UdpTransport" lazy-init="false" init-method="start"
-		destroy-method="stop">
-		<constructor-arg value="6578" />
+	      destroy-method="stop">
+		<constructor-arg value="6578"/>
 		<constructor-arg>
 			<bean class="org.bazhenov.logging.transport.WriteToStorageTransportListener">
-				<constructor-arg ref="storage" />
-				<constructor-arg ref="marshaller" />
+				<constructor-arg ref="storage"/>
+				<constructor-arg ref="marshaller"/>
 			</bean>
 		</constructor-arg>
-		<property name="bufferSize" value="120000" />
+		<property name="bufferSize" value="120000"/>
+	</bean>
+
+	<bean class="org.bazhenov.logging.SchemaInitiator" lazy-init="false">
+		<property name="datasource" ref="datasource" />
+		<property name="dump" value="classpath:/dump-init.mysql.sql" />
 	</bean>
 
 </beans>
