@@ -56,6 +56,6 @@ public interface LogStorage {
 	 */
 	void createChecksumAlias(String checksum, String alias) throws LogStorageException;
 
-	List<AggregatedLogEntry> getEntries(Collection<LogEntryMatcher> criterias)
+	List<AggregatedLogEntry> findEntries(Collection<LogEntryMatcher> criterias)
 		throws LogStorageException, InvalidCriteriaException;
 }

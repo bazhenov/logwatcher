@@ -57,17 +57,17 @@ abstract public class LogStorageTestCase {
 		Date today = today();
 
 		LogEntry thirdEntry = entry().
-			occured(today.at("12:55")).
+			occured(today.at("12:53")).
 			checksum("a").
 			saveIn(storage);
 
 		LogEntry firstEntry = entry().
-			occured(today.at("15:55")).
+			occured(today.at("15:56")).
 			checksum("b").
 			saveIn(storage);
 
 		LogEntry secondEntry = entry().
-			occured(today.at("15:53")).
+			occured(today.at("15:55")).
 			checksum("c").
 			saveIn(storage);
 

@@ -91,7 +91,7 @@ public class SqlLogStorage implements LogStorage {
 		}
 	}
 
-	public List<AggregatedLogEntry> getEntries(Collection<LogEntryMatcher> criterias)
+	public List<AggregatedLogEntry> findEntries(Collection<LogEntryMatcher> criterias)
 		throws LogStorageException, InvalidCriteriaException {
 		StringBuilder sql = new StringBuilder("SELECT * FROM `log_entry` l");
 		if ( criterias == null || criterias.size() <= 0 ) {

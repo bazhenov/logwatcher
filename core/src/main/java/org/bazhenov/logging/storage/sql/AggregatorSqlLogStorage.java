@@ -4,6 +4,7 @@ import com.farpost.timepoint.Date;
 import com.farpost.timepoint.DateTime;
 import org.apache.log4j.Logger;
 import org.bazhenov.logging.AggregatedLogEntry;
+import org.bazhenov.logging.ByLastOccurenceDateComparator;
 import org.bazhenov.logging.LogEntry;
 import org.bazhenov.logging.aggregator.Aggregator;
 import org.bazhenov.logging.marshalling.Marshaller;
@@ -19,6 +20,8 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.*;
 import java.util.*;
+
+import static java.util.Collections.sort;
 
 public class AggregatorSqlLogStorage implements LogStorage {
 
@@ -57,7 +60,7 @@ public class AggregatorSqlLogStorage implements LogStorage {
 		}
 	}
 
-	public List<AggregatedLogEntry> getEntries(Collection<LogEntryMatcher> criterias)
+	public List<AggregatedLogEntry> findEntries(Collection<LogEntryMatcher> criterias)
 		throws LogStorageException, InvalidCriteriaException {
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -78,7 +81,9 @@ public class AggregatorSqlLogStorage implements LogStorage {
 			result = statement.executeQuery();
 			Collection<AggregatedLogEntry> aggregated = aggregator.aggregate(
 				new ResultSetIterable(result), lateBoundMatchers);
-			return new ArrayList<AggregatedLogEntry>(aggregated);
+			ArrayList<AggregatedLogEntry> list = new ArrayList<AggregatedLogEntry>(aggregated);
+			sort(list, new ByLastOccurenceDateComparator());
+			return list;
 		} catch ( SQLException e ) {
 			throw new LogStorageException(e);
 		} catch ( MatcherMapperException e ) {

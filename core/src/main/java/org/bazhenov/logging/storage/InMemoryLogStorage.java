@@ -65,7 +65,7 @@ public class InMemoryLogStorage implements LogStorage {
 		}
 	}
 
-	public List<AggregatedLogEntry> getEntries(Collection<LogEntryMatcher> criterias)
+	public List<AggregatedLogEntry> findEntries(Collection<LogEntryMatcher> criterias)
 		throws LogStorageException, InvalidCriteriaException {
 		List<AggregatedLogEntry> result = new ArrayList<AggregatedLogEntry>();
 		for ( AggregatedLogEntry entry : entries ) {
