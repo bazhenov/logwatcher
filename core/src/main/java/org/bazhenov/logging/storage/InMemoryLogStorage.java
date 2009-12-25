@@ -92,14 +92,12 @@ public class InMemoryLogStorage implements LogStorage {
 		}
 	}
 
-	public void removeEntries(String checksum, Date date) throws LogStorageException {
+	public void removeEntries(String checksum) throws LogStorageException {
 		writeLock.lock();
 		try {
-			Map<String, AggregatedLogEntryImpl> byDate = entriesByDay.get(date);
-			if ( byDate != null ) {
-				AggregatedLogEntryImpl entry = byDate.get(checksum);
+			for ( Map<String, AggregatedLogEntryImpl> row : entriesByDay.values() ) {
+				AggregatedLogEntryImpl entry = row.remove(checksum);
 				if ( entry != null ) {
-					byDate.remove(checksum);
 					entries.remove(entry);
 				}
 			}

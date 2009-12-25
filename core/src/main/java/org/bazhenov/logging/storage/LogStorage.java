@@ -37,13 +37,12 @@ public interface LogStorage {
 		throws LogStorageException, InvalidCriteriaException;
 
 	/**
-	 * Удаляет из хранилища записи с указанной контрольной суммой за указанную дату
+	 * Удаляет из хранилища записи с указанной контрольной суммой
 	 *
 	 * @param checksum контрольная сумма
-	 * @param date     дата
 	 * @throws LogStorageException в случае внутренней ошибки
 	 */
-	void removeEntries(String checksum, Date date) throws LogStorageException;
+	void removeEntries(String checksum) throws LogStorageException;
 
 	/**
 	 * Создает синоним для контрольной суммы. Все записи с первой переданной контрольной суммой

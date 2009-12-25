@@ -291,9 +291,9 @@ abstract public class LogStorageTestCase {
 			checksum("FF").
 			saveIn(storage);
 
-		storage.removeEntries("FF", today);
+		storage.removeEntries("FF");
 
-		assertThat(entries().count(storage), equalTo(2));
+		assertThat(entries().count(storage), equalTo(1));
 	}
 
 	protected abstract LogStorage createStorage() throws Exception;

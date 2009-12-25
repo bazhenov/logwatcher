@@ -144,9 +144,9 @@ public class SqlLogStorage implements LogStorage {
 		}
 	}
 
-	public void removeEntries(String checksum, Date date) throws LogStorageException {
+	public void removeEntries(String checksum) throws LogStorageException {
 		try {
-			jdbc.update("DELETE FROM log_entry WHERE date = ? AND checksum = ?", date(date), checksum);
+			jdbc.update("DELETE FROM log_entry WHERE checksum = ?", checksum);
 		} catch ( DataAccessException e ) {
 			throw new LogStorageException(e);
 		}

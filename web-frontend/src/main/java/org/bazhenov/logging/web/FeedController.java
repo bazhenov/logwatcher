@@ -49,7 +49,7 @@ public class FeedController {
 
 	@RequestMapping("/entry/remove")
 	public View removeEntry(@RequestParam("checksum") String checksum) throws LogStorageException {
-		storage.removeEntries(checksum, today());
+		storage.removeEntries(checksum);
 		return new BufferView("Ok");
 	}
 
