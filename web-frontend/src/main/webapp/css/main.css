@@ -99,3 +99,5 @@ span.tag            { font-size: 70%; background-color: #E0EAF1; border-bottom: 
 #sliderContainer:hover #sliderValue    { visibility: visible; }
 
 p                   { font-size: 14px; }
+
+FORM                { margin: 0 }
