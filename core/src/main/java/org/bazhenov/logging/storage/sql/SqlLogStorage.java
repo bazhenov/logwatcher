@@ -36,7 +36,7 @@ public class SqlLogStorage implements LogStorage {
 		entryCreator = new EntryCreator();
 		attributesMarshaller = new DomMarshallerImpl();
 
-		InputStream stream = SqlLogStorage.class.getResourceAsStream("/dump.h2.sql");
+		InputStream stream = SqlLogStorage.class.getResourceAsStream("/dump-init.h2.sql");
 		loadDump(dataSource, stream);
 	}
 

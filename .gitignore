@@ -7,3 +7,4 @@
 /log4j.xml
 target
 test
+mysql.properties

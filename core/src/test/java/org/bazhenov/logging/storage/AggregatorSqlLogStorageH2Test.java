@@ -7,6 +7,7 @@ import org.bazhenov.logging.marshalling.JDomMarshaller;
 import org.bazhenov.logging.storage.sql.*;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 
 public class AggregatorSqlLogStorageH2Test extends LogStorageTestCase {
@@ -17,6 +18,12 @@ public class AggregatorSqlLogStorageH2Test extends LogStorageTestCase {
 		ds.setUsername("sa");
 		ds.setPassword("");
 		ds.setUrl("jdbc:h2:mem:");
+
+		InputStream initDump = DatabaseSchema.class.getResourceAsStream("/dump-init.h2.sql");
+		InputStream cleanupDump = DatabaseSchema.class.getResourceAsStream("/dump-cleanup.h2.sql");
+		DatabaseSchema schema = new DatabaseSchema(initDump, cleanupDump);
+		schema.cleanup(ds);
+		schema.init(ds);
 
 		SqlMatcherMapper mapper = new AnnotationDrivenMatcherMapperImpl(new SqlMatcherMapperRules());
 		JDomMarshaller marshaller = new JDomMarshaller();

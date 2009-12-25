@@ -40,9 +40,6 @@ public class AggregatorSqlLogStorage implements LogStorage {
 		this.mapper = mapper;
 		this.datasource = datasource;
 		this.jdbc = new SimpleJdbcTemplate(datasource);
-
-		InputStream stream = AggregatorSqlLogStorage.class.getResourceAsStream("/dump.h2.sql");
-		loadDump(datasource, stream);
 	}
 
 	public synchronized void writeEntry(LogEntry entry) throws LogStorageException {
@@ -207,22 +204,6 @@ public class AggregatorSqlLogStorage implements LogStorage {
 			} catch ( SQLException e ) {
 				log.error("Error occured while closing result set", e);
 			}
-		}
-	}
-
-	public static void loadDump(DataSource ds, InputStream stream) throws IOException, SQLException {
-		StringBuffer buffer = new StringBuffer();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-		String line;
-		while ( (line = reader.readLine()) != null ) {
-			buffer.append(line).append("\n");
-		}
-
-		Connection connection = ds.getConnection();
-		try {
-			connection.prepareStatement(buffer.toString()).executeUpdate();
-		} finally {
-			connection.close();
 		}
 	}
 
