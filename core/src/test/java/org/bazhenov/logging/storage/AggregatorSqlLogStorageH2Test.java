@@ -4,13 +4,16 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.bazhenov.logging.aggregator.Aggregator;
 import org.bazhenov.logging.aggregator.SimpleAggregator;
 import org.bazhenov.logging.marshalling.JDomMarshaller;
-import org.bazhenov.logging.storage.sql.*;
+import org.bazhenov.logging.storage.sql.AggregatorSqlLogStorage;
+import org.bazhenov.logging.storage.sql.AnnotationDrivenMatcherMapperImpl;
+import org.bazhenov.logging.storage.sql.SqlMatcherMapper;
+import org.bazhenov.logging.storage.sql.SqlMatcherMapperRules;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 
-public class AggregatorSqlLogStorageH2Test extends LogStorageTestCase {
+public class AggregatorSqlLogStorageH2Test {
 
 	protected LogStorage createStorage() throws IOException, SQLException {
 		BasicDataSource ds = new BasicDataSource();

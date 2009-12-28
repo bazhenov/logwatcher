@@ -20,8 +20,7 @@ public class ResultSetIterable implements Iterable<String> {
 
 		public boolean hasNext() {
 			try {
-				result.next();
-				return result.getRow() > 0;
+				return result.next();
 			} catch ( SQLException e ) {
 				throw new RuntimeException(e);
 			}

@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.*;
 
+import static java.sql.ResultSet.CONCUR_READ_ONLY;
+import static java.sql.ResultSet.TYPE_FORWARD_ONLY;
 import static java.util.Collections.sort;
 
 public class AggregatorSqlLogStorage implements LogStorage {
@@ -75,7 +77,8 @@ public class AggregatorSqlLogStorage implements LogStorage {
 
 			sql.append(" WHERE ").append(whereClause);
 			connection = datasource.getConnection();
-			statement = connection.prepareStatement(sql.toString());
+			statement = connection.prepareStatement(sql.toString(), TYPE_FORWARD_ONLY, CONCUR_READ_ONLY);
+			statement.setFetchSize(Integer.MIN_VALUE);
 			fill(statement, arguments);
 
 			result = statement.executeQuery();

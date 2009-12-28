@@ -102,8 +102,8 @@ public class ExecutorServiceAggregator implements Aggregator {
 
 	private class Task implements Callable<Collection<AggregatedLogEntry>> {
 
-		private final String[] batch;
 		private final Collection<LogEntryMatcher> matchers;
+		private String[] batch;
 
 		public Task(String[] batch, Collection<LogEntryMatcher> matchers) {
 			this.batch = batch;
@@ -130,6 +130,10 @@ public class ExecutorServiceAggregator implements Aggregator {
 				}
 				processedCnt++;
 			}
+			/**
+			 * Данный null необходим, чтобы GC мог высвободить память отводимую под пакеты досрочно.
+			 */
+			batch = null;
 			long end = currentTimeMillis();
 			if ( log.isInfoEnabled() ) {
 				log.info(

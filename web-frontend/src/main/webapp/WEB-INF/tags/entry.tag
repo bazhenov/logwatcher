@@ -24,6 +24,7 @@
 	<div class='entryHeader'>
 		<span class='marker'>&bull;</span>
 
+		<div class="spinner"></div>
 		<div class='message'><c:out value="${sampleEntry.message}"/></div>
 		<div class='messageOverlay'></div>
 		<div class='times'>
