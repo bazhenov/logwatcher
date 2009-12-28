@@ -56,6 +56,10 @@ public class LogEntry {
 		return severity;
 	}
 
+	public String getGroup() {
+		return group;
+	}
+
 	public String getCategory() {
 		return group;
 	}

@@ -1,5 +1,6 @@
 @import url("menubar.css");
 @import url("searchbox.css");
+@import url("entry.css");
 
 body				                    { font-size: 25px; font-family: tahoma, sans-serif; padding:0; margin:0 }
 img                             { border: 0 }
@@ -20,29 +21,7 @@ a					                      { color: #0099ff; text-decoration: none }
 a:hover				                  { color: red; text-decoration: underline }
 a:visited			                  { color: brown; text-decoration: underline }
 
-.entry				                  { position: relative; cursor: pointer }
-.entry a			                  { display: inline; text-align: right; }
-
-.entry                          {	border-top: 1px dotted gray; padding-bottom: 10px;
-																	padding-top: 10px; padding-left: 15px }
-.selectedEntry                  { background-color: #ffd; }
-.entryHeader .times             { color: #666; font-size: 55%; line-height: 20px; }
-.entry:hover                    { background-color: #ffd }
-
-.entry:hover .operations        { display: inline }
-
 .noBubble                       { cursor: auto }
-
-.messageOverlay                 { position: absolute; height: 32px; width:50px; top: 10px; right: 224px;
-																	background: url("/images/sha.png") repeat-y;}
-.entry:hover .messageOverlay,
-.selectedEntry .messageOverlay  { background: url("/images/sha-hover.png") repeat-y; }
-
-.operations                     { display: none; position: absolute; top: 20px; right: 20px;
-																	font-size: 70% }
-
-.message                        { color: black; margin-left: 17px; margin-right: 225px;
-																	overflow: hidden; height: 32px; white-space: nowrap }
 
 .asynchronous                   { color: #0099ff !important; text-decoration: none !important;
 																	border-bottom: 1px dashed !important }
@@ -52,46 +31,11 @@ a:visited			                  { color: brown; text-decoration: underline }
 #notificationPanel              { text-align: center; font-size: 150%; color: #666;
 																	font-family: serif !important; padding-top: 40px; padding-bottom: 40px; }
 
-.entryContent                   { font-size: 12px; margin-left: 17px; display: none }
-.entryContent .stacktrace       { font-family: monospace; margin-bottom: 5px; margin-top: 10px;
-																	white-space:pre-wrap; margin-right: 40px; font-size:120%; cursor:text }
-
 #severitySelector               { font-size: 60%; font-family: serif }
 #severitySelector span:hover    { font-weight: bold; }
 #severitySelector span:hover span { font-weight: normal; }
-.attributes                     { list-style: none; padding: 0; line-height: 18px; }
-.attributes label               {  }
-.attributes span                { border-left: 1px dotted #997; margin-left: 4px;
-																	padding-left: 4px; padding-right: 2px; color: #777 !important; font-family: monospace; }
-.attributes code                { background-color: #eec; border: 1px dotted #997; padding: 0 2px; font-family: monospace; }
 
-abbr                            { cursor: default; border-bottom: 1px dashed black !important }
-
-.entryContent ul                { list-style-type: none; padding: 0; color: gray }
-.entryContent li span           { color: black }
-.selectedEntry .entryContent    { display: block !important }
-
-.spinner                        { background: url("/images/sp.gif") no-repeat; width: 16px; height: 16px }
-
-.entryHeader .spinner           { position: absolute; top: 26px; left: 9px; display: none; }
-.removing .entryHeader .spinner { display: inline !important; }
-
-
-
-.applicationId                  { font-variant:small-caps; font-size: 120%; color: black; margin-left: 17px }
-
-.marker                         { position: absolute; left: 12px; top: 28px; width: 14px; height: 15px;
-																	cursor: pointer; margin: 0; padding: 0; line-height: 9px;}
-
-.error .marker                  { color: #c90000 }
-.warning .marker                { color: #ff9900; }
-.info .marker                   { color: #3366ff; }
-.removing .marker               { visibility: hidden; }
-
-.warningMarker                  { color: #990000; }
-
-span.tag            { font-size: 70%; background-color: #E0EAF1; border-bottom: 1px solid #3E6D8E;
-											border-right: 1px solid #7F9FB6; color: #3E6D8E; margin: 1px; padding: 1px }
+abbr                            { cursor: default; border-bottom: 1px dashed !important }
 
 #slider             { font-size: 40%; width: 100px }
 #sliderValue        { width: 100px; text-align: center; padding-bottom: 5px; font-size: 60%;

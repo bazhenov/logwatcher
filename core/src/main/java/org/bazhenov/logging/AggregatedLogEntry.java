@@ -13,6 +13,8 @@ public interface AggregatedLogEntry {
 
 	int getCount();
 
+	String getGroup();
+
 	LogEntry getSampleEntry();
 
 	Map<String, AggregatedAttribute> getAttributes();

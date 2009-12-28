@@ -4,9 +4,9 @@ $(document).ready(function() {
 
 	$('#searchInput').focus();
 
-	$('.entry').click(function(target) {
+	$('.entryHeader').click(function(target) {
 		if ( $(target.target).parents(".noBubble").length <= 0 ) {
-			$(this).toggleClass('selectedEntry')
+			$(this).parents(".entry").toggleClass('selectedEntry')
 		}
 	});
 

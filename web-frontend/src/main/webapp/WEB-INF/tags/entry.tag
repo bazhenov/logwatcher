@@ -22,47 +22,33 @@
 
 <div class='entry ${sampleEntry.severity}' checksum='${sampleEntry.checksum}'>
 	<div class='entryHeader'>
-		<span class='marker'>&bull;</span>
-
 		<div class="spinner"></div>
-		<div class='message'><c:out value="${sampleEntry.message}"/></div>
-		<div class='messageOverlay'></div>
-		<div class='times'>
-			<span class='applicationId'><c:out value="${sampleEntry.applicationId}"/></span> &mdash;
+		<div class="count">
 			<c:set var="count" value="${entry.count}"/>
 			<c:choose>
 				<c:when test="${count gt 10000}">
-					<abbr title="${count} times">more than 10 000 times</abbr>, last time
+					<abbr title="${count} times">10K</abbr>
 				</c:when>
 				<c:when test="${count gt 5000}">
-					<abbr title="${count} times">more than 5 000 times</abbr>, last time
+					<abbr title="${count} times">5K</abbr>
 				</c:when>
 				<c:when test="${count gt 1000}">
-					<abbr title="${count} times">more than 1 000 times</abbr>, last time
-				</c:when>
-				<c:when test="${count gt 1}">
-					${count} times, last time
-				</c:when>
-			</c:choose>
-
-			<%out.write(lastOccurenceInfo);%>
-		</div>
-		<div class='entryContent noBubble'>
-			<ol class='attributes'>
-				<c:forEach var="row" items="${entry.attributes}">
-					<li><l:attribute attribute="${row.value}" name="${row.key}"/></li>
-				</c:forEach>
-			</ol>
-			<c:choose>
-				<c:when test="${not empty sampleEntry.cause}">
-					<pre class="stacktrace noBubble"><c:out
-						value="${lf:formatCause(sampleEntry.cause)}"/></pre>
+					<abbr title="${count} times">1K</abbr>
 				</c:when>
 				<c:otherwise>
-					<pre class="stacktrace noBubble"><c:out value="${sampleEntry.message}"/></pre>
+					${count}
 				</c:otherwise>
 			</c:choose>
 		</div>
+		<div class='message'><c:out value="${sampleEntry.message}"/></div>
+		<div class='messageOverlay'></div>
+		<div class='times'>
+			<span class='applicationId'><c:out value="${sampleEntry.applicationId}"
+				/><c:if test="${not empty entry.group}"><span class="group">@<c:out value="${entry.group}"
+				/></span></c:if></span> &mdash;
+			<%out.write(lastOccurenceInfo);%>
+		</div>
+
 		<div class='operations noBubble'>
 			<c:url value="http://jira.dev.loc/jira/secure/CreateIssueDetails.jspa" var="jiraLink">
 				<c:param name="pid">10000</c:param>
@@ -78,4 +64,22 @@
 				<img src='/images/link-icon.png' alt="permanent link"/></a>
 		</div>
 	</div>
+	<div class='entryContent'>
+		<ol class='attributes'>
+			<c:forEach var="row" items="${entry.attributes}">
+				<li><l:attribute attribute="${row.value}" name="${row.key}"/></li>
+			</c:forEach>
+		</ol>
+		<c:choose>
+			<c:when test="${not empty sampleEntry.cause}">
+					<pre class="stacktrace noBubble"><c:out
+						value="${lf:formatCause(sampleEntry.cause)}"/></pre>
+			</c:when>
+			<c:otherwise>
+				<pre class="stacktrace noBubble"><c:out value="${sampleEntry.message}"/></pre>
+			</c:otherwise>
+		</c:choose>
+	</div>
+
+
 </div>
