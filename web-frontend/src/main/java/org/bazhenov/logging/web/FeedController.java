@@ -83,24 +83,30 @@ public class FeedController {
 		if ( date.lessThan(today()) ) {
 			map.addAttribute("nextDate", date.plusDay(1).asDate());
 		}
+		String severity = getSeverity(request).toString();
+
 		List<AggregatedLogEntry> entries;
 		if ( query != null && query.trim().length() > 0 ) {
 			List<LogEntryMatcher> matchers = translator.translate(query.trim());
 			if ( !contains(matchers, DateMatcher.class) ) {
 				matchers.add(new DateMatcher(today()));
 			}
+			if ( !contains(matchers, SeverityMatcher.class) ) {
+				matchers.add(new SeverityMatcher(getSeverity(request)));
+			}
 			entries = entries().
 				withCriteria(matchers).
 				find(storage);
 		}else{
-			String severity = getSeverity(request);
-			map.addAttribute("severity", severity);
+
 			entries = entries().
 				date(date).
 				severity(Severity.forName(severity)).
 				find(storage);
 		}
 		map.addAttribute("query", query);
+
+		map.addAttribute("severity", severity);
 
 		int times = 0;
 		for ( AggregatedLogEntry entry : entries ) {
@@ -139,21 +145,21 @@ public class FeedController {
 		return "feed-rss";
 	}
 
-	private String getSeverity(HttpServletRequest request) {
+	private Severity getSeverity(HttpServletRequest request) {
 		String get = request.getParameter("severity");
 		if ( get != null ) {
-			return get;
+			return Severity.forName(get);
 		}
 
 		Cookie[] cookies = request.getCookies();
 		if ( cookies != null ) {
 			for ( Cookie cookie : cookies ) {
 				if ( "severity".equals(cookie.getName()) ) {
-					return cookie.getValue();
+					return Severity.forName(cookie.getValue());
 				}
 			}
 		}
 
-		return "error";
+		return Severity.error;
 	}
 }
