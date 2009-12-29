@@ -43,10 +43,8 @@
 		<div class='message'><c:out value="${sampleEntry.message}"/></div>
 		<div class='messageOverlay'></div>
 		<div class='times'>
-			<span class='applicationId'><c:out value="${sampleEntry.applicationId}"
-				/><c:if test="${not empty entry.group}"><span class="group">@<c:out value="${entry.group}"
-				/></span></c:if></span> &mdash;
-			<%out.write(lastOccurenceInfo);%>
+			<span class='applicationId'><c:out value="${sampleEntry.applicationId}"/></span>
+			&mdash; <%out.write(lastOccurenceInfo);%>
 		</div>
 
 		<div class='operations noBubble'>

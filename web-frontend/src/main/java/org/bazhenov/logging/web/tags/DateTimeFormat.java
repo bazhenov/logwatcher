@@ -20,9 +20,17 @@ public class DateTimeFormat extends DateFormat {
 		Calendar now = Calendar.getInstance();
 
 		long millsSinceNow = now.getTimeInMillis() - date.getTime();
-		if ( millsSinceNow < 60000 && millsSinceNow > 0 ) {
-			formatLessThanMinuteDate(calendar, toAppendTo, fieldPosition);
+		if ( millsSinceNow < 60000 ) {
+			staticFormat(toAppendTo, fieldPosition, "less than a minute ago");
 			return toAppendTo;
+		} else if ( millsSinceNow < 60000*5 ) {
+			staticFormat(toAppendTo, fieldPosition, "less than 5 minutes ago");
+		} else if ( millsSinceNow < 60000*10 ) {
+			staticFormat(toAppendTo, fieldPosition, "less than 10 minutes ago");
+		} else if ( millsSinceNow < 60000*15 ) {
+			staticFormat(toAppendTo, fieldPosition, "less than 15 minutes ago");
+		} else if ( millsSinceNow < 60000*30 ) {
+			staticFormat(toAppendTo, fieldPosition, "less than 30 minutes ago");
 		} else {
 			Calendar today = now;
 			today.set(Calendar.HOUR_OF_DAY, 0);
@@ -68,10 +76,9 @@ public class DateTimeFormat extends DateFormat {
 		fp.setEndIndex(toAppendTo.length());
 	}
 
-	private void formatLessThanMinuteDate(Calendar calendar, StringBuffer toAppendTo,
-	                                      FieldPosition fp) {
+	private void staticFormat(StringBuffer toAppendTo, FieldPosition fp, String str) {
 		fp.setBeginIndex(toAppendTo.length());
-		toAppendTo.append("less than a minute ago");
+		toAppendTo.append(str);
 		fp.setEndIndex(toAppendTo.length());
 	}
 
