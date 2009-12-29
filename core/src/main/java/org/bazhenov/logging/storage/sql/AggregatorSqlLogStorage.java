@@ -3,9 +3,7 @@ package org.bazhenov.logging.storage.sql;
 import com.farpost.timepoint.Date;
 import com.farpost.timepoint.DateTime;
 import org.apache.log4j.Logger;
-import org.bazhenov.logging.AggregatedLogEntry;
-import org.bazhenov.logging.ByLastOccurenceDateComparator;
-import org.bazhenov.logging.LogEntry;
+import org.bazhenov.logging.*;
 import org.bazhenov.logging.aggregator.Aggregator;
 import org.bazhenov.logging.marshalling.Marshaller;
 import org.bazhenov.logging.marshalling.MarshallerException;
@@ -14,10 +12,14 @@ import org.bazhenov.logging.storage.LogEntryMatcher;
 import org.bazhenov.logging.storage.LogStorage;
 import org.bazhenov.logging.storage.LogStorageException;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
 import javax.sql.DataSource;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.*;
 import java.util.*;
 
@@ -33,6 +35,7 @@ public class AggregatorSqlLogStorage implements LogStorage {
 	private final SqlMatcherMapper mapper;
 	private final SimpleJdbcTemplate jdbc;
 	private final Logger log = Logger.getLogger(AggregatorSqlLogStorage.class);
+	private final ParameterizedRowMapper<AggregatedEntry> creator;
 
 	public AggregatorSqlLogStorage(Aggregator aggregator, DataSource datasource,
 	                               Marshaller marshaller, SqlMatcherMapper mapper)
@@ -42,15 +45,28 @@ public class AggregatorSqlLogStorage implements LogStorage {
 		this.mapper = mapper;
 		this.datasource = datasource;
 		this.jdbc = new SimpleJdbcTemplate(datasource);
+		this.creator = new AggregatedRowCreator(marshaller);
 	}
 
 	public synchronized void writeEntry(LogEntry entry) throws LogStorageException {
 		try {
 			String marshalledEntry = marshaller.marshall(entry);
+			Timestamp entryTimestamp = timestamp(entry.getDate());
+			java.sql.Date entryDate = date(entry.getDate());
 			jdbc.update(
 				"INSERT INTO entry (time, date, checksum, category, severity, application_id, content) VALUES (?, ?, ?, ?, ?, ?, ?)",
-				timestamp(entry.getDate()), date(entry.getDate()), entry.getChecksum(), entry.getCategory(),
+				entryTimestamp, entryDate, entry.getChecksum(), entry.getCategory(),
 				entry.getSeverity().getCode(), entry.getApplicationId(), marshalledEntry);
+
+			int affectedRows = jdbc.update(
+				"UPDATE aggregated_entry SET count = count + 1, last_time = IF(last_time < ?, ?, last_time) WHERE date = ? AND checksum = ?",
+				entryTimestamp, entryTimestamp, entryDate, entry.getChecksum());
+			if ( affectedRows == 0 ) {
+				jdbc.update(
+					"INSERT INTO aggregated_entry (date, checksum, last_time, category, severity, application_id, count, content) VALUES (?, ?, ?, ?, ?, ?, 1, ?)",
+					entryDate, entry.getChecksum(), entryTimestamp, entry.getCategory(),
+					entry.getSeverity().getCode(), entry.getApplicationId(), marshalledEntry);
+			}
 
 			if ( log.isDebugEnabled() ) {
 				log.debug("Entry with checksum: " + entry.getChecksum() + " wrote to database");
@@ -98,6 +114,13 @@ public class AggregatorSqlLogStorage implements LogStorage {
 			close(statement);
 			close(connection);
 		}
+	}
+
+	public List<AggregatedEntry> getAggregatedEntries(Date date, Severity severity) {
+		return jdbc.query(
+			"SELECT checksum, MAX(time) as last_time, COUNT(*) as count, content FROM entry WHERE date = ? AND severity >= ? GROUP BY checksum",
+			creator, date(date),
+			severity.getCode());
 	}
 
 	private void fill(PreparedStatement statement, List arguments) throws SQLException {
@@ -178,6 +201,10 @@ public class AggregatorSqlLogStorage implements LogStorage {
 		return criterias;
 	}
 
+	static Timestamp timestamp(DateTime date) {
+		return new Timestamp(date.asTimestamp());
+	}
+
 	static java.sql.Date date(Date date) {
 		return new java.sql.Date(date.asTimestamp());
 	}
@@ -212,7 +239,19 @@ public class AggregatorSqlLogStorage implements LogStorage {
 		}
 	}
 
-	static Timestamp timestamp(DateTime date) {
-		return new Timestamp(date.asTimestamp());
+	public static void loadDump(DataSource ds, InputStream stream) throws IOException, SQLException {
+		StringBuffer buffer = new StringBuffer();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+		String line;
+		while ( (line = reader.readLine()) != null ) {
+			buffer.append(line).append("\n");
+		}
+
+		Connection connection = ds.getConnection();
+		try {
+			connection.prepareStatement(buffer.toString()).executeUpdate();
+		} finally {
+			connection.close();
+		}
 	}
 }

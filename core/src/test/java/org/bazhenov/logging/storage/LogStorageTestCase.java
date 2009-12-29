@@ -2,10 +2,7 @@ package org.bazhenov.logging.storage;
 
 import com.farpost.timepoint.Date;
 import com.farpost.timepoint.DateTime;
-import org.bazhenov.logging.AggregatedAttribute;
-import org.bazhenov.logging.AggregatedLogEntry;
-import org.bazhenov.logging.LogEntry;
-import org.bazhenov.logging.Severity;
+import org.bazhenov.logging.*;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -82,18 +79,24 @@ abstract public class LogStorageTestCase {
 		Date date = november(12, 2008);
 		DateTime morning = date.at("11:00");
 		DateTime evening = date.at("18:05");
+		String checksum = "aef";
 
 		entry().
+			checksum(checksum).
 			occured(morning).
 			saveIn(storage);
 		entry().
+			checksum(checksum).
 			occured(evening).
 			saveIn(storage);
 
-		List<AggregatedLogEntry> list = entries().
-			date(date).
-			find(storage);
+		List<AggregatedEntry> list = storage.getAggregatedEntries(date, Severity.info);
 		assertThat(list.size(), equalTo(1));
+
+		AggregatedEntry entry = list.get(0);
+
+		assertThat(entry.getChecksum(), equalTo(checksum));
+
 	}
 
 	@Test

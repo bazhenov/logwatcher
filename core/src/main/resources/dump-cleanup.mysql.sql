@@ -1,1 +1,2 @@
 DROP TABLE IF EXISTS entry;
+DROP TABLE IF EXISTS aggregated_entry;

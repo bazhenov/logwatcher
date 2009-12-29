@@ -2,6 +2,8 @@ package org.bazhenov.logging.storage;
 
 import com.farpost.timepoint.Date;
 import org.bazhenov.logging.*;
+
+import static org.bazhenov.logging.storage.LogEntries.entries;
 import static org.bazhenov.logging.storage.MatcherUtils.isMatching;
 
 import java.util.*;
@@ -76,6 +78,36 @@ public class InMemoryLogStorage implements LogStorage {
 		Collections.sort(result, comparator);
 		return result;
 	}
+
+	public List<AggregatedEntry> getAggregatedEntries(Date date, Severity severity) throws
+		LogStorageException {
+		List<LogEntryMatcher> matchers = entries().
+			date(date).
+			severity(severity).
+			criterias();
+		try {
+			List<AggregatedLogEntry> entries = findEntries(matchers);
+
+			return map(entries, new MapOperation<AggregatedLogEntry, AggregatedEntry>() {
+				public AggregatedEntry map(AggregatedLogEntry input) {
+					LogEntry entry = input.getSampleEntry();
+					return new AggregatedEntryImpl(entry.getMessage(), entry.getChecksum(), input.getCount(),
+						input.getLastTime(), entry.getCause());
+				}
+			});
+		} catch ( InvalidCriteriaException e ) {
+			throw new LogStorageException(e);
+		}
+	}
+
+	public static <I, O> List<O> map(Collection<I> input, MapOperation<I, O> op) {
+		List<O> result = new ArrayList<O>(input.size());
+		for ( I i : input ) {
+			result.add(op.map(i));
+		}
+		return result;
+	}
+
 
 	public int countEntries(Collection<LogEntryMatcher> criterias) throws LogStorageException {
 		readLock.lock();

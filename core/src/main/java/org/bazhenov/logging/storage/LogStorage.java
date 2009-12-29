@@ -1,8 +1,10 @@
 package org.bazhenov.logging.storage;
 
 import com.farpost.timepoint.Date;
+import org.bazhenov.logging.AggregatedEntry;
 import org.bazhenov.logging.LogEntry;
 import org.bazhenov.logging.AggregatedLogEntry;
+import org.bazhenov.logging.Severity;
 
 import java.util.*;
 
@@ -58,4 +60,14 @@ public interface LogStorage {
 
 	List<AggregatedLogEntry> findEntries(Collection<LogEntryMatcher> criterias)
 		throws LogStorageException, InvalidCriteriaException;
+
+	/**
+	 * Возвращает список аггрегированных записей за указанную дату с указанным severity.
+	 *
+	 * @param date дата
+	 * @param severity уровень
+	 * @return список аггрегированных записей
+	 */
+	List<AggregatedEntry> getAggregatedEntries(Date date, Severity severity) throws
+		LogStorageException;
 }

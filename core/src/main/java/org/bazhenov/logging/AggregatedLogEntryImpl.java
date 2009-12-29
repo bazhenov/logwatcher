@@ -37,7 +37,7 @@ public class AggregatedLogEntryImpl implements AggregatedLogEntry {
 	}
 
 	public String getGroup() {
-		return sampleEntry.getGroup();
+		return sampleEntry.getCategory();
 	}
 
 	public LogEntry getSampleEntry() {

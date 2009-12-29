@@ -5,7 +5,7 @@ import org.springframework.core.io.Resource;
 
 import javax.sql.DataSource;
 
-import static org.bazhenov.logging.storage.sql.SqlLogStorage.loadDump;
+import static org.bazhenov.logging.storage.sql.AggregatorSqlLogStorage.loadDump;
 
 /**
  * Вспомогательный класс для spring, который позволят при запуске контейнера инициализировать

@@ -75,6 +75,15 @@ public class LogEntriesFinder {
 	}
 
 	/**
+	 * Возвращает коллекцию matcher'ов по заданным finder'ом критериям.
+	 *
+	 * @return коллекция matcher'ов
+	 */
+	public List<LogEntryMatcher> criterias() {
+		return criterias;
+	}
+
+	/**
 	 * Возвращает количество записей в хранилище подпадающих под заданные критерии.
 	 * @return количество записей
 	 * @throws LogStorageException в случае внутренней ошибки
