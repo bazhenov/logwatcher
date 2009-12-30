@@ -80,10 +80,10 @@ public class FeedController {
 
 		map.addAttribute("date", date.asDate());
 		map.addAttribute("prevDate", date.minusDay(1).asDate());
-		if ( date.lessThan(today()) ) {
+		if ( date.lessThan(today) ) {
 			map.addAttribute("nextDate", date.plusDay(1).asDate());
 		}
-		String severity = getSeverity(request).toString();
+		Severity severity = getSeverity(request);
 
 		List<AggregatedLogEntry> entries;
 		if ( query != null && query.trim().length() > 0 ) {
@@ -98,10 +98,9 @@ public class FeedController {
 				withCriteria(matchers).
 				find(storage);
 		}else{
-
 			entries = entries().
 				date(date).
-				severity(Severity.forName(severity)).
+				severity(severity).
 				find(storage);
 		}
 		map.addAttribute("query", query);

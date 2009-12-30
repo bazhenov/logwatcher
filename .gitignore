@@ -4,7 +4,7 @@
 /*.properties
 /*.log
 /test-output
-/log4j.xml
+/log*.xml
 target
 test
 mysql.properties

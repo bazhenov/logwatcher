@@ -11,6 +11,11 @@
 	<bean class="org.bazhenov.logging.web.FeedController">
 		<property name="storage" ref="storage"/>
 	</bean>
+
+	<bean class="org.bazhenov.logging.web.BackController">
+		<property name="storage" ref="storage"/>
+	</bean>
+
 	<bean class="org.bazhenov.logging.web.SessionController"/>
 
 	<bean class="org.springframework.web.servlet.view.UrlBasedViewResolver"

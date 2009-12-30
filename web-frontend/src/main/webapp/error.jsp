@@ -6,7 +6,8 @@
 
 <c:set var="cause" value="${requestScope['javax.servlet.error.exception']}"/>
 <%
-	Throwable cause = (Throwable) pageContext.getRequest().getAttribute("javax.servlet.error.exception");
+	Throwable cause = (Throwable) pageContext.getRequest()
+		.getAttribute("javax.servlet.error.exception");
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -24,7 +25,7 @@
 		id="thirdDot">&bull;</span><span>&nbsp;</span></h1>
 
 	<div id="menuBar">
-		<a href="/" class="selected">&infin;</a>
+		<a href="/" class="selected">Hidden page</a>
 	</div>
 
 	<div id="sliderContainer">
@@ -41,20 +42,20 @@
 
 	<div class='entry error selectedEntry'>
 		<div class='entryHeader'>
-			<span class='marker'>&bull;</span>
+			<div class="count">&infin;</div>
 
 			<div class='message'><c:out value="${cause}"/></div>
 			<div class='messageOverlay'>&nbsp;</div>
 			<div class='times'>
 				<span class='applicationId'>self</span> &mdash; right now
 			</div>
-			<div class='entryContent noBubble'>
+		</div>
+		<div class='entryContent noBubble'>
 				<pre class="stacktrace noBubble"><%
 					StringWriter writer = new StringWriter();
 					cause.printStackTrace(new PrintWriter(writer));
 					out.write(writer.toString());
 				%></pre>
-			</div>
 		</div>
 	</div>
 
