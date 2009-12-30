@@ -5,10 +5,10 @@
 
 .entryHeader                    { padding-bottom: 10px; padding-top: 10px; cursor: pointer; position: relative; }
 
-.entryHeader .count             { position: absolute; width: 50px; height: 43px;
-																	color: white; font: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif;
+.entryHeader .count             { position: absolute; width: 50px; height: 46px; color: white;
+																	font: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif;
 																	font-weight: bold; font-size: 70%;
-																	text-align: center; top: 15px; left: 10px; line-height:35px; padding-top: 3px; }
+																	text-align: center; top: 15px; left: 10px; line-height:46px; }
 
 .entry .message                 { color: black; margin-left: 72px; margin-right: 225px;
 																	overflow: hidden; height: 32px; white-space: nowrap }

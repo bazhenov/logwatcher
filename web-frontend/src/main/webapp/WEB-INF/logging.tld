@@ -39,4 +39,16 @@
 		<function-class>org.bazhenov.logging.web.tags.EntryTag</function-class>
 		<function-signature>java.util.Date date(com.farpost.timepoint.Date)</function-signature>
 	</function>
+
+	<function>
+		<name>thousands</name>
+		<function-class>org.bazhenov.logging.web.tags.EntryTag</function-class>
+		<function-signature>int thousands(int)</function-signature>
+	</function>
+
+	<function>
+		<name>magnitude</name>
+		<function-class>org.bazhenov.logging.web.tags.EntryTag</function-class>
+		<function-signature>int magnitude(int)</function-signature>
+	</function>
 </taglib>

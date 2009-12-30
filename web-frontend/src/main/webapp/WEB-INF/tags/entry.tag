@@ -26,14 +26,11 @@
 		<div class="count">
 			<c:set var="count" value="${entry.count}"/>
 			<c:choose>
-				<c:when test="${count gt 10000}">
-					<abbr title="${count} times">10K</abbr>
-				</c:when>
-				<c:when test="${count gt 5000}">
-					<abbr title="${count} times">5K</abbr>
+				<c:when test="${count gt 100000}">
+					<abbr title="${count} times">10<sup>${lf:magnitude(count)}</sup></abbr>
 				</c:when>
 				<c:when test="${count gt 1000}">
-					<abbr title="${count} times">1K</abbr>
+					<abbr title="${count} times">${lf:thousands(count)}K</abbr>
 				</c:when>
 				<c:otherwise>
 					${count}
