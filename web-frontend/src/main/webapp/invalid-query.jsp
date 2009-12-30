@@ -23,7 +23,7 @@
 
 	<c:url value="/js/jquery-ui-1.7.2.js" var="jsUrl"/>
 	<script type="text/javascript" src="${jsUrl}">/**/</script>
-	<c:url value="/js/exception-list.js" var="jsUrl"/>
+	<c:url value="/js/exception-list.events.js" var="jsUrl"/>
 	<script type="text/javascript" src="${jsUrl}">/**/</script>
 </head>
 

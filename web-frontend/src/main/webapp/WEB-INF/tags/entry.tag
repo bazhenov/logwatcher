@@ -63,11 +63,7 @@
 		</div>
 	</div>
 	<div class='entryContent'>
-		<ol class='attributes'>
-			<c:forEach var="row" items="${entry.attributes}">
-				<li><l:attribute attribute="${row.value}" name="${row.key}"/></li>
-			</c:forEach>
-		</ol>
+		<ol class='attributes' loaded="false"></ol>
 		<c:choose>
 			<c:when test="${not empty sampleEntry.cause}">
 					<pre class="stacktrace noBubble"><c:out

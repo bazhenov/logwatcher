@@ -1,7 +1,6 @@
 .entry				                  { border-top: 1px dotted gray }
-.entry:hover                    { background-color: #ffd }
-.entryHeader:hover .operations  { display: inline }
 
+.entry:hover                    { background-color: #ffd }
 .selectedEntry                  { background-color: #ffd; }
 
 .entryHeader                    { padding-bottom: 10px; padding-top: 10px; cursor: pointer; position: relative; }
@@ -28,7 +27,9 @@
 
 .operations                     { display: none; position: absolute; top: 20px; right: 20px;
 																	font-size: 70% }
+.selectedEntry .operations      { display: inline }
 .removing .operations           { display: none !important; }
+.loadingAttributes .operations           { display: none !important; }
 
 .entryContent                   { font-size: 12px; padding: 0 10px 15px 34px; display: none }
 
@@ -45,10 +46,11 @@
 .entryContent li span           { color: black }
 .selectedEntry .entryContent    { display: block !important }
 
-.spinner                        { background: url("/images/sp.gif") no-repeat; width: 16px; height: 16px }
+.entryHeader .spinner           { background: url("/images/sp.gif") no-repeat; width: 16px; height: 16px;
+																	position: absolute; top: 26px; right: 25px; display: none; }
 
-.entryHeader .spinner           { position: absolute; top: 26px; right: 25px; display: none }
-.removing .entryHeader .spinner { display: inline !important; }
+.removing .entryHeader .spinner,
+.loadingAttributes .entryHeader .spinner { display: inline !important; }
 
 .marker                         { position: absolute; left: 12px; top: 28px; width: 14px; height: 15px;
 																	cursor: pointer; margin: 0; padding: 0; line-height: 9px;}
@@ -61,3 +63,4 @@
 
 span.tag            { font-size: 70%; background-color: #E0EAF1; border-bottom: 1px solid #3E6D8E;
 											border-right: 1px solid #7F9FB6; color: #3E6D8E; margin: 1px; padding: 1px }
+

@@ -2,11 +2,29 @@ severity = ['all', 'trace', 'debug', 'info', 'warning', 'error'];
 
 $(document).ready(function() {
 
+	function toggleEntry(entry) {
+		entry.toggleClass('selectedEntry');
+		var checksum = entry.attr("checksum");
+		var attributes = entry.find('.attributes');
+		if ( attributes.attr("loaded") == "false" ) {
+			attributes.attr("loaded", "true");
+			entry.addClass("loadingAttributes");
+			attributes.load("/service/attributes", {'checksum': checksum}, function(response, code) {
+				if ( code != "success" ) {
+					attributes.html("Error while loading attributes");
+				}
+				entry.removeClass("loadingAttributes");
+			});
+		}
+
+	}
+
 	$('#searchInput').focus();
 
 	$('.entryHeader').click(function(target) {
 		if ( $(target.target).parents(".noBubble").length <= 0 ) {
-			$(this).parents(".entry").toggleClass('selectedEntry')
+			toggleEntry($(this).parents(".entry"));
+
 		}
 	});
 
