@@ -11,6 +11,8 @@ public interface AggregatedEntry {
 
 	DateTime getLastTime();
 
+	Severity getSeverity();
+
 	int getCount();
 
 	String getMessage();

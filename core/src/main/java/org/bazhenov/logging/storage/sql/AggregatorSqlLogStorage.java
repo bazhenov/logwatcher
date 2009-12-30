@@ -118,7 +118,7 @@ public class AggregatorSqlLogStorage implements LogStorage {
 
 	public List<AggregatedEntry> getAggregatedEntries(Date date, Severity severity) {
 		return jdbc.query(
-			"SELECT checksum, MAX(time) as last_time, COUNT(*) as count, content FROM entry WHERE date = ? AND severity >= ? GROUP BY checksum",
+			"SELECT checksum, MAX(time) as last_time, COUNT(*) as count, severity, content FROM entry WHERE date = ? AND severity >= ? GROUP BY checksum",
 			creator, date(date),
 			severity.getCode());
 	}

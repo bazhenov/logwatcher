@@ -57,7 +57,7 @@ public class InMemoryLogStorage implements LogStorage {
 					entriesForDate.remove(checksum);
 					if ( entriesForDate.containsKey(alias) ) {
 						entriesForDate.get(alias).incrementCount(entry.getCount());
-					}else{
+					} else {
 						throw new RuntimeException("Ooops");
 					}
 				}
@@ -79,8 +79,8 @@ public class InMemoryLogStorage implements LogStorage {
 		return result;
 	}
 
-	public List<AggregatedEntry> getAggregatedEntries(Date date, Severity severity) throws
-		LogStorageException {
+	public List<AggregatedEntry> getAggregatedEntries(Date date, Severity severity)
+		throws LogStorageException {
 		List<LogEntryMatcher> matchers = entries().
 			date(date).
 			severity(severity).
@@ -91,8 +91,8 @@ public class InMemoryLogStorage implements LogStorage {
 			return map(entries, new MapOperation<AggregatedLogEntry, AggregatedEntry>() {
 				public AggregatedEntry map(AggregatedLogEntry input) {
 					LogEntry entry = input.getSampleEntry();
-					return new AggregatedEntryImpl(entry.getMessage(), entry.getChecksum(), input.getCount(),
-						input.getLastTime(), entry.getCause());
+					return new AggregatedEntryImpl(entry.getMessage(), entry.getChecksum(),
+						entry.getSeverity(), input.getCount(), input.getLastTime(), entry.getCause());
 				}
 			});
 		} catch ( InvalidCriteriaException e ) {
@@ -107,7 +107,6 @@ public class InMemoryLogStorage implements LogStorage {
 		}
 		return result;
 	}
-
 
 	public int countEntries(Collection<LogEntryMatcher> criterias) throws LogStorageException {
 		readLock.lock();

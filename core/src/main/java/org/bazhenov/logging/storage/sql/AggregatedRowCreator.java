@@ -4,6 +4,7 @@ import com.farpost.timepoint.DateTime;
 import org.bazhenov.logging.AggregatedEntry;
 import org.bazhenov.logging.AggregatedEntryImpl;
 import org.bazhenov.logging.LogEntry;
+import org.bazhenov.logging.Severity;
 import org.bazhenov.logging.marshalling.Marshaller;
 import org.bazhenov.logging.marshalling.MarshallerException;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
@@ -23,7 +24,8 @@ class AggregatedRowCreator implements ParameterizedRowMapper<AggregatedEntry> {
 		try {
 			LogEntry entry = marshaller.unmarshall(rs.getString("content"));
 			return new AggregatedEntryImpl(entry.getMessage(), rs.getString("checksum"),
-				rs.getInt("count"), new DateTime(rs.getTimestamp("last_time").getTime()), entry.getCause());
+				Severity.forCode(rs.getInt("severity")), rs.getInt("count"),
+				new DateTime(rs.getTimestamp("last_time").getTime()), entry.getCause());
 		} catch ( MarshallerException e ) {
 			throw new RuntimeException(e);
 		}

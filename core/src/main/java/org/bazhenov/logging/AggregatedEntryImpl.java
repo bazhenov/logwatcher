@@ -9,8 +9,11 @@ public class AggregatedEntryImpl implements AggregatedEntry {
 	private final String message;
 	private final Cause sampleCause;
 	private final String checksum;
+	private final Severity severity;
 
-	public AggregatedEntryImpl(String message, String checksum, int count, DateTime lastTime, Cause sampleCause) {
+	public AggregatedEntryImpl(String message, String checksum, Severity severity, int count,
+	                           DateTime lastTime, Cause sampleCause) {
+		this.severity = severity;
 		this.lastTime = lastTime;
 		this.checksum = checksum;
 		this.count = count;
@@ -20,6 +23,10 @@ public class AggregatedEntryImpl implements AggregatedEntry {
 
 	public DateTime getLastTime() {
 		return lastTime;
+	}
+
+	public Severity getSeverity() {
+		return severity;
 	}
 
 	public int getCount() {
