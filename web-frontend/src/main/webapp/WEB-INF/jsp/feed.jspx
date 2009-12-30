@@ -18,8 +18,11 @@
 		<c:url value='/css/ui.all.css' var="cssUrl"/>
 		<link rel="stylesheet" href="${cssUrl}"/>
 
+		<fmt:formatDate value="${date}" pattern="yyyy-MM-dd" var="dateAsString" />
+
 		<script type="text/javascript">
-			var severityLevel = '${severity}'
+			var severityLevel = '${severity}';
+			var date = '${dateAsString}';
 		</script>
 
 		<c:url value="/js/jquery-1.3.2.js" var="jsUrl"/>

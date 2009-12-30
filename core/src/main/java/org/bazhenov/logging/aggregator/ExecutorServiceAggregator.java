@@ -87,10 +87,10 @@ public class ExecutorServiceAggregator implements Aggregator {
 		while ( iterator.hasNext() ) {
 			String[] batch = new String[batchSize];
 			int batchIndex = 0;
-			while ( batchIndex < batchSize && iterator.hasNext() ) {
+			do {
 				batch[batchIndex++] = iterator.next();
 				size++;
-			}
+			} while ( batchIndex < batchSize && iterator.hasNext() );
 			futures.add(service.submit(new Task(batch, matchers)));
 		}
 		long end = currentTimeMillis();

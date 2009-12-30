@@ -2,6 +2,8 @@ package org.bazhenov.logging;
 
 import java.util.*;
 
+import static java.util.Arrays.sort;
+
 public class AggregatedAttribute {
 
 	private final String name;
@@ -26,7 +28,9 @@ public class AggregatedAttribute {
 	}
 
 	public AttributeValue[] getValues() {
-		return values.values().toArray(new AttributeValue[values.size()]);
+		AttributeValue[] attributeValues = values.values().toArray(new AttributeValue[values.size()]);
+		sort(attributeValues, new AttributeValueComparator());
+		return attributeValues;
 	}
 
 	public void incrementCountFor(String value) {

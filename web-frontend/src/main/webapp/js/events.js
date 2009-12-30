@@ -9,7 +9,7 @@ $(document).ready(function() {
 		if ( attributes.attr("loaded") == "false" ) {
 			attributes.attr("loaded", "true");
 			entry.addClass("loadingAttributes");
-			attributes.load("/service/attributes", {'checksum': checksum}, function(response, code) {
+			attributes.load("/service/attributes", {'checksum': checksum, 'date': date}, function(response, code) {
 				if ( code != "success" ) {
 					attributes.html("Error while loading attributes");
 				}
