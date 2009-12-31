@@ -28,6 +28,11 @@ public class TranslationRulesImpl {
 		return new ApplicationIdMatcher(applicationId);
 	}
 
+	@Criteria("caused-by")
+	public LogEntryMatcher causeType(String expectedCauseType) {
+		return new CauseTypeMatcher(expectedCauseType);
+	}
+
 	@Criteria("occured")
 	public LogEntryMatcher date(String dateString) throws ParseException {
 		if ( dateString.startsWith("last") ) {

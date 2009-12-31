@@ -1,5 +1,13 @@
 severity = ['all', 'trace', 'debug', 'info', 'warning', 'error'];
 
+;(function($) {
+	$.fn.extend({
+		autocomplete: function(el) {
+			
+		}
+	});
+})(jQuery);
+
 $(document).ready(function() {
 
 	function toggleEntry(entry) {
@@ -19,7 +27,19 @@ $(document).ready(function() {
 
 	}
 
-	$('#searchInput').focus();
+	$('#searchInput').autocomplete($('#suggest'));
+
+	var suggestPane = $('#suggest');
+	var searchInput = $('#searchInput');
+	searchInput.focus();
+
+	searchInput.bind('focus', function() {
+		suggestPane.show();
+	});
+
+	searchInput.bind('blur', function() {
+		suggestPane.hide();
+	});
 
 	$('.entryHeader').click(function(target) {
 		if ( $(target.target).parents(".noBubble").length <= 0 ) {
