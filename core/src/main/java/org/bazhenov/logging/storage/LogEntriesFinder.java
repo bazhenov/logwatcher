@@ -5,7 +5,9 @@ import com.farpost.timepoint.Date;
 import java.util.*;
 
 import org.bazhenov.logging.AggregatedLogEntry;
+import org.bazhenov.logging.LogEntry;
 import org.bazhenov.logging.Severity;
+import org.bazhenov.logging.Visitor;
 
 public class LogEntriesFinder {
 
@@ -95,5 +97,11 @@ public class LogEntriesFinder {
 
 	public List<AggregatedLogEntry> find(LogStorage storage) throws LogStorageException, InvalidCriteriaException {
 		return storage.findEntries(criterias);
+	}
+
+	public void walk(LogStorage storage, Visitor<LogEntry> visitor) throws LogStorageException,
+		InvalidCriteriaException {
+		
+		storage.walk(criterias, visitor);
 	}
 }

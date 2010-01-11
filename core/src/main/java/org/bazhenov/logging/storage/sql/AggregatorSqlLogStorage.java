@@ -26,6 +26,7 @@ import java.util.*;
 import static java.sql.ResultSet.CONCUR_READ_ONLY;
 import static java.sql.ResultSet.TYPE_FORWARD_ONLY;
 import static java.util.Collections.sort;
+import static org.bazhenov.logging.storage.MatcherUtils.isMatching;
 
 public class AggregatorSqlLogStorage implements LogStorage {
 
@@ -116,11 +117,49 @@ public class AggregatorSqlLogStorage implements LogStorage {
 		}
 	}
 
+	public void walk(Collection<LogEntryMatcher> criterias, Visitor<LogEntry> visitor)
+		throws LogStorageException, InvalidCriteriaException {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet result = null;
+		try {
+			StringBuilder sql = new StringBuilder("SELECT content FROM `entry` l");
+
+			List arguments = new LinkedList();
+			StringBuilder whereClause = new StringBuilder();
+			Collection<LogEntryMatcher> lateBoundMatchers = fillWhereClause(criterias, whereClause,
+				arguments);
+
+			sql.append(" WHERE ").append(whereClause);
+			connection = datasource.getConnection();
+			statement = connection.prepareStatement(sql.toString(), TYPE_FORWARD_ONLY, CONCUR_READ_ONLY);
+			statement.setFetchSize(Integer.MIN_VALUE);
+			fill(statement, arguments);
+
+			result = statement.executeQuery();
+			while ( result.next() ) {
+				LogEntry entry = marshaller.unmarshall(result.getString("content"));
+				if ( isMatching(entry, lateBoundMatchers) ) {
+					visitor.visit(entry);
+				}
+			}
+		} catch ( SQLException e ) {
+			throw new LogStorageException(e);
+		} catch ( MatcherMapperException e ) {
+			throw new LogStorageException(e);
+		} catch ( MarshallerException e ) {
+			throw new LogStorageException(e);
+		} finally {
+			close(result);
+			close(statement);
+			close(connection);
+		}
+	}
+
 	public List<AggregatedEntry> getAggregatedEntries(Date date, Severity severity) {
 		return jdbc.query(
-			"SELECT checksum, MAX(time) as last_time, COUNT(*) as count, severity, content FROM entry WHERE date = ? AND severity >= ? GROUP BY checksum",
-			creator, date(date),
-			severity.getCode());
+			"SELECT checksum, last_time, count, severity, content FROM aggregated_entry WHERE date = ? AND severity >= ?",
+			creator, date(date), severity.getCode());
 	}
 
 	private void fill(PreparedStatement statement, List arguments) throws SQLException {

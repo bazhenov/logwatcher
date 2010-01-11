@@ -1,10 +1,7 @@
 package org.bazhenov.logging.storage;
 
 import com.farpost.timepoint.Date;
-import org.bazhenov.logging.AggregatedEntry;
-import org.bazhenov.logging.LogEntry;
-import org.bazhenov.logging.AggregatedLogEntry;
-import org.bazhenov.logging.Severity;
+import org.bazhenov.logging.*;
 
 import java.util.*;
 
@@ -62,12 +59,26 @@ public interface LogStorage {
 		throws LogStorageException, InvalidCriteriaException;
 
 	/**
+	 * Данный метод проходит по записям {@link LogEntry} передавая каждую в заданный visitor.
+	 * Visitor не должен менять передаваемые ему записи. Имплементации этих методов не дают никаких
+	 * гаранитий относительно того в каком потоке будет вызыватся vistor, поэтому имплементация
+	 * visitor'а должна быть потокобезопасна.
+	 *
+	 * @param criterias критерии по которым осуществляется итерация
+	 * @param visitor visitor
+	 * @throws LogStorageException в случае внутренней ошибки хранилища
+	 * @throws InvalidCriteriaException в случае если некорректно заданы критерии поиска
+	 */
+	void walk(Collection<LogEntryMatcher> criterias, Visitor<LogEntry> visitor)
+		throws LogStorageException, InvalidCriteriaException;
+
+	/**
 	 * Возвращает список аггрегированных записей за указанную дату с указанным severity.
 	 *
-	 * @param date дата
+	 * @param date     дата
 	 * @param severity уровень
 	 * @return список аггрегированных записей
 	 */
-	List<AggregatedEntry> getAggregatedEntries(Date date, Severity severity) throws
-		LogStorageException;
+	List<AggregatedEntry> getAggregatedEntries(Date date, Severity severity)
+		throws LogStorageException;
 }

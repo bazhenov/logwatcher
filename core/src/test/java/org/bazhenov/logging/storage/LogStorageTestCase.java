@@ -75,6 +75,17 @@ abstract public class LogStorageTestCase {
 	}
 
 	@Test
+	public void storageCanWalkByEntries() throws LogStorageException, InvalidCriteriaException {
+		entry().checksum("foo").saveIn(storage);
+		entry().checksum("foo").saveIn(storage);
+		entry().checksum("bar").saveIn(storage);
+
+		CountVisitor<LogEntry> visitor = new CountVisitor<LogEntry>();
+		entries().checksum("foo").walk(storage, visitor);
+		assertThat(visitor.getCount(), equalTo(2));
+	}
+
+	@Test
 	public void storageCanGetAggregatedEntries() throws Exception {
 		Date date = november(12, 2008);
 		DateTime morning = date.at("11:00");
@@ -96,7 +107,6 @@ abstract public class LogStorageTestCase {
 		AggregatedEntry entry = list.get(0);
 
 		assertThat(entry.getChecksum(), equalTo(checksum));
-
 	}
 
 	@Test
