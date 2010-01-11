@@ -1,5 +1,6 @@
 @import url("menubar.css");
-@import url("searchbox.css");
+@import url("search-box.css");
+@import url("sort-box.css");
 @import url("entry.css");
 
 body				                    { font-size: 25px; font-family: tahoma, sans-serif; padding:0; margin:0 }

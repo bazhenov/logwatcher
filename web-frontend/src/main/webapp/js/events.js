@@ -3,7 +3,7 @@ severity = ['all', 'trace', 'debug', 'info', 'warning', 'error'];
 ;(function($) {
 	$.fn.extend({
 		autocomplete: function(el) {
-			
+
 		}
 	});
 })(jQuery);
@@ -126,4 +126,22 @@ $(document).ready(function() {
 			}
 		});
 	}
+
+	$("#sortBox span").each(function() {
+		var el = $(this);
+		if ( el.attr("value") == entrySortOrder ) {
+			el.addClass("selected");
+		}else{
+			el.click(function() {
+				var value = $(this).attr("value");
+				$.ajax({
+					type: "GET",
+					url: './session?sortOrder=' + value,
+					complete: function() {
+						window.location = window.location;
+					}
+				});
+			});
+		}
+	});
 });

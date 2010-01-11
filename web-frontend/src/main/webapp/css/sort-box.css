@@ -1,0 +1,7 @@
+@import url("menubar.css");
+@import url("search-box.css");
+@import url("entry.css");
+
+#sortBox                { font-size: 50%; position: absolute; right: 0; top: 0; }
+#sortBox span           { cursor: pointer; }
+#sortBox span.selected  { background-color: #4a4a4a; color: white; padding: 2px 5px; cursor: default !important; }

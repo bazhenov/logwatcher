@@ -22,6 +22,7 @@
 
 		<script type="text/javascript">
 			var severityLevel = '${severity}';
+			var entrySortOrder = '${sortOrder}';
 			var date = '${dateAsString}';
 		</script>
 
@@ -83,6 +84,7 @@
 		</h2>
 
 		<jsp:include page="/widgets/searchBox.jsp" />
+		<jsp:include page="/widgets/sortBox.jsp" />
 
 		<c:choose>
 			<c:when test="${f:length(entries) > 0}">

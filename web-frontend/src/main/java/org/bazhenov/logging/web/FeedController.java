@@ -1,11 +1,7 @@
 package org.bazhenov.logging.web;
 
 import com.farpost.timepoint.Date;
-import static com.farpost.timepoint.Date.today;
 import org.bazhenov.logging.*;
-
-import static java.util.Collections.sort;
-import static org.bazhenov.logging.storage.LogEntries.entries;
 import org.bazhenov.logging.storage.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -14,14 +10,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 
-import javax.servlet.http.*;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.farpost.timepoint.Date.today;
+import static java.util.Collections.sort;
+import static org.bazhenov.logging.storage.LogEntries.entries;
 
 @Controller
 public class FeedController {
@@ -107,6 +108,8 @@ public class FeedController {
 		map.addAttribute("query", query);
 
 		map.addAttribute("severity", severity);
+		String sortOrder = getSortOrder(request);
+		map.addAttribute("sortOrder", sortOrder);
 
 		int times = 0;
 		for ( AggregatedEntry entry : entries ) {
@@ -159,5 +162,18 @@ public class FeedController {
 		}
 
 		return Severity.error;
+	}
+
+	private String getSortOrder(HttpServletRequest request) {
+		Cookie[] cookies = request.getCookies();
+		if ( cookies != null ) {
+			for ( Cookie cookie : cookies ) {
+				if ( "sortOrder".equals(cookie.getName()) ) {
+					return cookie.getValue();
+				}
+			}
+		}
+
+		return null;
 	}
 }

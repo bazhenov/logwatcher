@@ -13,9 +13,14 @@ public class SessionController {
 
 	@RequestMapping(value = "/session")
 	public View handleFeed(@RequestParam(value = "severity", required = false) String severity,
+	                       @RequestParam(value = "sortOrder", required = false) String sortOrder,
 	                       HttpServletResponse response) {
 		if ( severity != null ) {
 			Cookie cookie = new Cookie("severity", severity);
+			response.addCookie(cookie);
+		}
+		if ( sortOrder != null ) {
+			Cookie cookie = new Cookie("sortOrder", sortOrder);
 			response.addCookie(cookie);
 		}
 		return new BufferView();
