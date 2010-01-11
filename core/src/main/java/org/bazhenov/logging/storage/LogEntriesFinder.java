@@ -101,7 +101,11 @@ public class LogEntriesFinder {
 
 	public void walk(LogStorage storage, Visitor<LogEntry> visitor) throws LogStorageException,
 		InvalidCriteriaException {
-		
+
 		storage.walk(criterias, visitor);
+	}
+
+	public List<LogEntryMatcher> all() {
+		return new ArrayList<LogEntryMatcher>();
 	}
 }
