@@ -79,7 +79,7 @@ public class AggregatorSqlLogStorage implements LogStorage {
 		}
 	}
 
-	public List<AggregatedLogEntry> findEntries(Collection<LogEntryMatcher> criterias)
+	public List<AggregatedEntry> findEntries(Collection<LogEntryMatcher> criterias)
 		throws LogStorageException, InvalidCriteriaException {
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -99,9 +99,9 @@ public class AggregatorSqlLogStorage implements LogStorage {
 			fill(statement, arguments);
 
 			result = statement.executeQuery();
-			Collection<AggregatedLogEntry> aggregated = aggregator.aggregate(
+			Collection<AggregatedEntry> aggregated = aggregator.aggregate(
 				new ResultSetIterable(result), lateBoundMatchers);
-			ArrayList<AggregatedLogEntry> list = new ArrayList<AggregatedLogEntry>(aggregated);
+			ArrayList<AggregatedEntry> list = new ArrayList<AggregatedEntry>(aggregated);
 			sort(list, new ByLastOccurenceDateComparator());
 			return list;
 		} catch ( SQLException e ) {
@@ -158,7 +158,7 @@ public class AggregatorSqlLogStorage implements LogStorage {
 
 	public List<AggregatedEntry> getAggregatedEntries(Date date, Severity severity) {
 		return jdbc.query(
-			"SELECT checksum, last_time, count, severity, content FROM aggregated_entry WHERE date = ? AND severity >= ?",
+			"SELECT checksum, application_id, last_time, count, severity, content FROM aggregated_entry WHERE date = ? AND severity >= ?",
 			creator, date(date), severity.getCode());
 	}
 
@@ -211,6 +211,7 @@ public class AggregatorSqlLogStorage implements LogStorage {
 	public void removeEntries(String checksum) throws LogStorageException {
 		try {
 			jdbc.update("DELETE FROM entry WHERE checksum = ?", checksum);
+			jdbc.update("DELETE FROM aggregated_entry WHERE checksum = ?", checksum);
 		} catch ( DataAccessException e ) {
 			throw new LogStorageException(e);
 		}

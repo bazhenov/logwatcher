@@ -3,9 +3,8 @@
 <%@taglib prefix="lf" uri="http://bazhenov.org/logging" %>
 <%@taglib prefix="f" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@taglib prefix="l" tagdir="/WEB-INF/tags" %>
-<%@attribute name="entry" type="org.bazhenov.logging.AggregatedLogEntry" required="true" %>
+<%@attribute name="entry" type="org.bazhenov.logging.AggregatedEntry" required="true" %>
 
-<c:set var="sampleEntry" value="${entry.sampleEntry}"/>
 <%
 	boolean isExceptionNew = entry.getLastTime().plusMinute(30).isInFuture();
 
@@ -18,9 +17,9 @@
 		lastOccurenceInfo = "<abbr title='" + fullDate + "'>" + lastOccurenceInfo + "</abbr>";
 	}
 %>
-<a name='${sampleEntry.checksum}'></a>
+<a name='${entry.checksum}'></a>
 
-<div class='entry ${sampleEntry.severity}' checksum='${sampleEntry.checksum}'>
+<div class='entry ${entry.severity}' checksum='${entry.checksum}'>
 	<div class='entryHeader'>
 		<div class="spinner"></div>
 		<div class="count">
@@ -37,10 +36,10 @@
 				</c:otherwise>
 			</c:choose>
 		</div>
-		<div class='message'><c:out value="${sampleEntry.message}"/></div>
+		<div class='message'><c:out value="${entry.message}"/></div>
 		<div class='messageOverlay'></div>
 		<div class='times'>
-			<span class='applicationId'><c:out value="${sampleEntry.applicationId}"/></span>
+			<span class='applicationId'><c:out value="${entry.applicationId}"/></span>
 			&mdash; <%out.write(lastOccurenceInfo);%>
 		</div>
 
@@ -48,26 +47,26 @@
 			<c:url value="http://jira.dev.loc/jira/secure/CreateIssueDetails.jspa" var="jiraLink">
 				<c:param name="pid">10000</c:param>
 				<c:param name="issuetype">1</c:param>
-				<c:param name="summary" value="${sampleEntry.message}"/>
-				<c:param name="description" value="${lf:formatCause(sampleEntry.cause)}"/>
+				<c:param name="summary" value="${entry.message}"/>
+				<c:param name="description" value="${lf:formatCause(entry.sampleCause)}"/>
 				<c:param name="priority">3</c:param>
 			</c:url>
 			<a href="<c:out value="${jiraLink}"/>" target='_blank'>create task</a> or
 			<a class='removeEntry asynchronous' href='#'>remove</a>
 			<a
-				href='/feed?date=${sampleEntry.date.date}&severity=${sampleEntry.severity}#${sampleEntry.checksum}'>
+				href='/feed?date=${entry.lastTime.date}&severity=${entry.severity}#${entry.checksum}'>
 				<img src='/images/link-icon.png' alt="permanent link"/></a>
 		</div>
 	</div>
 	<div class='entryContent'>
 		<ol class='attributes' loaded="false"></ol>
 		<c:choose>
-			<c:when test="${not empty sampleEntry.cause}">
+			<c:when test="${not empty entry.sampleCause}">
 					<pre class="stacktrace noBubble"><c:out
-						value="${lf:formatCause(sampleEntry.cause)}"/></pre>
+						value="${lf:formatCause(entry.sampleCause)}"/></pre>
 			</c:when>
 			<c:otherwise>
-				<pre class="stacktrace noBubble"><c:out value="${sampleEntry.message}"/></pre>
+				<pre class="stacktrace noBubble"><c:out value="${entry.message}"/></pre>
 			</c:otherwise>
 		</c:choose>
 	</div>

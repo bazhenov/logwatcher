@@ -16,11 +16,11 @@
 
 			<c:forEach var="item" items="${entries}">
 				<item>
-					<title><c:out value="${item.sampleEntry.message}" /></title>
-					<description><pre><c:out value="${l:formatCause(item.sampleEntry.cause)}" /></pre></description>
+					<title><c:out value="${item.message}" /></title>
+					<description><pre><c:out value="${l:formatCause(item.sampleCause)}" /></pre></description>
 					<link><c:url value="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/feed">
-						<c:param name="severity" value="${item.sampleEntry.severity}" />
-					</c:url>#${item.sampleEntry.checksum}</link>
+						<c:param name="severity" value="${item.severity}" />
+					</c:url>#${item.checksum}</link>
 					<pubDate><fmt:formatDate value="${l:date(item.lastTime)}" pattern="EE, d MMM yyyy HH:mm:ss ZZZZ" /></pubDate>
 				</item>
 			</c:forEach>

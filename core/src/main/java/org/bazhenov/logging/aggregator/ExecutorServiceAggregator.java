@@ -34,11 +34,11 @@ public class ExecutorServiceAggregator implements Aggregator {
 		this.service = executor;
 	}
 
-	public Collection<AggregatedLogEntry> aggregate(Iterable<String> entries,
-	                                                Collection<LogEntryMatcher> matchers) {
+	public Collection<AggregatedEntry> aggregate(Iterable<String> entries,
+	                                             Collection<LogEntryMatcher> matchers) {
 		long start = currentTimeMillis();
-		List<Future<Collection<AggregatedLogEntry>>> futures = emitTasks(entries, matchers);
-		Map<String, AggregatedLogEntry> result = aggregateResults(futures);
+		List<Future<Collection<AggregatedEntry>>> futures = emitTasks(entries, matchers);
+		Map<String, AggregatedEntry> result = aggregateResults(futures);
 		long end = currentTimeMillis();
 		if ( log.isInfoEnabled() ) {
 			log.info("Filtering and aggregating complete in " + (end - start) + "ms.");
@@ -50,17 +50,18 @@ public class ExecutorServiceAggregator implements Aggregator {
 		this.batchSize = batchSize;
 	}
 
-	private Map<String, AggregatedLogEntry> aggregateResults(
-		List<Future<Collection<AggregatedLogEntry>>> futures) {
-		Map<String, AggregatedLogEntry> result = new HashMap<String, AggregatedLogEntry>();
+	private Map<String, AggregatedEntry> aggregateResults(
+		List<Future<Collection<AggregatedEntry>>> futures) {
+		Map<String, AggregatedEntry> result = new HashMap<String, AggregatedEntry>();
 		long start = currentTimeMillis();
-		for ( Future<Collection<AggregatedLogEntry>> future : futures ) {
+		for ( Future<Collection<AggregatedEntry>> future : futures ) {
 			try {
-				Collection<AggregatedLogEntry> aggregatedEntries = future.get();
-				for ( AggregatedLogEntry entry : aggregatedEntries ) {
-					String checksum = entry.getSampleEntry().getChecksum();
+				Collection<AggregatedEntry> aggregatedEntries = future.get();
+				for ( AggregatedEntry entry : aggregatedEntries ) {
+					String checksum = entry.getChecksum();
 					if ( result.containsKey(checksum) ) {
-						((AggregatedLogEntryImpl) result.get(checksum)).merge(entry);
+						AggregatedEntryImpl impl = (AggregatedEntryImpl) result.get(checksum);
+						impl.happensAgain(entry.getCount(), entry.getLastTime());
 					} else {
 						result.put(checksum, entry);
 					}
@@ -78,9 +79,9 @@ public class ExecutorServiceAggregator implements Aggregator {
 		return result;
 	}
 
-	private List<Future<Collection<AggregatedLogEntry>>> emitTasks(Iterable<String> entries,
-	                                                               Collection<LogEntryMatcher> matchers) {
-		LinkedList<Future<Collection<AggregatedLogEntry>>> futures = new LinkedList<Future<Collection<AggregatedLogEntry>>>();
+	private List<Future<Collection<AggregatedEntry>>> emitTasks(Iterable<String> entries,
+	                                                            Collection<LogEntryMatcher> matchers) {
+		LinkedList<Future<Collection<AggregatedEntry>>> futures = new LinkedList<Future<Collection<AggregatedEntry>>>();
 		Iterator<String> iterator = entries.iterator();
 		int size = 0;
 		long start = currentTimeMillis();
@@ -100,7 +101,7 @@ public class ExecutorServiceAggregator implements Aggregator {
 		return futures;
 	}
 
-	private class Task implements Callable<Collection<AggregatedLogEntry>> {
+	private class Task implements Callable<Collection<AggregatedEntry>> {
 
 		private final Collection<LogEntryMatcher> matchers;
 		private String[] batch;
@@ -110,8 +111,8 @@ public class ExecutorServiceAggregator implements Aggregator {
 			this.matchers = matchers;
 		}
 
-		public Collection<AggregatedLogEntry> call() throws Exception {
-			Map<String, AggregatedLogEntry> result = new HashMap<String, AggregatedLogEntry>();
+		public Collection<AggregatedEntry> call() throws Exception {
+			Map<String, AggregatedEntry> result = new HashMap<String, AggregatedEntry>();
 			long start = currentTimeMillis();
 			int processedCnt = 0;
 			for ( String marshalledEntry : batch ) {
@@ -121,11 +122,10 @@ public class ExecutorServiceAggregator implements Aggregator {
 				LogEntry entry = marshaller.unmarshall(marshalledEntry);
 				if ( isMatching(entry, matchers) ) {
 					if ( result.containsKey(entry.getChecksum()) ) {
-						AggregatedLogEntryImpl aggregated = (AggregatedLogEntryImpl) result.get(
-							entry.getChecksum());
-						aggregated.happensAgain(entry);
+						AggregatedEntryImpl aggregated = (AggregatedEntryImpl) result.get(entry.getChecksum());
+						aggregated.happensAgain(1, entry.getDate());
 					} else {
-						result.put(entry.getChecksum(), new AggregatedLogEntryImpl(entry));
+						result.put(entry.getChecksum(), new AggregatedEntryImpl(entry));
 					}
 				}
 				processedCnt++;

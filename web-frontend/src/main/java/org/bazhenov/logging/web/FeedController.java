@@ -3,6 +3,8 @@ package org.bazhenov.logging.web;
 import com.farpost.timepoint.Date;
 import static com.farpost.timepoint.Date.today;
 import org.bazhenov.logging.*;
+
+import static java.util.Collections.sort;
 import static org.bazhenov.logging.storage.LogEntries.entries;
 import org.bazhenov.logging.storage.*;
 import org.springframework.stereotype.Controller;
@@ -16,6 +18,7 @@ import javax.servlet.http.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +40,7 @@ public class FeedController {
 	};
 	private LogStorage storage;
 	private QueryTranslator translator = new AnnotationDrivenQueryTranslator(new TranslationRulesImpl());
+	private final ByLastOccurenceDateComparator byLastOccurenceDate = new ByLastOccurenceDateComparator();
 
 	public void setStorage(LogStorage storage) {
 		this.storage = storage;
@@ -85,7 +89,7 @@ public class FeedController {
 		}
 		Severity severity = getSeverity(request);
 
-		List<AggregatedLogEntry> entries;
+		List<AggregatedEntry> entries;
 		if ( query != null && query.trim().length() > 0 ) {
 			List<LogEntryMatcher> matchers = translator.translate(query.trim());
 			if ( !contains(matchers, DateMatcher.class) ) {
@@ -98,19 +102,17 @@ public class FeedController {
 				withCriteria(matchers).
 				find(storage);
 		}else{
-			entries = entries().
-				date(date).
-				severity(severity).
-				find(storage);
+			entries = storage.getAggregatedEntries(date, severity);
 		}
 		map.addAttribute("query", query);
 
 		map.addAttribute("severity", severity);
 
 		int times = 0;
-		for ( AggregatedLogEntry entry : entries ) {
+		for ( AggregatedEntry entry : entries ) {
 			times += entry.getCount();
 		}
+		sort(entries, byLastOccurenceDate);
 		map.addAttribute("entries", entries);
 		map.addAttribute("times", times);
 
@@ -133,10 +135,7 @@ public class FeedController {
 		Severity severity = s == null
 			? Severity.error
 			: Severity.forName(s);
-		List<AggregatedLogEntry> entries = entries().
-			date(today()).
-			severity(severity).
-			find(storage);
+		List<AggregatedEntry> entries = storage.getAggregatedEntries(today(), severity);
 
 		map.addAttribute("entries", entries);
 		map.addAttribute("date", new java.util.Date());

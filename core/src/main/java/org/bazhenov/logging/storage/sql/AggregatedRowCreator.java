@@ -24,7 +24,7 @@ class AggregatedRowCreator implements ParameterizedRowMapper<AggregatedEntry> {
 		try {
 			LogEntry entry = marshaller.unmarshall(rs.getString("content"));
 			return new AggregatedEntryImpl(entry.getMessage(), rs.getString("checksum"),
-				Severity.forCode(rs.getInt("severity")), rs.getInt("count"),
+				rs.getString("application_id"), Severity.forCode(rs.getInt("severity")), rs.getInt("count"),
 				new DateTime(rs.getTimestamp("last_time").getTime()), entry.getCause());
 		} catch ( MarshallerException e ) {
 			throw new RuntimeException(e);

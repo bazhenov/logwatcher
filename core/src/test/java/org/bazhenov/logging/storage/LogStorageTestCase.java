@@ -14,6 +14,7 @@ import static org.bazhenov.logging.storage.LogEntries.entries;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.nullValue;
+import static org.testng.Assert.fail;
 
 abstract public class LogStorageTestCase {
 
@@ -28,50 +29,28 @@ abstract public class LogStorageTestCase {
 	public void storageCanSaveEntry() throws Exception {
 		Date today = today();
 
+		DateTime date = today.at("11:35");
 		LogEntry entry = entry().
-			occured(today.at("11:35")).
+			occured(date).
+			checksum("a").
+			attribute("foo", "bar").
 			create();
 		storage.writeEntry(entry);
 
-		AggregatedLogEntry aggreagatedEntry = entries().
+		AggregatedEntry aggreagatedEntry = entries().
 			date(today).
 			findFirst(storage);
 
-		assertThat(aggreagatedEntry.getSampleEntry(), equalTo(entry));
+		assertThat(aggreagatedEntry.getChecksum(), equalTo("a"));
+		assertThat(aggreagatedEntry.getLastTime(), equalTo(date));
 	}
 
 	@Test
 	public void storageShouldReturnNullIfEntryNotFound()
 		throws LogStorageException, InvalidCriteriaException {
 
-		AggregatedLogEntry entry = entries().applicationId("foo").findFirst(storage);
+		AggregatedEntry entry = entries().applicationId("foo").findFirst(storage);
 		assertThat(entry, nullValue());
-	}
-
-	@Test
-	public void storageMustOrderEntriesByLastOccurenceDate()
-		throws LogStorageException, InvalidCriteriaException {
-		Date today = today();
-
-		LogEntry thirdEntry = entry().
-			occured(today.at("12:53")).
-			checksum("a").
-			saveIn(storage);
-
-		LogEntry firstEntry = entry().
-			occured(today.at("15:56")).
-			checksum("b").
-			saveIn(storage);
-
-		LogEntry secondEntry = entry().
-			occured(today.at("15:55")).
-			checksum("c").
-			saveIn(storage);
-
-		List<AggregatedLogEntry> list = entries().date(today).find(storage);
-		assertThat(list.get(0).getSampleEntry(), equalTo(firstEntry));
-		assertThat(list.get(1).getSampleEntry(), equalTo(secondEntry));
-		assertThat(list.get(2).getSampleEntry(), equalTo(thirdEntry));
 	}
 
 	@Test
@@ -128,11 +107,11 @@ abstract public class LogStorageTestCase {
 	@Test
 	public void storageCanFilterEntriesByDate() throws LogStorageException, InvalidCriteriaException {
 		entry().
-			occured(today().at("12:22")).
+			occured(today().at("12:22")).checksum("a").
 			saveIn(storage);
 
 		entry().
-			occured(yesterday().at("10:00")).
+			occured(yesterday().at("10:00")).checksum("b").
 			saveIn(storage);
 
 		int count = entries().date(today(), today()).
@@ -150,39 +129,6 @@ abstract public class LogStorageTestCase {
 		count = entries().date(today(), tomorrow()).
 			count(storage);
 		assertThat(count, equalTo(0));
-	}
-
-	@Test
-	public void storageCanStoreAttributes() throws LogStorageException, InvalidCriteriaException {
-		entry().
-			attribute("user", "john").
-			attribute("machine", "host1").
-			saveIn(storage);
-
-		entry().
-			attribute("user", "john").
-			saveIn(storage);
-		entry().
-			attribute("user", "christin").
-			saveIn(storage);
-		entry().
-			attribute("machine", "host2").
-			attribute("user", "david").
-			saveIn(storage);
-
-		AggregatedLogEntry entry = entries().
-			date(today()).
-			findFirst(storage);
-		assertThat(entry.getAttributes().size(), equalTo(2));
-
-		AggregatedAttribute attr = entry.getAttributes().get("user");
-		assertThat(attr.getCountFor("john"), equalTo(2));
-		assertThat(attr.getCountFor("christin"), equalTo(1));
-		assertThat(attr.getCountFor("david"), equalTo(1));
-
-		attr = entry.getAttributes().get("machine");
-		assertThat(attr.getCountFor("host1"), equalTo(1));
-		assertThat(attr.getCountFor("host2"), equalTo(1));
 	}
 
 	@Test(enabled = false)
@@ -214,7 +160,7 @@ abstract public class LogStorageTestCase {
 			checksum("FE").
 			saveIn(storage);
 
-		List<AggregatedLogEntry> list = entries().
+		List<AggregatedEntry> list = entries().
 			date(today()).
 			find(storage);
 		assertThat(list.size(), equalTo(2));
@@ -307,6 +253,12 @@ abstract public class LogStorageTestCase {
 		storage.removeEntries("FF");
 
 		assertThat(entries().count(storage), equalTo(1));
+		for ( AggregatedEntry entry : storage.getAggregatedEntries(today, Severity.info) ) {
+			if ( entry.getChecksum().equals("FF") ) {
+				fail("Collection must not contains entries with checksum 'FF'");
+			}
+		}
+
 	}
 
 	protected abstract LogStorage createStorage() throws Exception;

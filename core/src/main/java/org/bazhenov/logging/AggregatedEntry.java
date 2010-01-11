@@ -17,6 +17,8 @@ public interface AggregatedEntry {
 
 	String getMessage();
 
+	String getApplicationId();
+
 	Cause getSampleCause();
 
 	String getChecksum();

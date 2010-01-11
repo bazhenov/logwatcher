@@ -1,6 +1,7 @@
 package org.bazhenov.logging.aggregator;
 
 import com.farpost.timepoint.DateTime;
+import org.bazhenov.logging.AggregatedEntry;
 import org.bazhenov.logging.AggregatedLogEntry;
 import org.bazhenov.logging.LogEntry;
 import org.bazhenov.logging.marshalling.JDomMarshaller;
@@ -46,11 +47,11 @@ abstract public class AggregatorTestCase {
 		List<LogEntryMatcher> matchers = new ArrayList<LogEntryMatcher>();
 
 		matchers.add(new AttributeValueMatcher("machine", "aux1.srv.loc"));
-		Collection<AggregatedLogEntry> aggregated = aggregator.aggregate(entries, matchers);
+		Collection<AggregatedEntry> aggregated = aggregator.aggregate(entries, matchers);
 		assertThat(aggregated.size(), equalTo(1));
 
-		AggregatedLogEntry[] arr = aggregated.toArray(new AggregatedLogEntry[aggregated.size()]);
-		assertThat(arr[0].getAttributes().get("machine").getCountFor("aux1.srv.loc"), equalTo(1111));
+		AggregatedEntry[] arr = aggregated.toArray(new AggregatedEntry[aggregated.size()]);
+		assertThat(arr[0].getLastTime(), equalTo(date));
 	}
 
 	abstract protected Aggregator createAggregator(Marshaller marshaller);

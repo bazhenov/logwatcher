@@ -1,13 +1,12 @@
 package org.bazhenov.logging.storage;
 
 import com.farpost.timepoint.Date;
+import org.bazhenov.logging.*;
 
-import java.util.*;
-
-import org.bazhenov.logging.AggregatedLogEntry;
-import org.bazhenov.logging.LogEntry;
-import org.bazhenov.logging.Severity;
-import org.bazhenov.logging.Visitor;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 public class LogEntriesFinder {
 
@@ -65,12 +64,11 @@ public class LogEntriesFinder {
 	 * Данный метод не дает никаких гарантий в отношении порядка извлекаемых записей.
 	 *
 	 * @return первая запись подпадающиая под условия
-	 * @throws LogStorageException в случае возникновения внутренней ошибки
-	 * @param storage
+	 * @throws LogStorageException в случае возникновения внутренней ошибки  @param storage
 	 */
-	public AggregatedLogEntry findFirst(LogStorage storage) throws LogStorageException,
+	public AggregatedEntry findFirst(LogStorage storage) throws LogStorageException,
 		InvalidCriteriaException {
-		List<AggregatedLogEntry> entries = find(storage);
+		List<AggregatedEntry> entries = find(storage);
 		return entries.size() > 0
 			? entries.get(0)
 			: null;
@@ -95,7 +93,7 @@ public class LogEntriesFinder {
 		return storage.countEntries(criterias);
 	}
 
-	public List<AggregatedLogEntry> find(LogStorage storage) throws LogStorageException, InvalidCriteriaException {
+	public List<AggregatedEntry> find(LogStorage storage) throws LogStorageException, InvalidCriteriaException {
 		return storage.findEntries(criterias);
 	}
 

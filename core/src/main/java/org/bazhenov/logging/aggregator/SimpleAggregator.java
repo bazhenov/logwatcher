@@ -21,22 +21,21 @@ public class SimpleAggregator implements Aggregator {
 		this.marshaller = marshaller;
 	}
 
-	public Collection<AggregatedLogEntry> aggregate(Iterable<String> entries,
-	                                                Collection<LogEntryMatcher> matchers) throws
-		MarshallerException {
+	public Collection<AggregatedEntry> aggregate(Iterable<String> entries,
+	                                             Collection<LogEntryMatcher> matchers)
+		throws MarshallerException {
 
-		Map<String, AggregatedLogEntry> result = new HashMap<String, AggregatedLogEntry>();
+		Map<String, AggregatedEntry> result = new HashMap<String, AggregatedEntry>();
 		long start = System.currentTimeMillis();
 		int size = 0;
 		for ( String marshalledEntry : entries ) {
 			LogEntry entry = marshaller.unmarshall(marshalledEntry);
 			if ( isMatching(entry, matchers) ) {
 				if ( result.containsKey(entry.getChecksum()) ) {
-					AggregatedLogEntryImpl aggregated = (AggregatedLogEntryImpl) result.get(
-						entry.getChecksum());
-					aggregated.happensAgain(entry);
+					AggregatedEntryImpl impl = (AggregatedEntryImpl) result.get(entry.getChecksum());
+					impl.happensAgain(1, entry.getDate());
 				} else {
-					result.put(entry.getChecksum(), new AggregatedLogEntryImpl(entry));
+					result.put(entry.getChecksum(), new AggregatedEntryImpl(entry));
 				}
 			}
 			size++;
