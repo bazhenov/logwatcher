@@ -16,9 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.farpost.timepoint.Date.today;
 import static java.util.Collections.sort;
@@ -42,6 +40,13 @@ public class FeedController {
 	private LogStorage storage;
 	private QueryTranslator translator = new AnnotationDrivenQueryTranslator(new TranslationRulesImpl());
 	private final ByLastOccurenceDateComparator byLastOccurenceDate = new ByLastOccurenceDateComparator();
+
+	private final HashMap<String, Comparator<AggregatedEntry>> comparators = new HashMap<String, Comparator<AggregatedEntry>>() {{
+		put(null, new ByLastOccurenceDateComparator());
+		put("last-occurence", new ByLastOccurenceDateComparator());
+		put("occurence-count", new ByOccurenceCountComparator());
+	}};
+
 
 	public void setStorage(LogStorage storage) {
 		this.storage = storage;
@@ -108,14 +113,18 @@ public class FeedController {
 		map.addAttribute("query", query);
 
 		map.addAttribute("severity", severity);
-		String sortOrder = getSortOrder(request);
-		map.addAttribute("sortOrder", sortOrder);
 
 		int times = 0;
 		for ( AggregatedEntry entry : entries ) {
 			times += entry.getCount();
 		}
-		sort(entries, byLastOccurenceDate);
+		String sortOrder = getSortOrder(request);
+		Comparator<AggregatedEntry> comparator = comparators.containsKey(sortOrder)
+			? comparators.get(sortOrder)
+			: comparators.get(null);
+		sort(entries, comparator);
+		map.addAttribute("sortOrder", sortOrder);
+
 		map.addAttribute("entries", entries);
 		map.addAttribute("times", times);
 
