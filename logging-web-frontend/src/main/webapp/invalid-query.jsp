@@ -44,7 +44,7 @@
 
 <div id="mainPanel">
 
-	<jsp:include page="/widgets/searchBox.jsp"/>
+	<jsp:include page="/widgets/search-box.jsp"/>
 
 	<h2>Invalid query</h2>
 

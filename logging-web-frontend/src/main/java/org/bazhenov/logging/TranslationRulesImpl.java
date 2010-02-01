@@ -33,7 +33,7 @@ public class TranslationRulesImpl {
 		return new CauseTypeMatcher(expectedCauseType);
 	}
 
-	@Criteria("occured")
+	@Criteria("occurred")
 	public LogEntryMatcher date(String dateString) throws ParseException {
 		if ( dateString.startsWith("last") ) {
 			// Парсим строчку вида occured: last X (days|weeks|month)

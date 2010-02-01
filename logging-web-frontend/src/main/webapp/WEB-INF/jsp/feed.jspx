@@ -83,8 +83,8 @@
 			</c:if>
 		</h2>
 
-		<jsp:include page="/widgets/searchBox.jsp" />
-		<jsp:include page="/widgets/sortBox.jsp" />
+		<jsp:include page="/widgets/search-box.jsp" />
+		<jsp:include page="/widgets/sort-box.jsp" />
 
 		<c:choose>
 			<c:when test="${f:length(entries) > 0}">

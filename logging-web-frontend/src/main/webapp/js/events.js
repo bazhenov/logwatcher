@@ -27,8 +27,6 @@ $(document).ready(function() {
 
 	}
 
-	$('#searchInput').autocomplete($('#suggest'));
-
 	var suggestPane = $('#suggest');
 	var searchInput = $('#searchInput');
 	searchInput.focus();
@@ -58,7 +56,7 @@ $(document).ready(function() {
 		if ( input.val().length > 0 && input.val().substr(-1, 1) != ' ' ) {
 			value = " " + value;
 		}
-		input.val(input.val() + value);
+		input.val(input.val() + value + ": ");
 		input.focus();
 	});
 
