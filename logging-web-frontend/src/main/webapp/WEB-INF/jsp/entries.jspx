@@ -4,7 +4,7 @@
           xmlns:l="http://bazhenov.org/logging"
           xmlns:f="http://java.sun.com/jsp/jstl/functions"
           xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
-					xmlns:lt="urn:jsptagdir:/WEB-INF/tags">
+          xmlns:lt="urn:jsptagdir:/WEB-INF/tags">
 
 	<jsp:directive.page contentType="text/html"/>
 	<jsp:directive.page pageEncoding="UTF-8"/>
@@ -15,10 +15,12 @@
 		<title>LogWatcher</title>
 		<c:url value='/css/main.css' var="cssUrl"/>
 		<link rel="stylesheet" href="${cssUrl}"/>
+		<c:url value='/css/detailed-entry.css' var="cssUrl"/>
+		<link rel="stylesheet" href="${cssUrl}"/>
 		<c:url value='/css/ui.all.css' var="cssUrl"/>
 		<link rel="stylesheet" href="${cssUrl}"/>
 
-		<fmt:formatDate value="${date}" pattern="yyyy-MM-dd" var="dateAsString" />
+		<fmt:formatDate value="${date}" pattern="yyyy-MM-dd" var="dateAsString"/>
 
 		<script type="text/javascript">
 			var severityLevel = '${severity}';
@@ -34,13 +36,74 @@
 		<c:url value="/js/events.js" var="jsUrl"/>
 		<script type="text/javascript" src="${jsUrl}">/**/</script>
 
-		<c:url value="/feed/rss" var="rssUrl"/>
-		<link rel="alternate" type="application/rss+xml" title="LogWatcher RSS"
-		      href="${rssUrl}?severity=${severity}"/>
 	</head>
 
 	<body>
-		${checksum}
+	<div id="header">
+		<h1><span id="firstDot">&amp;bull;</span><span id="secondDot">&amp;bull;</span><span
+			id="thirdDot">&amp;bull;</span><span>&amp;nbsp;</span></h1>
+
+		<div id="menuBar">
+
+			<c:forEach var="i" items="${dates}">
+				<c:url var="url" value="/feed">
+					<c:param name="date"><fmt:formatDate value="${i.value}" pattern="yyyy-MM-dd"/></c:param>
+				</c:url>
+				<c:choose>
+					<c:when test="${i.value == date}">
+						<a href="${url}" class="selected">${i.key}</a>
+					</c:when>
+					<c:otherwise>
+						<a href="${url}">${i.key}</a>
+					</c:otherwise>
+				</c:choose>
+			</c:forEach>
+		</div>
+	</div>
+	<div id="mainPanel">
+		<h2><a href="/feed">&amp;larr;</a> Detailed information</h2>
+		<p>Last 500 entries with checksum <code>${checksum}</code> for 21 January, 2010.</p>
+
+		<div id="detailed">
+			<div class="entry">
+				<div class="entryHeader">
+					<span class="timestamp">21 Jun, 18:35:12</span>
+					<span class="message">bulletinConcurrentModificationException: Bulletin #4610419 was changed during session. Bulletin version: 88, actual version: 89</span>
+				</div>
+				<div class="entryContainer">
+					<div class="attributes">
+						<span><label>url:</label> <code>/adding</code></span>
+						<span><label>machine:</label> <code>aux2.srv.loc</code></span>
+					</div>
+					<pre class="stacktrace">bulletinConcurrentModificationException: Bulletin #4610419 was changed during session. Bulletin version: 88, actual version: 89
+at /var/www/baza.farpost.ru/rev/20100127-1747/slr/bulletin/src/provider/bulletinSqlProvider.class.php:206
+  7 : bulletinProviderDecorator.class.php:19 bulletinSqlProvider->saveBulletin(bulletinBean)
+  6 : bulletinManagerImpl.class.php:176 bulletinProviderDecorator->saveBulletin(bulletinBean)
+  5 : bulletinManagerDecorator.class.php:39 bulletinManagerImpl->saveBulletin(bulletinRegular)
+  4 : bulletinRuntimeCacheManager.class.php:56 bulletinManagerDecorator->saveBulletin(bulletinRegular)
+  3 : bulletin.class.php:515 bulletinRuntimeCacheManager->saveBulletin(bulletinRegular)
+  2 : bulletinExpireService.class.php:31 bulletin->save()
+  1 : service_runner.php:44 bulletinExpireService->run()</pre></div>
+			</div>
+
+			<div class="entry">
+				<div class="entryHeader">
+					<span class="timestamp">21 Jun, 18:35:12</span>
+					<span class="message">bulletinConcurrentModificationException: Bulletin #4610419 was changed during session. Bulletin version: 88, actual version: 89</span>
+				</div>
+				<div class="entryContainer">
+					<pre class="stacktrace">bulletinConcurrentModificationException: Bulletin #4610419 was changed during session. Bulletin version: 88, actual version: 89
+at /var/www/baza.farpost.ru/rev/20100127-1747/slr/bulletin/src/provider/bulletinSqlProvider.class.php:206
+  7 : bulletinProviderDecorator.class.php:19 bulletinSqlProvider->saveBulletin(bulletinBean)
+  6 : bulletinManagerImpl.class.php:176 bulletinProviderDecorator->saveBulletin(bulletinBean)
+  5 : bulletinManagerDecorator.class.php:39 bulletinManagerImpl->saveBulletin(bulletinRegular)
+  4 : bulletinRuntimeCacheManager.class.php:56 bulletinManagerDecorator->saveBulletin(bulletinRegular)
+  3 : bulletin.class.php:515 bulletinRuntimeCacheManager->saveBulletin(bulletinRegular)
+  2 : bulletinExpireService.class.php:31 bulletin->save()
+  1 : service_runner.php:44 bulletinExpireService->run()</pre></div>
+			</div>
+		</div>
+	</div>
 	</body>
 	</html>
 </jsp:root>

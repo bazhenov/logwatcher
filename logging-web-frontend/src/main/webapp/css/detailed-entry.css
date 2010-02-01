@@ -1,0 +1,15 @@
+.entry              { font-size: 16px; }
+.entry .timestamp   { color: gray; margin-right: 10px; font-size: 90%; white-space: nowrap }
+.entry .message     { overflow: hidden; white-space: nowrap }
+
+.entryHeader        { padding: 3px 8px; }
+
+.entryContainer     { padding-left: 8px; }
+.stacktrace         { padding-top: 10px; padding-bottom: 10px; }
+
+.attributes         { padding-top: 10px; }
+.attributes label   { margin-right: 5px; }
+
+.attributes code    { background-color: #eec; border: 1px dotted #997; padding: 0 2px;
+										  font-family: monospace; margin-right: 5px; }
+

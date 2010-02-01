@@ -42,8 +42,22 @@
 			<span class='applicationId'><c:out value="${entry.applicationId}"/></span>
 			&mdash; <%out.write(lastOccurenceInfo);%>
 		</div>
+	</div>
+	<div class="entryContainer">
+		<div class='entryContent'>
+			<ol class='attributes' loaded="false"></ol>
+			<c:choose>
+				<c:when test="${not empty entry.sampleCause}">
+						<pre class="stacktrace noBubble"><c:out
+							value="${lf:formatCause(entry.sampleCause)}"/></pre>
+				</c:when>
+				<c:otherwise>
+					<pre class="stacktrace noBubble"><c:out value="${entry.message}"/></pre>
+				</c:otherwise>
+			</c:choose>
 
-		<div class='operations noBubble'>
+		</div>
+		<div class="entryFooter">
 			<c:url value="http://jira.dev.loc/jira/secure/CreateIssueDetails.jspa" var="jiraLink">
 				<c:param name="pid">10000</c:param>
 				<c:param name="issuetype">1</c:param>
@@ -51,25 +65,11 @@
 				<c:param name="description" value="${lf:formatCause(entry.sampleCause)}"/>
 				<c:param name="priority">3</c:param>
 			</c:url>
-			<a href="<c:out value="${jiraLink}"/>" target='_blank'>create task</a> or
-			<a class='removeEntry asynchronous' href='#'>remove</a>
-			<a
-				href='/feed?date=${entry.lastTime.date}&severity=${entry.severity}#${entry.checksum}'>
-				<img src='/images/link-icon.png' alt="permanent link"/></a>
+			<a href="<c:out value="${jiraLink}"/>" target='_blank'>Create task</a>
+			<a href='/feed?date=${entry.lastTime.date}&severity=${entry.severity}#${entry.checksum}'>Permalink</a>
+			<a href="/entry/${entry.checksum}">Details</a>
+			<a class='removeEntry asynchronous' href='#'>Remove</a>
 		</div>
 	</div>
-	<div class='entryContent'>
-		<ol class='attributes' loaded="false"></ol>
-		<c:choose>
-			<c:when test="${not empty entry.sampleCause}">
-					<pre class="stacktrace noBubble"><c:out
-						value="${lf:formatCause(entry.sampleCause)}"/></pre>
-			</c:when>
-			<c:otherwise>
-				<pre class="stacktrace noBubble"><c:out value="${entry.message}"/></pre>
-			</c:otherwise>
-		</c:choose>
-	</div>
-
 
 </div>
