@@ -26,5 +26,6 @@ CREATE TABLE IF NOT EXISTS entry (
 CREATE INDEX date ON entry(date);
 CREATE INDEX time ON entry(time);
 CREATE INDEX checksum ON entry(checksum);
+CREATE INDEX date_checksum ON entry(date, checksum);
 CREATE INDEX severity ON entry(severity);
 CREATE INDEX application_id ON entry(application_id);
