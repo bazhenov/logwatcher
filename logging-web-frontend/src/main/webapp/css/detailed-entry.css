@@ -1,15 +1,30 @@
 .entry              { font-size: 16px; }
-.entry .timestamp   { color: gray; margin-right: 10px; font-size: 90%; white-space: nowrap }
-.entry .message     { overflow: hidden; white-space: nowrap }
+.entryHeader .message     { overflow: hidden; white-space: nowrap;
+														position: absolute; left: 110px; top: 2px; }
 
-.entryHeader        { padding: 3px 8px; }
+.selectedEntry .entryHeader .message { top: 12px; }
+
+.entryHeader        { padding: 3px 8px; position: relative; height: 40px; }
+
+.entryHeader .timestamp { position: absolute; font-size: 26px; white-space: nowrap; left: 10px; }
+.timestamp .hours       { color: #666; }
+.timestamp .seconds     { color: #bbb; font-size: 70% }
+
+.entryHeader .message     {  }
+.entryHeader .attributes  { position: absolute; left: 110px; top: 25px;
+														font-size: 12px; }
+
+.entryHeader .attributes code { background-color: #ffe; border: 1px dotted #ddd; padding: 0 2px }
+
+.selectedEntry .entryHeader .attributes { visibility: hidden; }
 
 .entryContainer     { padding-left: 8px; }
 .stacktrace         { padding-top: 10px; padding-bottom: 10px; }
 
-.attributes         { padding-top: 10px; }
-.attributes label   { margin-right: 5px; }
+.entryContainer .attributes         { padding-top: 10px; }
+.entryContainer .attributes label   { margin-right: 5px; }
 
-.attributes code    { background-color: #eec; border: 1px dotted #997; padding: 0 2px;
-										  font-family: monospace; margin-right: 5px; }
+.entryContainer .attributes code    { background-color: #eec; border: 1px dotted #997;
+																			padding: 0 2px;
+										                  font-family: monospace; margin-right: 5px; }
 

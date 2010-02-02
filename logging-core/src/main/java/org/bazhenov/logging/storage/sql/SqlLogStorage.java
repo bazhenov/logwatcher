@@ -136,7 +136,9 @@ public class SqlLogStorage implements LogStorage {
 
 			CriteriaStatement st = fillWhereClause(criterias);
 
-			sql.append(" WHERE ").append(st.getWhereClause());
+			sql.append(" WHERE ").
+				append(st.getWhereClause()).
+				append(" ORDER BY l.time DESC LIMIT 100");
 			connection = datasource.getConnection();
 			statement = connection.prepareStatement(sql.toString(), TYPE_FORWARD_ONLY, CONCUR_READ_ONLY);
 			statement.setFetchSize(Integer.MIN_VALUE);

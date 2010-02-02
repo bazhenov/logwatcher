@@ -15,6 +15,8 @@
 	<title>Ooops...</title>
 	<c:url value='/css/main.css' var="cssUrl"/>
 	<link rel="stylesheet" href="${cssUrl}"/>
+	<c:url value='/css/aggregated-entry.css' var="cssUrl"/>
+	<link rel="stylesheet" href="${cssUrl}"/>
 	<c:url value='/css/ui.all.css' var="cssUrl"/>
 	<link rel="stylesheet" href="${cssUrl}"/>
 </head>
@@ -42,7 +44,7 @@
 
 	<div class='entry error selectedEntry'>
 		<div class='entryHeader'>
-			<div class="count">&infin;</div>
+			<div class="count">&nbsp;</div>
 
 			<div class='message'><c:out value="${cause}"/></div>
 			<div class='messageOverlay'>&nbsp;</div>
@@ -50,12 +52,14 @@
 				<span class='applicationId'>self</span> &mdash; right now
 			</div>
 		</div>
-		<div class='entryContent noBubble'>
-				<pre class="stacktrace noBubble"><%
+		<div class='entryContainer'>
+			<div class="entryContent">
+				<pre class="stacktrace"><%
 					StringWriter writer = new StringWriter();
 					cause.printStackTrace(new PrintWriter(writer));
 					out.write(writer.toString());
 				%></pre>
+			</div>
 		</div>
 	</div>
 

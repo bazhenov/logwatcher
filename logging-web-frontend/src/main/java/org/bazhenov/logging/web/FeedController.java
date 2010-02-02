@@ -39,15 +39,14 @@ public class FeedController {
 		}
 	};
 	private LogStorage storage;
-	private QueryTranslator translator = new AnnotationDrivenQueryTranslator(new TranslationRulesImpl());
+	private QueryTranslator translator = new AnnotationDrivenQueryTranslator(
+		new TranslationRulesImpl());
 	private final ByLastOccurenceDateComparator byLastOccurenceDate = new ByLastOccurenceDateComparator();
-
 	private final HashMap<String, Comparator<AggregatedEntry>> comparators = new HashMap<String, Comparator<AggregatedEntry>>() {{
 		put(null, new ByLastOccurenceDateComparator());
 		put("last-occurence", new ByLastOccurenceDateComparator());
 		put("occurence-count", new ByOccurenceCountComparator());
 	}};
-
 
 	public void setStorage(LogStorage storage) {
 		this.storage = storage;
@@ -65,8 +64,8 @@ public class FeedController {
 	}
 
 	@RequestMapping("/feed")
-	public String handleFeed(@RequestParam(value = "query", required = false) String query, ModelMap map,
-	                         HttpServletRequest request, HttpServletResponse response)
+	public String handleFeed(@RequestParam(value = "query", required = false) String query,
+	                         ModelMap map, HttpServletRequest request, HttpServletResponse response)
 		throws ParseException, LogStorageException, InvalidCriteriaException, InvalidQueryException {
 
 		response.setContentType("text/html");
@@ -108,7 +107,7 @@ public class FeedController {
 			entries = entries().
 				withCriteria(matchers).
 				findAggregated(storage);
-		}else{
+		} else {
 			entries = storage.getAggregatedEntries(date, severity);
 		}
 		map.addAttribute("query", query);
@@ -133,8 +132,15 @@ public class FeedController {
 	}
 
 	@RequestMapping("/entries/{checksum}")
-	public String handleEntries(@PathVariable String checksum, ModelMap map) {
+	public String handleEntries(@PathVariable String checksum, ModelMap map,
+	                           @RequestParam("date") String date)
+		throws LogStorageException, InvalidCriteriaException, ParseException {
+		List<LogEntry> entries = entries().
+			checksum(checksum).
+			find(storage);
 		map.addAttribute("checksum", checksum);
+		map.addAttribute("entries", entries);
+		map.addAttribute("date", format.get().parse(date));
 		return "entries";
 	}
 
@@ -148,8 +154,9 @@ public class FeedController {
 	}
 
 	@RequestMapping("/feed/rss")
-	public String handleRss(ModelMap map, @RequestParam(value = "severity", required = false) String s) throws
-		LogStorageException, InvalidCriteriaException {
+	public String handleRss(ModelMap map,
+	                        @RequestParam(value = "severity", required = false) String s)
+		throws LogStorageException, InvalidCriteriaException {
 
 		Severity severity = s == null
 			? Severity.error

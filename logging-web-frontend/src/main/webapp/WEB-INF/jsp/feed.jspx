@@ -91,7 +91,7 @@
 		<c:choose>
 			<c:when test="${f:length(entries) > 0}">
 				<c:forEach var="entry" items="${entries}">
-					<lt:entry entry="${entry}" />
+					<lt:aggregated-entry entry="${entry}" />
 				</c:forEach>
 
 				<div id="footer">
