@@ -11,7 +11,7 @@
 	<div class="entryHeader">
 		<div class="timestamp"><span class="hours"><fmt:formatDate
 			value="${lf:date(entry.date)}"
-			pattern="HH:MM"/></span><span class="seconds"><fmt:formatDate
+			pattern="HH:mm"/></span><span class="seconds"><fmt:formatDate
 			value="${lf:date(entry.date)}"
 			pattern=".ss"/></span></div>
 		<span class="message"><c:out value="${entry.message}"/></span>
