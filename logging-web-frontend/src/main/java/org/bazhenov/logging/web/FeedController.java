@@ -107,7 +107,7 @@ public class FeedController {
 			}
 			entries = entries().
 				withCriteria(matchers).
-				find(storage);
+				findAggregated(storage);
 		}else{
 			entries = storage.getAggregatedEntries(date, severity);
 		}

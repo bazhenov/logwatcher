@@ -4,10 +4,8 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.bazhenov.logging.aggregator.Aggregator;
 import org.bazhenov.logging.aggregator.SimpleAggregator;
 import org.bazhenov.logging.marshalling.JDomMarshaller;
-import org.bazhenov.logging.storage.sql.AggregatorSqlLogStorage;
-import org.bazhenov.logging.storage.sql.AnnotationDrivenMatcherMapperImpl;
-import org.bazhenov.logging.storage.sql.SqlMatcherMapper;
-import org.bazhenov.logging.storage.sql.SqlMatcherMapperRules;
+import org.bazhenov.logging.storage.sql.*;
+import org.bazhenov.logging.storage.sql.SqlLogStorage;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -15,7 +13,7 @@ import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class AggregatorSqlLogStorageMySqlTest extends LogStorageTestCase {
+public class SqlLogStorageMySqlTest extends LogStorageTestCase {
 
 	protected LogStorage createStorage() throws IOException, SQLException {
 		String pathToConfig = System.getProperty("mysql.config", "./mysql.properties");
@@ -36,6 +34,6 @@ public class AggregatorSqlLogStorageMySqlTest extends LogStorageTestCase {
 		SqlMatcherMapper mapper = new AnnotationDrivenMatcherMapperImpl(new SqlMatcherMapperRules());
 		JDomMarshaller marshaller = new JDomMarshaller();
 		Aggregator aggregator = new SimpleAggregator(marshaller);
-		return new AggregatorSqlLogStorage(aggregator, ds, marshaller, mapper);
+		return new SqlLogStorage(aggregator, ds, marshaller, mapper);
 	}
 }

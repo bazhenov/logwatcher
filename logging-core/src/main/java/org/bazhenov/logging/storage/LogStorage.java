@@ -14,9 +14,9 @@ public interface LogStorage {
 	/**
 	 * Сохраняет обьект {@link LogEntry} в постоянном хранилище.
 	 * <p/>
-	 * Учтите что сохранение не влияет на обьект LogEntry. Ему не выдается никакого
-	 * идентификационного номера. Если вы передадите один и тот же LogEntry в этот метод два раза,
-	 * то произойдет две записи в постоянное хранилище.
+	 * Учтите что сохранение не влияет на обьект LogEntry. Ему не выдается никакого идентификационного
+	 * номера. Если вы передадите один и тот же LogEntry в этот метод два раза, то произойдет две
+	 * записи в постоянное хранилище.
 	 *
 	 * @param entry запись лога
 	 * @throws LogStorageException в случае внутренней ошибки
@@ -44,29 +44,48 @@ public interface LogStorage {
 	void removeEntries(String checksum) throws LogStorageException;
 
 	/**
-	 * Создает синоним для контрольной суммы. Все записи с первой переданной контрольной суммой
-	 * будут превращены в записи со второй контрольной суммой. Так же имплементации обязаны
-	 * предоставлять гарантии для сохранения этого маппинга в будущем. То есть если позже
-	 * приходят записи с первой контрольной суммой, им автоматически будет переписыватся контрольная
-	 * сумма на alias.
+	 * Создает синоним для контрольной суммы. Все записи с первой переданной контрольной суммой будут
+	 * превращены в записи со второй контрольной суммой. Так же имплементации обязаны предоставлять
+	 * гарантии для сохранения этого маппинга в будущем. То есть если позже приходят записи с первой
+	 * контрольной суммой, им автоматически будет переписыватся контрольная сумма на alias.
 	 *
 	 * @param checksum контролная сумма, которую надо смапить
 	 * @param alias    контрольная сумма - синоним
 	 */
 	void createChecksumAlias(String checksum, String alias) throws LogStorageException;
 
-	List<AggregatedEntry> findEntries(Collection<LogEntryMatcher> criterias)
+	/**
+	 * Возвращает список записей удовлетворяющих заданным критериям.
+	 *
+	 * @param criterias критерии отбора записей
+	 * @return список записей
+	 * @throws LogStorageException      в случае внутренне ошибки хранилища
+	 * @throws InvalidCriteriaException в случае если указанные неверные критерии отбора
+	 */
+	List<LogEntry> findEntries(Collection<LogEntryMatcher> criterias)
 		throws LogStorageException, InvalidCriteriaException;
 
 	/**
-	 * Данный метод проходит по записям {@link LogEntry} передавая каждую в заданный visitor.
-	 * Visitor не должен менять передаваемые ему записи. Имплементации этих методов не дают никаких
-	 * гаранитий относительно того в каком потоке будет вызыватся vistor, поэтому имплементация
-	 * visitor'а должна быть потокобезопасна.
+	 * Возвращает список записей удовлетворяющих заданным критериям сгруппированных по контрольной
+	 * сумме
+	 *
+	 * @param criterias критерии отбора записей
+	 * @return список записей
+	 * @throws LogStorageException      в случае внутренне ошибки хранилища
+	 * @throws InvalidCriteriaException в случае если указанные неверные критерии отбора
+	 */
+	List<AggregatedEntry> findAggregatedEntries(Collection<LogEntryMatcher> criterias)
+		throws LogStorageException, InvalidCriteriaException;
+
+	/**
+	 * Данный метод проходит по записям {@link LogEntry} передавая каждую в заданный visitor. Visitor
+	 * не должен менять передаваемые ему записи. Имплементации этих методов не дают никаких гаранитий
+	 * относительно того в каком потоке будет вызыватся vistor, поэтому имплементация visitor'а должна
+	 * быть потокобезопасна.
 	 *
 	 * @param criterias критерии по которым осуществляется итерация
-	 * @param visitor visitor
-	 * @throws LogStorageException в случае внутренней ошибки хранилища
+	 * @param visitor   visitor
+	 * @throws LogStorageException      в случае внутренней ошибки хранилища
 	 * @throws InvalidCriteriaException в случае если некорректно заданы критерии поиска
 	 */
 	void walk(Collection<LogEntryMatcher> criterias, Visitor<LogEntry> visitor)

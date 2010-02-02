@@ -54,6 +54,17 @@ abstract public class LogStorageTestCase {
 	}
 
 	@Test
+	public void storageCanFindRawEntriesByCriteria() throws LogStorageException,
+		InvalidCriteriaException {
+		LogEntry first = entry().checksum("fa").saveIn(storage);
+		LogEntry second = entry().checksum("fa").saveIn(storage);
+
+		List<LogEntry> entries = entries().checksum("fa").find(storage);
+
+		assertThat(entries.size(), equalTo(2));
+	}
+
+	@Test
 	public void storageCanWalkByEntries() throws LogStorageException, InvalidCriteriaException {
 		entry().checksum("foo").saveIn(storage);
 		entry().checksum("foo").saveIn(storage);
@@ -162,7 +173,7 @@ abstract public class LogStorageTestCase {
 
 		List<AggregatedEntry> list = entries().
 			date(today()).
-			find(storage);
+			findAggregated(storage);
 		assertThat(list.size(), equalTo(2));
 	}
 

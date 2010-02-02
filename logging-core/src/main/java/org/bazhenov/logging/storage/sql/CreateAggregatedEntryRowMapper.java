@@ -12,11 +12,11 @@ import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-class AggregatedRowCreator implements ParameterizedRowMapper<AggregatedEntry> {
+class CreateAggregatedEntryRowMapper implements ParameterizedRowMapper<AggregatedEntry> {
 
 	private final Marshaller marshaller;
 
-	public AggregatedRowCreator(Marshaller marshaller) {
+	public CreateAggregatedEntryRowMapper(Marshaller marshaller) {
 		this.marshaller = marshaller;
 	}
 

@@ -28,25 +28,26 @@ import static java.sql.ResultSet.TYPE_FORWARD_ONLY;
 import static java.util.Collections.sort;
 import static org.bazhenov.logging.storage.MatcherUtils.isMatching;
 
-public class AggregatorSqlLogStorage implements LogStorage {
+public class SqlLogStorage implements LogStorage {
 
 	private final Aggregator aggregator;
 	private final DataSource datasource;
 	private final Marshaller marshaller;
 	private final SqlMatcherMapper mapper;
 	private final SimpleJdbcTemplate jdbc;
-	private final Logger log = Logger.getLogger(AggregatorSqlLogStorage.class);
-	private final ParameterizedRowMapper<AggregatedEntry> creator;
+	private final Logger log = Logger.getLogger(SqlLogStorage.class);
+	private final ParameterizedRowMapper<AggregatedEntry> aggregateEntryMapper;
+	private final ParameterizedRowMapper<LogEntry> entryMapper;
 
-	public AggregatorSqlLogStorage(Aggregator aggregator, DataSource datasource,
-	                               Marshaller marshaller, SqlMatcherMapper mapper)
-		throws IOException, SQLException {
+	public SqlLogStorage(Aggregator aggregator, DataSource datasource, Marshaller marshaller,
+	                     SqlMatcherMapper mapper) throws IOException, SQLException {
 		this.aggregator = aggregator;
 		this.marshaller = marshaller;
 		this.mapper = mapper;
 		this.datasource = datasource;
 		this.jdbc = new SimpleJdbcTemplate(datasource);
-		this.creator = new AggregatedRowCreator(marshaller);
+		this.aggregateEntryMapper = new CreateAggregatedEntryRowMapper(marshaller);
+		this.entryMapper = new CreateEntryRowMapper(marshaller);
 	}
 
 	public synchronized void writeEntry(LogEntry entry) throws LogStorageException {
@@ -79,31 +80,39 @@ public class AggregatorSqlLogStorage implements LogStorage {
 		}
 	}
 
-	public List<AggregatedEntry> findEntries(Collection<LogEntryMatcher> criterias)
+	public List<LogEntry> findEntries(Collection<LogEntryMatcher> criterias)
+		throws LogStorageException, InvalidCriteriaException {
+		try {
+			CriteriaStatement st = fillWhereClause(criterias);
+			if ( st.haveLateBoundMatchers() ) {
+				throw new InvalidCriteriaException(st.getLateBoundMatchers());
+			}
+			String sql = "SELECT content FROM entry l WHERE " + st.getWhereClause();
+			return jdbc.query(sql, entryMapper, st.getArguments());
+		} catch ( MatcherMapperException e ) {
+			throw new LogStorageException(e);
+		}
+	}
+
+	public List<AggregatedEntry> findAggregatedEntries(Collection<LogEntryMatcher> criterias)
 		throws LogStorageException, InvalidCriteriaException {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet result = null;
 		try {
 			StringBuilder sql = new StringBuilder("SELECT content FROM `entry` l");
+			CriteriaStatement st = fillWhereClause(criterias);
 
-			List arguments = new LinkedList();
-			StringBuilder whereClause = new StringBuilder();
-			Collection<LogEntryMatcher> lateBoundMatchers = fillWhereClause(criterias, whereClause,
-				arguments);
-
-			sql.append(" WHERE ").append(whereClause);
+			sql.append(" WHERE ").append(st.getWhereClause());
 			connection = datasource.getConnection();
 			statement = connection.prepareStatement(sql.toString(), TYPE_FORWARD_ONLY, CONCUR_READ_ONLY);
 			statement.setFetchSize(Integer.MIN_VALUE);
-			fill(statement, arguments);
+			fill(statement, st.getArguments());
 
 			result = statement.executeQuery();
-			Collection<AggregatedEntry> aggregated = aggregator.aggregate(
-				new ResultSetIterable(result), lateBoundMatchers);
-			ArrayList<AggregatedEntry> list = new ArrayList<AggregatedEntry>(aggregated);
-			sort(list, new ByLastOccurenceDateComparator());
-			return list;
+			Collection<AggregatedEntry> aggregated = aggregator.aggregate(new ResultSetIterable(result),
+				st.getLateBoundMatchers());
+			return new ArrayList<AggregatedEntry>(aggregated);
 		} catch ( SQLException e ) {
 			throw new LogStorageException(e);
 		} catch ( MatcherMapperException e ) {
@@ -125,18 +134,16 @@ public class AggregatorSqlLogStorage implements LogStorage {
 		try {
 			StringBuilder sql = new StringBuilder("SELECT content FROM `entry` l");
 
-			List arguments = new LinkedList();
-			StringBuilder whereClause = new StringBuilder();
-			Collection<LogEntryMatcher> lateBoundMatchers = fillWhereClause(criterias, whereClause,
-				arguments);
+			CriteriaStatement st = fillWhereClause(criterias);
 
-			sql.append(" WHERE ").append(whereClause);
+			sql.append(" WHERE ").append(st.getWhereClause());
 			connection = datasource.getConnection();
 			statement = connection.prepareStatement(sql.toString(), TYPE_FORWARD_ONLY, CONCUR_READ_ONLY);
 			statement.setFetchSize(Integer.MIN_VALUE);
-			fill(statement, arguments);
+			fill(statement, st.getArguments());
 
 			result = statement.executeQuery();
+			Collection<LogEntryMatcher> lateBoundMatchers = st.getLateBoundMatchers();
 			while ( result.next() ) {
 				LogEntry entry = marshaller.unmarshall(result.getString("content"));
 				if ( isMatching(entry, lateBoundMatchers) ) {
@@ -159,10 +166,10 @@ public class AggregatorSqlLogStorage implements LogStorage {
 	public List<AggregatedEntry> getAggregatedEntries(Date date, Severity severity) {
 		return jdbc.query(
 			"SELECT checksum, application_id, last_time, count, severity, content FROM aggregated_entry WHERE date = ? AND severity >= ?",
-			creator, date(date), severity.getCode());
+			aggregateEntryMapper, date(date), severity.getCode());
 	}
 
-	private void fill(PreparedStatement statement, List arguments) throws SQLException {
+	private void fill(PreparedStatement statement, Object[] arguments) throws SQLException {
 		int i = 1;
 		for ( Object obj : arguments ) {
 			if ( obj instanceof String ) {
@@ -190,16 +197,13 @@ public class AggregatorSqlLogStorage implements LogStorage {
 		if ( criterias == null || criterias.size() <= 0 ) {
 			return jdbc.queryForInt(sql.toString());
 		} else {
-			List arguments = new LinkedList();
-			StringBuilder whereClause = new StringBuilder();
 			try {
-				Collection<LogEntryMatcher> lateBoundMatchers = fillWhereClause(criterias, whereClause,
-					arguments);
-				if ( lateBoundMatchers.size() > 0 ) {
-					throw new InvalidCriteriaException(lateBoundMatchers);
+				CriteriaStatement st = fillWhereClause(criterias);
+				if ( st.haveLateBoundMatchers() ) {
+					throw new InvalidCriteriaException(st.getLateBoundMatchers());
 				}
-				sql.append(" WHERE ").append(whereClause);
-				return jdbc.queryForInt(sql.toString(), arguments.toArray());
+				sql.append(" WHERE ").append(st.getWhereClause());
+				return jdbc.queryForInt(sql.toString(), st.getArguments());
 			} catch ( DataAccessException e ) {
 				throw new LogStorageException(e);
 			} catch ( MatcherMapperException e ) {
@@ -218,18 +222,17 @@ public class AggregatorSqlLogStorage implements LogStorage {
 	}
 
 	/**
-	 * Принимает критерии отбора (список обьектов типа {@link org.bazhenov.logging.storage.LogEntryMatcher}), буффер куда
-	 * писать WHERE clause и список куда добавлять sql аргументы.
+	 * Принимает критерии отбора (список обьектов типа {@link org.bazhenov.logging.storage.LogEntryMatcher}),
+	 * буффер куда писать WHERE clause и список куда добавлять sql аргументы.
 	 *
 	 * @param criterias критерии отбора
-	 * @param builder   буффер для записи выражения WHERE
-	 * @param arguments список куда будут добавлены sql аргументы
 	 * @return список критериев, которые не могут быть обработаны {@link org.bazhenov.logging.storage.sql.SqlMatcherMapper}'ом
 	 */
-	private Collection<LogEntryMatcher> fillWhereClause(Collection<LogEntryMatcher> criterias,
-	                                                    StringBuilder builder, List arguments)
+	private CriteriaStatement fillWhereClause(Collection<LogEntryMatcher> criterias)
 		throws MatcherMapperException {
 
+		StringBuilder builder = new StringBuilder();
+		List<Object> arguments = new ArrayList<Object>();
 		WhereClause where = new WhereClause(builder, arguments);
 		Iterator<LogEntryMatcher> iterator = criterias.iterator();
 		while ( iterator.hasNext() ) {
@@ -238,7 +241,7 @@ public class AggregatorSqlLogStorage implements LogStorage {
 				iterator.remove();
 			}
 		}
-		return criterias;
+		return new CriteriaStatement(builder.toString(), arguments.toArray(), criterias);
 	}
 
 	static Timestamp timestamp(DateTime date) {

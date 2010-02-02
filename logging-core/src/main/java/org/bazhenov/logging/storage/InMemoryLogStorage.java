@@ -12,7 +12,7 @@ import static org.bazhenov.logging.storage.LogEntries.entries;
 import static org.bazhenov.logging.storage.MatcherUtils.isMatching;
 
 /**
- * Реализация {@link LogStorage}, которая хранит все записи в памяти. Потокобезопасная.
+ * Реализация {@link LogStorage}, которая хранит все записи в памяти. Потокобезопасна.
  */
 public class InMemoryLogStorage implements LogStorage {
 
@@ -31,26 +31,42 @@ public class InMemoryLogStorage implements LogStorage {
 	}
 
 	public void createChecksumAlias(String checksum, String alias) {
-		writeLock.lock();
+		throw new UnsupportedOperationException();
+	}
+
+	public List<LogEntry> findEntries(Collection<LogEntryMatcher> criterias)
+		throws LogStorageException, InvalidCriteriaException {
+		readLock.lock();
 		try {
-			throw new UnsupportedOperationException();
+			List<LogEntry> result = new ArrayList<LogEntry>();
+			for ( LogEntry entry : entries ) {
+				if ( isMatching(entry, criterias) ) {
+					result.add(entry);
+				}
+			}
+			return result;
 		} finally {
-			writeLock.unlock();
+			readLock.unlock();
 		}
 	}
 
-	public List<AggregatedEntry> findEntries(Collection<LogEntryMatcher> criterias)
+	public List<AggregatedEntry> findAggregatedEntries(Collection<LogEntryMatcher> criterias)
 		throws LogStorageException, InvalidCriteriaException {
 		Map<String, AggregatedEntry> result = new HashMap<String, AggregatedEntry>();
-		for ( LogEntry entry : entries ) {
-			if ( isMatching(entry, criterias) ) {
-				AggregatedEntryImpl aggregated = (AggregatedEntryImpl) result.get(entry.getChecksum());
-				if ( aggregated == null ) {
-					result.put(entry.getChecksum(), new AggregatedEntryImpl(entry));
-				} else {
-					aggregated.happensAgain(1, entry.getDate());
+		readLock.lock();
+		try {
+			for ( LogEntry entry : entries ) {
+				if ( isMatching(entry, criterias) ) {
+					AggregatedEntryImpl aggregated = (AggregatedEntryImpl) result.get(entry.getChecksum());
+					if ( aggregated == null ) {
+						result.put(entry.getChecksum(), new AggregatedEntryImpl(entry));
+					} else {
+						aggregated.happensAgain(1, entry.getDate());
+					}
 				}
 			}
+		} finally {
+			readLock.unlock();
 		}
 		return new ArrayList<AggregatedEntry>(result.values());
 	}
@@ -62,7 +78,7 @@ public class InMemoryLogStorage implements LogStorage {
 			severity(severity).
 			criterias();
 		try {
-			return findEntries(matchers);
+			return findAggregatedEntries(matchers);
 		} catch ( InvalidCriteriaException e ) {
 			throw new LogStorageException(e);
 		}
@@ -70,22 +86,21 @@ public class InMemoryLogStorage implements LogStorage {
 
 	public void walk(Collection<LogEntryMatcher> criterias, Visitor<LogEntry> visitor)
 		throws LogStorageException, InvalidCriteriaException {
-		for ( LogEntry entry : entries ) {
-			if ( isMatching(entry, criterias) ) {
-				visitor.visit(entry);
-			}
-		}
-	}
-
-	public int countEntries(Collection<LogEntryMatcher> criterias) throws LogStorageException,
-		InvalidCriteriaException {
-
 		readLock.lock();
 		try {
-			return findEntries(criterias).size();
+			for ( LogEntry entry : entries ) {
+				if ( isMatching(entry, criterias) ) {
+					visitor.visit(entry);
+				}
+			}
 		} finally {
 			readLock.unlock();
 		}
+	}
+
+	public int countEntries(Collection<LogEntryMatcher> criterias)
+		throws LogStorageException, InvalidCriteriaException {
+		return findAggregatedEntries(criterias).size();
 	}
 
 	public void removeEntries(String checksum) throws LogStorageException {

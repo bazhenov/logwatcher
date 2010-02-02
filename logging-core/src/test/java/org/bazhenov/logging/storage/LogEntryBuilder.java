@@ -45,6 +45,14 @@ public class LogEntryBuilder {
 		return this;
 	}
 
+	/**
+	 * Сохраняет запись в постояном хранилище и возвращает ссылку на нее.
+	 *
+	 * @param storage хранилище
+	 * @return новая сконструированая запись
+	 * @throws LogStorageException в случае ошибки во время сохранения хаписи
+	 * @see LogStorage#writeEntry(LogEntry) 
+	 */
 	public LogEntry saveIn(LogStorage storage) throws LogStorageException {
 		LogEntry entry = create();
 		storage.writeEntry(entry);

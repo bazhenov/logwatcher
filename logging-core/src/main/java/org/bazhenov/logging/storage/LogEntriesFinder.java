@@ -19,8 +19,9 @@ public class LogEntriesFinder {
 
 	/**
 	 * Добавляет критерий поиска по диапазону дат.
+	 *
 	 * @param from начало диапазона (исключая саму дату)
-	 * @param to конец диапазона (включительно)
+	 * @param to   конец диапазона (включительно)
 	 */
 	public LogEntriesFinder date(Date from, Date to) {
 		criterias.add(new DateMatcher(from, to));
@@ -29,6 +30,7 @@ public class LogEntriesFinder {
 
 	/**
 	 * Добавляет критерий по идентификатору приложения
+	 *
 	 * @param applicationId идентификатор приложения
 	 */
 	public LogEntriesFinder applicationId(String applicationId) {
@@ -37,6 +39,7 @@ public class LogEntriesFinder {
 
 	/**
 	 * Добавляет критерий по контрольной сумме
+	 *
 	 * @param checksum контрольная сумма
 	 */
 	public LogEntriesFinder checksum(String checksum) {
@@ -58,17 +61,17 @@ public class LogEntriesFinder {
 	}
 
 	/**
-	 * Возвращает первую запись с данными условиями отбора или {@code null}, если таких записей
-	 * не существует.
-	 * <p />
+	 * Возвращает первую запись с данными условиями отбора или {@code null}, если таких записей не
+	 * существует.
+	 * <p/>
 	 * Данный метод не дает никаких гарантий в отношении порядка извлекаемых записей.
 	 *
 	 * @return первая запись подпадающиая под условия
 	 * @throws LogStorageException в случае возникновения внутренней ошибки  @param storage
 	 */
-	public AggregatedEntry findFirst(LogStorage storage) throws LogStorageException,
-		InvalidCriteriaException {
-		List<AggregatedEntry> entries = find(storage);
+	public AggregatedEntry findFirst(LogStorage storage)
+		throws LogStorageException, InvalidCriteriaException {
+		List<AggregatedEntry> entries = findAggregated(storage);
 		return entries.size() > 0
 			? entries.get(0)
 			: null;
@@ -85,20 +88,45 @@ public class LogEntriesFinder {
 
 	/**
 	 * Возвращает количество записей в хранилище подпадающих под заданные критерии.
+	 *
 	 * @return количество записей
 	 * @throws LogStorageException в случае внутренней ошибки
-	 * @param storage
 	 */
 	public int count(LogStorage storage) throws LogStorageException, InvalidCriteriaException {
 		return storage.countEntries(criterias);
 	}
 
-	public List<AggregatedEntry> find(LogStorage storage) throws LogStorageException, InvalidCriteriaException {
+	/**
+	 * Возвращает список записей удовлетворяющих заданным критериям
+	 *
+	 * @param storage хранилище
+	 * @return список записей
+	 * @throws InvalidCriteriaException в случае если неверно заданы критерии фильтрации
+	 * @throws LogStorageException в случае внутренней ошибки хранилища
+	 * @see LogStorage#findEntries(Collection) 
+	 */
+	public List<LogEntry> find(LogStorage storage) throws LogStorageException,
+		InvalidCriteriaException {
 		return storage.findEntries(criterias);
 	}
 
-	public void walk(LogStorage storage, Visitor<LogEntry> visitor) throws LogStorageException,
-		InvalidCriteriaException {
+	/**
+	 * Возвращает список записей удовлетворяющих заданным критериям сгруппированных по контрольной
+	 * сумме.
+	 *
+	 * @param storage хранилище
+	 * @return список аггрегированных записей
+	 * @throws InvalidCriteriaException в случае если неверно заданы критерии фильтрации
+	 * @throws LogStorageException в случае внутренней ошибки хранилища
+	 * @see LogStorage#findAggregatedEntries(Collection)
+	 */
+	public List<AggregatedEntry> findAggregated(LogStorage storage)
+		throws LogStorageException, InvalidCriteriaException {
+		return storage.findAggregatedEntries(criterias);
+	}
+
+	public void walk(LogStorage storage, Visitor<LogEntry> visitor)
+		throws LogStorageException, InvalidCriteriaException {
 
 		storage.walk(criterias, visitor);
 	}
