@@ -50,9 +50,6 @@
 
 		<h2><a href="${backUrl}">&amp;larr;</a> Detailed information</h2>
 
-		<p>Last 100 entries with checksum <code>${checksum}</code> for
-			<fmt:formatDate value="${date}" pattern="d MMMM, yyyy"/>.</p>
-
 		<div id="detailed">
 			<c:forEach items="${entries}" var="entry">
 				<lt:entry entry="${entry}"/>

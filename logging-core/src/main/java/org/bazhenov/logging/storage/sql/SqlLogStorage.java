@@ -87,7 +87,7 @@ public class SqlLogStorage implements LogStorage {
 			if ( st.haveLateBoundMatchers() ) {
 				throw new InvalidCriteriaException(st.getLateBoundMatchers());
 			}
-			String sql = "SELECT content FROM entry l WHERE " + st.getWhereClause();
+			String sql = "SELECT content FROM entry l WHERE " + st.getWhereClause()+ " ORDER BY l.time DESC LIMIT 100";
 			return jdbc.query(sql, entryMapper, st.getArguments());
 		} catch ( MatcherMapperException e ) {
 			throw new LogStorageException(e);
@@ -136,9 +136,7 @@ public class SqlLogStorage implements LogStorage {
 
 			CriteriaStatement st = fillWhereClause(criterias);
 
-			sql.append(" WHERE ").
-				append(st.getWhereClause()).
-				append(" ORDER BY l.time DESC LIMIT 100");
+			sql.append(" WHERE ").append(st.getWhereClause());
 			connection = datasource.getConnection();
 			statement = connection.prepareStatement(sql.toString(), TYPE_FORWARD_ONLY, CONCUR_READ_ONLY);
 			statement.setFetchSize(Integer.MIN_VALUE);

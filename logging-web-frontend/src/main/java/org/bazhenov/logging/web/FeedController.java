@@ -133,14 +133,16 @@ public class FeedController {
 
 	@RequestMapping("/entries/{checksum}")
 	public String handleEntries(@PathVariable String checksum, ModelMap map,
-	                           @RequestParam("date") String date)
+	                           @RequestParam("date") String dateAsString)
 		throws LogStorageException, InvalidCriteriaException, ParseException {
+		java.util.Date date = format.get().parse(dateAsString);
 		List<LogEntry> entries = entries().
 			checksum(checksum).
+			date(new Date(date)).
 			find(storage);
 		map.addAttribute("checksum", checksum);
 		map.addAttribute("entries", entries);
-		map.addAttribute("date", format.get().parse(date));
+		map.addAttribute("date", date);
 		return "entries";
 	}
 

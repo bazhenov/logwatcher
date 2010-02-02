@@ -1,12 +1,12 @@
 .entry              { font-size: 16px; }
 .entryHeader .message     { overflow: hidden; white-space: nowrap;
-														position: absolute; left: 110px; top: 2px; }
+														position: absolute; left: 110px; top: 2px; right: 50px; }
 
-.selectedEntry .entryHeader .message { top: 12px; }
+.selectedEntry .entryHeader .message { top: 14px; }
 
 .entryHeader        { padding: 3px 8px; position: relative; height: 40px; }
 
-.entryHeader .timestamp { position: absolute; font-size: 26px; white-space: nowrap; left: 10px; }
+.entryHeader .timestamp { position: absolute; font-size: 26px; white-space: nowrap; left: 10px; top: 5px; bottom: 5px; }
 .timestamp .hours       { color: #666; }
 .timestamp .seconds     { color: #bbb; font-size: 70% }
 

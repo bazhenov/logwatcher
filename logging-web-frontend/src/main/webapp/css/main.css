@@ -36,7 +36,7 @@ a:visited			                  { color: brown; text-decoration: underline }
 #severitySelector span:hover    { font-weight: bold; }
 #severitySelector span:hover span { font-weight: normal; }
 
-abbr                            { cursor: default; border-bottom: 1px dashed !important }
+abbr                            { cursor: default; border-bottom: 1px dotted !important }
 
 #slider             { font-size: 40%; width: 100px }
 #sliderValue        { width: 100px; text-align: center; padding-bottom: 5px; font-size: 60%;
