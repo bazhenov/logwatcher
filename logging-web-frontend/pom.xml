@@ -77,8 +77,6 @@
 	</dependencies>
 
 	<build>
-		<finalName>logging-web-frontend-${project.version}</finalName>
-
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

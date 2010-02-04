@@ -55,7 +55,6 @@
 	</dependencies>
 
 	<build>
-		<finalName>logging-core-${project.version}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
