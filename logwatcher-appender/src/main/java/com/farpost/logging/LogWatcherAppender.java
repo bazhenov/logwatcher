@@ -87,7 +87,7 @@ public class LogWatcherAppender extends AppenderSkeleton {
 	}
 
 	private String calculateChecksum(String message, String location) {
-		return message + location;
+		return (message.replaceAll(" ", "") + location).replaceAll("\\.", "").substring(0, 32);
 	}
 
 	public void activateOptions() {

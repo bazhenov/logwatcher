@@ -23,9 +23,14 @@
 %>
 <a name='${entry.checksum}'></a>
 
+<c:url value="/entries/${entry.checksum}" var="detailsLink">
+	<c:param name="date"><fmt:formatDate value="${lastDate}"
+	                                     pattern="yyyy-MM-dd"/></c:param>
+</c:url>
+
 <div class='entry ${entry.severity}' checksum='${entry.checksum}'>
 	<div class='entryHeader'>
-		<div class="spinner"></div>
+
 		<div class="count">
 			<c:set var="count" value="${entry.count}"/>
 			<c:choose>
@@ -46,10 +51,18 @@
 			<span class='applicationId'><c:out value="${entry.applicationId}"/></span>
 			&mdash; <%out.write(lastOccurenceInfo);%>
 		</div>
+
+		<div class="operations noBubble">
+			<a href="${detailsLink}">&rarr;</a>
+		</div>
+
 	</div>
+
 	<div class="entryContainer">
 		<div class='entryContent'>
-			<ol class='attributes' loaded="false"></ol>
+			<ol class='attributes' loaded="false">
+				<div class="spinner"></div>
+			</ol>
 			<c:choose>
 				<c:when test="${not empty entry.sampleCause}">
 						<pre class="stacktrace noBubble"><c:out
@@ -71,10 +84,7 @@
 			</c:url>
 			<a href="<c:out value="${jiraLink}"/>" target='_blank'>Create task</a>
 			<a href='/feed?date=${entry.lastTime.date}&severity=${entry.severity}#${entry.checksum}'>Permalink</a>
-			<c:url value="/entries/${entry.checksum}" var="detailsLink">
-				<c:param name="date"><fmt:formatDate value="${lastDate}"
-				                                     pattern="yyyy-MM-dd"/></c:param>
-			</c:url>
+
 			<a href="${detailsLink}">Details</a>
 			<a class='removeEntry asynchronous' href='#'>Remove</a>
 		</div>

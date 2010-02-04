@@ -15,9 +15,6 @@
 .stacktrace                     { font-family: monospace;
 																	white-space: pre-wrap; font-size:120%; cursor:text; margin:0 }
 
-.entryHeader .spinner           { background: url("/images/sp.gif") no-repeat; width: 16px; height: 16px;
-																	position: absolute; top: 26px; right: 25px; display: none; }
-
 .marker                         { position: absolute; left: 12px; top: 28px; width: 14px; height: 15px;
 																	cursor: pointer; margin: 0; padding: 0; line-height: 9px;}
 
