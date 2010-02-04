@@ -6,10 +6,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>logging-parent</artifactId>
-		<groupId>org.bazhenov.logging</groupId>
+		<groupId>com.farpost.logging</groupId>
 		<version>1.3-SNAPSHOT</version>
 	</parent>
-	<groupId>org.bazhenov.logging</groupId>
+	<groupId>com.farpost.logging</groupId>
 	<artifactId>logging-web-frontend</artifactId>
 	<version>1.3-b6</version>
 	<packaging>war</packaging>
@@ -18,7 +18,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.bazhenov.logging</groupId>
+			<groupId>com.farpost.logging</groupId>
 			<artifactId>logging-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
