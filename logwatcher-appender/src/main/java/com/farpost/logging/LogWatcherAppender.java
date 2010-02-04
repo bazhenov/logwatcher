@@ -11,6 +11,8 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import static java.lang.Math.min;
+
 /**
  * It is an implementation of Log4j appender that sends
  * log message to the log system of Bazhenov Denis
@@ -87,7 +89,8 @@ public class LogWatcherAppender extends AppenderSkeleton {
 	}
 
 	private String calculateChecksum(String message, String location) {
-		return (message.replaceAll(" ", "") + location).replaceAll("\\.", "").substring(0, 32);
+		String checksum = (message.replaceAll(" ", "") + location).replaceAll("\\.", "");
+		return checksum.substring(0, min(32, checksum.length()));
 	}
 
 	public void activateOptions() {
