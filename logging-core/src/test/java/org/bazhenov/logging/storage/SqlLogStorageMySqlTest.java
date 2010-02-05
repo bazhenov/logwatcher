@@ -1,6 +1,7 @@
 package org.bazhenov.logging.storage;
 
 import org.apache.commons.dbcp.BasicDataSource;
+import org.bazhenov.logging.SimpleChecksumCalculator;
 import org.bazhenov.logging.aggregator.Aggregator;
 import org.bazhenov.logging.aggregator.SimpleAggregator;
 import org.bazhenov.logging.marshalling.JDomMarshaller;
@@ -34,6 +35,6 @@ public class SqlLogStorageMySqlTest extends LogStorageTestCase {
 		SqlMatcherMapper mapper = new AnnotationDrivenMatcherMapperImpl(new SqlMatcherMapperRules());
 		JDomMarshaller marshaller = new JDomMarshaller();
 		Aggregator aggregator = new SimpleAggregator(marshaller);
-		return new SqlLogStorage(aggregator, ds, marshaller, mapper);
+		return new SqlLogStorage(aggregator, ds, marshaller, mapper, new SimpleChecksumCalculator());
 	}
 }

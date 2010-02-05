@@ -50,6 +50,10 @@ public class LogEntriesFinder {
 		return withCriteria(new SeverityMatcher(severity));
 	}
 
+	public LogEntriesFinder contains(String part) {
+		return withCriteria(new ContainsMatcher(part));
+	}
+
 	private LogEntriesFinder withCriteria(LogEntryMatcher matcher) {
 		criterias.add(matcher);
 		return this;
@@ -103,7 +107,7 @@ public class LogEntriesFinder {
 	 * @return список записей
 	 * @throws InvalidCriteriaException в случае если неверно заданы критерии фильтрации
 	 * @throws LogStorageException в случае внутренней ошибки хранилища
-	 * @see LogStorage#findEntries(Collection) 
+	 * @see LogStorage#findEntries(Collection)
 	 */
 	public List<LogEntry> find(LogStorage storage) throws LogStorageException,
 		InvalidCriteriaException {

@@ -51,7 +51,7 @@ public class LogEntryBuilder {
 	 * @param storage хранилище
 	 * @return новая сконструированая запись
 	 * @throws LogStorageException в случае ошибки во время сохранения хаписи
-	 * @see LogStorage#writeEntry(LogEntry) 
+	 * @see LogStorage#writeEntry(LogEntry)
 	 */
 	public LogEntry saveIn(LogStorage storage) throws LogStorageException {
 		LogEntry entry = create();
@@ -76,6 +76,11 @@ public class LogEntryBuilder {
 
 	public LogEntryBuilder attribute(String name, String value) {
 		attributes.put(name, value);
+		return this;
+	}
+
+	public LogEntryBuilder message(String message) {
+		this.message = message;
 		return this;
 	}
 }

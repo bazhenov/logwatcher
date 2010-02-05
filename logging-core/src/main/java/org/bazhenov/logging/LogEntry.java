@@ -20,7 +20,7 @@ public class LogEntry {
 	private final String message;
 	private final Severity severity;
 	private final String group;
-	private final String checksum;
+	private volatile String checksum;
 	private final String applicationId;
 	private final Map<String, String> attributes;
 	private final Cause cause;
@@ -66,6 +66,10 @@ public class LogEntry {
 
 	public String getChecksum() {
 		return checksum;
+	}
+
+	public void setChecksum(String checksum) {
+		this.checksum = checksum;
 	}
 
 	public String getApplicationId() {

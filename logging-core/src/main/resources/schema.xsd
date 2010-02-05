@@ -16,7 +16,7 @@
 	    <element name="cause" type="u:Cause" minOccurs="0"/>
     </all>
     <attribute name="date" type="dateTime"/>
-    <attribute name="checksum" type="string"/>
+	  <attribute name="checksum" type="string"/>
   </complexType>
 
   <complexType name="Severity">

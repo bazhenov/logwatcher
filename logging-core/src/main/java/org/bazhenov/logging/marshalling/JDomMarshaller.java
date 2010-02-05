@@ -38,7 +38,9 @@ public class JDomMarshaller implements Marshaller {
 
 	public String marshall(LogEntry entry) throws MarshallerException {
 		Element root = element("logEntry");
-		root.setAttribute("checksum", entry.getChecksum());
+		if ( entry.getChecksum() != null ) {
+			root.setAttribute("checksum", entry.getChecksum());
+		}
 		String date = dateToString(entry);
 		root.setAttribute("date", date);
 		root.addContent(element("message", entry.getMessage()));

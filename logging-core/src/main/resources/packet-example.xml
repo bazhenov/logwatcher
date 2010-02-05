@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<logEntry xmlns="http://logging.farpost.com/schema/v1.1"
-          checksum="3dfre"
-          date="2008-03-15T12:33:12+11:00">
+<logEntry xmlns="http://logging.farpost.com/schema/v1.1" date="2008-03-15T12:33:12+11:00">
 	<message>Log message</message>
 	<group name="group"/>
 	<severity name="warning"/>

@@ -32,6 +32,13 @@ public class Cause {
 		return cause;
 	}
 
+	public Cause getRootCause() {
+		Cause cause = getCause();
+		return cause == null
+			? this
+			: cause.getRootCause();
+	}
+
 	public String getMessage() {
 		return message;
 	}

@@ -7,31 +7,26 @@ import org.bazhenov.logging.*;
 import org.bazhenov.logging.aggregator.Aggregator;
 import org.bazhenov.logging.marshalling.Marshaller;
 import org.bazhenov.logging.marshalling.MarshallerException;
-import org.bazhenov.logging.storage.InvalidCriteriaException;
-import org.bazhenov.logging.storage.LogEntryMatcher;
-import org.bazhenov.logging.storage.LogStorage;
-import org.bazhenov.logging.storage.LogStorageException;
+import org.bazhenov.logging.storage.*;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
 import javax.sql.DataSource;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.sql.*;
 import java.util.*;
 
-import static java.sql.ResultSet.CONCUR_READ_ONLY;
-import static java.sql.ResultSet.TYPE_FORWARD_ONLY;
-import static java.util.Collections.sort;
+import static java.sql.ResultSet.*;
 import static org.bazhenov.logging.storage.MatcherUtils.isMatching;
+
+import com.farpost.timepoint.Date;
 
 public class SqlLogStorage implements LogStorage {
 
 	private final Aggregator aggregator;
 	private final DataSource datasource;
+	private final ChecksumCalculator checksumCalculator;
 	private final Marshaller marshaller;
 	private final SqlMatcherMapper mapper;
 	private final SimpleJdbcTemplate jdbc;
@@ -40,11 +35,12 @@ public class SqlLogStorage implements LogStorage {
 	private final ParameterizedRowMapper<LogEntry> entryMapper;
 
 	public SqlLogStorage(Aggregator aggregator, DataSource datasource, Marshaller marshaller,
-	                     SqlMatcherMapper mapper) throws IOException, SQLException {
+	                     SqlMatcherMapper mapper, ChecksumCalculator checksumCalculator) throws IOException, SQLException {
 		this.aggregator = aggregator;
 		this.marshaller = marshaller;
 		this.mapper = mapper;
 		this.datasource = datasource;
+		this.checksumCalculator = checksumCalculator;
 		this.jdbc = new SimpleJdbcTemplate(datasource);
 		this.aggregateEntryMapper = new CreateAggregatedEntryRowMapper(marshaller);
 		this.entryMapper = new CreateEntryRowMapper(marshaller);
@@ -52,27 +48,30 @@ public class SqlLogStorage implements LogStorage {
 
 	public synchronized void writeEntry(LogEntry entry) throws LogStorageException {
 		try {
-			String marshalledEntry = marshaller.marshall(entry);
 			Timestamp entryTimestamp = timestamp(entry.getDate());
 			java.sql.Date entryDate = date(entry.getDate());
+			String checksum = checksumCalculator.calculateChecksum(entry);
+			entry.setChecksum(checksum);
+			String marshalledEntry = marshaller.marshall(entry);
 			jdbc.update(
 				"INSERT INTO entry (time, date, checksum, category, severity, application_id, content) VALUES (?, ?, ?, ?, ?, ?, ?)",
-				entryTimestamp, entryDate, entry.getChecksum(), entry.getCategory(),
+				entryTimestamp, entryDate, checksum, entry.getCategory(),
 				entry.getSeverity().getCode(), entry.getApplicationId(), marshalledEntry);
 
 			int affectedRows = jdbc.update(
 				"UPDATE aggregated_entry SET count = count + 1, last_time = IF(last_time < ?, ?, last_time) WHERE date = ? AND checksum = ?",
-				entryTimestamp, entryTimestamp, entryDate, entry.getChecksum());
+				entryTimestamp, entryTimestamp, entryDate, checksum);
 			if ( affectedRows == 0 ) {
 				jdbc.update(
 					"INSERT INTO aggregated_entry (date, checksum, last_time, category, severity, application_id, count, content) VALUES (?, ?, ?, ?, ?, ?, 1, ?)",
-					entryDate, entry.getChecksum(), entryTimestamp, entry.getCategory(),
+					entryDate, checksum, entryTimestamp, entry.getCategory(),
 					entry.getSeverity().getCode(), entry.getApplicationId(), marshalledEntry);
 			}
 
 			if ( log.isDebugEnabled() ) {
-				log.debug("Entry with checksum: " + entry.getChecksum() + " wrote to database");
+				log.debug("Entry with checksum: " + checksum + " wrote to database");
 			}
+
 		} catch ( MarshallerException e ) {
 			throw new LogStorageException(e);
 		} catch ( DataAccessException e ) {

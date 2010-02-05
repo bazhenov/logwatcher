@@ -11,6 +11,7 @@ import java.util.List;
 import static com.farpost.timepoint.Date.*;
 import static org.bazhenov.logging.TestSupport.entry;
 import static org.bazhenov.logging.storage.LogEntries.entries;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.nullValue;
@@ -32,16 +33,16 @@ abstract public class LogStorageTestCase {
 		DateTime date = today.at("11:35");
 		LogEntry entry = entry().
 			occured(date).
-			checksum("a").
 			attribute("foo", "bar").
 			create();
 		storage.writeEntry(entry);
+
 
 		AggregatedEntry aggreagatedEntry = entries().
 			date(today).
 			findFirst(storage);
 
-		assertThat(aggreagatedEntry.getChecksum(), equalTo("a"));
+		assertThat(entry.getChecksum(), notNullValue());
 		assertThat(aggreagatedEntry.getLastTime(), equalTo(date));
 	}
 
@@ -56,22 +57,26 @@ abstract public class LogStorageTestCase {
 	@Test
 	public void storageCanFindRawEntriesByCriteria() throws LogStorageException,
 		InvalidCriteriaException {
-		LogEntry first = entry().checksum("fa").saveIn(storage);
-		LogEntry second = entry().checksum("fa").saveIn(storage);
+		entry().saveIn(storage);
+		entry().saveIn(storage);
 
-		List<LogEntry> entries = entries().checksum("fa").find(storage);
-
+		List<LogEntry> entries = entries().date(today()).find(storage);
 		assertThat(entries.size(), equalTo(2));
+
+		assertThat(entries.get(0).getChecksum(), equalTo(entries.get(1).getChecksum()));
 	}
 
 	@Test
 	public void storageCanWalkByEntries() throws LogStorageException, InvalidCriteriaException {
-		entry().checksum("foo").saveIn(storage);
-		entry().checksum("foo").saveIn(storage);
-		entry().checksum("bar").saveIn(storage);
+		entry().message("foo").saveIn(storage);
+		entry().message("foo").saveIn(storage);
+		entry().message("bar").saveIn(storage);
 
 		CountVisitor<LogEntry> visitor = new CountVisitor<LogEntry>();
-		entries().checksum("foo").walk(storage, visitor);
+		entries().
+			date(today()).
+			contains("foo").
+			walk(storage, visitor);
 		assertThat(visitor.getCount(), equalTo(2));
 	}
 
@@ -80,14 +85,14 @@ abstract public class LogStorageTestCase {
 		Date date = november(12, 2008);
 		DateTime morning = date.at("11:00");
 		DateTime evening = date.at("18:05");
-		String checksum = "aef";
 
+		String message = "Hello";
 		entry().
-			checksum(checksum).
+			message(message).
 			occured(morning).
 			saveIn(storage);
 		entry().
-			checksum(checksum).
+			message(message).
 			occured(evening).
 			saveIn(storage);
 
@@ -96,7 +101,7 @@ abstract public class LogStorageTestCase {
 
 		AggregatedEntry entry = list.get(0);
 
-		assertThat(entry.getChecksum(), equalTo(checksum));
+		assertThat(entry.getMessage(), equalTo(message));
 	}
 
 	@Test
@@ -118,11 +123,11 @@ abstract public class LogStorageTestCase {
 	@Test
 	public void storageCanFilterEntriesByDate() throws LogStorageException, InvalidCriteriaException {
 		entry().
-			occured(today().at("12:22")).checksum("a").
+			occured(today().at("12:22")).message("a").
 			saveIn(storage);
 
 		entry().
-			occured(yesterday().at("10:00")).checksum("b").
+			occured(yesterday().at("10:00")).message("b").
 			saveIn(storage);
 
 		int count = entries().date(today(), today()).
@@ -147,11 +152,9 @@ abstract public class LogStorageTestCase {
 		throws LogStorageException, InvalidCriteriaException {
 
 		entry().
-			checksum("foo").
 			saveIn(storage);
 
 		entry().
-			checksum("bar").
 			saveIn(storage);
 
 		storage.createChecksumAlias("foo", "bar");
@@ -165,10 +168,10 @@ abstract public class LogStorageTestCase {
 	@Test
 	public void storageShouldNotAggregateEntriesWithNonEqualsChecksum() throws Exception {
 		entry().
-			checksum("FF").
+			message("foo").
 			saveIn(storage);
 		entry().
-			checksum("FE").
+			message("bar").
 			saveIn(storage);
 
 		List<AggregatedEntry> list = entries().
@@ -194,10 +197,10 @@ abstract public class LogStorageTestCase {
 
 		entry().
 			occured(yesterday.at("12:23")).
-			checksum("2fe").
+			message("foo").
 			saveIn(storage);
 		entry().
-			checksum("3fe").
+			message("bar").
 			saveIn(storage);
 
 		int count = entries().
@@ -248,28 +251,27 @@ abstract public class LogStorageTestCase {
 
 		entry().
 			occured(today.at("12:35")).
-			checksum("FF").
+			message("foo").
 			saveIn(storage);
 
 		entry().
 			occured(today.at("12:35")).
-			checksum("FE").
+			message("bar").
 			saveIn(storage);
 
-		entry().
+		LogEntry entry = entry().
+			message("foo").
 			occured(yesterday.at("11:36")).
-			checksum("FF").
 			saveIn(storage);
 
-		storage.removeEntries("FF");
+		storage.removeEntries(entry.getChecksum());
 
 		assertThat(entries().count(storage), equalTo(1));
-		for ( AggregatedEntry entry : storage.getAggregatedEntries(today, Severity.info) ) {
-			if ( entry.getChecksum().equals("FF") ) {
-				fail("Collection must not contains entries with checksum 'FF'");
+		for ( AggregatedEntry en : storage.getAggregatedEntries(today, Severity.info) ) {
+			if ( en.getChecksum().equals("FF") ) {
+				fail("Collection must not contains entries with checksum '"+entry.getChecksum()+"'");
 			}
 		}
-
 	}
 
 	protected abstract LogStorage createStorage() throws Exception;

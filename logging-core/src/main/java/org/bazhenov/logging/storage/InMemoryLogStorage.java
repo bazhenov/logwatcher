@@ -20,10 +20,13 @@ public class InMemoryLogStorage implements LogStorage {
 	private final ReadWriteLock lock = new ReentrantReadWriteLock();
 	private final Lock writeLock = lock.writeLock();
 	private final Lock readLock = lock.readLock();
+	private final ChecksumCalculator checksumCalculator = new SimpleChecksumCalculator();
 
 	public void writeEntry(LogEntry entry) throws LogStorageException {
 		writeLock.lock();
 		try {
+			String checksum = checksumCalculator.calculateChecksum(entry);
+			entry.setChecksum(checksum);
 			entries.add(entry);
 		} finally {
 			writeLock.unlock();
