@@ -58,6 +58,13 @@ public class EntryTag {
 		return stackTrace.toString();
 	}
 
+	public static String trim(String string, int limit) {
+		if ( string.length() > limit ) {
+			return string.substring(0, limit);
+		}
+		return string;
+	}
+
 	public static String pluralize(int number, String titles) {
 		int abs = abs(number);
 		int[] cases = new int[]{2, 0, 1, 1, 1, 2};

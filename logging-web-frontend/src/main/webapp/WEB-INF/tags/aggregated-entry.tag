@@ -45,7 +45,7 @@
 				</c:otherwise>
 			</c:choose>
 		</div>
-		<div class='message'><c:out value="${entry.message}"/></div>
+		<div class='message'><c:out value="${lf:trim(entry.message, 150)}"/></div>
 		<div class='messageOverlay'></div>
 		<div class='times'>
 			<span class='applicationId'><c:out value="${entry.applicationId}"/></span>
@@ -53,41 +53,17 @@
 		</div>
 
 		<div class="operations noBubble">
+			<c:url value="/entries/${entry.checksum}" var="detailsLink">
+				<c:param name="date"><fmt:formatDate value="${lastDate}"
+				                                     pattern="yyyy-MM-dd"/></c:param>
+			</c:url>
 			<a href="${detailsLink}">&rarr;</a>
 		</div>
 
 	</div>
 
-	<div class="entryContainer">
-		<div class='entryContent'>
-			<ol class='attributes' loaded="false">
-				<div class="spinner"></div>
-			</ol>
-			<c:choose>
-				<c:when test="${not empty entry.sampleCause}">
-						<pre class="stacktrace noBubble"><c:out
-							value="${lf:formatCause(entry.sampleCause)}"/></pre>
-				</c:when>
-				<c:otherwise>
-					<pre class="stacktrace noBubble"><c:out value="${entry.message}"/></pre>
-				</c:otherwise>
-			</c:choose>
-
-		</div>
-		<div class="entryFooter">
-			<c:url value="http://jira.dev.loc/jira/secure/CreateIssueDetails.jspa" var="jiraLink">
-				<c:param name="pid">10000</c:param>
-				<c:param name="issuetype">1</c:param>
-				<c:param name="summary" value="${entry.message}"/>
-				<c:param name="description" value="${lf:formatCause(entry.sampleCause)}"/>
-				<c:param name="priority">3</c:param>
-			</c:url>
-			<a href="<c:out value="${jiraLink}"/>" target='_blank'>Create task</a>
-			<a href='/feed?date=${entry.lastTime.date}&severity=${entry.severity}#${entry.checksum}'>Permalink</a>
-
-			<a href="${detailsLink}">Details</a>
-			<a class='removeEntry asynchronous' href='#'>Remove</a>
-		</div>
+	<div class="entryContainer" loaded="false">
+		<div class="spinner"></div>
 	</div>
 
 </div>

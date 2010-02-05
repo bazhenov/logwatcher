@@ -41,6 +41,12 @@
 	</function>
 
 	<function>
+		<name>trim</name>
+		<function-class>org.bazhenov.logging.web.tags.EntryTag</function-class>
+		<function-signature>java.lang.String trim(java.lang.String, int)</function-signature>
+	</function>
+
+	<function>
 		<name>thousands</name>
 		<function-class>org.bazhenov.logging.web.tags.EntryTag</function-class>
 		<function-signature>int thousands(int)</function-signature>

@@ -1,7 +1,7 @@
 .entry				                  { border-top: 1px dotted gray }
 
-.entry:hover                    { background-color: #ffd }
-.selectedEntry                  { background-color: #ffd; }
+.entry:hover                    { background-color: #ffffe5; }
+.selectedEntry                  { background-color: #ffffe5; }
 
 .entryHeader                    { padding-bottom: 10px; padding-top: 10px; cursor: pointer; position: relative; }
 
@@ -17,10 +17,6 @@
 
 .marker                         { position: absolute; left: 12px; top: 28px; width: 14px; height: 15px;
 																	cursor: pointer; margin: 0; padding: 0; line-height: 9px;}
-
-.error .count    { background-color: #c90000; }
-.warning .count  { background-color: #ff9900; }
-.info .count     { background-color: #3366ff; }
 
 .warningMarker                  { color: #990000; }
 

@@ -1,7 +1,14 @@
 .entryHeader .count             { position: absolute; width: 50px; height: 46px; color: white;
 																	font: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif;
 																	font-weight: bold; font-size: 70%;
-																	text-align: center; top: 15px; left: 10px; line-height:46px; }
+																	text-align: center; top: 15px; left: 10px; line-height:46px;
+-moz-border-radius: 4px 4px 4px 4px; -webkit-border-top-left-radius: 4px;
+	-webkit-border-bottom-left-radius: 4px; -webkit-border-bottom-right-radius: 4px;
+											-webkit-border-top-right-radius: 4px; border-radius: 4px 4px 4px 4px;}
+
+.error .count    { background-color: #c90000; }
+.warning .count  { background-color: #ff9900; }
+.info .count     { background-color: #3366ff; }
 
 .entry .message                 { color: black; margin-left: 72px; margin-right: 225px;
 																	overflow: hidden; height: 32px; white-space: nowrap }
@@ -10,13 +17,12 @@
 .entryHeader .applicationId     { font-variant:small-caps; font-size: 120%; color: black; }
 .entryHeader .group             { color: gray !important; }
 
-.entry .spinner                 { background: url("/images/sp.gif") no-repeat; width: 16px; height: 16px;
-																	}
+.entry .spinner                 {	background: url("/images/spinner_large.gif") no-repeat center;
+																	height: 66px; width: 100%; }
 .removing .spinner,
 .loadingAttributes .spinner     { display: block !important; }
 
-
-.entry .entryHeader .operations       { position: absolute; right: 10px; top: 12px;
+.entry .entryHeader .operations       { position: absolute; right: 10px; top: 16px;
 																				visibility: hidden; font-size: 130%;
 																				}
 .entry:hover .entryHeader .operations { visibility: visible; }
@@ -27,14 +33,17 @@
 
 .messageOverlay                 { position: absolute; height: 32px; width:50px; top: 10px; right: 224px;
 																	background: url("/images/sha.png") repeat-y;}
+
 .entry:hover .messageOverlay,
 .selectedEntry .messageOverlay  { background: url("/images/sha-hover.png") repeat-y; }
 
-.entryContent .attributes                     { list-style: none; padding: 0; line-height: 18px; }
-.entryContent .attributes label               {  }
-.entryContent .attributes span                { border-left: 1px dotted #997; margin-left: 4px;
-																	padding-left: 4px; padding-right: 2px; color: #777 !important; font-family: monospace; }
 
-.entryContent .attributes code                { background-color: #eec; border: 1px dotted #997; padding: 0 2px; font-family: monospace; }
+.entryContent .attributes       { list-style: none; padding: 0; line-height: 18px; }
+.entryContent .attributes label { font-variant: normal; font-size: 120% }
+.entryContent .attributes span  { border-left: 1px dotted #997; margin-left: 4px;
+																	padding-left: 4px; padding-right: 2px; color: #777 !important;
+																	font-family: monospace; }
+
+.entryContent .attributes code  { background-color: #eec; border: 1px dotted #997; padding: 0 2px; font-family: monospace; }
 .entryContent ul                { list-style-type: none; padding: 0; color: gray }
 .entryContent li span           { color: black }

@@ -13,15 +13,16 @@ $(document).ready(function() {
 	function toggleEntry(entry) {
 		entry.toggleClass('selectedEntry');
 		var checksum = entry.attr("checksum");
-		var attributes = entry.find('.attributes');
-		if ( attributes.attr("loaded") == "false" ) {
-			attributes.attr("loaded", "true");
-			entry.addClass("loadingAttributes");
-			attributes.load("/service/attributes", {'checksum': checksum, 'date': date}, function(response, code) {
+		var content = entry.find('.entryContainer');
+		if ( content.attr("loaded") == "false" ) {
+			content.attr("loaded", "true");
+			entry.addClass("loadingContent");
+			content.load("/service/content", {'checksum': checksum, 'date': date}, function(response, code) {
 				if ( code != "success" ) {
-					attributes.html("Error while loading attributes");
+					content.html("Error while loading content");
 				}
-				entry.removeClass("loadingAttributes");
+				entry.removeClass("loadingContent");
+
 			});
 		}
 
@@ -62,10 +63,10 @@ $(document).ready(function() {
 
 
 
-	$('a.removeEntry').click(function() {
-		var entry = $(this).parents(".entry")
-		var checksum = entry.attr('checksum')
-		if ( confirm('Вы уверены что хотите удалить запись?') ) {
+	$('a.removeEntry').live('click', function() {
+		var entry = $(this).parents(".entry");
+		var checksum = entry.attr('checksum');
+		if ( confirm('Are you shure you want to remove this entry?') ) {
 			entry.addClass('removing');
 			$.ajax({
 				type: "GET",
@@ -77,13 +78,13 @@ $(document).ready(function() {
 					entry.hide('normal');
 				},
 				error: function(request, status, error) {
-					alert("Произошла ошибка при удалении записи: "+status+", "+error)
+					alert("There is an error occured while removing entry: "+status+", "+error)
 				}
 			})
 		}
 
 		return false;
-	})
+	});
 
 	$('#slider').slider({
 		step: 1,
@@ -120,7 +121,7 @@ $(document).ready(function() {
 	if ( checksum.length > 0 ) {
 		$('.entry').each(function() {
 			if ( $(this).attr('checksum') == checksum ) {
-				$(this).toggleClass('selectedEntry');
+				toggleEntry($(this));
 			}
 		});
 	}

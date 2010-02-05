@@ -2,6 +2,7 @@ package org.bazhenov.logging.web;
 
 import com.farpost.timepoint.Date;
 import org.bazhenov.logging.AggregateAttributesVisitor;
+import org.bazhenov.logging.AggregatedEntry;
 import org.bazhenov.logging.storage.InvalidCriteriaException;
 import org.bazhenov.logging.storage.LogStorage;
 import org.bazhenov.logging.storage.LogStorageException;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static org.bazhenov.logging.storage.LogEntries.entries;
 
@@ -20,7 +22,6 @@ import static org.bazhenov.logging.storage.LogEntries.entries;
 public class BackController {
 
 	private LogStorage storage;
-
 	private final ThreadLocal<DateFormat> format = new ThreadLocal<DateFormat>() {
 		@Override
 		protected DateFormat initialValue() {
@@ -32,7 +33,7 @@ public class BackController {
 		this.storage = storage;
 	}
 
-	@RequestMapping("/service/attributes")
+	@RequestMapping("/service/content")
 	public String handleAttributes(ModelMap map, @RequestParam("checksum") String checksum,
 	                               @RequestParam("date") String date)
 		throws LogStorageException, InvalidCriteriaException, ParseException {
@@ -43,7 +44,14 @@ public class BackController {
 			checksum(checksum).
 			date(dt).
 			walk(storage, visitor);
+
+		List<AggregatedEntry> entries = entries().
+			checksum(checksum).
+			date(dt).
+			findAggregated(storage);
+
 		map.addAttribute("attributes", visitor.getAttributeMap());
-		return "service/attributes";
+		map.addAttribute("entry", entries.get(0));
+		return "service/aggregated-entry-content";
 	}
 }
