@@ -1,19 +1,20 @@
-.entryHeader .count             { position: absolute; width: 50px; height: 46px; color: white;
-																	font: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif;
+.entryHeader .count             { position: absolute; width: 45px; height: 42px; color: white;
 																	font-weight: bold; font-size: 70%;
-																	text-align: center; top: 15px; left: 10px; line-height:46px;
--moz-border-radius: 4px 4px 4px 4px; -webkit-border-top-left-radius: 4px;
-	-webkit-border-bottom-left-radius: 4px; -webkit-border-bottom-right-radius: 4px;
-											-webkit-border-top-right-radius: 4px; border-radius: 4px 4px 4px 4px;}
+																	text-align: center; top: 9px; left: 11px; line-height:42px;
+																	-moz-border-radius: 4px 4px 4px 4px; -webkit-border-top-left-radius: 4px;
+																	-webkit-border-bottom-left-radius: 4px; -webkit-border-bottom-right-radius: 4px;
+																	-webkit-border-top-right-radius: 4px; border-radius: 4px }
 
-.error .count    { background-color: #c90000; }
-.warning .count  { background-color: #ff9900; }
-.info .count     { background-color: #3366ff; }
+.error .count    { background-color: #990000; }
+.warning .count  { background-color: #ff6600; }
+.info .count     { background-color: #339900; }
+.debug .count    { background-color: #247; }
+.trace .count    { background-color: #aaa; }
 
-.entry .message                 { color: black; margin-left: 72px; margin-right: 225px;
-																	overflow: hidden; height: 32px; white-space: nowrap }
+.entry .message                 { color: #444; margin-left: 68px; margin-right: 225px;
+																	overflow: hidden; height: 28px; white-space: nowrap; line-height: 26px }
 
-.entryHeader .times             { color: #666; font-size: 55%; line-height: 20px; margin-left: 72px; }
+.entryHeader .times             { color: #666; font-size: 60%; line-height: 16px; margin-left: 68px; }
 .entryHeader .applicationId     { font-variant:small-caps; font-size: 120%; color: black; }
 .entryHeader .group             { color: gray !important; }
 
@@ -22,7 +23,7 @@
 .removing .spinner,
 .loadingAttributes .spinner     { display: block !important; }
 
-.entry .entryHeader .operations       { position: absolute; right: 10px; top: 16px;
+.entry .entryHeader .operations       { position: absolute; right: 10px; top: 10px;
 																				visibility: hidden; font-size: 130%;
 																				}
 .entry:hover .entryHeader .operations { visibility: visible; }
@@ -31,7 +32,7 @@
 .entryFooter        { background-color: #eec; padding: 3px 10px 4px 34px; font-size: 120%; }
 .entryFooter a      { margin-right: 15px; }
 
-.messageOverlay                 { position: absolute; height: 32px; width:50px; top: 10px; right: 224px;
+.messageOverlay                 { position: absolute; height: 28px; width:50px; top: 6px; right: 224px;
 																	background: url("/images/sha.png") repeat-y;}
 
 .entry:hover .messageOverlay,

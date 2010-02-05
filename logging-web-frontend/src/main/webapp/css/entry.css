@@ -3,7 +3,7 @@
 .entry:hover                    { background-color: #ffffe5; }
 .selectedEntry                  { background-color: #ffffe5; }
 
-.entryHeader                    { padding-bottom: 10px; padding-top: 10px; cursor: pointer; position: relative; }
+.entryHeader                    { padding-bottom: 8px; padding-top: 6px; cursor: pointer; position: relative; }
 
 .entry a			                  { display: inline; text-align: right; }
 

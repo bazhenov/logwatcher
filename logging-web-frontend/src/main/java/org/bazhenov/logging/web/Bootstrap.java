@@ -53,6 +53,14 @@ public class Bootstrap {
 			}}, cause));
 		storage.writeEntry(new LogEntry(DateTime.now().minusMinute(18), "group", "java.lang.OutOfMemoryException", Severity.info, "sum3", "search", null));
 
+		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "Ooops", Severity.info, "sum4",
+			"geocoder", null, cause));
+		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "Ooops", Severity.debug, "sum4",
+			"geocoder", null, cause));
+
+		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "Ooops", Severity.trace, "sum4",
+			"geocoder", null, cause));
+
 		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
 			"searcha", null, cause));
 		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
