@@ -37,7 +37,6 @@ abstract public class LogStorageTestCase {
 			create();
 		storage.writeEntry(entry);
 
-
 		AggregatedEntry aggreagatedEntry = entries().
 			date(today).
 			findFirst(storage);
