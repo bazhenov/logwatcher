@@ -14,6 +14,9 @@
 .entry .message                 { color: #444; margin-left: 68px; margin-right: 225px;
 																	overflow: hidden; height: 28px; white-space: nowrap; line-height: 26px }
 
+.entry .message .causeType      { font-size: 70%; color: #666; }
+
+
 .entryHeader .times             { color: #666; font-size: 60%; line-height: 16px; margin-left: 68px; }
 .entryHeader .applicationId     { font-variant:small-caps; font-size: 120%; color: black; }
 .entryHeader .group             { color: gray !important; }
