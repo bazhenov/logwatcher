@@ -32,7 +32,7 @@ public class LogWatcherAppenderTest {
 		t.start();
 
 		Throwable cause = new RuntimeException("Ooops");
-		String message = "Message";
+		String message = "Сообщение";
 		LoggingEvent e = new LoggingEvent("category", Category.getRoot(), Priority.DEBUG, message, cause);
 		appender.doAppend(e);
 
