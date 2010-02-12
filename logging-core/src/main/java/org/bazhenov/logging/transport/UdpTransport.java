@@ -42,11 +42,11 @@ public class UdpTransport implements Transport {
 		}
 
 		public void run() {
-			byte[] buffer = new byte[bufferSize];
-			DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 			while ( true ) {
 				String message = null;
 				try {
+					byte[] buffer = new byte[bufferSize];
+					DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 					socket.receive(packet);
 					byte[] data = packet.getData();
 					message = new String(data, 0, packet.getLength());
