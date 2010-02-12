@@ -19,7 +19,7 @@
 			value="${lf:formatCause(entry.sampleCause)}"/></pre>
 			</c:when>
 			<c:otherwise>
-				<pre class="stacktrace noBubble"><c:out value="${lf:trim(entry.message, 100)}"/></pre>
+				<pre class="stacktrace noBubble"><c:out value="${entry.message}"/></pre>
 			</c:otherwise>
 		</c:choose>
 	</div>
