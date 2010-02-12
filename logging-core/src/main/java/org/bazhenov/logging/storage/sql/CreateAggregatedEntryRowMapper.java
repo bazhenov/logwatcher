@@ -5,8 +5,8 @@ import org.bazhenov.logging.AggregatedEntry;
 import org.bazhenov.logging.AggregatedEntryImpl;
 import org.bazhenov.logging.LogEntry;
 import org.bazhenov.logging.Severity;
-import org.bazhenov.logging.marshalling.Marshaller;
-import org.bazhenov.logging.marshalling.MarshallerException;
+import com.farpost.logging.marshalling.Marshaller;
+import com.farpost.logging.marshalling.MarshallerException;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 
 import java.sql.ResultSet;

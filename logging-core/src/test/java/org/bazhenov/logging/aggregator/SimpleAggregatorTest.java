@@ -1,6 +1,6 @@
 package org.bazhenov.logging.aggregator;
 
-import org.bazhenov.logging.marshalling.Marshaller;
+import com.farpost.logging.marshalling.Marshaller;
 
 public class SimpleAggregatorTest extends AggregatorTestCase {
 

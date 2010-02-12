@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>com.farpost.logging</groupId>
 	<artifactId>logging-web-frontend</artifactId>
-	<version>1.3-b6</version>
+	<version>1.3-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>web-frontend Maven Webapp</name>
 	<url>http://maven.apache.org</url>

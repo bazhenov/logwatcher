@@ -1,6 +1,6 @@
 package org.bazhenov.logging.aggregator;
 
-import org.bazhenov.logging.marshalling.Marshaller;
+import com.farpost.logging.marshalling.Marshaller;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

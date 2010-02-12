@@ -2,11 +2,10 @@ package org.bazhenov.logging.aggregator;
 
 import com.farpost.timepoint.DateTime;
 import org.bazhenov.logging.AggregatedEntry;
-import org.bazhenov.logging.AggregatedLogEntry;
 import org.bazhenov.logging.LogEntry;
-import org.bazhenov.logging.marshalling.JDomMarshaller;
-import org.bazhenov.logging.marshalling.Marshaller;
-import org.bazhenov.logging.marshalling.MarshallerException;
+import com.farpost.logging.marshalling.JDomMarshaller;
+import com.farpost.logging.marshalling.Marshaller;
+import com.farpost.logging.marshalling.MarshallerException;
 import org.bazhenov.logging.storage.AttributeValueMatcher;
 import org.bazhenov.logging.storage.LogEntryMatcher;
 import org.testng.annotations.BeforeMethod;

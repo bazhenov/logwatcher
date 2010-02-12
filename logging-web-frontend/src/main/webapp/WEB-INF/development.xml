@@ -18,7 +18,7 @@
 			<bean class="org.bazhenov.logging.transport.WriteToStorageTransportListener">
 				<constructor-arg ref="storage"/>
 				<constructor-arg>
-					<bean class="org.bazhenov.logging.marshalling.JDomMarshaller"/>
+					<bean class="com.farpost.logging.marshalling.JDomMarshaller"/>
 				</constructor-arg>
 			</bean>
 		</constructor-arg>

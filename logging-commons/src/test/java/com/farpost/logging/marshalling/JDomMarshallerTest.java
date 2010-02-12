@@ -1,4 +1,4 @@
-package org.bazhenov.logging.marshalling;
+package com.farpost.logging.marshalling;
 
 public class JDomMarshallerTest extends AbstractLogEntryMarshallerTest {
 

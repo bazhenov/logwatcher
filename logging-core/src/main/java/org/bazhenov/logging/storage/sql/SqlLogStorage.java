@@ -5,8 +5,8 @@ import com.farpost.timepoint.DateTime;
 import org.apache.log4j.Logger;
 import org.bazhenov.logging.*;
 import org.bazhenov.logging.aggregator.Aggregator;
-import org.bazhenov.logging.marshalling.Marshaller;
-import org.bazhenov.logging.marshalling.MarshallerException;
+import com.farpost.logging.marshalling.Marshaller;
+import com.farpost.logging.marshalling.MarshallerException;
 import org.bazhenov.logging.storage.*;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
@@ -19,8 +19,6 @@ import java.util.*;
 
 import static java.sql.ResultSet.*;
 import static org.bazhenov.logging.storage.MatcherUtils.isMatching;
-
-import com.farpost.timepoint.Date;
 
 public class SqlLogStorage implements LogStorage {
 

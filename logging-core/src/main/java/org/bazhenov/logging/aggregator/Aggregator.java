@@ -1,7 +1,7 @@
 package org.bazhenov.logging.aggregator;
 
 import org.bazhenov.logging.AggregatedEntry;
-import org.bazhenov.logging.marshalling.MarshallerException;
+import com.farpost.logging.marshalling.MarshallerException;
 import org.bazhenov.logging.storage.LogEntryMatcher;
 
 import java.util.Collection;

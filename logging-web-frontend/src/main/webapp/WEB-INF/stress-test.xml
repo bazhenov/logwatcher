@@ -20,7 +20,7 @@
 		<constructor-arg ref="marshaller" />
 	</bean>
 
-	<bean id="marshaller" class="org.bazhenov.logging.marshalling.JDomMarshaller"/>
+	<bean id="marshaller" class="com.farpost.logging.marshalling.JDomMarshaller"/>
 
 	<bean id="datasource" class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName" value="org.h2.Driver" />

@@ -10,7 +10,7 @@
 		<artifactId>logging-parent</artifactId>
 		<version>1.3-SNAPSHOT</version>
 	</parent>
-	<version>1.3-b6</version>
+	<version>1.3-SNAPSHOT</version>
 	<name>core</name>
 	<url>http://maven.apache.org</url>
 	<dependencies>
@@ -22,9 +22,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>jdom</groupId>
-			<artifactId>jdom</artifactId>
-			<version>1.0</version>
+			<groupId>com.farpost.logging</groupId>
+			<artifactId>logging-commons</artifactId>
+			<version>1.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>

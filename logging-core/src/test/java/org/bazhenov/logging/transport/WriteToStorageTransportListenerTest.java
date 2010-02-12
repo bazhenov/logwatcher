@@ -1,9 +1,9 @@
 package org.bazhenov.logging.transport;
 
+import com.farpost.logging.marshalling.*;
 import com.farpost.timepoint.DateTime;
 import static com.farpost.timepoint.DateTime.now;
 import org.bazhenov.logging.*;
-import org.bazhenov.logging.marshalling.*;
 import org.bazhenov.logging.storage.*;
 
 import static org.bazhenov.logging.storage.LogEntries.entries;

@@ -1,11 +1,11 @@
 package com.farpost.logging;
 
+import com.farpost.logging.marshalling.*;
 import com.farpost.timepoint.DateTime;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Level;
 import org.apache.log4j.spi.LoggingEvent;
 import org.bazhenov.logging.*;
-import org.bazhenov.logging.marshalling.*;
 
 import java.io.*;
 import java.net.*;
@@ -119,7 +119,7 @@ public class LogWatcherAppender extends AppenderSkeleton {
 		try {
 			String stringMessage = marshaller.marshall(entry);
 			sendMessage(port, stringMessage);
-		} catch (MarshallerException e) {
+		} catch ( MarshallerException e) {
 			throw new RuntimeException(e);
 		} catch (IOException e) {
 			throw new RuntimeException(e);

@@ -2,7 +2,7 @@ package org.bazhenov.logging.aggregator;
 
 import org.apache.log4j.Logger;
 import org.bazhenov.logging.*;
-import org.bazhenov.logging.marshalling.Marshaller;
+import com.farpost.logging.marshalling.Marshaller;
 import org.bazhenov.logging.storage.LogEntryMatcher;
 
 import static java.lang.System.currentTimeMillis;

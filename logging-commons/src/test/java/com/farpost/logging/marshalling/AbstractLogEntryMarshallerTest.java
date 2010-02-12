@@ -1,9 +1,10 @@
-package org.bazhenov.logging.marshalling;
+package com.farpost.logging.marshalling;
 
 import static com.farpost.timepoint.DateTime.now;
-import org.bazhenov.logging.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+
+import org.bazhenov.logging.*;
 import org.testng.annotations.Test;
 
 import java.util.*;

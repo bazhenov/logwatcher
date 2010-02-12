@@ -1,9 +1,10 @@
 package com.farpost.logging;
 
-import org.apache.log4j.*;
+import com.farpost.logging.marshalling.*;
+import org.apache.log4j.Category;
+import org.apache.log4j.Priority;
 import org.apache.log4j.spi.LoggingEvent;
 import org.bazhenov.logging.LogEntry;
-import org.bazhenov.logging.marshalling.*;
 import org.bazhenov.logging.transport.*;
 import org.testng.annotations.Test;
 

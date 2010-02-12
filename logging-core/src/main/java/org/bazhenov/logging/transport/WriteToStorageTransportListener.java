@@ -1,7 +1,7 @@
 package org.bazhenov.logging.transport;
 
-import org.bazhenov.logging.marshalling.Marshaller;
-import org.bazhenov.logging.marshalling.MarshallerException;
+import com.farpost.logging.marshalling.Marshaller;
+import com.farpost.logging.marshalling.MarshallerException;
 import org.bazhenov.logging.storage.LogStorage;
 import org.bazhenov.logging.storage.LogStorageException;
 import org.apache.log4j.Logger;
