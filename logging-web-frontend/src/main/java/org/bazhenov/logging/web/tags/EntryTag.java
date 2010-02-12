@@ -1,27 +1,12 @@
 package org.bazhenov.logging.web.tags;
 
-import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
-import static org.apache.commons.lang.StringUtils.join;
+import com.farpost.timepoint.Date;
 import org.bazhenov.logging.AggregatedLogEntry;
-import org.bazhenov.logging.LogEntry;
 import org.bazhenov.logging.Cause;
 
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.tagext.TagSupport;
-import java.io.IOException;
 import static java.lang.Math.abs;
 import java.text.DateFormat;
-import java.text.FieldPosition;
-import static java.text.MessageFormat.format;
 import java.text.SimpleDateFormat;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.Collection;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Callable;
-
-import com.farpost.timepoint.Date;
 
 public class EntryTag {
 
@@ -56,6 +41,16 @@ public class EntryTag {
 			}
 		}
 		return stackTrace.toString();
+	}
+
+	public static Cause rootCause(Cause cause) {
+		if ( cause == null ) {
+			return null;
+		}
+		while ( cause.getCause() != null ) {
+			cause = cause.getCause();
+		}
+		return cause;
 	}
 
 	public static String trim(String string, int limit) {

@@ -1,5 +1,5 @@
-<%@ tag import="org.bazhenov.logging.web.tags.EntryTag" %>
-<%@ tag import="java.util.*" %>
+<%@tag import="org.bazhenov.logging.web.tags.EntryTag" %>
+<%@tag import="java.util.*" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="lf" uri="http://bazhenov.org/logging" %>
 <%@taglib prefix="f" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -45,7 +45,9 @@
 				</c:otherwise>
 			</c:choose>
 		</div>
-		<div class='message'><c:out value="${lf:trim(entry.message, 150)}"/></div>
+		<div class='message'
+			><c:if test="${not empty(entry.sampleCause)}"><span class="causeType"><c:out value="${lf:rootCause(entry.sampleCause).type}"/>:</span> </c:if
+			><c:out value="${lf:trim(entry.message, 150)}"/></div>
 		<div class='messageOverlay'></div>
 		<div class='times'>
 			<span class='applicationId'><c:out value="${entry.applicationId}"/></span>

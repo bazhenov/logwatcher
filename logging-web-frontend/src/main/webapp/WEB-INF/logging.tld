@@ -57,4 +57,10 @@
 		<function-class>org.bazhenov.logging.web.tags.EntryTag</function-class>
 		<function-signature>int magnitude(int)</function-signature>
 	</function>
+
+	<function>
+		<name>rootCause</name>
+		<function-class>org.bazhenov.logging.web.tags.EntryTag</function-class>
+		<function-signature>org.bazhenov.logging.Cause rootCause(org.bazhenov.logging.Cause)</function-signature>
+	</function>
 </taglib>
