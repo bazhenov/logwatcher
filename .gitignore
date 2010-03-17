@@ -3,7 +3,7 @@
 *.iml
 /*.properties
 *.log
-/test-output
+test-output
 /log*.xml
 /.idea
 target
