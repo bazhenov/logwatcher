@@ -32,6 +32,7 @@
 
 	<c:set var="issueDescription">http://${pageContext.request.serverName}:${pageContext.request.serverPort}${permaLink}
 
+${lf:trim(entry.message, 300)}
 ${lf:trim(lf:formatCause(entry.sampleCause), 500)}</c:set>
 
 	<div class="entryFooter">
