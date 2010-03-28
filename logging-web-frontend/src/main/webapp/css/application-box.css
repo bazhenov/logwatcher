@@ -1,0 +1,9 @@
+#applicationBox               { margin: 20px 0 }
+#applicationBox TD            { font-family: 'Lucida Grande', Tahoma, Verdana, Helvetica, sans-serif; font-size: 70% }
+
+#applicationBox label         { color: gray; font-size: 120%; }
+
+#applicationBox A:hover       { text-decoration: none }
+
+#applicationBox A             { background-color: #666666; color: white; padding: 5px 15px; margin: 0 10px; font-weight: bold }
+#applicationBox span.active A { background-color: #ff9900; }

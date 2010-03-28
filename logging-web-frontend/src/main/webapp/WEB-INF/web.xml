@@ -2,105 +2,113 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
          version="2.5">
-	<display-name>Logging web-frontend</display-name>
+  <display-name>Logging web-frontend</display-name>
 
-	<servlet-mapping>
-		<servlet-name>default</servlet-name>
-		<url-pattern>*.css</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.css</url-pattern>
+  </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>default</servlet-name>
-		<url-pattern>*.ico</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.ico</url-pattern>
+  </servlet-mapping>
 
 
-	<servlet-mapping>
-		<servlet-name>default</servlet-name>
-		<url-pattern>*.js</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.js</url-pattern>
+  </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>default</servlet-name>
-		<url-pattern>*.png</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.png</url-pattern>
+  </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>default</servlet-name>
-		<url-pattern>*.gif</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.gif</url-pattern>
+  </servlet-mapping>
 
-	<servlet>
-		<servlet-name>default</servlet-name>
-		<servlet-class>org.mortbay.jetty.servlet.DefaultServlet</servlet-class>
-		<init-param>
-			<param-name>cacheControl</param-name>
-			<param-value>max-age=86400,public</param-value>
-		</init-param>
-	</servlet>
+  <servlet>
+    <servlet-name>default</servlet-name>
+    <servlet-class>org.mortbay.jetty.servlet.DefaultServlet</servlet-class>
+    <init-param>
+      <param-name>cacheControl</param-name>
+      <param-value>max-age=86400,public</param-value>
+    </init-param>
+  </servlet>
 
-	<servlet>
-		<servlet-name>spring</servlet-name>
-		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+  <servlet>
+    <servlet-name>spring</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
 
-	<servlet>
-		<servlet-name>jsp</servlet-name>
-		<servlet-class>org.apache.jasper.servlet.JspServlet</servlet-class>
-		<init-param>
-			<param-name>enablePooling</param-name>
-			<param-value>false</param-value>
-		</init-param>
-		<init-param>
-			<param-name>development</param-name>
-			<param-value>false</param-value>
-		</init-param>
-		<init-param>
-			<param-name>reload-interval</param-name>
-			<param-value>0</param-value>
-		</init-param>
-	</servlet>
+  <servlet>
+    <servlet-name>jsp</servlet-name>
+    <servlet-class>org.apache.jasper.servlet.JspServlet</servlet-class>
+    <init-param>
+      <param-name>enablePooling</param-name>
+      <param-value>false</param-value>
+    </init-param>
+    <init-param>
+      <param-name>development</param-name>
+      <param-value>false</param-value>
+    </init-param>
+    <init-param>
+      <param-name>reload-interval</param-name>
+      <param-value>0</param-value>
+    </init-param>
+  </servlet>
 
-	<servlet-mapping>
-		<servlet-name>jsp</servlet-name>
-		<url-pattern>*.jspx</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>jsp</servlet-name>
+    <url-pattern>*.jspx</url-pattern>
+  </servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>spring</servlet-name>
-		<url-pattern>/</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>spring</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
 
-	<listener>
-		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-	</listener>
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
 
-	<context-param>
-		<param-name>contextConfigLocation</param-name>
-		<param-value>/WEB-INF/production.xml</param-value>
-	</context-param>
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>/WEB-INF/production.xml</param-value>
+  </context-param>
 
-	<jsp-config>
-		<taglib>
-			<taglib-uri>http://bazhenov.org/logging</taglib-uri>
-			<taglib-location>/WEB-INF/logging.tld</taglib-location>
-		</taglib>
-	</jsp-config>
+  <jsp-config>
+    <taglib>
+      <taglib-uri>http://bazhenov.org/logging</taglib-uri>
+      <taglib-location>/WEB-INF/logging.tld</taglib-location>
+    </taglib>
+    <jsp-property-group>
+      <url-pattern>*.jsp</url-pattern>
+      <trim-directive-whitespaces>true</trim-directive-whitespaces>
+    </jsp-property-group>
+    <jsp-property-group>
+      <url-pattern>*.jspx</url-pattern>
+      <trim-directive-whitespaces>true</trim-directive-whitespaces>
+    </jsp-property-group>
+  </jsp-config>
 
-	<welcome-file-list>
-		<welcome-file>index.jspx</welcome-file>
-	</welcome-file-list>
+  <welcome-file-list>
+    <welcome-file>index.jspx</welcome-file>
+  </welcome-file-list>
 
-	<error-page>
-		<exception-type>java.lang.Exception</exception-type>
-		<location>/error.jsp</location>
-	</error-page>
+  <error-page>
+    <exception-type>java.lang.Exception</exception-type>
+    <location>/error.jsp</location>
+  </error-page>
 
-	<error-page>
-		<exception-type>org.bazhenov.logging.InvalidQueryException</exception-type>
-		<location>/invalid-query.jsp</location>
-	</error-page>
+  <error-page>
+    <exception-type>org.bazhenov.logging.InvalidQueryException</exception-type>
+    <location>/invalid-query.jsp</location>
+  </error-page>
 
 
 </web-app>

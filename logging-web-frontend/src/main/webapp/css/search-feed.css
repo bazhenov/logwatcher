@@ -1,0 +1,4 @@
+@import "aggregated-feed.css";
+@import "main.css";
+
+#givenQuery             { color: gray; border: 1px solid black; margin-bottom: 15px; }

@@ -3,18 +3,20 @@
 @import url("sort-box.css");
 @import url("entry.css");
 
-body				                    { font-size: 22px; font-family: tahoma, sans-serif; padding:0; margin:0 }
+body				                    { font-size: 22px; font-family: tahoma, sans-serif; background-color: #fafafa; margin: 0; padding: 0 }
 img                             { border: 0 }
-#firstDot                       { color: #ff3333; font-size: 180%; position: absolute; left: 10px }
-#secondDot                      { color: #ff9900; font-size: 180%; position: absolute; left: 15px }
-#thirdDot                       { color: #009900; font-size: 180%; position: absolute; left: 20px }
 
-h1                              { font-size: 18px; font-weight: normal; margin: 0 0 10px 10px }
-h2                              { font-size: 24px; font-weight: normal; color: #555; margin-top: 0; }
+TABLE, TR, TBODY, TD                        { padding: 0; margin: 0; }
+
+#header                         { padding: 0; margin: 0; height: 65px; width: 950px; text-align: left;
+                                  position: relative; }
+
+#searchPanel                    { position: absolute; right: 15px; top: 60%; color: gray; font-size: 12px; }
+
+h2                              { font-size: 24px; font-weight: normal; color: #555; margin: 0 0 5px 0 }
 h2 a                            { text-decoration:none !important; }
 h2 a:visited                    { color: rgb(0, 153, 255) }
-#header                         { background-color: rgb(247, 247, 247); padding:0; margin:0;
-																	position: relative; height: 70px; min-width: 995px; }
+
 
 #footer                         { font-size: 80%; margin-top: 20px; color: gray; text-align: center; }
 
@@ -24,10 +26,19 @@ a:visited			                  { color: brown; text-decoration: underline }
 
 .noBubble                       { cursor: auto }
 
+#breadcrumbsContainer           { font-size: 12px; }
+
+
+
 .asynchronous                   { color: #0099ff !important; text-decoration: none !important;
 																	border-bottom: 1px dashed !important; cursor: pointer }
 
-#mainPanel                      { margin: 25px; min-width: 995px; position: relative; }
+#mainPanel                      { position: relative; width: 970px; text-align: left; }
+
+#mainPanel #topContainer        { background: url("/images/background-top.png") no-repeat; height: 14px }
+#mainPanel #bottomContainer     { background: url("/images/background-bottom.png") no-repeat; height: 14px }
+
+#contentPanel                   { background: url("/images/background-repeat.png") repeat-y; padding: 0 20px; }
 
 #notificationPanel              { text-align: center; font-size: 150%; color: #666;
 																	font-family: serif !important; padding-top: 40px; padding-bottom: 40px; }

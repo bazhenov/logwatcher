@@ -1,6 +1,7 @@
 package org.bazhenov.logging.web;
 
 import com.farpost.timepoint.Date;
+import com.farpost.timepoint.DateTime;
 import org.bazhenov.logging.*;
 import org.bazhenov.logging.storage.*;
 import org.springframework.stereotype.Controller;
@@ -26,179 +27,197 @@ import static org.bazhenov.logging.storage.LogEntries.entries;
 @Controller
 public class FeedController {
 
-	private final ThreadLocal<DateFormat> format = new ThreadLocal<DateFormat>() {
-		@Override
-		protected DateFormat initialValue() {
-			return new SimpleDateFormat("yyyy-MM-dd");
-		}
-	};
-	private final ThreadLocal<DateFormat> fullFormat = new ThreadLocal<DateFormat>() {
-		@Override
-		protected DateFormat initialValue() {
-			return new SimpleDateFormat("d MMMM");
-		}
-	};
-	private LogStorage storage;
-	private QueryTranslator translator = new AnnotationDrivenQueryTranslator(
-		new TranslationRulesImpl());
-	private final ByLastOccurenceDateComparator byLastOccurenceDate = new ByLastOccurenceDateComparator();
-	private final HashMap<String, Comparator<AggregatedEntry>> comparators = new HashMap<String, Comparator<AggregatedEntry>>() {{
-		put(null, new ByLastOccurenceDateComparator());
-		put("last-occurence", new ByLastOccurenceDateComparator());
-		put("occurence-count", new ByOccurenceCountComparator());
-	}};
+  private final ThreadLocal<DateFormat> format = new ThreadLocal<DateFormat>() {
+    @Override
+    protected DateFormat initialValue() {
+      return new SimpleDateFormat("yyyy-MM-dd");
+    }
+  };
+  private final ThreadLocal<DateFormat> fullFormat = new ThreadLocal<DateFormat>() {
+    @Override
+    protected DateFormat initialValue() {
+      return new SimpleDateFormat("d MMMM");
+    }
+  };
+  private LogStorage storage;
+  private QueryTranslator translator = new AnnotationDrivenQueryTranslator(
+    new TranslationRulesImpl());
+  private final ByLastOccurenceDateComparator byLastOccurenceDate = new ByLastOccurenceDateComparator();
+  private final HashMap<String, Comparator<AggregatedEntry>> comparators = new HashMap<String, Comparator<AggregatedEntry>>() {{
+    put(null, new ByLastOccurenceDateComparator());
+    put("last-occurence", new ByLastOccurenceDateComparator());
+    put("occurence-count", new ByOccurenceCountComparator());
+  }};
 
-	public void setStorage(LogStorage storage) {
-		this.storage = storage;
-	}
+  public void setStorage(LogStorage storage) {
+    this.storage = storage;
+  }
 
-	@RequestMapping("/")
-	public View handleRoot() {
-		return new RedirectView("/feed", true);
-	}
+  @RequestMapping("/")
+  public View handleRoot() {
+    return new RedirectView("/feed", true);
+  }
 
-	@RequestMapping("/entry/remove")
-	public View removeEntry(@RequestParam("checksum") String checksum) throws LogStorageException {
-		storage.removeEntries(checksum);
-		return new BufferView("Ok");
-	}
+  @RequestMapping("/entry/remove")
+  public View removeEntry(@RequestParam("checksum") String checksum) throws LogStorageException {
+    storage.removeEntries(checksum);
+    return new BufferView("Ok");
+  }
 
-	@RequestMapping("/feed")
-	public String handleFeed(@RequestParam(value = "query", required = false) String query,
-	                         ModelMap map, HttpServletRequest request, HttpServletResponse response)
-		throws ParseException, LogStorageException, InvalidCriteriaException, InvalidQueryException {
+  @RequestMapping("/search")
+  public String handleSearch(@RequestParam("q") String query, HttpServletRequest request, ModelMap map) throws InvalidQueryException, LogStorageException, InvalidCriteriaException {
+    List<AggregatedEntry> entries;
+    List<LogEntryMatcher> matchers = translator.translate(query.trim());
+    if (!contains(matchers, DateMatcher.class)) {
+      matchers.add(new DateMatcher(today()));
+    }
+    if (!contains(matchers, SeverityMatcher.class)) {
+      matchers.add(new SeverityMatcher(getSeverity(request)));
+    }
+    entries = entries().withCriteria(matchers).findAggregated(storage);
+    map.put("entries", entries);
+    map.put("date", DateTime.now().asDate());
+    map.put("query", query);
+    return "search-feed";
+  }
 
-		response.setContentType("text/html");
-		response.setCharacterEncoding("UTF-8");
-		Date today = today();
-		Date date;
-		String dateStr = request.getParameter("date");
-		if ( dateStr == null ) {
-			date = today;
-		} else {
-			date = new Date(format.get().parse(dateStr).getTime());
-		}
+  @RequestMapping("/feed/{applicationId}")
+  public String handleFeed(@RequestParam(value = "query", required = false) String query,
+                           @PathVariable String applicationId,
+                           ModelMap map, HttpServletRequest request, HttpServletResponse response)
+    throws ParseException, LogStorageException, InvalidCriteriaException, InvalidQueryException {
 
-		Map<String, java.util.Date> dates = new LinkedHashMap<String, java.util.Date>();
-		dates.put("today", today.asDate());
-		dates.put("yesterday", today.minusDay(1).asDate());
-		dates.put("2 days ago", today.minusDay(2).asDate());
-		if ( date.lessThan(today.minusDay(2)) ) {
-			dates.put(fullFormat.get().format(date.asDate()), date.asDate());
-		}
-		map.addAttribute("dates", dates);
+    response.setContentType("text/html");
+    response.setCharacterEncoding("UTF-8");
+    Date today = today();
+    Date date;
+    String dateStr = request.getParameter("date");
+    if (dateStr == null) {
+      date = today;
+    } else {
+      date = new Date(format.get().parse(dateStr).getTime());
+    }
 
-		map.addAttribute("date", date.asDate());
-		map.addAttribute("prevDate", date.minusDay(1).asDate());
-		if ( date.lessThan(today) ) {
-			map.addAttribute("nextDate", date.plusDay(1).asDate());
-		}
-		Severity severity = getSeverity(request);
+    Map<String, java.util.Date> dates = new LinkedHashMap<String, java.util.Date>();
+    dates.put("today", today.asDate());
+    dates.put("yesterday", today.minusDay(1).asDate());
+    dates.put("2 days ago", today.minusDay(2).asDate());
+    if (date.lessThan(today.minusDay(2))) {
+      dates.put(fullFormat.get().format(date.asDate()), date.asDate());
+    }
+    map.addAttribute("dates", dates);
 
-		List<AggregatedEntry> entries;
-		if ( query != null && query.trim().length() > 0 ) {
-			List<LogEntryMatcher> matchers = translator.translate(query.trim());
-			if ( !contains(matchers, DateMatcher.class) ) {
-				matchers.add(new DateMatcher(today()));
-			}
-			if ( !contains(matchers, SeverityMatcher.class) ) {
-				matchers.add(new SeverityMatcher(getSeverity(request)));
-			}
-			entries = entries().
-				withCriteria(matchers).
-				findAggregated(storage);
-		} else {
-			entries = storage.getAggregatedEntries(date, severity);
-		}
-		map.addAttribute("query", query);
+    map.addAttribute("date", date.asDate());
+    map.addAttribute("prevDate", date.minusDay(1).asDate());
+    if (date.lessThan(today)) {
+      map.addAttribute("nextDate", date.plusDay(1).asDate());
+    }
+    Severity severity = getSeverity(request);
 
-		map.addAttribute("severity", severity);
+    List<AggregatedEntry> entries;
+    if (query != null && query.trim().length() > 0) {
+      List<LogEntryMatcher> matchers = translator.translate(query.trim());
+      if (!contains(matchers, DateMatcher.class)) {
+        matchers.add(new DateMatcher(today()));
+      }
+      if (!contains(matchers, SeverityMatcher.class)) {
+        matchers.add(new SeverityMatcher(getSeverity(request)));
+      }
+      entries = entries().
+        withCriteria(matchers).
+        findAggregated(storage);
+    } else {
+      entries = storage.getAggregatedEntries(date, severity);
+    }
+    map.addAttribute("query", query);
 
-		int times = 0;
-		for ( AggregatedEntry entry : entries ) {
-			times += entry.getCount();
-		}
-		String sortOrder = getSortOrder(request);
-		Comparator<AggregatedEntry> comparator = comparators.containsKey(sortOrder)
-			? comparators.get(sortOrder)
-			: comparators.get(null);
-		sort(entries, comparator);
-		map.addAttribute("sortOrder", sortOrder);
+    map.addAttribute("severity", severity);
 
-		map.addAttribute("entries", entries);
-		map.addAttribute("times", times);
+    int times = 0;
+    for (AggregatedEntry entry : entries) {
+      times += entry.getCount();
+    }
+    String sortOrder = getSortOrder(request);
+    Comparator<AggregatedEntry> comparator = comparators.containsKey(sortOrder)
+      ? comparators.get(sortOrder)
+      : comparators.get(null);
+    sort(entries, comparator);
+    map.addAttribute("sortOrder", sortOrder);
 
-		return "feed";
-	}
+    map.addAttribute("entries", entries);
+    map.addAttribute("times", times);
 
-	@RequestMapping("/entries/{checksum}")
-	public String handleEntries(@PathVariable String checksum, ModelMap map,
-	                           @RequestParam("date") String dateAsString)
-		throws LogStorageException, InvalidCriteriaException, ParseException {
-		java.util.Date date = format.get().parse(dateAsString);
-		List<LogEntry> entries = entries().
-			checksum(checksum).
-			date(new Date(date)).
-			find(storage);
-		map.addAttribute("checksum", checksum);
-		map.addAttribute("entries", entries);
-		map.addAttribute("date", date);
-		return "entries";
-	}
+    return "aggregated-feed";
+  }
 
-	private boolean contains(List<LogEntryMatcher> matchers, Class<? extends LogEntryMatcher> type) {
-		for ( LogEntryMatcher matcher : matchers ) {
-			if ( matcher.getClass().equals(type) ) {
-				return true;
-			}
-		}
-		return false;
-	}
+  @RequestMapping("/entries/{checksum}")
+  public String handleEntries(@PathVariable String checksum, ModelMap map,
+                              @RequestParam("date") String dateAsString)
+    throws LogStorageException, InvalidCriteriaException, ParseException {
+    java.util.Date date = format.get().parse(dateAsString);
+    List<LogEntry> entries = entries().
+      checksum(checksum).
+      date(new Date(date)).
+      find(storage);
+    map.addAttribute("checksum", checksum);
+    map.addAttribute("entries", entries);
+    map.addAttribute("date", date);
+    return "entries";
+  }
 
-	@RequestMapping("/feed/rss")
-	public String handleRss(ModelMap map,
-	                        @RequestParam(value = "severity", required = false) String s)
-		throws LogStorageException, InvalidCriteriaException {
+  private boolean contains(List<LogEntryMatcher> matchers, Class<? extends LogEntryMatcher> type) {
+    for (LogEntryMatcher matcher : matchers) {
+      if (matcher.getClass().equals(type)) {
+        return true;
+      }
+    }
+    return false;
+  }
 
-		Severity severity = s == null
-			? Severity.error
-			: Severity.forName(s);
-		List<AggregatedEntry> entries = storage.getAggregatedEntries(today(), severity);
+  @RequestMapping("/feed/rss")
+  public String handleRss(ModelMap map,
+                          @RequestParam(value = "severity", required = false) String s)
+    throws LogStorageException, InvalidCriteriaException {
 
-		map.addAttribute("entries", entries);
-		map.addAttribute("date", new java.util.Date());
+    Severity severity = s == null
+      ? Severity.error
+      : Severity.forName(s);
+    List<AggregatedEntry> entries = storage.getAggregatedEntries(today(), severity);
 
-		return "feed-rss";
-	}
+    map.addAttribute("entries", entries);
+    map.addAttribute("date", new java.util.Date());
 
-	private Severity getSeverity(HttpServletRequest request) {
-		String get = request.getParameter("severity");
-		if ( get != null ) {
-			return Severity.forName(get);
-		}
+    return "feed-rss";
+  }
 
-		Cookie[] cookies = request.getCookies();
-		if ( cookies != null ) {
-			for ( Cookie cookie : cookies ) {
-				if ( "severity".equals(cookie.getName()) ) {
-					return Severity.forName(cookie.getValue());
-				}
-			}
-		}
+  private Severity getSeverity(HttpServletRequest request) {
+    String get = request.getParameter("severity");
+    if (get != null) {
+      return Severity.forName(get);
+    }
 
-		return Severity.error;
-	}
+    Cookie[] cookies = request.getCookies();
+    if (cookies != null) {
+      for (Cookie cookie : cookies) {
+        if ("severity".equals(cookie.getName())) {
+          return Severity.forName(cookie.getValue());
+        }
+      }
+    }
 
-	private String getSortOrder(HttpServletRequest request) {
-		Cookie[] cookies = request.getCookies();
-		if ( cookies != null ) {
-			for ( Cookie cookie : cookies ) {
-				if ( "sortOrder".equals(cookie.getName()) ) {
-					return cookie.getValue();
-				}
-			}
-		}
+    return Severity.error;
+  }
 
-		return null;
-	}
+  private String getSortOrder(HttpServletRequest request) {
+    Cookie[] cookies = request.getCookies();
+    if (cookies != null) {
+      for (Cookie cookie : cookies) {
+        if ("sortOrder".equals(cookie.getName())) {
+          return cookie.getValue();
+        }
+      }
+    }
+
+    return null;
+  }
 }

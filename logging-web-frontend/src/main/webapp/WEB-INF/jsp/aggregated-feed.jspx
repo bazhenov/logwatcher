@@ -15,7 +15,7 @@
 		<title>LogWatcher</title>
 		<c:url value='/css/main.css' var="cssUrl"/>
 		<link rel="stylesheet" href="${cssUrl}"/>
-		<c:url value='/css/aggregated-entry.css' var="cssUrl"/>
+    <c:url value='/css/aggregated-feed.css' var="cssUrl"/>
 		<link rel="stylesheet" href="${cssUrl}"/>
 		<c:url value='/css/ui.all.css' var="cssUrl"/>
 		<link rel="stylesheet" href="${cssUrl}"/>
@@ -87,6 +87,7 @@
 
 		<jsp:include page="/widgets/search-box.jsp" />
 		<jsp:include page="/widgets/sort-box.jsp" />
+		<jsp:include page="/widgets/application-box.jsp" />
 
 		<c:choose>
 			<c:when test="${f:length(entries) > 0}">

@@ -1,7 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <div id="searchBox">
-	<form method="get" action="">
+  <c:url value="/search" var="url" />
+	<form method="get" action="${url}">
 		<c:set var="query"><c:out value="${param['query']}" /></c:set>
 		<input type="text" name="query" id="searchInput" accesskey="S" value="${query}" autocomplete="off"/>
 	</form>
