@@ -28,22 +28,17 @@ $(document).ready(function() {
 
 	}
 
-	var suggestPane = $('#suggest');
-	var searchInput = $('#searchInput');
-	searchInput.focus();
-
-	searchInput.bind('focus', function() {
-		suggestPane.show();
-	});
-
-	searchInput.bind('blur', function() {
-		suggestPane.hide();
-	});
+  $('#givenQuery').click(function(target) {
+    var el = $(target.target).parents('#givenQuery');
+    var query = el.attr('rawQuery');
+    el.html("<form action='/search'><input id='searchInput' type='text' name='q' value='"+query+"' /></form>");
+    $('#searchInput').focus();
+    el.unbind('click');
+  });
 
 	$('.entryHeader').click(function(target) {
 		if ( $(target.target).parents(".noBubble").length <= 0 ) {
 			toggleEntry($(this).parents(".entry"));
-
 		}
 	});
 

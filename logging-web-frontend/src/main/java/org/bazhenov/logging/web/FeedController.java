@@ -40,8 +40,9 @@ public class FeedController {
     }
   };
   private LogStorage storage;
-  private QueryTranslator translator = new AnnotationDrivenQueryTranslator(
+  private final QueryTranslator translator = new AnnotationDrivenQueryTranslator(
     new TranslationRulesImpl());
+  private final QueryParser parser = new QueryParser();
   private final ByLastOccurenceDateComparator byLastOccurenceDate = new ByLastOccurenceDateComparator();
   private final HashMap<String, Comparator<AggregatedEntry>> comparators = new HashMap<String, Comparator<AggregatedEntry>>() {{
     put(null, new ByLastOccurenceDateComparator());
@@ -72,12 +73,13 @@ public class FeedController {
       matchers.add(new DateMatcher(today()));
     }
     if (!contains(matchers, SeverityMatcher.class)) {
-      matchers.add(new SeverityMatcher(getSeverity(request)));
+      matchers.add(new SeverityMatcher(Severity.error));
     }
     entries = entries().withCriteria(matchers).findAggregated(storage);
     map.put("entries", entries);
     map.put("date", DateTime.now().asDate());
     map.put("query", query);
+    map.put("terms", parser.parse(query));
     return "search-feed";
   }
 

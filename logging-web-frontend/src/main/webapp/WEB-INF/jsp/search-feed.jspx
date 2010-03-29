@@ -48,7 +48,7 @@
           <a href="/"><img src="${logoSrc}" alt="LogWatcher"/></a>
 
           <div id="searchPanel">
-            <form action="/">
+            <form action="/search">
               <input type="search" name="q" accesskey="s" placeholder="Search..." autocomplete="off" results="5"
                 size="25"/>
             </form>
@@ -66,12 +66,15 @@
         <div id="mainPanel">
           <div id="topContainer">&amp;nbsp;</div>
           <div id="contentPanel">
-            <div id="breadcrumbsContainer">
-              Dashboard &amp;rarr; search &amp;rarr; "at: frontend"
-            </div>
             <h2>Search</h2>
 
-            <div id="givenQuery"><c:out value="${query}"/></div>
+            <div id="givenQuery" rawQuery="${query}">
+              <span id="query" >
+                <c:forEach items="${terms}" var="term">
+                  <span class="keyword"><c:out value="${term.key}"/>:</span><c:out value="${term.value}" />&amp;nbsp;
+                </c:forEach>
+              </span>
+            </div>
 
             <c:choose>
               <c:when test="${f:length(entries) > 0}">
@@ -86,7 +89,7 @@
               </c:when>
               <c:otherwise>
                 <div id="notificationPanel">
-                  No entries.
+                  <span>&amp;empty;</span><br />No results found
                 </div>
               </c:otherwise>
             </c:choose>

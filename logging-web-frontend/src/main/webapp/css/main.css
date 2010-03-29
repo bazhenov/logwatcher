@@ -6,14 +6,15 @@
 body				                    { font-size: 22px; font-family: tahoma, sans-serif; background-color: #fafafa; margin: 0; padding: 0 }
 img                             { border: 0 }
 
-TABLE, TR, TBODY, TD                        { padding: 0; margin: 0; }
+TABLE, TR, TBODY, TD            { padding: 0; margin: 0; }
 
 #header                         { padding: 0; margin: 0; height: 65px; width: 950px; text-align: left;
                                   position: relative; }
 
-#searchPanel                    { position: absolute; right: 15px; top: 60%; color: gray; font-size: 12px; }
+#searchPanel                    { position: absolute; right: 0; top: 60%; color: gray; font-size: 12px; }
 
-h2                              { font-size: 24px; font-weight: normal; color: #555; margin: 0 0 5px 0 }
+h2                              { font-size: 24px; letter-spacing: -1px; font-weight: normal; color: #666; margin: 0 0 5px 0;
+                                  font-family: helvetica, arial, clean, sans-serif }
 h2 a                            { text-decoration:none !important; }
 h2 a:visited                    { color: rgb(0, 153, 255) }
 
@@ -28,8 +29,6 @@ a:visited			                  { color: brown; text-decoration: underline }
 
 #breadcrumbsContainer           { font-size: 12px; }
 
-
-
 .asynchronous                   { color: #0099ff !important; text-decoration: none !important;
 																	border-bottom: 1px dashed !important; cursor: pointer }
 
@@ -40,8 +39,10 @@ a:visited			                  { color: brown; text-decoration: underline }
 
 #contentPanel                   { background: url("/images/background-repeat.png") repeat-y; padding: 0 20px; }
 
-#notificationPanel              { text-align: center; font-size: 150%; color: #666;
-																	font-family: serif !important; padding-top: 40px; padding-bottom: 40px; }
+#notificationPanel span         { font-size: 650% }
+#notificationPanel              { text-align: center; font-size: 200%; color: #ddd; padding-bottom: 80px; font-weight: bold }
+
+
 
 abbr                            { cursor: default; border-bottom: 1px dotted !important }
 
