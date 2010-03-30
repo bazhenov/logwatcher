@@ -14,7 +14,6 @@
     <url-pattern>*.ico</url-pattern>
   </servlet-mapping>
 
-
   <servlet-mapping>
     <servlet-name>default</servlet-name>
     <url-pattern>*.js</url-pattern>
@@ -62,6 +61,21 @@
     </init-param>
   </servlet>
 
+  <filter>
+    <filter-name>sitemesh-filter</filter-name>
+    <filter-class>org.sitemesh.config.ConfigurableSiteMeshFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>sitemesh-filter</filter-name>
+    <servlet-name>spring</servlet-name>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>sitemesh-filter</filter-name>
+    <url-pattern>*.jsp</url-pattern>
+  </filter-mapping>
+
   <servlet-mapping>
     <servlet-name>jsp</servlet-name>
     <url-pattern>*.jspx</url-pattern>
@@ -104,11 +118,5 @@
     <exception-type>java.lang.Exception</exception-type>
     <location>/error.jsp</location>
   </error-page>
-
-  <error-page>
-    <exception-type>org.bazhenov.logging.InvalidQueryException</exception-type>
-    <location>/invalid-query.jsp</location>
-  </error-page>
-
 
 </web-app>

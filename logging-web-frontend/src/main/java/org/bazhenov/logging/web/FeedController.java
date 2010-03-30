@@ -68,7 +68,12 @@ public class FeedController {
   @RequestMapping("/search")
   public String handleSearch(@RequestParam("q") String query, HttpServletRequest request, ModelMap map) throws InvalidQueryException, LogStorageException, InvalidCriteriaException {
     List<AggregatedEntry> entries;
-    List<LogEntryMatcher> matchers = translator.translate(query.trim());
+    List<LogEntryMatcher> matchers;
+    try {
+      matchers = translator.translate(query.trim());
+    } catch ( InvalidQueryException e ) {
+      return "invalid-query";
+    }
     if (!contains(matchers, DateMatcher.class)) {
       matchers.add(new DateMatcher(today()));
     }
@@ -78,9 +83,22 @@ public class FeedController {
     entries = entries().withCriteria(matchers).findAggregated(storage);
     map.put("entries", entries);
     map.put("date", DateTime.now().asDate());
-    map.put("query", query);
-    map.put("terms", parser.parse(query));
+    Map<String, String> queryTerms = parser.parse(query);
+    map.put("query", buildQuery(queryTerms));
+    map.put("terms", queryTerms);
     return "search-feed";
+  }
+
+  private String buildQuery(Map<String, String> queryTerms) {
+    StringBuilder builder = new StringBuilder();
+    for (Map.Entry<String, String> row : queryTerms.entrySet()) {
+      builder.
+        append(row.getKey()).
+        append(": ").
+        append(row.getValue()).
+        append(" ");
+    }
+    return builder.toString().trim();
   }
 
   @RequestMapping("/feed/{applicationId}")
