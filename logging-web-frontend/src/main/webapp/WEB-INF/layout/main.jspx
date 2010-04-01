@@ -4,7 +4,7 @@
           xmlns:l="http://bazhenov.org/logging"
           xmlns:f="http://java.sun.com/jsp/jstl/functions"
           xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
-          xmlns:lt="urn:jsptagdir:/WEB-INF/tags" xmlns:sitemesh="as">
+          xmlns:lt="urn:jsptagdir:/WEB-INF/tags" xmlns:sitemesh="http://sitemesh.org/">
 
   <jsp:directive.page contentType="text/html"/>
   <jsp:directive.page pageEncoding="UTF-8"/>
@@ -12,9 +12,9 @@
   &lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"&gt;
   <html>
   <head>
-    <title>LogWatcher</title>
-    <c:url value='/css/search-feed.css' var="cssUrl"/>
-    <link rel="stylesheet" href="${cssUrl}"/>
+    <title>
+      <sitemesh:write property="title">LogWatcher</sitemesh:write>
+    </title>
 
     <fmt:formatDate value="${date}" pattern="yyyy-MM-dd" var="dateAsString"/>
 
@@ -29,12 +29,14 @@
 
     <c:url value="/js/jquery-ui-1.7.2.js" var="jsUrl"/>
     <script type="text/javascript" src="${jsUrl}">/**/</script>
+
     <c:url value="/js/events.js" var="jsUrl"/>
     <script type="text/javascript" src="${jsUrl}">/**/</script>
 
     <c:url value="/feed/rss" var="rssUrl"/>
     <link rel="alternate" type="application/rss+xml" title="LogWatcher RSS"
           href="${rssUrl}?severity=${severity}"/>
+    <sitemesh:write property="head" />
   </head>
 
 
@@ -42,7 +44,6 @@
   <table width="100%">
     <tr>
       <td align="center">
-
         <div id="header">
           <c:url value="/images/logwatcher-logo.png" var="logoSrc"/>
           <a href="/"><img src="${logoSrc}" alt="LogWatcher"/></a>
@@ -55,11 +56,16 @@
           </div>
 
           <div id="menuBar">
-            <a href="/">Dashboard</a>
+            <c:url value="/dashboard" var="url" />
+            <a href="${url}">Dashboard</a>
             <span class="devider"></span>
-            <a href="/">Application feed</a>
+
+            <c:url value="/feed" var="url" />
+            <a href="${url}">Application feed</a>
             <span class="devider"></span>
-            <a href="/">Advanced search</a>
+
+            <c:url value="/search" var="url" />
+            <a href="${url}">Advanced search</a>
           </div>
         </div>
 

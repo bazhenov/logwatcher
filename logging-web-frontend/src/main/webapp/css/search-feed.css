@@ -10,3 +10,10 @@
 #givenQuery input         { font-family: Monaco, 'Courier New', monospace; font-size: 1em; width: 680px; text-align: center; }
 
 #givenQuery input         { padding: 5px }
+
+.samplesTable TD          { font-size: 16px; padding: 5px; }
+
+.samplesTable SPAN        { font-family: Monaco, 'Courier New', monospace; background-color: #eee;
+                            padding: 4px; font-size: 80%;}
+
+.sampleDescription        { color: #444; }

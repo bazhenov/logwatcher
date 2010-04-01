@@ -66,12 +66,15 @@ public class FeedController {
   }
 
   @RequestMapping("/search")
-  public String handleSearch(@RequestParam("q") String query, HttpServletRequest request, ModelMap map) throws InvalidQueryException, LogStorageException, InvalidCriteriaException {
+  public String handleSearch(@RequestParam(value = "q", required = false) String query, HttpServletRequest request, ModelMap map) throws InvalidQueryException, LogStorageException, InvalidCriteriaException {
+    if ( query == null || query.isEmpty() ) {
+      return "search-form";
+    }
     List<AggregatedEntry> entries;
     List<LogEntryMatcher> matchers;
     try {
       matchers = translator.translate(query.trim());
-    } catch ( InvalidQueryException e ) {
+    } catch (InvalidQueryException e) {
       return "invalid-query";
     }
     if (!contains(matchers, DateMatcher.class)) {
