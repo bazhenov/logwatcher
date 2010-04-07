@@ -85,22 +85,35 @@ abstract public class LogStorageTestCase {
 		DateTime morning = date.at("11:00");
 		DateTime evening = date.at("18:05");
 
-		String message = "Hello";
 		entry().
-			message(message).
+			applicationId("search").
+			message("Error in search").
 			occured(morning).
 			saveIn(storage);
 		entry().
-			message(message).
+			applicationId("billing").
+			message("Error in billing").
+			occured(evening).
+			saveIn(storage);
+		entry().
+			applicationId("billing").
+			message("Error in billing").
 			occured(evening).
 			saveIn(storage);
 
-		List<AggregatedEntry> list = storage.getAggregatedEntries(date, Severity.info);
+		List<AggregatedEntry> list = storage.getAggregatedEntries("billing", date, Severity.info);
 		assertThat(list.size(), equalTo(1));
 
 		AggregatedEntry entry = list.get(0);
+		assertThat(entry.getMessage(), equalTo("Error in billing"));
+		assertThat(entry.getCount(), equalTo(2));
 
-		assertThat(entry.getMessage(), equalTo(message));
+		list = storage.getAggregatedEntries("search", date, Severity.info);
+		assertThat(list.size(), equalTo(1));
+
+		entry = list.get(0);
+		assertThat(entry.getMessage(), equalTo("Error in search"));
+		assertThat(entry.getCount(), equalTo(1));
 	}
 
 	@Test

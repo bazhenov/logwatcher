@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS aggregated_entry (
 	content TEXT NOT NULL,
 	PRIMARY KEY(date, checksum)
 );
-CREATE INDEX date_severity ON aggregated_entry(date, severity);
+CREATE INDEX application_date_severity ON aggregated_entry(application_id, date, severity);
 
 CREATE TABLE IF NOT EXISTS entry (
 	id INT NOT NULL AUTO_INCREMENT,

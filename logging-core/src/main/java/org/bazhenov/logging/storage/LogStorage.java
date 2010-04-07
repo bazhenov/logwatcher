@@ -6,8 +6,7 @@ import org.bazhenov.logging.*;
 import java.util.*;
 
 /**
- * Имплементации этого интерфейса сохраняют обьекты типа LogEntry в постоянном хранилище? будь то
- * реляционная база данных или XML файл.
+ * Имплементации этого интерфейса сохраняют обьекты типа LogEntry в постоянном хранилище.
  */
 public interface LogStorage {
 
@@ -97,7 +96,22 @@ public interface LogStorage {
 	 * @param date     дата
 	 * @param severity уровень
 	 * @return список аггрегированных записей
+	 * @throws LogStorageException в случае возникновения внутренних ошибок хранилища
 	 */
+	@Deprecated
 	List<AggregatedEntry> getAggregatedEntries(Date date, Severity severity)
+		throws LogStorageException;
+
+	/**
+	 * Возвращает список аггрегированных записей за указанную дату с указанным severity произошедших
+	 * в указанном приложении.
+	 *
+	 * @param applicationId идентификатор приложения
+	 * @param date          дата
+	 * @param severity      уровень
+	 * @return список аггрегированных записей
+	 * @throws LogStorageException в случае возникновения внутренних ошибок хранилища
+	 */
+	List<AggregatedEntry> getAggregatedEntries(String applicationId, Date date, Severity severity)
 		throws LogStorageException;
 }

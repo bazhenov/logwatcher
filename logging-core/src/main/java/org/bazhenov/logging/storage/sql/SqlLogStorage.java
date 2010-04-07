@@ -166,6 +166,12 @@ public class SqlLogStorage implements LogStorage {
 			aggregateEntryMapper, date(date), severity.getCode());
 	}
 
+	public List<AggregatedEntry> getAggregatedEntries(String applicationId, Date date, Severity severity) {
+		return jdbc.query(
+			"SELECT checksum, application_id, last_time, count, severity, content FROM aggregated_entry WHERE application_id = ? AND date = ? AND severity >= ?",
+			aggregateEntryMapper, applicationId, date(date), severity.getCode());
+	}
+
 	private void fill(PreparedStatement statement, Object[] arguments) throws SQLException {
 		int i = 1;
 		for ( Object obj : arguments ) {

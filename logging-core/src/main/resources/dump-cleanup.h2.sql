@@ -1,2 +1,0 @@
-DROP TABLE IF EXISTS log_entry;
-DROP TABLE IF EXISTS entry;
