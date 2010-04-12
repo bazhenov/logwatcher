@@ -1,6 +1,6 @@
 severity = ['all', 'trace', 'debug', 'info', 'warning', 'error'];
 
-;(function($) {
+(function($) {
 	$.fn.extend({
 		autocomplete: function(el) {
 

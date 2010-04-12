@@ -14,7 +14,8 @@ TABLE, TR, TBODY, TD            { padding: 0; margin: 0; }
 #searchPanel                    { position: absolute; right: 0; top: 60%; color: gray; font-size: 12px; }
 
 h2                              { font-size: 24px; letter-spacing: -1px; font-weight: normal; color: #666; margin: 0 0 5px 0;
-                                  font-family: helvetica, arial, clean, sans-serif }
+                                  font-family: helvetica, arial, clean, sans-serif; font-weight: bold; }
+h2 span                         { font-weight: normal; }
 h2 a                            { text-decoration:none !important; }
 h2 a:visited                    { color: rgb(0, 153, 255) }
 

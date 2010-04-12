@@ -28,8 +28,7 @@
 .removing .spinner,
 .loadingAttributes .spinner     { display: block !important; }
 
-.entry .entryHeader .operations       { position: absolute; right: 10px; top: 10px;
-																				visibility: hidden; font-size: 130% }
+.entry .entryHeader .operations       { position: absolute; right: 10px; top: 14px;	visibility: hidden }
 
 .entry:hover .entryHeader .operations { visibility: visible; }
 .entry .entryHeader .operations A     { padding: 2px 20px; line-height: 30px; }

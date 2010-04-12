@@ -67,7 +67,7 @@ public class FeedController {
 
   @RequestMapping("/search")
   public String handleSearch(@RequestParam(value = "q", required = false) String query, HttpServletRequest request, ModelMap map) throws InvalidQueryException, LogStorageException, InvalidCriteriaException {
-    if ( query == null || query.isEmpty() ) {
+    if (query == null || query.isEmpty()) {
       return "search-form";
     }
     List<AggregatedEntry> entries;
@@ -85,11 +85,21 @@ public class FeedController {
     }
     entries = entries().withCriteria(matchers).findAggregated(storage);
     map.put("entries", entries);
+    int times = sumCount(entries);
+    map.put("times", times);
     map.put("date", DateTime.now().asDate());
     Map<String, String> queryTerms = parser.parse(query);
     map.put("query", buildQuery(queryTerms));
     map.put("terms", queryTerms);
     return "search-feed";
+  }
+
+  private static int sumCount(List<AggregatedEntry> entries) {
+    int times = 0;
+    for (AggregatedEntry e : entries) {
+      times += e.getCount();
+    }
+    return times;
   }
 
   private String buildQuery(Map<String, String> queryTerms) {
@@ -105,8 +115,7 @@ public class FeedController {
   }
 
   @RequestMapping("/feed/{applicationId}")
-  public String handleFeed(@RequestParam(value = "query", required = false) String query,
-                           @PathVariable String applicationId,
+  public String handleFeed(@PathVariable String applicationId,
                            ModelMap map, HttpServletRequest request, HttpServletResponse response)
     throws ParseException, LogStorageException, InvalidCriteriaException, InvalidQueryException {
 
@@ -121,45 +130,14 @@ public class FeedController {
       date = new Date(format.get().parse(dateStr).getTime());
     }
 
-    Map<String, java.util.Date> dates = new LinkedHashMap<String, java.util.Date>();
-    dates.put("today", today.asDate());
-    dates.put("yesterday", today.minusDay(1).asDate());
-    dates.put("2 days ago", today.minusDay(2).asDate());
-    if (date.lessThan(today.minusDay(2))) {
-      dates.put(fullFormat.get().format(date.asDate()), date.asDate());
-    }
-    map.addAttribute("dates", dates);
-
     map.addAttribute("date", date.asDate());
-    map.addAttribute("prevDate", date.minusDay(1).asDate());
-    if (date.lessThan(today)) {
-      map.addAttribute("nextDate", date.plusDay(1).asDate());
-    }
     Severity severity = getSeverity(request);
 
-    List<AggregatedEntry> entries;
-    if (query != null && query.trim().length() > 0) {
-      List<LogEntryMatcher> matchers = translator.translate(query.trim());
-      if (!contains(matchers, DateMatcher.class)) {
-        matchers.add(new DateMatcher(today()));
-      }
-      if (!contains(matchers, SeverityMatcher.class)) {
-        matchers.add(new SeverityMatcher(getSeverity(request)));
-      }
-      entries = entries().
-        withCriteria(matchers).
-        findAggregated(storage);
-    } else {
-      entries = storage.getAggregatedEntries(date, severity);
-    }
-    map.addAttribute("query", query);
+    List<AggregatedEntry> entries = storage.getAggregatedEntries(date, severity);
 
     map.addAttribute("severity", severity);
 
-    int times = 0;
-    for (AggregatedEntry entry : entries) {
-      times += entry.getCount();
-    }
+    int times = sumCount(entries);
     String sortOrder = getSortOrder(request);
     Comparator<AggregatedEntry> comparator = comparators.containsKey(sortOrder)
       ? comparators.get(sortOrder)
@@ -167,6 +145,7 @@ public class FeedController {
     sort(entries, comparator);
     map.addAttribute("sortOrder", sortOrder);
 
+    map.addAttribute("applicationId", applicationId);
     map.addAttribute("entries", entries);
     map.addAttribute("times", times);
 

@@ -18,6 +18,9 @@
 
     <fmt:formatDate value="${date}" pattern="yyyy-MM-dd" var="dateAsString"/>
 
+    <c:url value='/css/main.css' var="cssUrl"/>
+    <link rel="stylesheet" href="${cssUrl}"/>
+
     <script type="text/javascript">
       var severityLevel = '${severity}';
       var entrySortOrder = '${sortOrder}';
