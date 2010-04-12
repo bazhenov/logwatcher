@@ -87,6 +87,20 @@ public class InMemoryLogStorage implements LogStorage {
 		}
 	}
 
+	public List<AggregatedEntry> getAggregatedEntries(String applicationId, Date date,
+	                                                  Severity severity) throws LogStorageException {
+		List<LogEntryMatcher> matchers = entries().
+			applicationId(applicationId).
+			date(date).
+			severity(severity).
+			criterias();
+		try {
+			return findAggregatedEntries(matchers);
+		} catch ( InvalidCriteriaException e ) {
+			throw new LogStorageException(e);
+		}
+	}
+
 	public void walk(Collection<LogEntryMatcher> criterias, Visitor<LogEntry> visitor)
 		throws LogStorageException, InvalidCriteriaException {
 		readLock.lock();
