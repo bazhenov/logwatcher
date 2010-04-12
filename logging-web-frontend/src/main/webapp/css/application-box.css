@@ -5,5 +5,6 @@
 
 #applicationBox A:hover       { text-decoration: none }
 
-#applicationBox A             { background-color: #666666; color: white; padding: 5px 15px; margin: 0 10px; font-weight: bold }
+#applicationBox A             { background-color: #666666; color: white; padding: 5px 15px; margin: 0 10px;
+																font-weight: bold; text-decoration: none }
 #applicationBox span.active A { background-color: #ff9900; }

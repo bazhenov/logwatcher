@@ -279,9 +279,9 @@ abstract public class LogStorageTestCase {
 		storage.removeEntries(entry.getChecksum());
 
 		assertThat(entries().count(storage), equalTo(1));
-		for ( AggregatedEntry en : storage.getAggregatedEntries(today, Severity.info) ) {
-			if ( en.getChecksum().equals("FF") ) {
-				fail("Collection must not contains entries with checksum '"+entry.getChecksum()+"'");
+		for (AggregatedEntry en : storage.getAggregatedEntries(today, Severity.info)) {
+			if (en.getChecksum().equals("FF")) {
+				fail("Collection must not contains entries with checksum '" + entry.getChecksum() + "'");
 			}
 		}
 	}

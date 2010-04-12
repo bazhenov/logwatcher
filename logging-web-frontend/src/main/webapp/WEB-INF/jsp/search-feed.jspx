@@ -28,7 +28,7 @@
   <c:choose>
     <c:when test="${f:length(entries) > 0}">
       <c:forEach var="entry" items="${entries}">
-        <lt:aggregated-entry entry="${entry}"/>
+        <lt:aggregated-entry entry="${entry}" currentApplicationId="${currentApplicationId}"/>
       </c:forEach>
 
       <div id="footer">

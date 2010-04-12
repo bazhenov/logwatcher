@@ -19,12 +19,12 @@
   <body>
   <h2>Application feed</h2>
 
-  <jsp:include page="/widgets/application-box.jsp"/>
+	<lt:application-box applicationIds="${uniqueApplicationIds}" currentApplicationId="${applicationId}" />
 
   <c:choose>
     <c:when test="${f:length(entries) > 0}">
       <c:forEach var="entry" items="${entries}">
-        <lt:aggregated-entry entry="${entry}"/>
+        <lt:aggregated-entry entry="${entry}" currentApplicationId="${applicationId}"/>
       </c:forEach>
 
       <div id="footer">
@@ -33,9 +33,12 @@
       </div>
     </c:when>
     <c:otherwise>
-      <div id="notificationPanel">
-        No entries.
-      </div>
+			<div id="notificationPanel">
+				<p>Try to change severity settings</p>
+				<span>&amp;empty;</span>
+				<br/>No results found.
+			</div>
+
     </c:otherwise>
   </c:choose>
 

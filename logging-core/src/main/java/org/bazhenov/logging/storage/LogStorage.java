@@ -28,7 +28,7 @@ public interface LogStorage {
 	 * @param criterias условия отбора записей или {@code null} если интересует общее количество
 	 *                  записей в хранилище
 	 * @return колличество записей
-	 * @throws LogStorageException      в случае внутренней ошибки
+	 * @throws LogStorageException			в случае внутренней ошибки
 	 * @throws InvalidCriteriaException в случае если заданные критерии неверны
 	 */
 	int countEntries(Collection<LogEntryMatcher> criterias)
@@ -49,7 +49,7 @@ public interface LogStorage {
 	 * контрольной суммой, им автоматически будет переписыватся контрольная сумма на alias.
 	 *
 	 * @param checksum контролная сумма, которую надо смапить
-	 * @param alias    контрольная сумма - синоним
+	 * @param alias		контрольная сумма - синоним
 	 */
 	void createChecksumAlias(String checksum, String alias) throws LogStorageException;
 
@@ -58,7 +58,7 @@ public interface LogStorage {
 	 *
 	 * @param criterias критерии отбора записей
 	 * @return список записей
-	 * @throws LogStorageException      в случае внутренне ошибки хранилища
+	 * @throws LogStorageException			в случае внутренне ошибки хранилища
 	 * @throws InvalidCriteriaException в случае если указанные неверные критерии отбора
 	 */
 	List<LogEntry> findEntries(Collection<LogEntryMatcher> criterias)
@@ -70,7 +70,7 @@ public interface LogStorage {
 	 *
 	 * @param criterias критерии отбора записей
 	 * @return список записей
-	 * @throws LogStorageException      в случае внутренне ошибки хранилища
+	 * @throws LogStorageException			в случае внутренне ошибки хранилища
 	 * @throws InvalidCriteriaException в случае если указанные неверные критерии отбора
 	 */
 	List<AggregatedEntry> findAggregatedEntries(Collection<LogEntryMatcher> criterias)
@@ -83,8 +83,8 @@ public interface LogStorage {
 	 * быть потокобезопасна.
 	 *
 	 * @param criterias критерии по которым осуществляется итерация
-	 * @param visitor   visitor
-	 * @throws LogStorageException      в случае внутренней ошибки хранилища
+	 * @param visitor	 visitor
+	 * @throws LogStorageException			в случае внутренней ошибки хранилища
 	 * @throws InvalidCriteriaException в случае если некорректно заданы критерии поиска
 	 */
 	void walk(Collection<LogEntryMatcher> criterias, Visitor<LogEntry> visitor)
@@ -93,7 +93,7 @@ public interface LogStorage {
 	/**
 	 * Возвращает список аггрегированных записей за указанную дату с указанным severity.
 	 *
-	 * @param date     дата
+	 * @param date		 дата
 	 * @param severity уровень
 	 * @return список аггрегированных записей
 	 * @throws LogStorageException в случае возникновения внутренних ошибок хранилища
@@ -107,8 +107,8 @@ public interface LogStorage {
 	 * в указанном приложении.
 	 *
 	 * @param applicationId идентификатор приложения
-	 * @param date          дата
-	 * @param severity      уровень
+	 * @param date					дата
+	 * @param severity			уровень
 	 * @return список аггрегированных записей
 	 * @throws LogStorageException в случае возникновения внутренних ошибок хранилища
 	 */
