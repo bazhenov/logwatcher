@@ -95,6 +95,20 @@ public class FeedController {
 		return "search-feed";
 	}
 
+	@RequestMapping("/dashboard")
+	public String doDashboard(ModelMap map) throws LogStorageException {
+		List<AggregatedEntry> allEntries = storage.getAggregatedEntries(today().minusDay(1), Severity.trace);
+		Map<String, ApplicationInfo> infos = new HashMap<String, ApplicationInfo>();
+		Set<String> uniqueApplicationIds = getUniqueApplicationId(allEntries);
+		for (String applicationId : uniqueApplicationIds) {
+			List<AggregatedEntry> applicationsEntries = filter(allEntries, applicationId);
+			ApplicationInfo info = new ApplicationInfo(applicationId, applicationsEntries);
+			infos.put(applicationId, info);
+		}
+		map.put("infos", infos);
+		return "dashboard";
+	}
+
 	@RequestMapping("/feed/{applicationId}")
 	public String handleFeed(@PathVariable String applicationId,
 													 ModelMap map, HttpServletRequest request, HttpServletResponse response)

@@ -1,20 +1,17 @@
 package org.bazhenov.logging.web.tags;
 
 import com.farpost.timepoint.Date;
-import org.bazhenov.logging.AggregatedLogEntry;
 import org.bazhenov.logging.Cause;
 
-import static java.lang.Math.abs;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
+import static java.lang.Math.abs;
+
 public class EntryTag {
 
-	public static final int MAX_LENGTH = 80;
-	private AggregatedLogEntry entry;
 	public static DateFormat shortFormat = new DateTimeFormat();
 	public static DateFormat fullFormat = new SimpleDateFormat("d MMMM yyyy, HH:mm:ss zz");
-	public static final String JIRA_LINK_FORMAT = "http://jira.dev.loc/jira/secure/CreateIssueDetails.jspa?pid=10000&issuetype=1&summary={0}&description={1}&priority=3";
 
 	public static String formatCause(Cause rootCause) {
 		if ( rootCause == null ) {
