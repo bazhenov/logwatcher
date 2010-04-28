@@ -11,7 +11,14 @@
 	<c:if test="${counter.count le valuesLimit}">
 		<c:choose>
 			<c:when test="${fn:length(row.value) gt lengthLimit}">
-				<abbr title="<c:out value="${row.value}" />"><code class="value"><c:out value="${l:trim(row.value, lengthLimit)}" />&hellip;<c:if test="${row.count gt 1}"><span>${row.count}</span></c:if></code></abbr>
+				<abbr title="<c:out value="${row.value}" />">
+					<code class="value">
+						<c:out value="${l:trim(row.value, lengthLimit, '&hellip;')}" />
+						<c:if test="${row.count gt 1}">
+							<span>${row.count}</span>
+						</c:if>
+					</code>
+				</abbr>
 			</c:when>
 			<c:otherwise>
 				<code class="value"><c:out value="${row.value}" /><c:if test="${row.count gt 1}"><span>${row.count}</span></c:if></code>

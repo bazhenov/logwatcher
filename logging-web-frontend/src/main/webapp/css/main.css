@@ -16,6 +16,7 @@ TABLE, TR, TBODY, TD            { padding: 0; margin: 0; }
 h2                              { font-size: 24px; letter-spacing: -1px; color: #666; margin: 0 0 5px 0;
                                   font-family: helvetica, arial, clean, sans-serif; font-weight: bold;
 																	text-shadow: 1px 1px 0 #ddd; }
+h2:first-letter									{ text-transform: capitalize; }
 h2 span                         { font-weight: normal; }
 h2 a                            { text-decoration:none !important; }
 h2 a:visited                    { color: rgb(0, 153, 255) }

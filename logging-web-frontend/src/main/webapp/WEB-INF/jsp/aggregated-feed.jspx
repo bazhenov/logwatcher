@@ -1,47 +1,54 @@
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns="http://www.w3.org/1999/xhtml"
-          version="2.1"
-          xmlns:c="http://java.sun.com/jsp/jstl/core"
-          xmlns:l="http://bazhenov.org/logging"
-          xmlns:f="http://java.sun.com/jsp/jstl/functions"
-          xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
-          xmlns:lt="urn:jsptagdir:/WEB-INF/tags">
+					version="2.1"
+					xmlns:c="http://java.sun.com/jsp/jstl/core"
+					xmlns:l="http://bazhenov.org/logging"
+					xmlns:f="http://java.sun.com/jsp/jstl/functions"
+					xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+					xmlns:lt="urn:jsptagdir:/WEB-INF/tags">
 
-  <jsp:directive.page contentType="text/html"/>
-  <jsp:directive.page pageEncoding="UTF-8"/>
+	<jsp:directive.page contentType="text/html"/>
+	<jsp:directive.page pageEncoding="UTF-8"/>
+	<jsp:useBean id="applicationId" scope="request" type="java.lang.String"/>
+	<jsp:useBean id="uniqueApplicationIds" scope="request" type="java.util.Set"/>
+	<jsp:useBean id="entries" scope="request" type="java.util.List"/>
+	<jsp:useBean id="times" scope="request" type="java.lang.Integer"/>
 
-  <html>
-  <head>
-    <title>LogWatcher: feed for <c:out value="${applicationId}"/></title>
-    <c:url value='/css/aggregated-feed.css' var="cssUrl"/>
-    <link rel="stylesheet" href="${cssUrl}"/>
-  </head>
+	<html>
+	<head>
+		<title>LogWatcher: <c:out value="${applicationId}"/> feed</title>
+		<c:url value='/css/aggregated-feed.css' var="cssUrl"/>
+		<link rel="stylesheet" href="${cssUrl}"/>
+	</head>
 
-  <body>
-  <h2>Application feed</h2>
+	<body>
+	<h2><c:out value="${applicationId}"/> feed</h2>
 
-	<lt:application-box applicationIds="${uniqueApplicationIds}" currentApplicationId="${applicationId}" />
 
-  <c:choose>
-    <c:when test="${f:length(entries) > 0}">
-      <c:forEach var="entry" items="${entries}">
-        <lt:aggregated-entry entry="${entry}" currentApplicationId="${applicationId}"/>
-      </c:forEach>
+	<lt:application-box applicationIds="${uniqueApplicationIds}" currentApplicationId="${applicationId}"/>
 
-      <div id="footer">
-        ${l:pluralize(f:length(entries), "entry entries entries")},
-        ${l:pluralize(times, "message messages messages")}
-      </div>
-    </c:when>
-    <c:otherwise>
+	<c:choose>
+		<c:when test="${f:length(entries) > 0}">
+			<div class="entries">
+				<c:forEach var="entry" items="${entries}">
+					<lt:aggregated-entry entry="${entry}" currentApplicationId="${applicationId}"/>
+				</c:forEach>
+			</div>
+
+			<div id="footer">
+				${l:pluralize(f:length(entries), "entry entries entries")},
+				${l:pluralize(times, "message messages messages")}
+			</div>
+		</c:when>
+		<c:otherwise>
 			<div id="notificationPanel">
 				<p>Try to change severity settings</p>
 				<span>&amp;empty;</span>
 				<br/>No results found.
 			</div>
 
-    </c:otherwise>
-  </c:choose>
+		</c:otherwise>
+	</c:choose>
 
-  </body>
-  </html>
+	</body>
+	</html>
 </jsp:root>
