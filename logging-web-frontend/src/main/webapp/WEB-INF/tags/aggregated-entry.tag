@@ -49,7 +49,7 @@
 			<c:if test="${not empty(entry.sampleCause)}">
 				<span class="causeType"><c:out value="${lf:rootCause(entry.sampleCause).type}"/>:</span>
 			</c:if>
-			<c:out value="${lf:trim(entry.message, 150)}"/>
+			<c:out value="${lf:trim(entry.message, 150, null)}"/>
 		</div>
 		<div class='messageOverlay'></div>
 		<div class='times'>

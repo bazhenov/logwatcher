@@ -12,4 +12,8 @@ public class ApplicationInfo {
 		this.applicationId = applicationId;
 		this.entries = entries;
 	}
+
+	public List<AggregatedEntry> getEntries() {
+		return entries;
+	}
 }

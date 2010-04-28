@@ -50,11 +50,18 @@ public class EntryTag {
 		return cause;
 	}
 
-	public static String trim(String string, int limit) {
-		if ( string.length() > limit ) {
-			return string.substring(0, limit);
+	public static String trim(String string, int limit, String append) {
+		if (string == null) {
+			return null;
 		}
-		return string;
+		if (string.length() > limit) {
+			string = string.substring(0, limit);
+			return append != null && append.length() > 0
+				? string + append
+				: string;
+		}else{
+			return string;
+		}
 	}
 
 	public static String pluralize(int number, String titles) {

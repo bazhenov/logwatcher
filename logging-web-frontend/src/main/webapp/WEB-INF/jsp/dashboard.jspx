@@ -1,31 +1,38 @@
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns="http://www.w3.org/1999/xhtml"
-          version="2.1"
-          xmlns:c="http://java.sun.com/jsp/jstl/core"
-          xmlns:l="http://bazhenov.org/logging"
-          xmlns:f="http://java.sun.com/jsp/jstl/functions"
-          xmlns:lt="urn:jsptagdir:/WEB-INF/tags">
+					version="2.1"
+					xmlns:c="http://java.sun.com/jsp/jstl/core"
+					xmlns:l="http://bazhenov.org/logging"
+					xmlns:f="http://java.sun.com/jsp/jstl/functions"
+					xmlns:lt="urn:jsptagdir:/WEB-INF/tags">
 
-  <jsp:directive.page contentType="text/html"/>
-  <jsp:directive.page pageEncoding="UTF-8"/>
+	<jsp:directive.page contentType="text/html"/>
+	<jsp:directive.page pageEncoding="UTF-8"/>
 
-  <html>
-  <head>
-    <title>LogWatcher Dashboard</title>
-    <c:url value='/css/dashboard.css' var="cssUrl"/>
-    <link rel="stylesheet" href="${cssUrl}"/>
-  </head>
-  <body>
-  <h2>Dashboard</h2>
+	<html>
+	<head>
+		<title>LogWatcher Dashboard</title>
+		<c:url value='/css/dashboard.css' var="cssUrl"/>
+		<link rel="stylesheet" href="${cssUrl}"/>
+	</head>
+	<body>
+	<h2>Dashboard</h2>
 
 	<c:forEach items="${infos}" var="info">
 		<div class="dashboardWidget">
-			<div class="title"><c:out value="${info.key}" /></div>
-			<span><a href="#">StompSendException: Check t...</a></span>
-			<span><a href="#">No message given</a></span>
-
+			<div class="title">
+				<a href="/feed/${info.key}"><c:out value="${info.key}"/></a>
+			</div>
+			<ul>
+				<c:forEach items="${info.value.entries}" var="entry" varStatus="status">
+					<c:if test="${status.count lt 5}">
+						<li><a href="#"><c:out value="${l:trim(entry.message, 33, '...')}"/></a></li>
+					</c:if>
+				</c:forEach>
+			</ul>
 		</div>
 	</c:forEach>
+
 	<div style="clear: both;"></div>
-  </body>
-  </html>
+	</body>
+	</html>
 </jsp:root>

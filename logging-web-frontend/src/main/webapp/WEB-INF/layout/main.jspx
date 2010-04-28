@@ -49,7 +49,7 @@
 			<td align="center">
 				<div id="header">
 					<c:url value="/images/logwatcher-logo.png" var="logoSrc"/>
-					<a href="/"><img src="${logoSrc}" alt="LogWatcher"/></a>
+					<a href="/dashboard"><img src="${logoSrc}" alt="LogWatcher"/></a>
 
 					<div id="searchPanel">
 						<form action="/search">

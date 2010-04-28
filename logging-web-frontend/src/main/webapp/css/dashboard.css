@@ -1,16 +1,19 @@
 @import "main.css";
 
-#div												{ border: 1px solid black; }
-
-.dashboardWidget					{ float: left; width: 250px; margin: 10px; padding-bottom: 10px;
-														box-shadow: 0 0 10px #ddd; -moz-box-shadow: 0 0 10px #ddd;
-														-webkit-box-shadow: 0 0 10px #ddd; text-align: left;
+.dashboardWidget					{ float: left; width: 250px; margin: 30px; padding-bottom: 10px;
+														box-shadow: 0 0 5px #eee; -moz-box-shadow: 0 0 5px #eee;
+														-webkit-box-shadow: 0 0 5px #eee; text-align: left;
 														border: 1px solid #ddd; background-color: #f9f9f9; border-radius: 5px; -webkit-border-radius: 5px;
 														-moz-border-radius: 5px}
-.dashboardWidget .title		{ font-size: 80%; color: #999; font-weight: bold; padding: 5px 15px; border-bottom: 1px solid #ddd;
-														}
+.dashboardWidget .title		{ padding: 5px 15px; border-bottom: 1px solid #ddd;  }
 
-.dashboardWidget span			{ background-color: white; display: block; border-bottom: 1px solid #ddd; padding: 5px 10px;
-														font-size: 60%; white-space: nowrap; overflow-x: hidden }
+.dashboardWidget .title a	{ font-size: 70%; color: #999; font-weight: bold; width: 100%; display: block;
+														background: url("/images/arrow.png") no-repeat right; border: none; text-decoration: none; }
 
-.dashboardWidget A				{ width: 90%; overflow-x: hidden; display: block; }
+.dashboardWidget .title a:first-letter { text-transform: capitalize; }
+
+.dashboardWidget ul					{ padding: 0; margin: 0; }
+.dashboardWidget ul li			{ background-color: white; display: block; border-bottom: 1px solid #ddd; padding: 5px 15px;
+															font-size: 60%; white-space: nowrap; overflow-x: hidden }
+
+.dashboardWidget li A				{ width: 100%; overflow-x: hidden; display: block; }

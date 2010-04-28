@@ -43,7 +43,8 @@ public class FeedController {
 	private final QueryTranslator translator = new AnnotationDrivenQueryTranslator(
 		new TranslationRulesImpl());
 	private final QueryParser parser = new QueryParser();
-	private final ByLastOccurenceDateComparator byLastOccurenceDate = new ByLastOccurenceDateComparator();
+	private final Comparator<AggregatedEntry> byLastOccurenceDate = new ByLastOccurenceDateComparator();
+	private final Comparator<AggregatedEntry> byOccurenceCount = new ByOccurenceCountComparator();
 	private final HashMap<String, Comparator<AggregatedEntry>> comparators = new HashMap<String, Comparator<AggregatedEntry>>() {{
 		put(null, new ByLastOccurenceDateComparator());
 		put("last-occurence", new ByLastOccurenceDateComparator());
@@ -97,11 +98,12 @@ public class FeedController {
 
 	@RequestMapping("/dashboard")
 	public String doDashboard(ModelMap map) throws LogStorageException {
-		List<AggregatedEntry> allEntries = storage.getAggregatedEntries(today().minusDay(1), Severity.trace);
+		List<AggregatedEntry> allEntries = storage.getAggregatedEntries(today(), Severity.trace);
 		Map<String, ApplicationInfo> infos = new HashMap<String, ApplicationInfo>();
 		Set<String> uniqueApplicationIds = getUniqueApplicationId(allEntries);
 		for (String applicationId : uniqueApplicationIds) {
 			List<AggregatedEntry> applicationsEntries = filter(allEntries, applicationId);
+			sort(applicationsEntries, byOccurenceCount);
 			ApplicationInfo info = new ApplicationInfo(applicationId, applicationsEntries);
 			infos.put(applicationId, info);
 		}
