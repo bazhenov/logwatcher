@@ -16,4 +16,8 @@ public class ApplicationInfo {
 	public List<AggregatedEntry> getEntries() {
 		return entries;
 	}
+
+	public String getApplicationId() {
+		return applicationId;
+	}
 }

@@ -33,17 +33,10 @@ public class FeedController {
 			return new SimpleDateFormat("yyyy-MM-dd");
 		}
 	};
-	private final ThreadLocal<DateFormat> fullFormat = new ThreadLocal<DateFormat>() {
-		@Override
-		protected DateFormat initialValue() {
-			return new SimpleDateFormat("d MMMM");
-		}
-	};
 	private LogStorage storage;
 	private final QueryTranslator translator = new AnnotationDrivenQueryTranslator(
 		new TranslationRulesImpl());
 	private final QueryParser parser = new QueryParser();
-	private final Comparator<AggregatedEntry> byLastOccurenceDate = new ByLastOccurenceDateComparator();
 	private final Comparator<AggregatedEntry> byOccurenceCount = new ByOccurenceCountComparator();
 	private final HashMap<String, Comparator<AggregatedEntry>> comparators = new HashMap<String, Comparator<AggregatedEntry>>() {{
 		put(null, new ByLastOccurenceDateComparator());
@@ -57,7 +50,7 @@ public class FeedController {
 
 	@RequestMapping("/")
 	public View handleRoot() {
-		return new RedirectView("/feed", true);
+		return new RedirectView("/dashboard", true);
 	}
 
 	@RequestMapping("/entry/remove")
@@ -67,7 +60,7 @@ public class FeedController {
 	}
 
 	@RequestMapping("/search")
-	public String handleSearch(@RequestParam(value = "q", required = false) String query, HttpServletRequest request, ModelMap map)
+	public String handleSearch(@RequestParam(value = "q", required = false) String query, ModelMap map)
 		throws InvalidQueryException, LogStorageException, InvalidCriteriaException {
 		if (query == null || query.isEmpty()) {
 			return "search-form";
@@ -99,16 +92,20 @@ public class FeedController {
 	@RequestMapping("/dashboard")
 	public String doDashboard(ModelMap map) throws LogStorageException {
 		List<AggregatedEntry> allEntries = storage.getAggregatedEntries(today(), Severity.trace);
-		Map<String, ApplicationInfo> infos = new HashMap<String, ApplicationInfo>();
-		Set<String> uniqueApplicationIds = getUniqueApplicationId(allEntries);
-		for (String applicationId : uniqueApplicationIds) {
+		List<ApplicationInfo> infos = groupEntriesByApplicationId(allEntries);
+		map.put("infos", infos);
+		return "dashboard";
+	}
+
+	private List<ApplicationInfo> groupEntriesByApplicationId(List<AggregatedEntry> allEntries) {
+		List<ApplicationInfo> infos = new ArrayList<ApplicationInfo>();
+		for (String applicationId : getUniqueApplicationId(allEntries)) {
 			List<AggregatedEntry> applicationsEntries = filter(allEntries, applicationId);
 			sort(applicationsEntries, byOccurenceCount);
 			ApplicationInfo info = new ApplicationInfo(applicationId, applicationsEntries);
-			infos.put(applicationId, info);
+			infos.add(info);
 		}
-		map.put("infos", infos);
-		return "dashboard";
+		return infos;
 	}
 
 	@RequestMapping("/feed/{applicationId}")
@@ -183,9 +180,9 @@ public class FeedController {
 	}
 
 	@RequestMapping("/entries/{checksum}")
-	public String handleEntries(@PathVariable String checksum, ModelMap map,
-															@RequestParam("date") String dateAsString)
+	public String handleEntries(@PathVariable String checksum, ModelMap map, @RequestParam("date") String dateAsString)
 		throws LogStorageException, InvalidCriteriaException, ParseException {
+
 		java.util.Date date = format.get().parse(dateAsString);
 		List<LogEntry> entries = entries().
 			checksum(checksum).
@@ -194,6 +191,7 @@ public class FeedController {
 		map.addAttribute("checksum", checksum);
 		map.addAttribute("entries", entries);
 		map.addAttribute("date", date);
+		map.addAttribute("applicationId", entries.get(0).getApplicationId());
 		return "entries";
 	}
 
@@ -207,8 +205,7 @@ public class FeedController {
 	}
 
 	@RequestMapping("/feed/rss")
-	public String handleRss(ModelMap map,
-													@RequestParam(value = "severity", required = false) String s)
+	public String handleRss(ModelMap map, @RequestParam(value = "severity", required = false) String s)
 		throws LogStorageException, InvalidCriteriaException {
 
 		Severity severity = s == null

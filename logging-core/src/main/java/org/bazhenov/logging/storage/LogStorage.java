@@ -98,7 +98,6 @@ public interface LogStorage {
 	 * @return список аггрегированных записей
 	 * @throws LogStorageException в случае возникновения внутренних ошибок хранилища
 	 */
-	@Deprecated
 	List<AggregatedEntry> getAggregatedEntries(Date date, Severity severity)
 		throws LogStorageException;
 

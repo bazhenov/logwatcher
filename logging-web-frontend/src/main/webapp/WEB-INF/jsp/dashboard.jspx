@@ -8,6 +8,8 @@
 	<jsp:directive.page contentType="text/html"/>
 	<jsp:directive.page pageEncoding="UTF-8"/>
 
+	<jsp:useBean id="infos" scope="request" type="java.util.Collection"/>
+
 	<html>
 	<head>
 		<title>LogWatcher Dashboard</title>
@@ -18,18 +20,7 @@
 	<h2>Dashboard</h2>
 
 	<c:forEach items="${infos}" var="info">
-		<div class="dashboardWidget">
-			<div class="title">
-				<a href="/feed/${info.key}"><c:out value="${info.key}"/></a>
-			</div>
-			<ul>
-				<c:forEach items="${info.value.entries}" var="entry" varStatus="status">
-					<c:if test="${status.count lt 5}">
-						<li><a href="#"><c:out value="${l:trim(entry.message, 33, '...')}"/></a></li>
-					</c:if>
-				</c:forEach>
-			</ul>
-		</div>
+		<lt:dashboard-widget info="${info}" />
 	</c:forEach>
 
 	<div style="clear: both;"></div>

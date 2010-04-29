@@ -1,9 +1,10 @@
-#menuBar            { position: absolute; right: 0; top: -2px; padding: 8px; -moz-border-radius: 0 4px 0 4px;
+#menuBar            { position: absolute; right: 0; top: -4px; padding: 8px; -moz-border-radius: 0 4px 0 4px;
                       border-radius: 0 4px 0 4px; -webkit-border-bottom-left-radius: 4px;
-                      -webkit-border-bottom-right-radius: 4px; background-color: #eee; border: 1px solid #ddd;  }
+                      -webkit-border-bottom-right-radius: 4px; background-color: #eee; border: 1px solid #ddd;
+											box-shadow: 0 0 10px #ddd; -moz-box-shadow: 0 0 10px #ddd; -webkit-box-shadow: 0 0 10px #ddd; }
 
-#menuBar            { font-size: 12px; font-weight: bold; font-family: helvetica, clean, sans-serif }
-
+#menuBar            { font-size: 12px; font-weight: bold;
+											font-family: 'Lucida Grande', Tahoma, Verdana, Helvetica, sans-serif; }
 #menuBar A,
 #menuBar A:visited,
 #menuBar A:hover    { color: rgb(65, 131, 196); text-decoration: none; padding: 5px; }

@@ -21,8 +21,7 @@
 	</head>
 
 	<body>
-	<h2><c:out value="${applicationId}"/> feed</h2>
-
+	<h2>application feed — <code><c:out value="${applicationId}"/></code></h2>
 
 	<lt:application-box applicationIds="${uniqueApplicationIds}" currentApplicationId="${applicationId}"/>
 

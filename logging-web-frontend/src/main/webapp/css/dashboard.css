@@ -1,13 +1,14 @@
 @import "main.css";
 
-.dashboardWidget					{ float: left; width: 250px; margin: 30px; padding-bottom: 10px;
+.dashboardWidget					{ float: left; width: 250px; margin: 10px; padding-bottom: 10px;
 														box-shadow: 0 0 5px #eee; -moz-box-shadow: 0 0 5px #eee;
 														-webkit-box-shadow: 0 0 5px #eee; text-align: left;
 														border: 1px solid #ddd; background-color: #f9f9f9; border-radius: 5px; -webkit-border-radius: 5px;
 														-moz-border-radius: 5px}
-.dashboardWidget .title		{ padding: 5px 15px; border-bottom: 1px solid #ddd;  }
+.dashboardWidget .title		{ padding: 5px 15px; border-bottom: 1px solid #ddd; font-weight: normal;
+														font-family: 'Lucida Grande', Tahoma, Verdana, Helvetica, sans-serif; font-size: 70% }
 
-.dashboardWidget .title a	{ font-size: 70%; color: #999; font-weight: bold; width: 100%; display: block;
+.dashboardWidget .title a	{ width: 100%; display: block; color: #333;
 														background: url("/images/arrow.png") no-repeat right; border: none; text-decoration: none; }
 
 .dashboardWidget .title a:first-letter { text-transform: capitalize; }

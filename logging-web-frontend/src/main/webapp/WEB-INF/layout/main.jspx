@@ -14,7 +14,7 @@
 	<head>
 		<title>
 			<sitemesh:write property="title">LogWatcher</sitemesh:write>
-		</title>
+		</title>	
 
 		<fmt:formatDate value="${date}" pattern="yyyy-MM-dd" var="dateAsString"/>
 
@@ -49,12 +49,11 @@
 			<td align="center">
 				<div id="header">
 					<c:url value="/images/logwatcher-logo.png" var="logoSrc"/>
-					<a href="/dashboard"><img src="${logoSrc}" alt="LogWatcher"/></a>
+					<a href="/dashboard"><img class="logo" src="${logoSrc}" alt="LogWatcher"/></a>
 
 					<div id="searchPanel">
 						<form action="/search">
-							<input type="search" name="q" accesskey="s" placeholder="Search..." autocomplete="off" results="5"
-										 size="25"/>
+							<input id="searchInput" type="text" name="q" accesskey="s" placeholder="Search..." size="25"/>
 						</form>
 					</div>
 
