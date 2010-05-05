@@ -1,5 +1,4 @@
 @import url("menubar.css");
-@import url("search-box.css");
 @import url("sort-box.css");
 @import url("entry.css");
 
@@ -43,7 +42,7 @@ a:visited			                  { color: brown; text-decoration: underline }
 																	box-shadow: 0 0 10px #ddd; -moz-box-shadow: 0 0 10px #ddd;
 																	-webkit-box-shadow: 0 0 10px #ddd; width: 970px; text-align: left;
 																	border: 1px solid white; border-radius: 5px; -webkit-border-radius: 5px;
-																	-moz-border-radius: 5px }
+																	-moz-border-radius: 5px; position: relative; }
 
 #notificationPanel              { text-align: center; font-size: 200%; color: #ddd; padding-bottom: 80px; font-weight: bold }
 #notificationPanel span         { font-size: 650% }

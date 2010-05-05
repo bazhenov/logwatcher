@@ -1,5 +1,4 @@
 @import url("menubar.css");
-@import url("search-box.css");
 @import url("entry.css");
 
 #sortBox                { font-size: 65%; position: absolute; right: 0; top: 0;  }

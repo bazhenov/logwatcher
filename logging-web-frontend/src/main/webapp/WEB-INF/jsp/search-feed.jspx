@@ -17,7 +17,7 @@
   <body>
   <h2>Search</h2>
 
-  <div id="givenQuery" rawQuery="${query}">
+  <div class="queryBox givenQuery" rawQuery="${query}">
     <span id="query">
       <c:forEach items="${terms}" var="term">
         <span class="keyword"><c:out value="${term.key}"/>:</span><span><c:out value="${term.value}"/>&amp;nbsp;</span>

@@ -24,11 +24,13 @@
 %>
 <a name='${entry.checksum}'></a>
 
+<fmt:formatDate value="${lastDate}" pattern="yyyy-MM-dd" var="lastOccurredDate"/>
+
 <c:url value="/entries/${entry.checksum}" var="detailsLink">
-	<c:param name="date"><fmt:formatDate value="${lastDate}" pattern="yyyy-MM-dd"/></c:param>
+	<c:param name="date" value="${lastOccurredDate}" />
 </c:url>
 
-<div class='entry ${entry.severity}' checksum='${entry.checksum}'>
+<div class='entry ${entry.severity}' checksum='${entry.checksum}' lastOccurredDate='${lastOccurredDate}'>
 	<div class='entryHeader'>
 
 		<div class="count">

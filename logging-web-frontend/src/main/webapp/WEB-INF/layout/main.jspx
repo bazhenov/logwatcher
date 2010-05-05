@@ -42,6 +42,10 @@
 		<sitemesh:write property="head"/>
 	</head>
 
+<!--	<fc:widget datasource="${messagesDS}" template="widget/messages">
+		<fc:ifFailed template="messages-fails" />
+	</fc:widget>-->
+
 
 	<body>
 	<table width="100%">
@@ -60,7 +64,7 @@
 					<div id="menuBar">
 						<c:url value="/dashboard" var="url"/>
 						<a href="${url}">Dashboard</a>
-						<span class="devider"></span>
+						<span class="devider">&amp;nbsp;</span>
 
 						<c:url value="/feed" var="url"/>
 						<a href="${url}">Application feed</a>

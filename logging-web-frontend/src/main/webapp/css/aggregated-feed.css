@@ -1,4 +1,5 @@
 @import url("application-box.css");
+@import url("ui.all.css");
 
 .entries												{ padding: 20px 0 0 0; }
 
@@ -54,3 +55,7 @@
 .entryContent .attributes code  { background-color: #eec; border: 1px dotted #997; padding: 0 2px; font-family: monospace; }
 .entryContent ul                { list-style-type: none; padding: 0; color: gray }
 .entryContent li span           { color: black }
+
+#severityContainer							{ width: 120px; font-size: 12px; position: absolute; right: 20px; top: 10px;
+																	text-align: center; }
+#severityValue									{ margin-bottom: 5px; }

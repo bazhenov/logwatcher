@@ -13,11 +13,12 @@ $(document).ready(function() {
 	function toggleEntry(entry) {
 		entry.toggleClass('selectedEntry');
 		var checksum = entry.attr("checksum");
+		var lastOccurredDate = entry.attr("lastOccurredDate");
 		var content = entry.find('.entryContainer');
 		if ( content.attr("loaded") == "false" ) {
 			content.attr("loaded", "true");
 			entry.addClass("loadingContent");
-			content.load("/service/content", {'checksum': checksum, 'date': date}, function(response, code) {
+			content.load("/service/content", {'checksum': checksum, 'date': lastOccurredDate}, function(response, code) {
 				if ( code != "success" ) {
 					content.html("Error while loading content");
 				}
@@ -28,8 +29,8 @@ $(document).ready(function() {
 
 	}
 
-  $('#givenQuery').click(function(target) {
-    var el = $(target.target).parents('#givenQuery');
+  $('.givenQuery').click(function(target) {
+    var el = $(target.target).parents('.givenQuery');
     var query = el.attr('rawQuery');
     el.html("<form action='/search'><input id='searchInput' type='text' name='q' value='"+query+"' /></form>");
     $('#searchInput').focus();
@@ -81,16 +82,16 @@ $(document).ready(function() {
 		return false;
 	});
 
-	$('#slider').slider({
+	$('#severity').slider({
 		step: 1,
 		min: 1,
 		max: 5,
 		slide: function(event, ui) {
 			var value = ui.value;
 			var className = "slider-" + severity[value]
-			$('#slider').addClass(className);
+			$('#severity').addClass(className);
 
-			$('#sliderValue').text(severity[value]);
+			$('#severityValue').text(severity[value]);
 		},
 		change: function(event, ui) {
 			var value = severity[ui.value];
@@ -107,8 +108,8 @@ $(document).ready(function() {
 
 	for ( var i = 0; i < severity.length; i++ ) {
 		if ( severity[i] == severityLevel || severityLevel == i ) {
-			$('#sliderValue').text(severity[i]);
-			$('#slider').slider('option', 'value', i);
+			$('#severityValue').text(severity[i]);
+			$('#severity').slider('option', 'value', i);
 		}
 	}
 

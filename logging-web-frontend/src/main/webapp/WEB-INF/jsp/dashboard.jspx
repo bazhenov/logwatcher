@@ -19,9 +19,19 @@
 	<body>
 	<h2>Dashboard</h2>
 
-	<c:forEach items="${infos}" var="info">
-		<lt:dashboard-widget info="${info}" />
-	</c:forEach>
+	<c:choose>
+		<c:when test="${f:length(infos) gt 0}">
+			<c:forEach items="${infos}" var="info">
+				<lt:dashboard-widget info="${info}" />
+			</c:forEach>
+		</c:when>
+		<c:otherwise>
+			<div id="notificationPanel">
+				<span>&amp;empty;</span><br />
+				No entries found
+			</div>
+		</c:otherwise>
+	</c:choose>
 
 	<div style="clear: both;"></div>
 	</body>

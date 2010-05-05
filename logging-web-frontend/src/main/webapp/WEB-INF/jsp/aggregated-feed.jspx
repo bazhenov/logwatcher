@@ -23,6 +23,12 @@
 	<body>
 	<h2>application feed — <code><c:out value="${applicationId}"/></code></h2>
 
+	<div id="severityContainer">
+		<div id="severityValue">ERROR</div>
+		<div id="severity">&amp;nbsp;</div>
+	</div>
+
+
 	<lt:application-box applicationIds="${uniqueApplicationIds}" currentApplicationId="${applicationId}"/>
 
 	<c:choose>

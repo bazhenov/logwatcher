@@ -17,8 +17,10 @@
   <body>
   <h2>Search</h2>
 
-  <div id="givenQuery" rawQuery="${query}">
-    <input name="q" value=""/>
+  <div class="queryBox">
+		<form action="/search" method="get">
+    	<input name="q" value=""/>
+		</form>
   </div>
 
   <table width="100%">
@@ -35,11 +37,11 @@
           </tr>
           <tr>
             <td class="sampleDescription">absoulte date</td>
-            <td><span>occured: YYYY-MM-DD</span></td>
+            <td><span>occurred: YYYY-MM-DD</span></td>
           </tr>
           <tr>
             <td class="sampleDescription">absoulte date range</td>
-            <td><span>occured: YYYY-MM-DD/YYY-MM-DD</span></td>
+            <td><span>occurred: YYYY-MM-DD/YYY-MM-DD</span></td>
           </tr>
           <tr>
             <td class="sampleDescription">exception type</td>
