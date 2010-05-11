@@ -9,7 +9,7 @@
 														font-family: 'Lucida Grande', Tahoma, Verdana, Helvetica, sans-serif; font-size: 70% }
 
 .dashboardWidget .title a	{ width: 100%; display: block; color: #333;
-														background: url("/images/arrow.png") no-repeat right; border: none; text-decoration: none; }
+														background: url("../images/arrow.png") no-repeat right; border: none; text-decoration: none; }
 
 .dashboardWidget .title a:first-letter { text-transform: capitalize; }
 

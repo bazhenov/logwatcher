@@ -21,12 +21,6 @@
 		<c:url value='/css/main.css' var="cssUrl"/>
 		<link rel="stylesheet" href="${cssUrl}"/>
 
-		<script type="text/javascript">
-			var severityLevel = '${severity}';
-			var entrySortOrder = '${sortOrder}';
-			var date = '${dateAsString}';
-		</script>
-
 		<c:url value="/js/jquery-1.3.2.js" var="jsUrl"/>
 		<script type="text/javascript" src="${jsUrl}">/**/</script>
 
@@ -41,11 +35,6 @@
 					href="${rssUrl}?severity=${severity}"/>
 		<sitemesh:write property="head"/>
 	</head>
-
-<!--	<fc:widget datasource="${messagesDS}" template="widget/messages">
-		<fc:ifFailed template="messages-fails" />
-	</fc:widget>-->
-
 
 	<body>
 	<table width="100%">
@@ -65,10 +54,6 @@
 						<c:url value="/dashboard" var="url"/>
 						<a href="${url}">Dashboard</a>
 						<span class="devider">&amp;nbsp;</span>
-
-						<c:url value="/feed" var="url"/>
-						<a href="${url}">Application feed</a>
-						<span class="devider"></span>
 
 						<c:url value="/search" var="url"/>
 						<a href="${url}">Advanced search</a>

@@ -66,7 +66,7 @@ $(document).ready(function() {
 			entry.addClass('removing');
 			$.ajax({
 				type: "GET",
-				url: './entry/remove?checksum=' + checksum,
+				url: '/entry/remove?checksum=' + checksum,
 				complete: function() {
 					entry.removeClass('removing');
 				},
@@ -98,7 +98,7 @@ $(document).ready(function() {
 			var url = jQuery.param({severity: value});
 			$.ajax({
 				type: "GET",
-				url: './session?severity=' + value,
+				url: '/session?severity=' + value,
 				complete: function() {
 					window.location = window.location;
 				}
