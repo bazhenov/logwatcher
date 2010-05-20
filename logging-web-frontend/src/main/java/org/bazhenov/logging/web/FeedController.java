@@ -127,7 +127,7 @@ public class FeedController {
 		map.addAttribute("date", date.asDate());
 
 		Severity severity = getSeverity(request);
-		map.addAttribute("severity", severity);
+		map.addAttribute("severity", severity.toString());
 
 		List<AggregatedEntry> entries = storage.getAggregatedEntries(date, severity);
 

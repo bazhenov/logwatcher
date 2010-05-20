@@ -43,22 +43,6 @@ $(document).ready(function() {
 		}
 	});
 
-	$('#legend #question').click(function() {
-		$(this).parents("#legend").toggleClass('selected');
-	});
-
-	$('#legend a').click(function() {
-		var input = $('#searchInput');
-		var value = $(this).text();
-		if ( input.val().length > 0 && input.val().substr(-1, 1) != ' ' ) {
-			value = " " + value;
-		}
-		input.val(input.val() + value + ": ");
-		input.focus();
-	});
-
-
-
 	$('a.removeEntry').live('click', function() {
 		var entry = $(this).parents(".entry");
 		var checksum = entry.attr('checksum');
@@ -82,28 +66,8 @@ $(document).ready(function() {
 		return false;
 	});
 
-	$('#severity').slider({
-		step: 1,
-		min: 1,
-		max: 5,
-		slide: function(event, ui) {
-			var value = ui.value;
-			var className = "slider-" + severity[value]
-			$('#severity').addClass(className);
-
-			$('#severityValue').text(severity[value]);
-		},
-		change: function(event, ui) {
-			var value = severity[ui.value];
-			var url = jQuery.param({severity: value});
-			$.ajax({
-				type: "GET",
-				url: '/session?severity=' + value,
-				complete: function() {
-					window.location = window.location;
-				}
-			});
-		}
+	$('#severityMenu li.selected').click(function ()  {
+		$(this).parents('#severityMenu').toggleClass('visible');
 	});
 
 	for ( var i = 0; i < severity.length; i++ ) {
@@ -121,22 +85,4 @@ $(document).ready(function() {
 			}
 		});
 	}
-
-	$("#sortBox span").each(function() {
-		var el = $(this);
-		if ( el.attr("value") == entrySortOrder ) {
-			el.addClass("selected");
-		}else{
-			el.click(function() {
-				var value = $(this).attr("value");
-				$.ajax({
-					type: "GET",
-					url: './session?sortOrder=' + value,
-					complete: function() {
-						window.location = window.location;
-					}
-				});
-			});
-		}
-	});
 });
