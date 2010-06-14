@@ -8,5 +8,11 @@
 	<c:url value="/session" var="url">
 		<c:param name="severity" value="${severity}" />
 	</c:url>
-	<li><a href="${url}"><c:out value="${severity}" /></a></li>
+	<li><a href="#" onclick="$.ajax({
+		type: 'GET',
+		url: '${url}',
+		success: function() {
+			window.location.reload();
+		}
+	});"><c:out value="${severity}" /></a></li>
 </c:if>

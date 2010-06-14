@@ -1,0 +1,27 @@
+.popupContainer													{ position: absolute; z-index:1; top: 50px; opacity: 0.95; }
+.popupContainer .outerBlock							{ background-color: white; padding: 2px;
+																					box-shadow: 0 0 10px #999; -moz-box-shadow: 0 0 10px #999;
+																					-webkit-box-shadow: 0 0 4px #aaa; border-radius: 5px;
+																					-webkit-border-radius: 5px; -moz-border-radius: 5px; }
+
+.popupContainer .innerBlock							{ background: #3e3e3e url('/images/popup-background.png') repeat-x;
+																					color: white; padding: 5px; border-radius: 5px; -webkit-border-radius: 5px;
+																					-moz-border-radius: 5px;
+																					font-family: 'Lucida Grande', sans-serif; letter-spacing: -1px }
+
+.popupContainer .innerBlock .links			{ font-size: 12px }
+
+.popupContainer A.applicationLink				{ font-size: 14px; width: 108px; float: left }
+.popupContainer A.applicationLink			{ dispaly: block; padding: 5px; }
+.popupContainer A.applicationLink:hover { background-color: #a2a2a2 }
+
+.popupContainer .innerBlock A,
+.popupContainer .innerBlock A:visited,
+.popupContainer .innerBlock A:hover			{ color: white; text-decoration: none; display: block; }
+
+.popupContainer .innerBlock A:active		{ color: #ddd; }
+.popupContainer .innerBlock *:first-letter		{ text-transform: capitalize; }
+
+#applicationSelector										{ width: 250px }
+
+.popupContainer	.relatedLinks						{ padding: 5px; font-size: 12px; }

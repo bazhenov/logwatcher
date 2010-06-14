@@ -18,7 +18,7 @@ public class Bootstrap {
 	}
 
 	public void load() throws LogStorageException {
-		storage.writeEntry(new LogEntry(DateTime.now(), "group", "AdvertServiceException: Error Fetching http headers", Severity.error, "sum", "advert", null));
+		storage.writeEntry(new LogEntry(DateTime.now(), "group", "AdvertServiceException: Error Fetching http headers", Severity.error, "sum", "advertisement", null));
 		Cause cause = new Cause("RuntimeException", "Socket reading timeout", "AdvertServiceException: Error Fetching http headers\n" +
 			"  at /var/www/baza.farpost.ru/rev/20100325-1520/slr/advert/src/remote/AdvertSoapDecorator.class.php:16\n" +
 			"  10: slrSoapDecorator.class.php:94 AdvertSoapDecorator->handleException(\"Error Fetc...\", SoapFault)\n" +
@@ -62,15 +62,15 @@ public class Bootstrap {
 			"geocoder", null, cause));
 
 		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
-			"mq-broker", null, cause));
+			"frontend", null, cause));
 		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
-			"mq-broker", null, cause));
+			"frontend", null, cause));
 		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
-			"mq-broker", null, cause));
+			"frontend", null, cause));
 		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very very long longvery very long longvery very very long long Exception", Severity.error, "sum4",
-			"mq-broker", null, cause));
+			"frontend", null, cause));
 
 		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum5",
-			"mq-broker", null, null));
+			"frontend", null, null));
 	}
 }

@@ -18,6 +18,8 @@
 		<title>LogWatcher: <c:out value="${applicationId}"/> feed</title>
 		<c:url value='/css/aggregated-feed.css' var="cssUrl"/>
 		<link rel="stylesheet" href="${cssUrl}"/>
+		<c:url value='/css/popup.css' var="cssUrl"/>
+		<link rel="stylesheet" href="${cssUrl}"/>
 		<script type="text/javascript">
 			var severityLevel = '${severity}';
 			var entrySortOrder = '${sortOrder}';
@@ -25,11 +27,31 @@
 	</head>
 
 	<body>
-	<h2>application feed — <code><c:out value="${applicationId}"/></code></h2>
+	<h2>
+		<span id="applicationId"><c:out value="${applicationId}"/></span>
+		<span class="additionalInfo"> on <span id="date"><fmt:formatDate pattern="dd MMMM, yyyy"
+																																		 value="${date}"/></span></span>
+	</h2>
 
-	<lt:severity-selector severity="${severity}" />
+	<lt:severity-selector severity="${severity}"/>
 
-	<lt:application-box applicationIds="${uniqueApplicationIds}" currentApplicationId="${applicationId}"/>
+	<lt:popup id="applicationSelector">
+
+		<c:forEach items="${uniqueApplicationIds}" var="id">
+			<c:if test="${id ne applicationId}">
+				<c:url value="/feed/${id}" var="url"/>
+				<a class="applicationLink" href="${url}"><c:out value="${id}"/></a>
+			</c:if>
+		</c:forEach>
+		<div style="clear: both;">&amp;nbsp;</div>
+
+		<div class="relatedLinks"><a href="/dashboard">Return to dashboard</a></div>
+
+	</lt:popup>
+
+	<lt:popup id="dateSelector">
+		Select date
+	</lt:popup>
 
 	<c:choose>
 		<c:when test="${f:length(entries) > 0}">

@@ -66,17 +66,6 @@ $(document).ready(function() {
 		return false;
 	});
 
-	$('#severityMenu li.selected').click(function ()  {
-		$(this).parents('#severityMenu').toggleClass('visible');
-	});
-
-	for ( var i = 0; i < severity.length; i++ ) {
-		if ( severity[i] == severityLevel || severityLevel == i ) {
-			$('#severityValue').text(severity[i]);
-			$('#severity').slider('option', 'value', i);
-		}
-	}
-
 	var checksum = location.hash.substring(1);
 	if ( checksum.length > 0 ) {
 		$('.entry').each(function() {
@@ -85,4 +74,39 @@ $(document).ready(function() {
 			}
 		});
 	}
+
+	$('#applicationId').click(function() {
+		showPopup($(this), $('#applicationSelector'));
+		return false;
+	});
+
+	$('#date').click(function() {
+		showPopup($(this), $('#dateSelector'));
+		return false;
+	});
+
+	$('body').click(function(event) {
+		if ( $(event.target).parents(".popupContainer").length <= 0 ) {
+			hideAllPopups();
+		}
+	});
+
+	function hideAllPopups() {
+		$('.popupContainer').fadeOut(300);
+	}
+
+	function showPopup(activator, popup) {
+		if ( popup.css('display') == 'none' ) {
+			hideAllPopups();
+			var position = activator.position();
+			popup.css({"left": position.left, "top": position.top + activator.height() + 10});
+			popup.find('img.mark').css( { left: (activator.width()/2 - 8)+"px" } );
+
+				//;
+			popup.fadeIn(300);
+		}else{
+			popup.fadeOut(300);
+		}
+	}
+
 });

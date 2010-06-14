@@ -14,7 +14,9 @@
 	<head>
 		<title>
 			<sitemesh:write property="title">LogWatcher</sitemesh:write>
-		</title>	
+		</title>
+		<meta http-equiv="Pragma" content="no-cache" />
+
 
 		<fmt:formatDate value="${date}" pattern="yyyy-MM-dd" var="dateAsString"/>
 

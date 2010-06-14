@@ -1,6 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="f" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ tag import="org.bazhenov.logging.Severity" %>
 <%@ taglib prefix="l" tagdir="/WEB-INF/tags" %>
 
 <%@attribute name="severity" type="java.lang.String" required="true" %>

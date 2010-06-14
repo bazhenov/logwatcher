@@ -16,14 +16,11 @@ TABLE, TR, TBODY, TD            { padding: 0; margin: 0; }
 
 #searchInput										{ font-size: 14px; }
 
-h2                              { font-size: 24px; letter-spacing: -1px; color: #666; margin: 0 0 5px 0;
-                                  font-family: helvetica, arial, clean, sans-serif; font-weight: bold;
-																	text-shadow: 1px 1px 0 #ddd; }
+h2                              { font-size: 21px; letter-spacing: -1px; color: #4f4f4f; margin: 5px 0 5px 0;
+                                  font-family: 'Lucida grande', helvetica, arial, clean, sans-serif;
+																	font-weight: normal; }
 h2:first-letter									{ text-transform: capitalize; }
-h2 span                         { font-weight: normal; }
-h2 a                            { text-decoration:none !important; }
-h2 a:visited                    { color: rgb(0, 153, 255) }
-h2 code													{ font-weight: normal; }
+h2 span.additionalInfo					{ color: #b1b1b1 }
 
 a					                      { color: #0099ff; text-decoration: none }
 a:hover				                  { color: red; text-decoration: underline }
