@@ -1,5 +1,4 @@
 <%@attribute name="id" type="java.lang.String" required="true" %>
-<%@attribute name="width" type="java.lang.String" required="false" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <div class="popupContainer" id="${id}" style="display: none">
@@ -7,7 +6,7 @@
 
 		<img class="mark" src="/images/popup-mark.png" alt="" style="position: absolute; top: -10px; left: 30px"/>
 
-		<div class="outerBlock" style="width: ${width}">
+		<div class="outerBlock">
 			<div class="innerBlock">
 				<jsp:doBody />
 			</div>

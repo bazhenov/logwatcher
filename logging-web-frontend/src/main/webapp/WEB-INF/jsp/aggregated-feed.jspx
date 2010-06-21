@@ -12,6 +12,8 @@
 	<jsp:useBean id="uniqueApplicationIds" scope="request" type="java.util.Set"/>
 	<jsp:useBean id="entries" scope="request" type="java.util.List"/>
 	<jsp:useBean id="times" scope="request" type="java.lang.Integer"/>
+	<jsp:useBean id="date" scope="request" type="java.util.Date"/>
+	<jsp:useBean id="severity" scope="request" type="java.lang.String"/>
 
 	<html>
 	<head>
@@ -20,6 +22,7 @@
 		<link rel="stylesheet" href="${cssUrl}"/>
 		<c:url value='/css/popup.css' var="cssUrl"/>
 		<link rel="stylesheet" href="${cssUrl}"/>
+		<script type="text/javascript" src="/js/calendar.js"></script>
 		<script type="text/javascript">
 			var severityLevel = '${severity}';
 			var entrySortOrder = '${sortOrder}';
@@ -36,21 +39,52 @@
 	<lt:severity-selector severity="${severity}"/>
 
 	<lt:popup id="applicationSelector">
+		<c:choose>
+			<c:when test="${f:length(uniqueApplicationIds) gt 0}">
+				<c:forEach items="${uniqueApplicationIds}" var="id">
+					<c:if test="${id ne applicationId}">
+						<c:url value="/feed/${id}" var="url"/>
+						<a class="applicationLink" href="${url}"><c:out value="${id}"/></a>
+					</c:if>
+				</c:forEach>
+			</c:when>
+			<c:otherwise>
+				<div class="notification">
+					No applications found
+				</div>
+			</c:otherwise>
+		</c:choose>
 
-		<c:forEach items="${uniqueApplicationIds}" var="id">
-			<c:if test="${id ne applicationId}">
-				<c:url value="/feed/${id}" var="url"/>
-				<a class="applicationLink" href="${url}"><c:out value="${id}"/></a>
-			</c:if>
-		</c:forEach>
 		<div style="clear: both;">&amp;nbsp;</div>
 
 		<div class="relatedLinks"><a href="/dashboard">Return to dashboard</a></div>
-
 	</lt:popup>
 
+
+	<c:url value="/feed/${applicationId}" var="baseUrl"/>
+	<fmt:formatDate pattern="yyyy" var="year" value="${date}"/>
+	<fmt:formatDate pattern="MM" var="month" value="${date}"/>
+	<script type="text/javascript">
+		var baseUrl = "${baseUrl}";
+		var baseDate = new Date("${year}", ${month}-1, 1);
+		var urlCallback = function(date) {
+			return baseUrl + '?date=' + date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+		};
+		$("a.prevMonthLink").live("click", function(e) {
+			baseDate.setMonth(baseDate.getMonth() - 1);
+			var newContent = buildCal(baseDate, urlCallback);
+			$("#dateSelector .innerBlock").html(newContent);
+		});
+		$("a.nextMonthLink").live("click", function(e) {
+			baseDate.setMonth(baseDate.getMonth() + 1);
+			var newContent = buildCal(baseDate, urlCallback);
+			$("#dateSelector .innerBlock").html(newContent);
+		})
+	</script>
 	<lt:popup id="dateSelector">
-		Select date
+		<script type="text/javascript">
+			document.write(buildCal(baseDate, urlCallback));
+		</script>
 	</lt:popup>
 
 	<c:choose>
