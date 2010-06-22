@@ -13,7 +13,7 @@
 	<div class='entryContent'>
 		<ol class='attributes'>
 			<c:forEach var="row" items="${attributes}">
-				<li><l:attribute attribute="${row.value}" name="${row.key}"/></li>
+				<li><l:attribute name="${row.key}" attribute="${row.value}" /></li>
 			</c:forEach>
 		</ol>
 		<c:choose>
@@ -38,7 +38,7 @@
 		${lf:trim(lf:formatCause(entry.sampleCause), 500, '')}</c:set>
 
 	<div class="entryFooter">
-		<c:url value="http://jira.dev.loc/jira/secure/CreateIssueDetails.jspa" var="jiraLink">
+		<c:url value="http://jira.dev.loc:8080/secure/CreateIssueDetails.jspa" var="jiraLink">
 			<c:param name="pid">10000</c:param>
 			<c:param name="issuetype">1</c:param>
 			<c:param name="summary" value="${lf:trim(entry.message, 120, '')}"/>

@@ -1,13 +1,5 @@
 severity = ['all', 'trace', 'debug', 'info', 'warning', 'error'];
 
-(function($) {
-	$.fn.extend({
-		autocomplete: function(el) {
-
-		}
-	});
-})(jQuery);
-
 $(document).ready(function() {
 
 	function toggleEntry(entry) {

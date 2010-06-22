@@ -1,0 +1,39 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0" xmlns:c="http://java.sun.com/jsp/jstl/core"
+					xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:l="http://bazhenov.org/logging">
+
+	<jsp:directive.attribute name="name" required="true" type="java.lang.String"/>
+	<jsp:directive.attribute name="attribute" required="true" type="org.bazhenov.logging.AggregatedAttribute"/>
+
+	<c:set var="valuesLimit" value="6"/>
+	<c:set var="lengthLimit" value="20"/>
+
+	<label><c:out value="${name}"/>: </label>
+	<c:forEach items="${attribute.values}" var="row" varStatus="counter">
+		<c:if test="${counter.count le valuesLimit}">
+			<c:choose>
+				<c:when test="${fn:length(row.value) gt lengthLimit}">
+					<code class="value">
+						<jsp:element name="abbr">
+							<jsp:attribute name="title"><c:out value="${row.value}"/></jsp:attribute>
+							<jsp:body>
+								<c:out value="${l:trim(row.value, lengthLimit, '...')}"/>
+								<c:if test="${row.count gt 1}">
+									<span>${row.count}</span>
+								</c:if>
+							</jsp:body>
+						</jsp:element>
+					</code>
+				</c:when>
+				<c:otherwise>
+					<code class="value"><c:out value="${row.value}"/><c:if
+						test="${row.count gt 1}"><span>${row.count}</span></c:if></code>
+				</c:otherwise>
+			</c:choose>
+		</c:if>
+	</c:forEach>
+
+	<c:if test="${fn:length(attribute.values) gt valuesLimit}">
+		<c:out value="${fn:length(attribute.values) - valuesLimit}"/> more&amp;hellip;
+	</c:if>
+
+</jsp:root>

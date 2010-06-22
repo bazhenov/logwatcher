@@ -52,10 +52,10 @@
 																	padding-left: 4px; padding-right: 2px; color: #777 !important;
 																	font-family: monospace; }
 
-.entryContent .attributes code  { background-color: #eec; border: 1px dotted #997; padding: 0 2px; font-family: monospace; }
+.entryContent .attributes code  { background-color: #eec; border: 1px dotted #997; padding: 0 2px; font-family: monospace;
+																	margin-right: 10px;}
 .entryContent ul                { list-style-type: none; padding: 0; color: gray }
 .entryContent li span           { color: black }
-
 
 #severityContainer							{ position: absolute; right: -26px; top: -9px;  }
 #severityContainer							{ width: 160px; font-size: 16px; padding: 15px; z-index: 1; color: #4f4f4f;

@@ -33,7 +33,7 @@ public class Bootstrap {
 			"  1 : service_runner.php:38 advertUnpopularDeactivationService->run()");
 		storage.writeEntry(new LogEntry(DateTime.now().minusHour(2), "group", "OverflowFundsException", Severity.warning, "sum2",
 			"billing", new HashMap<String, String>() {{
-				put("url" ,"/some/foo");
+				put("url" ,"/some/foo/very/long/url/to/fit/in/screen");
 				put("machine", "aux1.srv.loc");
 			}}, cause));
 		storage.writeEntry(new LogEntry(DateTime.now().minusHour(2), "group", "OverflowFundsException", Severity.warning, "sum2",
