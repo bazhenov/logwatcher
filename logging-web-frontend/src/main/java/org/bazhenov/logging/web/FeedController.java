@@ -91,7 +91,7 @@ public class FeedController {
 
 	@RequestMapping("/dashboard")
 	public String doDashboard(ModelMap map) throws LogStorageException {
-		List<AggregatedEntry> allEntries = storage.getAggregatedEntries(today(), Severity.trace);
+		List<AggregatedEntry> allEntries = storage.getAggregatedEntries(today(), Severity.error);
 		List<ApplicationInfo> infos = groupEntriesByApplicationId(allEntries);
 		map.put("infos", infos);
 		return "dashboard";
