@@ -7,5 +7,5 @@ test-output
 /log*.xml
 /.idea
 target
-test
 mysql.properties
+/tags

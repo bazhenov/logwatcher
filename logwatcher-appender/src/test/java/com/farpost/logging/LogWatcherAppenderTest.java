@@ -23,13 +23,11 @@ public class LogWatcherAppenderTest {
 
 		Marshaller marshaller = new JDomMarshaller();
 		BlockingQueue<String> queue = new LinkedBlockingQueue<String>();
-		Transport t = new UdpTransport(6589, new QueueAppendListener(queue));
-		LogWatcherAppender appender = new LogWatcherAppender();
-		appender.setAddress("127.0.0.1:6589");
-		String applicationId = "foobar";
-		appender.setApplicationId(applicationId);
-		appender.activateOptions();
+		UdpTransport t = new UdpTransport(6589, new QueueAppendListener(queue));
+		t.setBufferSize(100*1024);
 		t.start();
+		String applicationId = "foobar";
+		LogWatcherAppender appender = createAppender("127.0.0.1:6589", applicationId);
 
 		Throwable cause = new RuntimeException("Ooops");
 		String message = "Сообщение";
@@ -43,5 +41,13 @@ public class LogWatcherAppenderTest {
 		assertThat(entry.getApplicationId(), equalTo(applicationId));
 		assertThat(entry.getCause().getMessage(), equalTo("Ooops"));
 		assertThat(entry.getCause().getType(), equalTo(RuntimeException.class.getSimpleName()));
+	}
+
+	private static LogWatcherAppender createAppender(String address, String applicationId) {
+		LogWatcherAppender appender = new LogWatcherAppender();
+		appender.setAddress(address);
+		appender.setApplicationId(applicationId);
+		appender.activateOptions();
+		return appender;
 	}
 }
