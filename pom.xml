@@ -49,4 +49,16 @@
 		<module>logwatcher-appender</module>
     <module>logging-commons</module>
   </modules>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<forkMode>never</forkMode>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>
