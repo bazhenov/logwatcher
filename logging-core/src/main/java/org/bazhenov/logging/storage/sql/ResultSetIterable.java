@@ -18,9 +18,6 @@ public class ResultSetIterable implements Iterable<String> {
 
 	public class ResultIterator implements Iterator<String> {
 
-		private int hasNexCount = 0;
-		private int nextCount = 0;
-		
 		public boolean hasNext() {
 			try {
 				return result.next();

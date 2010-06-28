@@ -14,19 +14,19 @@ import java.util.*;
 import static java.lang.Math.min;
 
 /**
- * It is an implementation of Log4j appender that sends
- * log message to the log system of Bazhenov Denis
+ * It is an implementation of Log4j appender that sends log message to the LogWatcher
  * <p/>
  * Configuration:
- * <appender name="remote" class="com.farpost.logging.LogWatcherAppender">
- *   <param name="address" value="aux2.srv.loc:6578" />
- *   <param name="threshold" value="WARNING" />
- *   <param name="applicationId" value="serviceName" />
- * </appender>
+ * <pre>
+ * &lt;appender name="remote" class="com.farpost.logging.LogWatcherAppender">
+ *   &lt;param name="address" value="aux2.srv.loc:6578" />
+ *   &lt;param name="threshold" value="WARNING" />
+ *   &lt;param name="applicationId" value="serviceName" />
+ * &lt;/appender>
+ * </pre>
  */
 public class LogWatcherAppender extends AppenderSkeleton {
 
-	private Collection clients = new LinkedList();
 	private int port = 6578;
 	private DatagramSocket socket;
 	private InetAddress address;
