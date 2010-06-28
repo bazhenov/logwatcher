@@ -7,6 +7,9 @@ import java.nio.ByteBuffer;
 import java.nio.channels.ClosedByInterruptException;
 import java.nio.channels.DatagramChannel;
 
+import static java.lang.Thread.currentThread;
+import static java.lang.Thread.interrupted;
+
 public class NioUdpTransport implements Transport {
 
 	private TransportListener listener;
@@ -54,13 +57,14 @@ public class NioUdpTransport implements Transport {
 
 		public void run() {
 			try {
-				while ( true ) {
+				while ( !interrupted() ) {
 					buffer.clear();
 					channel.receive(buffer);
 					String message = new String(buffer.array(), 0, buffer.position());
 					listener.onMessage(message);
 				}
 			} catch ( ClosedByInterruptException e ) {
+				currentThread().interrupt();
 			} catch ( IOException e ) {
 				throw new RuntimeException(e);
 			} catch ( TransportException e ) {
