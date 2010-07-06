@@ -49,7 +49,7 @@ public class UdpTransport implements Transport {
 					DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 					socket.receive(packet);
 					byte[] data = packet.getData();
-					message = new String(data, 0, packet.getLength());
+					message = new String(data, 0, packet.getLength(), "utf8");
 					if ( log.isDebugEnabled() ) {
 						log.debug("Packet received: " + message);
 					}

@@ -15,7 +15,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class LogWatcherAppenderTest {
+public class LogWatcherAppenderIT {
 
 	@Test
 	public void appenderShouldSendUdpMessages() throws SocketException, TransportException,

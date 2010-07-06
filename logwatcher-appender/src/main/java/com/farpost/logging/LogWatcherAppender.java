@@ -56,7 +56,7 @@ public class LogWatcherAppender extends AppenderSkeleton {
 	}
 
 	private void sendMessage(int port, String message) throws IOException {
-		byte[] data = message.getBytes();
+		byte[] data = message.getBytes("utf8");
 		DatagramPacket packet = new DatagramPacket(data, data.length);
 		packet.setAddress(address);
 		packet.setPort(port);

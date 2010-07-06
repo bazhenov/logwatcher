@@ -7,7 +7,7 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.net.*;
 
-public class UdpTransportTest {
+public class UdpTransportIT {
 
 	@Test
 	public void transportMustDeliverMessages()
@@ -21,6 +21,7 @@ public class UdpTransportTest {
 			listener.wait(1000);
 			assertThat(listener.getData(), equalTo("msg"));
 		}
+		t.stop();
 	}
 
 	private void sendMessage(int port, String message) throws IOException {

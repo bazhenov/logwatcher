@@ -32,46 +32,46 @@
 			<groupId>commons-dbcp</groupId>
 			<artifactId>commons-dbcp</artifactId>
 			<version>1.2.2</version>
-      <scope>runtime</scope>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
 		</dependency>
-    <dependency>
+		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.9</version>
-      <scope>runtime</scope>
+			<scope>runtime</scope>
 		</dependency>
-    <dependency>
-      <groupId>org.sitemesh</groupId>
-      <artifactId>sitemesh</artifactId>
-      <version>3.0-alpha-1</version>
-    </dependency>
+		<dependency>
+			<groupId>org.sitemesh</groupId>
+			<artifactId>sitemesh</artifactId>
+			<version>3.0-alpha-1</version>
+		</dependency>
 
-    <!-- Jetty provided dependencies -->
-    <dependency>
-      <groupId>org.mortbay.jetty</groupId>
-      <artifactId>jetty</artifactId>
-      <version>6.1.22</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mortbay.jetty</groupId>
-      <artifactId>jsp-2.1-jetty</artifactId>
-      <version>6.1.22</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
+		<!-- Jetty provided dependencies -->
+		<dependency>
+			<groupId>org.mortbay.jetty</groupId>
+			<artifactId>jetty</artifactId>
+			<version>6.1.22</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mortbay.jetty</groupId>
+			<artifactId>jsp-2.1-jetty</artifactId>
+			<version>6.1.22</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jsp-api</artifactId>
 			<version>2.0</version>
 			<scope>provided</scope>
 		</dependency>
 
-    <!-- Spring dependencies -->
+		<!-- Spring dependencies -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
@@ -83,8 +83,8 @@
 			<version>3.0.0.RELEASE</version>
 		</dependency>
 
-    <!-- Test dependencies -->
-    <dependency>
+		<!-- Test dependencies -->
+		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
 			<version>3.0.0.RELEASE</version>
@@ -106,13 +106,40 @@
 			</plugin>
 
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+			</plugin>
+
+			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>maven-jetty-plugin</artifactId>
 				<configuration>
 					<scanIntervalSeconds>1</scanIntervalSeconds>
 					<overrideWebXml>src/test/resources/web.xml</overrideWebXml>
 					<contextPath>/</contextPath>
+					<stopPort>8005</stopPort>
+          <stopKey>STOP</stopKey>
 				</configuration>
+				<!--<executions>-->
+					<!--<execution>-->
+						<!--<id>start-jetty</id>-->
+						<!--<phase>pre-integration-test</phase>-->
+						<!--<goals>-->
+							<!--<goal>run</goal>-->
+						<!--</goals>-->
+						<!--<configuration>-->
+							<!--<scanIntervalSeconds>0</scanIntervalSeconds>-->
+							<!--<daemon>true</daemon>-->
+						<!--</configuration>-->
+					<!--</execution>-->
+					<!--<execution>-->
+						<!--<id>stop-jetty</id>-->
+						<!--<phase>post-integration-test</phase>-->
+						<!--<goals>-->
+							<!--<goal>stop</goal>-->
+						<!--</goals>-->
+					<!--</execution>-->
+				<!--</executions>-->
 			</plugin>
 		</plugins>
 	</build>

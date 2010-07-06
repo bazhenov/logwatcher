@@ -14,7 +14,7 @@ import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class SqlLogStorageMySqlTest extends LogStorageTestCase {
+public class SqlLogStorageMySqlIT extends LogStorageTestCase {
 
 	protected LogStorage createStorage() throws IOException, SQLException {
 		String pathToConfig = System.getProperty("mysql.config", "./mysql.properties");
