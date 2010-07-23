@@ -1,11 +1,14 @@
 package com.farpost.logging;
 
-import com.farpost.logging.marshalling.*;
+import com.farpost.logging.marshalling.JDomMarshaller;
+import com.farpost.logging.marshalling.Marshaller;
+import com.farpost.logging.marshalling.MarshallerException;
 import org.apache.log4j.Category;
 import org.apache.log4j.Priority;
 import org.apache.log4j.spi.LoggingEvent;
 import org.bazhenov.logging.LogEntry;
-import org.bazhenov.logging.transport.*;
+import org.bazhenov.logging.transport.TransportException;
+import org.bazhenov.logging.transport.UdpTransport;
 import org.testng.annotations.Test;
 
 import java.net.SocketException;

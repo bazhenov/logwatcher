@@ -1,13 +1,13 @@
 package org.bazhenov.logging.web;
 
-import org.bazhenov.logging.storage.LogStorage;
-import org.bazhenov.logging.storage.LogStorageException;
+import com.farpost.timepoint.DateTime;
+import org.bazhenov.logging.Cause;
 import org.bazhenov.logging.LogEntry;
 import org.bazhenov.logging.Severity;
-import org.bazhenov.logging.Cause;
-import com.farpost.timepoint.DateTime;
+import org.bazhenov.logging.storage.LogStorage;
+import org.bazhenov.logging.storage.LogStorageException;
 
-import java.util.*;
+import java.util.HashMap;
 
 public class Bootstrap {
 

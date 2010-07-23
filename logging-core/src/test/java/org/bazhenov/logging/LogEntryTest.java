@@ -1,13 +1,14 @@
 package org.bazhenov.logging;
 
-import static com.farpost.timepoint.Date.november;
 import com.farpost.timepoint.DateTime;
+import org.testng.annotations.Test;
+
+import static com.farpost.timepoint.Date.november;
 import static com.farpost.timepoint.DateTime.now;
+import static org.bazhenov.logging.Severity.info;
+import static org.bazhenov.logging.Severity.warning;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import org.testng.annotations.Test;
-import static org.bazhenov.logging.Severity.warning;
-import static org.bazhenov.logging.Severity.info;
 
 public class LogEntryTest {
 

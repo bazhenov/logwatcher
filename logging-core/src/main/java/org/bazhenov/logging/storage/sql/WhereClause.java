@@ -1,7 +1,8 @@
 package org.bazhenov.logging.storage.sql;
 
-import static java.util.Collections.addAll;
 import java.util.List;
+
+import static java.util.Collections.addAll;
 
 /**
  * Вспомогательный класс для формирования WHERE выражения sql запроса. Предоставляет

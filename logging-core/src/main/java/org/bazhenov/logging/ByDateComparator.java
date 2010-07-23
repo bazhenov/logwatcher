@@ -1,6 +1,6 @@
 package org.bazhenov.logging;
 
-import java.util.*;
+import java.util.Comparator;
 
 public class ByDateComparator implements Comparator<LogEntry> {
 

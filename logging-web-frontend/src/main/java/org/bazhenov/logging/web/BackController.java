@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.List;
 
 import static org.bazhenov.logging.storage.LogEntries.entries;
 

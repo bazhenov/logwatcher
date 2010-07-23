@@ -1,7 +1,9 @@
 package org.bazhenov.logging;
 
 import org.testng.annotations.Test;
-import static org.bazhenov.logging.Severity.*;
+
+import static org.bazhenov.logging.Severity.trace;
+import static org.bazhenov.logging.Severity.warning;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 

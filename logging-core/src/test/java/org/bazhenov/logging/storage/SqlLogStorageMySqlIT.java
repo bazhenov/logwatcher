@@ -1,12 +1,14 @@
 package org.bazhenov.logging.storage;
 
+import com.farpost.logging.marshalling.JDomMarshaller;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.bazhenov.logging.SimpleChecksumCalculator;
 import org.bazhenov.logging.aggregator.Aggregator;
 import org.bazhenov.logging.aggregator.SimpleAggregator;
-import com.farpost.logging.marshalling.JDomMarshaller;
-import org.bazhenov.logging.storage.sql.*;
+import org.bazhenov.logging.storage.sql.AnnotationDrivenMatcherMapperImpl;
 import org.bazhenov.logging.storage.sql.SqlLogStorage;
+import org.bazhenov.logging.storage.sql.SqlMatcherMapper;
+import org.bazhenov.logging.storage.sql.SqlMatcherMapperRules;
 
 import java.io.FileReader;
 import java.io.IOException;

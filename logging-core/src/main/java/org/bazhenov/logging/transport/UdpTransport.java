@@ -3,7 +3,9 @@ package org.bazhenov.logging.transport;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.SocketException;
 
 public class UdpTransport implements Transport {
 

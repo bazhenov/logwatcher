@@ -2,7 +2,8 @@ package org.bazhenov.logging;
 
 import com.farpost.timepoint.DateTime;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Обьект представляющий собой запись лога. Запись лога описывается датой, группой, описанием,

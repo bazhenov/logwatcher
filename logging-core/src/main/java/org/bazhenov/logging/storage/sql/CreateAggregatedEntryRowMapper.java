@@ -1,12 +1,12 @@
 package org.bazhenov.logging.storage.sql;
 
+import com.farpost.logging.marshalling.Marshaller;
+import com.farpost.logging.marshalling.MarshallerException;
 import com.farpost.timepoint.DateTime;
 import org.bazhenov.logging.AggregatedEntry;
 import org.bazhenov.logging.AggregatedEntryImpl;
 import org.bazhenov.logging.LogEntry;
 import org.bazhenov.logging.Severity;
-import com.farpost.logging.marshalling.Marshaller;
-import com.farpost.logging.marshalling.MarshallerException;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 
 import java.sql.ResultSet;

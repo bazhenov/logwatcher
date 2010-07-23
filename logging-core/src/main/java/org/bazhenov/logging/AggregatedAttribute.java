@@ -1,6 +1,7 @@
 package org.bazhenov.logging;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import static java.util.Arrays.sort;
 

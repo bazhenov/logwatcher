@@ -2,7 +2,7 @@ package org.bazhenov.logging.storage.sql;
 
 import org.bazhenov.logging.storage.LogEntryMatcher;
 
-import java.util.*;
+import java.util.Collection;
 
 class CriteriaStatement {
 

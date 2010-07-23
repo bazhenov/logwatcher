@@ -1,16 +1,24 @@
 package com.farpost.logging.marshalling;
 
 import com.farpost.timepoint.DateTime;
-import org.bazhenov.logging.*;
-import org.jdom.*;
+import org.bazhenov.logging.Cause;
+import org.bazhenov.logging.LogEntry;
+import org.bazhenov.logging.Severity;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.Namespace;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.text.*;
-import java.util.*;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 public class JDomMarshaller implements Marshaller {
 

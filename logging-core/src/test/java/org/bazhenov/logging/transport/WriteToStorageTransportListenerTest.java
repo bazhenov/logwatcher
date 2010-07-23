@@ -1,15 +1,22 @@
 package org.bazhenov.logging.transport;
 
-import com.farpost.logging.marshalling.*;
+import com.farpost.logging.marshalling.JDomMarshaller;
+import com.farpost.logging.marshalling.Marshaller;
+import com.farpost.logging.marshalling.MarshallerException;
 import com.farpost.timepoint.DateTime;
-import static com.farpost.timepoint.DateTime.now;
-import org.bazhenov.logging.*;
-import org.bazhenov.logging.storage.*;
+import org.bazhenov.logging.Cause;
+import org.bazhenov.logging.LogEntry;
+import org.bazhenov.logging.Severity;
+import org.bazhenov.logging.storage.InMemoryLogStorage;
+import org.bazhenov.logging.storage.InvalidCriteriaException;
+import org.bazhenov.logging.storage.LogStorage;
+import org.bazhenov.logging.storage.LogStorageException;
+import org.testng.annotations.Test;
 
+import static com.farpost.timepoint.DateTime.now;
 import static org.bazhenov.logging.storage.LogEntries.entries;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import org.testng.annotations.Test;
 
 public class WriteToStorageTransportListenerTest {
 

@@ -1,6 +1,7 @@
 package org.bazhenov.logging;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * {@code QueryParser} парсит строчки типа "at: frontend severity: error" в <code>Map</code> где

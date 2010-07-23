@@ -1,17 +1,18 @@
 package org.bazhenov.logging.aggregator;
 
-import org.apache.log4j.Logger;
-import org.bazhenov.logging.*;
 import com.farpost.logging.marshalling.Marshaller;
+import org.apache.log4j.Logger;
+import org.bazhenov.logging.AggregatedEntry;
+import org.bazhenov.logging.AggregatedEntryImpl;
+import org.bazhenov.logging.LogEntry;
 import org.bazhenov.logging.storage.LogEntryMatcher;
 
-import static java.lang.System.currentTimeMillis;
-import static org.bazhenov.logging.storage.MatcherUtils.isMatching;
-
-import java.util.concurrent.*;
 import java.util.*;
+import java.util.concurrent.*;
 
+import static java.lang.System.currentTimeMillis;
 import static java.lang.Thread.interrupted;
+import static org.bazhenov.logging.storage.MatcherUtils.isMatching;
 
 public class ExecutorServiceAggregator implements Aggregator {
 

@@ -1,23 +1,33 @@
 package org.bazhenov.logging.storage.sql;
 
+import com.farpost.logging.marshalling.Marshaller;
+import com.farpost.logging.marshalling.MarshallerException;
 import com.farpost.timepoint.Date;
 import com.farpost.timepoint.DateTime;
 import org.apache.log4j.Logger;
 import org.bazhenov.logging.*;
 import org.bazhenov.logging.aggregator.Aggregator;
-import com.farpost.logging.marshalling.Marshaller;
-import com.farpost.logging.marshalling.MarshallerException;
-import org.bazhenov.logging.storage.*;
+import org.bazhenov.logging.storage.InvalidCriteriaException;
+import org.bazhenov.logging.storage.LogEntryMatcher;
+import org.bazhenov.logging.storage.LogStorage;
+import org.bazhenov.logging.storage.LogStorageException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
 import javax.sql.DataSource;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
-import static java.sql.ResultSet.*;
+import static java.sql.ResultSet.CONCUR_READ_ONLY;
+import static java.sql.ResultSet.TYPE_FORWARD_ONLY;
 import static org.bazhenov.logging.storage.MatcherUtils.isMatching;
 
 public class SqlLogStorage implements LogStorage {

@@ -1,5 +1,5 @@
 <%@tag import="org.bazhenov.logging.web.tags.EntryTag" %>
-<%@tag import="java.util.*" %>
+<%@tag import="java.util.Date" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="lf" uri="http://bazhenov.org/logging" %>
 <%@taglib prefix="f" uri="http://java.sun.com/jsp/jstl/functions" %>

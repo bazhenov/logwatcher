@@ -1,15 +1,18 @@
 package org.bazhenov.logging.aggregator;
 
-import org.apache.log4j.Logger;
-import org.bazhenov.logging.*;
-
-import static org.bazhenov.logging.storage.MatcherUtils.isMatching;
-
 import com.farpost.logging.marshalling.Marshaller;
 import com.farpost.logging.marshalling.MarshallerException;
+import org.apache.log4j.Logger;
+import org.bazhenov.logging.AggregatedEntry;
+import org.bazhenov.logging.AggregatedEntryImpl;
+import org.bazhenov.logging.LogEntry;
 import org.bazhenov.logging.storage.LogEntryMatcher;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.bazhenov.logging.storage.MatcherUtils.isMatching;
 
 public class SimpleAggregator implements Aggregator {
 

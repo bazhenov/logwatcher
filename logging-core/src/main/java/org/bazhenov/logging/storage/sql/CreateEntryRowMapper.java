@@ -1,8 +1,8 @@
 package org.bazhenov.logging.storage.sql;
 
-import org.bazhenov.logging.LogEntry;
 import com.farpost.logging.marshalling.Marshaller;
 import com.farpost.logging.marshalling.MarshallerException;
+import org.bazhenov.logging.LogEntry;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 
 import java.sql.ResultSet;

@@ -2,7 +2,10 @@ package org.bazhenov.logging.storage;
 
 import com.farpost.timepoint.Date;
 import com.farpost.timepoint.DateTime;
-import org.bazhenov.logging.*;
+import org.bazhenov.logging.AggregatedEntry;
+import org.bazhenov.logging.CountVisitor;
+import org.bazhenov.logging.LogEntry;
+import org.bazhenov.logging.Severity;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -13,9 +16,7 @@ import static org.bazhenov.logging.TestSupport.entry;
 import static org.bazhenov.logging.storage.LogEntries.entries;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 import static org.testng.Assert.fail;
 
 abstract public class LogStorageTestCase {

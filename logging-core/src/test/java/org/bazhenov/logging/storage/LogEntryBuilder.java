@@ -1,10 +1,14 @@
 package org.bazhenov.logging.storage;
 
-import org.bazhenov.logging.*;
 import com.farpost.timepoint.DateTime;
-import static com.farpost.timepoint.DateTime.now;
+import org.bazhenov.logging.Cause;
+import org.bazhenov.logging.LogEntry;
+import org.bazhenov.logging.Severity;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.farpost.timepoint.DateTime.now;
 
 /**
  * Просто builder новых записей, которые записываются в хранилище.

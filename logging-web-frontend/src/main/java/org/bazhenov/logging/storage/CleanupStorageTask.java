@@ -3,8 +3,6 @@ package org.bazhenov.logging.storage;
 import com.farpost.timepoint.Date;
 import org.apache.log4j.Logger;
 
-import java.util.TimerTask;
-
 import static com.farpost.timepoint.Date.today;
 
 public class CleanupStorageTask implements Runnable {

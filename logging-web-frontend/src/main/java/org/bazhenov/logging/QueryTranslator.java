@@ -2,7 +2,7 @@ package org.bazhenov.logging;
 
 import org.bazhenov.logging.storage.LogEntryMatcher;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * Имплементации этого интерфейса преобразуют строковые запросы в набор соответствующих

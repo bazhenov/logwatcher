@@ -1,13 +1,16 @@
 package com.farpost.logging.marshalling;
 
+import org.bazhenov.logging.Cause;
+import org.bazhenov.logging.LogEntry;
+import org.bazhenov.logging.Severity;
+import org.testng.annotations.Test;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.farpost.timepoint.DateTime.now;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-
-import org.bazhenov.logging.*;
-import org.testng.annotations.Test;
-
-import java.util.*;
 
 public abstract class AbstractLogEntryMarshallerTest {
 

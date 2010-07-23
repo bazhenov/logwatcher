@@ -1,7 +1,10 @@
 package org.bazhenov.logging.storage;
 
 import com.farpost.timepoint.Date;
-import org.bazhenov.logging.*;
+import org.bazhenov.logging.AggregatedEntry;
+import org.bazhenov.logging.LogEntry;
+import org.bazhenov.logging.Severity;
+import org.bazhenov.logging.Visitor;
 
 import java.util.ArrayList;
 import java.util.Collection;

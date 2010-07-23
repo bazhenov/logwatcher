@@ -3,7 +3,7 @@ package com.farpost.logging;
 import org.bazhenov.logging.transport.TransportException;
 import org.bazhenov.logging.transport.TransportListener;
 
-import java.util.*;
+import java.util.Queue;
 
 class QueueAppendListener implements TransportListener {
 

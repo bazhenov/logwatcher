@@ -2,9 +2,12 @@ package org.bazhenov.logging;
 
 import org.bazhenov.logging.storage.LogEntryMatcher;
 
-import java.util.*;
-import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Данная имплементация интерфейса {@link QueryTranslator} выполняет трансляцию

@@ -1,15 +1,20 @@
 package com.farpost.logging;
 
-import com.farpost.logging.marshalling.*;
+import com.farpost.logging.marshalling.JDomMarshaller;
+import com.farpost.logging.marshalling.Marshaller;
+import com.farpost.logging.marshalling.MarshallerException;
 import com.farpost.timepoint.DateTime;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Level;
 import org.apache.log4j.spi.LoggingEvent;
-import org.bazhenov.logging.*;
+import org.bazhenov.logging.Cause;
+import org.bazhenov.logging.LogEntry;
+import org.bazhenov.logging.Severity;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.*;
-import java.util.*;
 
 import static java.lang.Math.min;
 

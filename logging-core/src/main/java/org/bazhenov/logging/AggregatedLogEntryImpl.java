@@ -2,8 +2,9 @@ package org.bazhenov.logging;
 
 import com.farpost.timepoint.DateTime;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.*;
 
 public class AggregatedLogEntryImpl implements AggregatedLogEntry {
 

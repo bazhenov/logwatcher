@@ -2,8 +2,8 @@ package org.bazhenov.logging.storage.sql;
 
 import org.bazhenov.logging.storage.LogEntryMatcher;
 
-import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class AnnotationDrivenMatcherMapperImpl implements SqlMatcherMapper {
 

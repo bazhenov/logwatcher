@@ -9,7 +9,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import static java.lang.Thread.currentThread;
 import static org.bazhenov.logging.storage.LogEntries.entries;
 import static org.bazhenov.logging.storage.MatcherUtils.isMatching;
 
