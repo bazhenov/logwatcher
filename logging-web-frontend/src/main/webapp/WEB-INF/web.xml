@@ -69,6 +69,7 @@
   <filter-mapping>
     <filter-name>sitemesh-filter</filter-name>
     <servlet-name>spring</servlet-name>
+		<dispatcher>REQUEST</dispatcher>
   </filter-mapping>
 
   <filter-mapping>
@@ -102,11 +103,13 @@
     </taglib>
     <jsp-property-group>
       <url-pattern>*.jsp</url-pattern>
-      <trim-directive-whitespaces>true</trim-directive-whitespaces>
+			<page-encoding>utf-8</page-encoding>
+			<trim-directive-whitespaces>true</trim-directive-whitespaces>
     </jsp-property-group>
     <jsp-property-group>
       <url-pattern>*.jspx</url-pattern>
-      <trim-directive-whitespaces>true</trim-directive-whitespaces>
+			<page-encoding>utf-8</page-encoding>
+			<trim-directive-whitespaces>true</trim-directive-whitespaces>
     </jsp-property-group>
   </jsp-config>
 

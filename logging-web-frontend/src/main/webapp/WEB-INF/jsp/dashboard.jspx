@@ -6,7 +6,6 @@
 					xmlns:lt="urn:jsptagdir:/WEB-INF/tags">
 
 	<jsp:directive.page contentType="text/html"/>
-	<jsp:directive.page pageEncoding="UTF-8"/>
 
 	<jsp:useBean id="infos" scope="request" type="java.util.Collection"/>
 
@@ -22,7 +21,7 @@
 	<c:choose>
 		<c:when test="${f:length(infos) gt 0}">
 			<c:forEach items="${infos}" var="info">
-				<lt:dashboard-widget info="${info}" />
+				<jsp:include page="/widget/dashboard-widget?applicationId=${info.applicationId}" />
 			</c:forEach>
 		</c:when>
 		<c:otherwise>
@@ -32,6 +31,8 @@
 			</div>
 		</c:otherwise>
 	</c:choose>
+
+
 
 	<div style="clear: both;"></div>
 	</body>

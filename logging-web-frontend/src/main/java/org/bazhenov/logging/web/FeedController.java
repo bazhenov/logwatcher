@@ -89,25 +89,6 @@ public class FeedController {
 		return "search-feed";
 	}
 
-	@RequestMapping("/dashboard")
-	public String doDashboard(ModelMap map) throws LogStorageException {
-		List<AggregatedEntry> allEntries = storage.getAggregatedEntries(today(), Severity.error);
-		List<ApplicationInfo> infos = groupEntriesByApplicationId(allEntries);
-		map.put("infos", infos);
-		return "dashboard";
-	}
-
-	private List<ApplicationInfo> groupEntriesByApplicationId(List<AggregatedEntry> allEntries) {
-		List<ApplicationInfo> infos = new ArrayList<ApplicationInfo>();
-		for (String applicationId : getUniqueApplicationId(allEntries)) {
-			List<AggregatedEntry> applicationsEntries = filter(allEntries, applicationId);
-			sort(applicationsEntries, byOccurenceCount);
-			ApplicationInfo info = new ApplicationInfo(applicationId, applicationsEntries);
-			infos.add(info);
-		}
-		return infos;
-	}
-
 	@RequestMapping("/feed/{applicationId}")
 	public String handleFeed(@PathVariable String applicationId,
 													 ModelMap map, HttpServletRequest request, HttpServletResponse response)
@@ -157,7 +138,7 @@ public class FeedController {
 		return times;
 	}
 
-	private List<AggregatedEntry> filter(List<AggregatedEntry> entries, String applicationId) {
+	public static List<AggregatedEntry> filter(List<AggregatedEntry> entries, String applicationId) {
 		List<AggregatedEntry> result = new ArrayList<AggregatedEntry>();
 		for (AggregatedEntry entry : entries) {
 			if (entry.getApplicationId().equals(applicationId)) {

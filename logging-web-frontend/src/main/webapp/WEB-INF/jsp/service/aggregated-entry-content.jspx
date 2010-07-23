@@ -32,16 +32,20 @@
 	</c:url>
 	<c:set var="permaLink" value="${permaLink}\#${entry.checksum}"/>
 
-	<c:set var="issueDescription">http://${pageContext.request.serverName}:${pageContext.request.serverPort}${permaLink}
+	<c:set var="issueDescription">${lf:trim(entry.message, 300, '')}
+		<c:if test="${entry.sampleCause ne null}">
 
-		${lf:trim(entry.message, 300, '')}
-		${lf:trim(lf:formatCause(entry.sampleCause), 500, '')}</c:set>
+Stacktrace:
+${lf:trim(lf:formatCause(entry.sampleCause), 500, '')}
+		</c:if>
+
+http://${pageContext.request.serverName}:${pageContext.request.serverPort}${permaLink}</c:set>
 
 	<div class="entryFooter">
 		<c:url value="http://jira.dev.loc:8080/secure/CreateIssueDetails.jspa" var="jiraLink">
 			<c:param name="pid">10000</c:param>
 			<c:param name="issuetype">1</c:param>
-			<c:param name="summary" value="${lf:trim(entry.message, 120, '')}"/>
+			<c:param name="summary" value="${lf:trim(entry.message, 100, '...')}"/>
 			<c:param name="description" value="${issueDescription}"/>
 			<c:param name="priority">3</c:param>
 		</c:url>

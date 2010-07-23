@@ -18,6 +18,10 @@
 
 	<bean class="org.bazhenov.logging.web.SessionController"/>
 
+	<bean class="org.bazhenov.logging.web.DashboardController">
+		<constructor-arg ref="storage" />
+	</bean>
+
 	<bean class="org.springframework.web.servlet.view.UrlBasedViewResolver"
 				property:viewClass="org.springframework.web.servlet.view.JstlView"
 				property:prefix="/WEB-INF/jsp/"
