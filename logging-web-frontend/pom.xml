@@ -50,6 +50,11 @@
 			<artifactId>sitemesh</artifactId>
 			<version>3.0-alpha-1</version>
 		</dependency>
+		<dependency>
+			<groupId>com.farpost.groovy-shell</groupId>
+			<artifactId>server</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
 
 		<!-- Jetty provided dependencies -->
 		<dependency>
@@ -118,27 +123,27 @@
 					<overrideWebXml>src/test/resources/web.xml</overrideWebXml>
 					<contextPath>/</contextPath>
 					<stopPort>8005</stopPort>
-          <stopKey>STOP</stopKey>
+					<stopKey>STOP</stopKey>
 				</configuration>
 				<!--<executions>-->
-					<!--<execution>-->
-						<!--<id>start-jetty</id>-->
-						<!--<phase>pre-integration-test</phase>-->
-						<!--<goals>-->
-							<!--<goal>run</goal>-->
-						<!--</goals>-->
-						<!--<configuration>-->
-							<!--<scanIntervalSeconds>0</scanIntervalSeconds>-->
-							<!--<daemon>true</daemon>-->
-						<!--</configuration>-->
-					<!--</execution>-->
-					<!--<execution>-->
-						<!--<id>stop-jetty</id>-->
-						<!--<phase>post-integration-test</phase>-->
-						<!--<goals>-->
-							<!--<goal>stop</goal>-->
-						<!--</goals>-->
-					<!--</execution>-->
+				<!--<execution>-->
+				<!--<id>start-jetty</id>-->
+				<!--<phase>pre-integration-test</phase>-->
+				<!--<goals>-->
+				<!--<goal>run</goal>-->
+				<!--</goals>-->
+				<!--<configuration>-->
+				<!--<scanIntervalSeconds>0</scanIntervalSeconds>-->
+				<!--<daemon>true</daemon>-->
+				<!--</configuration>-->
+				<!--</execution>-->
+				<!--<execution>-->
+				<!--<id>stop-jetty</id>-->
+				<!--<phase>post-integration-test</phase>-->
+				<!--<goals>-->
+				<!--<goal>stop</goal>-->
+				<!--</goals>-->
+				<!--</execution>-->
 				<!--</executions>-->
 			</plugin>
 		</plugins>

@@ -28,6 +28,18 @@
 				property:prefix="/WEB-INF/jsp/"
 				property:suffix=".jspx"/>
 
+	<bean id="groovyShellService" class="com.iterative.groovy.service.GroovyShellService"
+				lazy-init="false" init-method="initialize" destroy-method="destroy">
+		<property name="port" value="6789"/>
+		<property name="bindings">
+			<map>
+				<entry key="storage" value-ref="storage"/>
+				<entry key="cleanupService" value-ref="cleanupTask"/>
+			</map>
+		</property>
+		<property name="launchAtStart" value="true"/>
+	</bean>
+
 	<task:scheduler id="scheduler" pool-size="1"/>
 
 	<task:scheduled-tasks scheduler="scheduler">
