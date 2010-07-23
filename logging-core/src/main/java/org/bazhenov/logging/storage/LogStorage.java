@@ -23,6 +23,16 @@ public interface LogStorage {
 	void writeEntry(LogEntry entry) throws LogStorageException;
 
 	/**
+	 * Удаляет все неагрегированные записи их хранилища с датой меньше указанной.
+	 * <p/>
+	 * Данный метод используется для периодической очистки хранилища от старых
+	 * записей
+	 *
+	 * @param date дата начиная с которой записи будут оставлены
+	 */
+	void removeOldEntries(Date date) throws LogStorageException;
+
+	/**
 	 * Подсчитывает колличество записей в хранилище с заданными условиями.
 	 *
 	 * @param criterias условия отбора записей или {@code null} если интересует общее количество
@@ -49,7 +59,7 @@ public interface LogStorage {
 	 * контрольной суммой, им автоматически должен назначатся alias контрольной суммы.
 	 *
 	 * @param checksum контролная сумма, которую надо смапить
-	 * @param alias		 контрольная сумма - синоним
+	 * @param alias		контрольная сумма - синоним
 	 */
 	void createChecksumAlias(String checksum, String alias) throws LogStorageException;
 
@@ -99,7 +109,7 @@ public interface LogStorage {
 	 * @throws LogStorageException в случае возникновения внутренних ошибок хранилища
 	 */
 	List<AggregatedEntry> getAggregatedEntries(Date date, Severity severity)
-		throws LogStorageException;
+		throws LogStorageException, InvalidCriteriaException;
 
 	/**
 	 * Возвращает список аггрегированных записей за указанную дату с указанным severity произошедших
@@ -112,5 +122,5 @@ public interface LogStorage {
 	 * @throws LogStorageException в случае возникновения внутренних ошибок хранилища
 	 */
 	List<AggregatedEntry> getAggregatedEntries(String applicationId, Date date, Severity severity)
-		throws LogStorageException;
+		throws LogStorageException, InvalidCriteriaException;
 }

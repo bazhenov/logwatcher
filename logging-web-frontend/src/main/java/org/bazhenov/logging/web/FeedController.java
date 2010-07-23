@@ -37,7 +37,6 @@ public class FeedController {
 	private final QueryTranslator translator = new AnnotationDrivenQueryTranslator(
 		new TranslationRulesImpl());
 	private final QueryParser parser = new QueryParser();
-	private final Comparator<AggregatedEntry> byOccurenceCount = new ByOccurenceCountComparator();
 	private final HashMap<String, Comparator<AggregatedEntry>> comparators = new HashMap<String, Comparator<AggregatedEntry>>() {{
 		put(null, new ByLastOccurenceDateComparator());
 		put("last-occurence", new ByLastOccurenceDateComparator());

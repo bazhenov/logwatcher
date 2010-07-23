@@ -3,6 +3,7 @@ package org.bazhenov.logging.web;
 import org.bazhenov.logging.AggregatedEntry;
 import org.bazhenov.logging.ByOccurenceCountComparator;
 import org.bazhenov.logging.Severity;
+import org.bazhenov.logging.storage.InvalidCriteriaException;
 import org.bazhenov.logging.storage.LogStorage;
 import org.bazhenov.logging.storage.LogStorageException;
 import org.springframework.stereotype.Controller;
@@ -28,7 +29,7 @@ public class DashboardController {
 	}
 
 	@RequestMapping("/dashboard")
-	public String doDashboard(ModelMap map) throws LogStorageException {
+	public String doDashboard(ModelMap map) throws LogStorageException, InvalidCriteriaException {
 		List<AggregatedEntry> allEntries = storage.getAggregatedEntries(today(), Severity.error);
 		List<ApplicationInfo> infos = groupEntriesByApplicationId(allEntries);
 		map.put("infos", infos);
@@ -36,7 +37,9 @@ public class DashboardController {
 	}
 
 	@RequestMapping("/widget/dashboard-widget")
-	public String doDashboardWidget(@RequestParam String applicationId, ModelMap map) throws LogStorageException {
+	public String doDashboardWidget(@RequestParam String applicationId, ModelMap map)
+		throws LogStorageException, InvalidCriteriaException {
+
 		List<AggregatedEntry> entries = storage.getAggregatedEntries(applicationId, today(), Severity.error);
 		map.put("info", new ApplicationInfo(applicationId, entries));
 		return "widget/dashboard-widget";

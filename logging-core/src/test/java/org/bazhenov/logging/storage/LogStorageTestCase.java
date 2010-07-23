@@ -14,6 +14,7 @@ import static org.bazhenov.logging.storage.LogEntries.entries;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.nullValue;
 import static org.testng.Assert.fail;
 
@@ -284,6 +285,27 @@ abstract public class LogStorageTestCase {
 				fail("Collection must not contains entries with checksum '" + entry.getChecksum() + "'");
 			}
 		}
+	}
+
+	@Test
+	public void storageCanRemoveOldEntries() throws LogStorageException, InvalidCriteriaException {
+		LogEntry yesterdayEntry = entry().
+			applicationId("foo").
+			occured(yesterday().at("15:32")).
+			saveIn(storage);
+
+		LogEntry todayEntry = entry().
+			applicationId("foo").
+			occured(today().at("16:00")).
+			saveIn(storage);
+
+		storage.removeOldEntries(today());
+		List<LogEntryMatcher> criteria = entries().
+			applicationId("foo").
+			criterias();
+		List<LogEntry> entries = storage.findEntries(criteria);
+		assertThat(entries.size(), equalTo(1));
+		assertThat(entries, hasItem(todayEntry));
 	}
 
 	protected abstract LogStorage createStorage() throws Exception;

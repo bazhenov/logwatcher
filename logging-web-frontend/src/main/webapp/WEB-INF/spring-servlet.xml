@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:property="http://www.springframework.org/schema/p"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+			 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			 xmlns:context="http://www.springframework.org/schema/context"
+			 xmlns:task="http://www.springframework.org/schema/task"
+			 xmlns:property="http://www.springframework.org/schema/p"
+			 xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
 	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
@@ -19,11 +20,23 @@
 	<bean class="org.bazhenov.logging.web.SessionController"/>
 
 	<bean class="org.bazhenov.logging.web.DashboardController">
-		<constructor-arg ref="storage" />
+		<constructor-arg ref="storage"/>
 	</bean>
 
 	<bean class="org.springframework.web.servlet.view.UrlBasedViewResolver"
 				property:viewClass="org.springframework.web.servlet.view.JstlView"
 				property:prefix="/WEB-INF/jsp/"
-				property:suffix=".jspx" />
+				property:suffix=".jspx"/>
+
+	<task:scheduler id="scheduler" pool-size="1"/>
+
+	<task:scheduled-tasks scheduler="scheduler">
+		<task:scheduled ref="cleanupTask" method="run" fixed-rate="60000"/>
+	</task:scheduled-tasks>
+
+	<bean id='cleanupTask' class="org.bazhenov.logging.storage.CleanupStorageTask">
+		<constructor-arg ref="storage"/>
+		<property name="daysToKeep" value="10"/>
+	</bean>
+
 </beans>
