@@ -6,7 +6,6 @@
           xmlns:lt="urn:jsptagdir:/WEB-INF/tags">
 
   <jsp:directive.page contentType="text/html"/>
-  <jsp:directive.page pageEncoding="UTF-8"/>
 
   <html>
   <head>

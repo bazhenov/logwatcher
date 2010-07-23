@@ -93,8 +93,6 @@ public class FeedController {
 													 ModelMap map, HttpServletRequest request, HttpServletResponse response)
 		throws ParseException, LogStorageException, InvalidCriteriaException, InvalidQueryException {
 
-		response.setContentType("text/html");
-		response.setCharacterEncoding("UTF-8");
 		Date today = today();
 		Date date;
 		String dateStr = request.getParameter("date");

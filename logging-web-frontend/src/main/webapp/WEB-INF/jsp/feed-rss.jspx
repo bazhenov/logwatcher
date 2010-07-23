@@ -6,7 +6,6 @@
           xmlns:fmt="http://java.sun.com/jsp/jstl/fmt">
 
 	<jsp:directive.page contentType="application/rss+xml"/>
-	<jsp:directive.page pageEncoding="UTF-8"/>
 
 	<rss version="2.0">
 		<channel>

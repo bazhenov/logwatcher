@@ -1,6 +1,5 @@
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns="http://www.w3.org/1999/xhtml" version="2.1">
   <jsp:directive.page contentType="text/html"/>
-  <jsp:directive.page pageEncoding="UTF-8"/>
   <html>
   <head>
     <title>LogWatcher: invalid query</title>

@@ -7,7 +7,6 @@
 					xmlns:lt="urn:jsptagdir:/WEB-INF/tags">
 
 	<jsp:directive.page contentType="text/html"/>
-	<jsp:directive.page pageEncoding="UTF-8"/>
 	<jsp:useBean id="applicationId" scope="request" type="java.lang.String"/>
 	<jsp:useBean id="uniqueApplicationIds" scope="request" type="java.util.Set"/>
 	<jsp:useBean id="entries" scope="request" type="java.util.List"/>

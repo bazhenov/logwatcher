@@ -7,7 +7,6 @@
 					xmlns:lt="urn:jsptagdir:/WEB-INF/tags" xmlns:sitemesh="http://sitemesh.org/">
 
 	<jsp:directive.page contentType="text/html"/>
-	<jsp:directive.page pageEncoding="UTF-8"/>
 
 	&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"&gt;
 	<html>

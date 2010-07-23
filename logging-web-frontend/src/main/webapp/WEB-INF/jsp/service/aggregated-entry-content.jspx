@@ -5,7 +5,6 @@
 					xmlns:fmt="http://java.sun.com/jsp/jstl/fmt">
 
 	<jsp:directive.page contentType="text/html"/>
-	<jsp:directive.page pageEncoding="UTF-8"/>
 
 	<jsp:useBean id="entry" scope="request" type="org.bazhenov.logging.AggregatedEntry"/>
 	<jsp:useBean id="attributes" scope="request" type="java.util.Map"/>

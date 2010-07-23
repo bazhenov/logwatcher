@@ -4,7 +4,6 @@
           xmlns:l="urn:jsptagdir:/WEB-INF/tags">
 
 	<jsp:directive.page contentType="text/html"/>
-	<jsp:directive.page pageEncoding="UTF-8"/>
 
 	<c:forEach var="row" items="${attributes}">
 		<li><l:attribute attribute="${row.value}" name="${row.key}"/></li>
