@@ -28,6 +28,10 @@ public class AggregatedAttribute {
 			: v.getCount();
 	}
 
+	public String getName() {
+		return name;
+	}
+
 	public AttributeValue[] getValues() {
 		AttributeValue[] attributeValues = values.values().toArray(new AttributeValue[values.size()]);
 		sort(attributeValues, new AttributeValueComparator());

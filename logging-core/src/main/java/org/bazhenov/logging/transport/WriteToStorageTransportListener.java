@@ -10,7 +10,6 @@ public class WriteToStorageTransportListener implements TransportListener {
 
 	private final LogStorage storage;
 	private final Marshaller marshaller;
-	private final Logger log = Logger.getLogger(WriteToStorageTransportListener.class);
 
 	public WriteToStorageTransportListener(LogStorage storage, Marshaller marshaller) {
 		this.storage = storage;
