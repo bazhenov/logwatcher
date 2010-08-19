@@ -4,9 +4,11 @@ import com.farpost.logging.marshalling.JDomMarshaller;
 import com.farpost.logging.marshalling.Marshaller;
 import com.farpost.logging.marshalling.MarshallerException;
 import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
 import org.apache.log4j.spi.LoggingEvent;
 import org.bazhenov.logging.LogEntry;
+import org.bazhenov.logging.Severity;
 import org.bazhenov.logging.transport.TransportException;
 import org.bazhenov.logging.transport.UdpTransport;
 import org.testng.annotations.Test;
@@ -34,13 +36,19 @@ public class LogWatcherAppenderIT {
 
 		Throwable cause = new RuntimeException("Ooops");
 		String message = "Сообщение";
-		LoggingEvent e = new LoggingEvent("category", Category.getRoot(), Priority.DEBUG, message, cause);
-		appender.doAppend(e);
+
+		Logger rootLogger = Logger.getRootLogger();
+		rootLogger.addAppender(appender);
+
+		Logger.getLogger(LogWatcherAppender.class).debug(message, cause);
 
 		String packet = queue.take();
 		LogEntry entry = marshaller.unmarshall(packet);
 
+		rootLogger.removeAppender(appender);
+
 		assertThat(entry.getMessage(), equalTo(message));
+		assertThat(entry.getSeverity(), equalTo(Severity.debug));
 		assertThat(entry.getApplicationId(), equalTo(applicationId));
 		assertThat(entry.getCause().getMessage(), equalTo("Ooops"));
 		assertThat(entry.getCause().getType(), equalTo(RuntimeException.class.getSimpleName()));
