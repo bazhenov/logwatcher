@@ -68,8 +68,8 @@ public class SqlLogStorage implements LogStorage {
 				entry.getSeverity().getCode(), entry.getApplicationId(), marshalledEntry);
 
 			int affectedRows = jdbc.update(
-				"UPDATE aggregated_entry SET count = count + 1, last_time = IF(last_time < ?, ?, last_time) WHERE date = ? AND checksum = ?",
-				entryTimestamp, entryTimestamp, entryDate, checksum);
+				"UPDATE aggregated_entry SET count = count + 1, last_time = ? WHERE date = ? AND checksum = ?",
+				entryTimestamp, entryDate, checksum);
 			if (affectedRows == 0) {
 				jdbc.update(
 					"INSERT INTO aggregated_entry (date, checksum, last_time, category, severity, application_id, count, content) VALUES (?, ?, ?, ?, ?, ?, 1, ?)",
