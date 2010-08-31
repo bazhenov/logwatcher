@@ -13,8 +13,7 @@
 	<artifactId>logging-web-frontend</artifactId>
 	<version>1.3-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>web-frontend Maven Webapp</name>
-	<url>http://maven.apache.org</url>
+	<name>LogWatcher Web frontend</name>
 
 	<dependencies>
 		<dependency>
@@ -98,23 +97,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>logging-web-frontend</finalName>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<encoding>UTF-8</encoding>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-			</plugin>
-
 			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>maven-jetty-plugin</artifactId>
@@ -122,43 +105,8 @@
 					<scanIntervalSeconds>1</scanIntervalSeconds>
 					<overrideWebXml>src/test/resources/web.xml</overrideWebXml>
 					<contextPath>/</contextPath>
-					<stopPort>8005</stopPort>
-					<stopKey>STOP</stopKey>
 				</configuration>
-				<!--<executions>-->
-				<!--<execution>-->
-				<!--<id>start-jetty</id>-->
-				<!--<phase>pre-integration-test</phase>-->
-				<!--<goals>-->
-				<!--<goal>run</goal>-->
-				<!--</goals>-->
-				<!--<configuration>-->
-				<!--<scanIntervalSeconds>0</scanIntervalSeconds>-->
-				<!--<daemon>true</daemon>-->
-				<!--</configuration>-->
-				<!--</execution>-->
-				<!--<execution>-->
-				<!--<id>stop-jetty</id>-->
-				<!--<phase>post-integration-test</phase>-->
-				<!--<goals>-->
-				<!--<goal>stop</goal>-->
-				<!--</goals>-->
-				<!--</execution>-->
-				<!--</executions>-->
 			</plugin>
 		</plugins>
 	</build>
-
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-pmd-plugin</artifactId>
-				<version>2.5</version>
-				<configuration>
-					<targetJdk>1.6</targetJdk>
-				</configuration>
-			</plugin>
-		</plugins>
-	</reporting>
 </project>
