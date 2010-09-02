@@ -11,17 +11,4 @@
 	      lazy-init="false"
 	      property:storage-ref="storage"/>
 
-	<bean class="org.bazhenov.logging.transport.UdpTransport" lazy-init="false" init-method="start"
-	      destroy-method="stop">
-		<constructor-arg value="6578"/>
-		<constructor-arg>
-			<bean class="org.bazhenov.logging.transport.WriteToStorageTransportListener">
-				<constructor-arg ref="storage"/>
-				<constructor-arg>
-					<bean class="com.farpost.logging.marshalling.JDomMarshaller"/>
-				</constructor-arg>
-			</bean>
-		</constructor-arg>
-		<property name="bufferSize" value="120000"/>
-	</bean>
 </beans>

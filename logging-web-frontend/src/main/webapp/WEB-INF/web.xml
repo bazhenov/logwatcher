@@ -91,11 +91,6 @@
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
 
-  <context-param>
-    <param-name>contextConfigLocation</param-name>
-    <param-value>/WEB-INF/production.xml</param-value>
-  </context-param>
-
   <jsp-config>
     <taglib>
       <taglib-uri>http://bazhenov.org/logging</taglib-uri>
