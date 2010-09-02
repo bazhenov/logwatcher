@@ -123,7 +123,7 @@ public class SqlLogStorage implements LogStorage {
 			sql.append(" WHERE ").append(st.getWhereClause());
 			connection = datasource.getConnection();
 			statement = connection.prepareStatement(sql.toString(), TYPE_FORWARD_ONLY, CONCUR_READ_ONLY);
-			statement.setFetchSize(Integer.MIN_VALUE);
+			enableServerSideCursor(statement);
 			fill(statement, st.getArguments());
 
 			result = statement.executeQuery();
@@ -143,6 +143,16 @@ public class SqlLogStorage implements LogStorage {
 		}
 	}
 
+	private boolean enableServerSideCursor(PreparedStatement statement) {
+		try {
+			statement.setFetchSize(Integer.MIN_VALUE);
+			return true;
+		} catch (SQLException e) {
+			log.warn("Server side cursors are not supported. Disabling cursor");
+			return false;
+		}
+	}
+
 	public void walk(Collection<LogEntryMatcher> criterias, Visitor<LogEntry> visitor)
 		throws LogStorageException, InvalidCriteriaException {
 		Connection connection = null;
@@ -156,7 +166,7 @@ public class SqlLogStorage implements LogStorage {
 			sql.append(" WHERE ").append(st.getWhereClause());
 			connection = datasource.getConnection();
 			statement = connection.prepareStatement(sql.toString(), TYPE_FORWARD_ONLY, CONCUR_READ_ONLY);
-			statement.setFetchSize(Integer.MIN_VALUE);
+			enableServerSideCursor(statement);
 			fill(statement, st.getArguments());
 
 			result = statement.executeQuery();
