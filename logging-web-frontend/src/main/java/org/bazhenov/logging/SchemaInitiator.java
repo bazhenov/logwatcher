@@ -15,7 +15,7 @@ import static org.bazhenov.logging.storage.sql.SqlLogStorage.loadDump;
  * <pre>
  * &lt;bean class="org.bazhenov.logging.SchemaInitiator" lazy-init="false">
  *   &lt;property name="datasource" ref="datasource" //>
- *   &lt;property name="dump" value="classpath:/dump-init.mysql.sql" //>
+ *   &lt;property name="dump" value="classpath:/schema.sql" //>
  * &lt;/bean>
  * </pre>
  * Этот класс написан специально для использования в контексте spring, поэтому он использует

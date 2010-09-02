@@ -28,8 +28,8 @@ public class SqlLogStorageMySqlIT extends LogStorageTestCase {
 		ds.setPassword(props.getProperty("password"));
 		ds.setUrl(props.getProperty("url"));
 
-		InputStream initDump = DatabaseSchema.class.getResourceAsStream("/dump-init.mysql.sql");
-		InputStream cleanupDump = DatabaseSchema.class.getResourceAsStream("/dump-cleanup.mysql.sql");
+		InputStream initDump = DatabaseSchema.class.getResourceAsStream("/schema.sql");
+		InputStream cleanupDump = DatabaseSchema.class.getResourceAsStream("/schema-cleanup.sql");
 		DatabaseSchema schema = new DatabaseSchema(initDump, cleanupDump);
 		schema.cleanup(ds);
 		schema.init(ds);

@@ -92,16 +92,19 @@ public class FeedController {
 
 	@RequestMapping("/feed/{applicationId}")
 	public String handleFeed(@PathVariable String applicationId,
-													 @RequestParam(required = false) @DateTimeFormat(iso = DATE) Date date, ModelMap map,
+													 @RequestParam(required = false) @DateTimeFormat(iso = DATE) java.util.Date date, ModelMap map,
 													 HttpServletRequest request)
 		throws ParseException, LogStorageException, InvalidCriteriaException, InvalidQueryException {
 
+		if (date == null) {
+			date = new java.util.Date();
+		}
 		map.addAttribute("date", date);
 
 		Severity severity = getSeverity(request);
 		map.addAttribute("severity", severity.toString());
 
-		List<AggregatedEntry> entries = storage.getAggregatedEntries(date, severity);
+		List<AggregatedEntry> entries = storage.getAggregatedEntries(new Date(date), severity);
 
 		int times = sumCount(entries);
 		String sortOrder = getSortOrder(request);
@@ -113,7 +116,7 @@ public class FeedController {
 
 		map.addAttribute("applicationId", applicationId);
 
-		Set<String> uniqueApplicationIds = getUniqueApplicationId(storage.getAggregatedEntries(date, Severity.trace));
+		Set<String> uniqueApplicationIds = getUniqueApplicationId(storage.getAggregatedEntries(new Date(date), Severity.trace));
 		map.addAttribute("uniqueApplicationIds", uniqueApplicationIds);
 		map.addAttribute("entries", filter(entries, applicationId));
 		map.addAttribute("times", times);

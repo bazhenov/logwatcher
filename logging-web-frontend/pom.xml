@@ -103,7 +103,7 @@
 				<artifactId>maven-jetty-plugin</artifactId>
 				<configuration>
 					<scanIntervalSeconds>1</scanIntervalSeconds>
-					<overrideWebXml>src/test/resources/web.xml</overrideWebXml>
+					<!-- <overrideWebXml>src/test/resources/web.xml</overrideWebXml> -->
 					<contextPath>/</contextPath>
 				</configuration>
 			</plugin>
