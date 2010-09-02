@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:property="http://www.springframework.org/schema/p"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+			 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			 xmlns:property="http://www.springframework.org/schema/p"
+			 xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+			 xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+			 http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
 
 	<bean id="storage" class="org.bazhenov.logging.storage.InMemoryLogStorage"/>
 
 	<bean class="org.bazhenov.logging.web.Bootstrap"
-	      init-method="load"
-	      lazy-init="false"
-	      property:storage-ref="storage"/>
+				init-method="load"
+				lazy-init="false"
+				property:storage-ref="storage"/>
+
+	<jdbc:embedded-database id="datasource" type="H2">
+		<jdbc:script location="classpath:dump-init.mysql.sql" />
+		<jdbc:script location="classpath:init.sql" />
+	</jdbc:embedded-database>
 
 	<bean class="org.bazhenov.logging.transport.UdpTransport" lazy-init="false" init-method="start"
-	      destroy-method="stop">
+				destroy-method="stop">
 		<constructor-arg value="6578"/>
 		<constructor-arg>
 			<bean class="org.bazhenov.logging.transport.WriteToStorageTransportListener">

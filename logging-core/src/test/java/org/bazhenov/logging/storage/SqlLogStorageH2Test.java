@@ -1,0 +1,45 @@
+package org.bazhenov.logging.storage;
+
+import com.farpost.logging.marshalling.JDomMarshaller;
+import org.apache.commons.dbcp.BasicDataSource;
+import org.bazhenov.logging.SimpleChecksumCalculator;
+import org.bazhenov.logging.aggregator.Aggregator;
+import org.bazhenov.logging.aggregator.SimpleAggregator;
+import org.bazhenov.logging.storage.sql.AnnotationDrivenMatcherMapperImpl;
+import org.bazhenov.logging.storage.sql.SqlLogStorage;
+import org.bazhenov.logging.storage.sql.SqlMatcherMapper;
+import org.bazhenov.logging.storage.sql.SqlMatcherMapperRules;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.testng.annotations.AfterMethod;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.SQLException;
+import java.util.Properties;
+
+import static org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType.H2;
+
+public class SqlLogStorageH2Test extends LogStorageTestCase {
+	private EmbeddedDatabase db;
+
+	protected LogStorage createStorage() throws IOException, SQLException {
+		EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
+		db = builder.
+			setType(H2).
+			addScript("dump-init.mysql.sql").
+			build();
+
+		SqlMatcherMapper mapper = new AnnotationDrivenMatcherMapperImpl(new SqlMatcherMapperRules());
+		JDomMarshaller marshaller = new JDomMarshaller();
+		Aggregator aggregator = new SimpleAggregator(marshaller);
+		return new SqlLogStorage(aggregator, db, marshaller, mapper, new SimpleChecksumCalculator());
+	}
+
+	@AfterMethod
+	protected void tearDown() {
+		db.shutdown();
+	}
+}
