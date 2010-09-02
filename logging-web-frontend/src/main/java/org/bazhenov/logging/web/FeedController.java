@@ -4,6 +4,7 @@ import com.farpost.timepoint.Date;
 import com.farpost.timepoint.DateTime;
 import org.bazhenov.logging.*;
 import org.bazhenov.logging.storage.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +24,7 @@ import java.util.*;
 import static com.farpost.timepoint.Date.today;
 import static java.util.Collections.sort;
 import static org.bazhenov.logging.storage.LogEntries.entries;
+import static org.springframework.format.annotation.DateTimeFormat.ISO.*;
 
 @Controller
 public class FeedController {
@@ -90,19 +92,11 @@ public class FeedController {
 
 	@RequestMapping("/feed/{applicationId}")
 	public String handleFeed(@PathVariable String applicationId,
-													 ModelMap map, HttpServletRequest request, HttpServletResponse response)
+													 @RequestParam(required = false) @DateTimeFormat(iso = DATE) Date date, ModelMap map,
+													 HttpServletRequest request)
 		throws ParseException, LogStorageException, InvalidCriteriaException, InvalidQueryException {
 
-		Date today = today();
-		Date date;
-		String dateStr = request.getParameter("date");
-		if (dateStr == null) {
-			date = today;
-		} else {
-			date = new Date(format.get().parse(dateStr).getTime());
-		}
-
-		map.addAttribute("date", date.asDate());
+		map.addAttribute("date", date);
 
 		Severity severity = getSeverity(request);
 		map.addAttribute("severity", severity.toString());

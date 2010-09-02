@@ -9,19 +9,7 @@
 	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
 
-	<bean class="org.bazhenov.logging.web.FeedController">
-		<property name="storage" ref="storage"/>
-	</bean>
-
-	<bean class="org.bazhenov.logging.web.BackController">
-		<property name="storage" ref="storage"/>
-	</bean>
-
-	<bean class="org.bazhenov.logging.web.SessionController"/>
-
-	<bean class="org.bazhenov.logging.web.DashboardController">
-		<constructor-arg ref="storage"/>
-	</bean>
+	<import resource="controllers.xml"/>
 
 	<bean class="org.springframework.web.servlet.view.UrlBasedViewResolver"
 				property:viewClass="org.springframework.web.servlet.view.JstlView"
