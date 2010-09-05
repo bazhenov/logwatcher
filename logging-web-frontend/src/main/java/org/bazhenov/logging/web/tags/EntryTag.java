@@ -10,7 +10,7 @@ import static java.lang.Math.abs;
 
 public class EntryTag {
 
-	public static DateFormat shortFormat = new DateTimeFormat();
+	private static final DateFormat shortFormat = new DateTimeFormat();
 
 	public static String shortFormat(java.util.Date date) {
 		return shortFormat.format(date);

@@ -32,14 +32,13 @@ public class DateTimeFormat extends DateFormat {
 		} else if ( millsSinceNow < 60000*30 ) {
 			staticFormat(toAppendTo, fieldPosition, "less than 30 minutes ago");
 		} else {
-			Calendar today = now;
-			today.set(Calendar.HOUR_OF_DAY, 0);
-			today.set(Calendar.MINUTE, 0);
-			today.set(Calendar.SECOND, 0);
-			today.set(Calendar.MILLISECOND, 0);
+			now.set(Calendar.HOUR_OF_DAY, 0);
+			now.set(Calendar.MINUTE, 0);
+			now.set(Calendar.SECOND, 0);
+			now.set(Calendar.MILLISECOND, 0);
 
 			calendar.setTime(date);
-			if ( calendar.before(today) ) {
+			if ( calendar.before(now) ) {
 				formatGenericDate(calendar, toAppendTo, fieldPosition);
 			} else {
 				formatTodaysDate(calendar, toAppendTo, fieldPosition);

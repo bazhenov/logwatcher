@@ -48,10 +48,8 @@
 				<artifactId>findbugs-maven-plugin</artifactId>
 				<version>1.2</version>
 				<configuration>
-					<threshold>High</threshold>
-					<effort>Default</effort>
+					<threshold>Default</threshold>
 					<xmlOutput>true</xmlOutput>
-          <xmlOutputDirectory>target</xmlOutputDirectory>
 				</configuration>
 			</plugin>
 		</plugins>
