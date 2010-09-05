@@ -33,7 +33,7 @@ abstract public class AggregatorTestCase {
 	@Test
 	public void testAggregatorCanFilterEntries() throws MarshallerException {
 		DateTime date = november(12, 2009).at(15, 12);
-		int problemSize = 3333;
+		int problemSize = 333;
 		List<String> entries = new ArrayList<String>(problemSize);
 
 		for ( int i = 0; i < problemSize; i++ ) {
