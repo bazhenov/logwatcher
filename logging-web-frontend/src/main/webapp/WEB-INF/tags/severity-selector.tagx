@@ -1,0 +1,26 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.1"
+					xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:f="http://java.sun.com/jsp/jstl/functions"
+					xmlns:l="urn:jsptagdir:/WEB-INF/tags">
+
+	<jsp:directive.attribute name="severity" type="java.lang.String" required="true"/>
+
+	<div id="severityContainer">
+		<table>
+			<tr>
+				<td class="label">Severity:</td>
+				<td>
+					<ul id="severityMenu">
+						<li class="selected"><span><c:out value="${severity}"/></span></li>
+						<l:severity-position severity="error" currentSeverity="${severity}"/>
+						<l:severity-position severity="warning" currentSeverity="${severity}"/>
+						<l:severity-position severity="info" currentSeverity="${severity}"/>
+						<l:severity-position severity="debug" currentSeverity="${severity}"/>
+						<l:severity-position severity="trace" currentSeverity="${severity}"/>
+					</ul>
+				</td>
+			</tr>
+		</table>
+	</div>
+</jsp:root>
+
+

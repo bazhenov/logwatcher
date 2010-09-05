@@ -47,7 +47,7 @@
 		<dependency>
 			<groupId>org.sitemesh</groupId>
 			<artifactId>sitemesh</artifactId>
-			<version>3.0.0-SNAPSHOT</version>
+			<version>3.0-alpha-1</version>
 		</dependency>
 		<dependency>
 			<groupId>joda-time</groupId>

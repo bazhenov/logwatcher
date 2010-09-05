@@ -1,0 +1,14 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.1"
+					xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:f="http://java.sun.com/jsp/jstl/functions">
+
+	<jsp:directive.attribute name="severity" type="java.lang.String" required="true"/>
+	<jsp:directive.attribute name="currentSeverity" type="java.lang.String" required="true"/>
+
+	<c:if test="${severity ne currentSeverity}">
+		<c:url value="/session" var="url">
+			<c:param name="severity" value="${severity}"/>
+		</c:url>
+		<li><a href="#" onclick="changeSeverity('${url}')"><c:out value="${severity}"/></a></li>
+	</c:if>
+
+</jsp:root>
