@@ -97,6 +97,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>${artifactId}-${version}-${build.number}</finalName>
 		<pluginManagement>
 			<plugins>
 				<plugin>
