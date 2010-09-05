@@ -5,7 +5,6 @@ import org.bazhenov.logging.AggregatedEntry;
 import org.bazhenov.logging.Cause;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 import static java.lang.Math.abs;
 
