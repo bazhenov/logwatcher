@@ -10,12 +10,12 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,7 +24,7 @@ import java.util.*;
 import static com.farpost.timepoint.Date.today;
 import static java.util.Collections.sort;
 import static org.bazhenov.logging.storage.LogEntries.entries;
-import static org.springframework.format.annotation.DateTimeFormat.ISO.*;
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @Controller
 public class FeedController {
@@ -55,21 +55,23 @@ public class FeedController {
 	}
 
 	@RequestMapping("/entry/remove")
-	public View removeEntry(@RequestParam("checksum") String checksum) throws LogStorageException {
+	@ResponseBody
+	public String removeEntry(@RequestParam("checksum") String checksum) throws LogStorageException {
 		storage.removeEntries(checksum);
-		return new BufferView("Ok");
+		return "Ok";
 	}
 
 	@RequestMapping("/search")
-	public String handleSearch(@RequestParam(value = "q", required = false) String query, ModelMap map)
+	public String handleSearch(@RequestParam(required = false) String q, ModelMap map)
 		throws InvalidQueryException, LogStorageException, InvalidCriteriaException {
-		if (query == null || query.isEmpty()) {
+
+		if (q == null || q.isEmpty()) {
 			return "search-form";
 		}
 		List<AggregatedEntry> entries;
 		List<LogEntryMatcher> matchers;
 		try {
-			matchers = translator.translate(query.trim());
+			matchers = translator.translate(q.trim());
 		} catch (InvalidQueryException e) {
 			return "invalid-query";
 		}
@@ -81,10 +83,9 @@ public class FeedController {
 		}
 		entries = entries().withCriteria(matchers).findAggregated(storage);
 		map.put("entries", entries);
-		int times = sumCount(entries);
-		map.put("times", times);
+		map.put("times", sumCount(entries));
 		map.put("date", DateTime.now().asDate());
-		Map<String, String> queryTerms = parser.parse(query);
+		Map<String, String> queryTerms = parser.parse(q);
 		map.put("query", buildQuery(queryTerms));
 		map.put("terms", queryTerms);
 		return "search-feed";
@@ -208,7 +209,6 @@ public class FeedController {
 				}
 			}
 		}
-
 		return Severity.error;
 	}
 
@@ -221,7 +221,6 @@ public class FeedController {
 				}
 			}
 		}
-
 		return null;
 	}
 

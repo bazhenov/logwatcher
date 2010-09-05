@@ -26,7 +26,7 @@ public class UdpTransport implements Transport {
 	}
 
 	public void setBufferSize(int bufferSize) {
-		if ( bufferSize <= 0 ) {
+		if (bufferSize <= 0) {
 			throw new IllegalArgumentException();
 		}
 		this.bufferSize = bufferSize;
@@ -44,22 +44,29 @@ public class UdpTransport implements Transport {
 		}
 
 		public void run() {
-			while ( true ) {
-				String message = null;
+			while (true) {
+				String message;
 				try {
 					byte[] buffer = new byte[bufferSize];
 					DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 					socket.receive(packet);
 					byte[] data = packet.getData();
 					message = new String(data, 0, packet.getLength(), "utf8");
-					if ( log.isDebugEnabled() ) {
+					if (log.isDebugEnabled()) {
 						log.debug("Packet received: " + message);
 					}
-					listener.onMessage(message);
-				} catch ( IOException e ) {
-					log.warn("Stopping transport thread", e);
+				} catch (IOException e) {
+					if (socket.isClosed()) {
+						log.info("Socket closed");
+					} else {
+						log.error("IO error occurred. Stopping transport thread", e);
+					}
 					break;
-				} catch ( Exception e ) {
+				}
+
+				try {
+					listener.onMessage(message);
+				} catch (Exception e) {
 					log.error("Listener failed at message: " + message, e);
 				}
 			}

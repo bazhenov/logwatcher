@@ -4,11 +4,6 @@
          version="2.5">
 	<display-name>Logging web-frontend</display-name>
 
-	<context-param>
-		<param-name>contextConfigLocation</param-name>
-		<param-value>/WEB-INF/development.xml</param-value>
-	</context-param>
-
 	<servlet>
 		<servlet-name>jsp</servlet-name>
 		<servlet-class>org.apache.jasper.servlet.JspServlet</servlet-class>

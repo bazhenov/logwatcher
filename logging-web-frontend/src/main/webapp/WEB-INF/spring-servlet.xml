@@ -3,11 +3,14 @@
 			 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 			 xmlns:context="http://www.springframework.org/schema/context"
 			 xmlns:task="http://www.springframework.org/schema/task"
+			 xmlns:mvc="http://www.springframework.org/schema/mvc"
 			 xmlns:property="http://www.springframework.org/schema/p"
-			 xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+			 xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+			 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+			 http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+			 http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
-	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
+	<mvc:annotation-driven />
 
 	<import resource="controllers.xml"/>
 
@@ -15,16 +18,5 @@
 				property:viewClass="org.springframework.web.servlet.view.JstlView"
 				property:prefix="/WEB-INF/jsp/"
 				property:suffix=".jspx"/>
-
-	<task:scheduler id="scheduler" pool-size="1"/>
-
-	<task:scheduled-tasks scheduler="scheduler">
-		<task:scheduled ref="cleanupTask" method="run" fixed-rate="60000"/>
-	</task:scheduled-tasks>
-
-	<bean id='cleanupTask' class="org.bazhenov.logging.storage.CleanupStorageTask">
-		<constructor-arg ref="storage"/>
-		<property name="daysToKeep" value="10"/>
-	</bean>
 
 </beans>

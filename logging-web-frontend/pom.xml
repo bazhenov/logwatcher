@@ -47,26 +47,31 @@
 		<dependency>
 			<groupId>org.sitemesh</groupId>
 			<artifactId>sitemesh</artifactId>
-			<version>3.0-alpha-1</version>
+			<version>3.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>1.6</version>
 		</dependency>
 
 		<!-- Jetty provided dependencies -->
 		<dependency>
 			<groupId>org.mortbay.jetty</groupId>
 			<artifactId>jetty</artifactId>
-			<version>6.1.22</version>
+			<version>6.1.24</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mortbay.jetty</groupId>
 			<artifactId>jsp-2.1-jetty</artifactId>
-			<version>6.1.22</version>
+			<version>6.1.24</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>javax.servlet</groupId>
+			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>jsp-api</artifactId>
-			<version>2.0</version>
+			<version>2.1</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -74,40 +79,82 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
-			<version>3.0.0.RELEASE</version>
+			<version>3.0.3.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
-			<version>3.0.0.RELEASE</version>
+			<version>3.0.3.RELEASE</version>
 		</dependency>
 
 		<!-- Test dependencies -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
-			<version>3.0.0.RELEASE</version>
+			<version>3.0.3.RELEASE</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<version>1.2.138</version>
 		</dependency>
 	</dependencies>
 
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.mortbay.jetty</groupId>
-				<artifactId>maven-jetty-plugin</artifactId>
-				<version>6.1.25</version>
-				<configuration>
-					<scanIntervalSeconds>1</scanIntervalSeconds>
-					<!-- <overrideWebXml>src/test/resources/web.xml</overrideWebXml> -->
-					<contextPath>/</contextPath>
-				</configuration>
-			</plugin>
-		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.mortbay.jetty</groupId>
+					<artifactId>maven-jetty-plugin</artifactId>
+					<version>6.1.24</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>development</id>
+			<dependencies>
+				<dependency>
+					<groupId>com.h2database</groupId>
+					<artifactId>h2</artifactId>
+					<version>1.2.138</version>
+				</dependency>
+			</dependencies>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.mortbay.jetty</groupId>
+						<artifactId>maven-jetty-plugin</artifactId>
+						<configuration>
+							<scanIntervalSeconds>1</scanIntervalSeconds>
+							<contextPath>/</contextPath>
+							<overrideWebXml>src/test/resources/web.xml</overrideWebXml>
+							<systemProperties>
+								<systemProperty>
+									<name>resources</name>
+									<value>development.xml</value>
+								</systemProperty>
+								<systemProperty>
+									<name>log4j.configuration</name>
+									<value>file:${basedir}/log4j.xml</value>
+								</systemProperty>
+							</systemProperties>
+						</configuration>
+						<dependencies>
+							<dependency>
+								<groupId>org.slf4j</groupId>
+								<artifactId>slf4j-log4j12</artifactId>
+								<version>1.0.1</version>
+								<type>jar</type>
+							</dependency>
+							<dependency>
+								<groupId>log4j</groupId>
+								<artifactId>log4j</artifactId>
+								<version>1.2.13</version>
+								<type>jar</type>
+							</dependency>
+						</dependencies>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
