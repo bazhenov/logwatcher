@@ -1,0 +1,66 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.1" xmlns:c="http://java.sun.com/jsp/jstl/core"
+					xmlns:f="http://java.sun.com/jsp/jstl/functions" xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+					xmlns:l="urn:jsptagdir:/WEB-INF/tags" xmlns:lf="http://bazhenov.org/logging">
+
+	<jsp:directive.attribute name="entry" type="org.bazhenov.logging.AggregatedEntry" required="true"/>
+	<jsp:directive.attribute name="currentApplicationId" type="java.lang.String" required="false"/>
+
+	<a name='${entry.checksum}'><!----></a>
+
+	<c:set var="lastDate" value="${lf:date(entry.lastTime)}"/>
+
+	<fmt:formatDate value="${lastDate}" pattern="yyyy-MM-dd" var="lastOccurredDate"/>
+
+	<c:url value="/entries/${entry.checksum}" var="detailsLink">
+		<c:param name="date" value="${lastOccurredDate}"/>
+	</c:url>
+
+	<div class='entry ${entry.severity}' checksum='${entry.checksum}' lastOccurredDate='${lastOccurredDate}'>
+		<div class='entryHeader'>
+
+			<div class="count">
+				<c:set var="count" value="${entry.count}"/>
+				<c:choose>
+					<c:when test="${count gt 100000}">
+						<abbr title="${count} times">10<sup>${lf:magnitude(count)}</sup></abbr>
+					</c:when>
+					<c:when test="${count gt 1000}">
+						<abbr title="${count} times">${lf:thousands(count)}K</abbr>
+					</c:when>
+					<c:otherwise>
+						${count}
+					</c:otherwise>
+				</c:choose>
+			</div>
+			<div class='message'>
+				<c:if test="${not empty(entry.sampleCause)}">
+					<span class="causeType"><c:out value="${lf:rootCause(entry.sampleCause).type}"/>:</span>
+				</c:if>
+				<c:out value="${lf:trim(entry.message, 150, null)}"/>
+			</div>
+			<div class='messageOverlay'><!----></div>
+			<div class='times'>
+				<c:if test="${currentApplicationId ne entry.applicationId}">
+					<span class='applicationId'><c:out value="${entry.applicationId}"/></span> &amp;mdash;
+				</c:if>
+
+				<fmt:formatDate value="${lastDate}" pattern="d MMMM yyyy, HH:mm:ss zz" var="fullDate"/>
+				<abbr
+					class='${lf:isNew(entry) ? "warningMarker" : ""}'
+					title='${fullDate}'><c:out value="${lf:shortFormar(lastDate)}"/></abbr>
+			</div>
+
+			<div class="operations noBubble">
+				<c:url value="/entries/${entry.checksum}" var="detailsLink">
+					<c:param name="date"><fmt:formatDate value="${lastDate}" pattern="yyyy-MM-dd"/></c:param>
+				</c:url>
+				<a href="${detailsLink}">Details &amp;rarr;</a>
+			</div>
+		</div>
+
+		<div class="entryContainer" loaded="false">
+			<div class="spinner"><!----></div>
+		</div>
+
+	</div>
+</jsp:root>

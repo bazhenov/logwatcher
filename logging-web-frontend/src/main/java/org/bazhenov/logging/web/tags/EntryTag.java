@@ -1,6 +1,7 @@
 package org.bazhenov.logging.web.tags;
 
 import com.farpost.timepoint.Date;
+import org.bazhenov.logging.AggregatedEntry;
 import org.bazhenov.logging.Cause;
 
 import java.text.DateFormat;
@@ -11,7 +12,10 @@ import static java.lang.Math.abs;
 public class EntryTag {
 
 	public static DateFormat shortFormat = new DateTimeFormat();
-	public static DateFormat fullFormat = new SimpleDateFormat("d MMMM yyyy, HH:mm:ss zz");
+
+	public static String shortFormat(java.util.Date date) {
+		return shortFormat.format(date);
+	}
 
 	public static String formatCause(Cause rootCause) {
 		if ( rootCause == null ) {
@@ -38,6 +42,10 @@ public class EntryTag {
 			}
 		}
 		return stackTrace.toString();
+	}
+
+	public static boolean isNew(AggregatedEntry entry) {
+		return entry.getLastTime().plusMinute(30).isInFuture();		
 	}
 
 	public static Cause rootCause(Cause cause) {

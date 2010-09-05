@@ -36,6 +36,18 @@
 	</function>
 
 	<function>
+		<name>isNew</name>
+		<function-class>org.bazhenov.logging.web.tags.EntryTag</function-class>
+		<function-signature>boolean isNew(org.bazhenov.logging.AggregatedEntry)</function-signature>
+	</function>
+
+	<function>
+		<name>shortFormar</name>
+		<function-class>org.bazhenov.logging.web.tags.EntryTag</function-class>
+		<function-signature>java.lang.String shortFormat(java.util.Date)</function-signature>
+	</function>
+
+	<function>
 		<name>date</name>
 		<function-class>org.bazhenov.logging.web.tags.EntryTag</function-class>
 		<function-signature>java.util.Date date(com.farpost.timepoint.Date)</function-signature>

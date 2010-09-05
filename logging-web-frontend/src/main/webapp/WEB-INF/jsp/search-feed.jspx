@@ -1,46 +1,54 @@
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns="http://www.w3.org/1999/xhtml"
-          version="2.1"
-          xmlns:c="http://java.sun.com/jsp/jstl/core"
-          xmlns:l="http://bazhenov.org/logging"
-          xmlns:f="http://java.sun.com/jsp/jstl/functions"
-          xmlns:lt="urn:jsptagdir:/WEB-INF/tags">
+					version="2.1"
+					xmlns:c="http://java.sun.com/jsp/jstl/core"
+					xmlns:l="http://bazhenov.org/logging"
+					xmlns:f="http://java.sun.com/jsp/jstl/functions"
+					xmlns:lt="urn:jsptagdir:/WEB-INF/tags">
 
-  <jsp:directive.page contentType="text/html"/>
+	<jsp:useBean id="entries" type="java.util.Collection" scope="request"/>
+	<jsp:useBean id="query" type="java.lang.String" scope="request"/>
+	<jsp:useBean id="terms" type="java.util.Map" scope="request"/>
+	<jsp:useBean id="times" type="java.lang.Integer" scope="request"/>
 
-  <html>
-  <head>
-    <title>LogWatcher Search: <c:out value="${query}"/></title>
-    <c:url value='/css/search-feed.css' var="cssUrl"/>
-    <link rel="stylesheet" href="${cssUrl}"/>
-  </head>
-  <body>
-  <h2>Search</h2>
+	<jsp:directive.page contentType="text/html"/>
 
-  <div class="queryBox givenQuery" rawQuery="${query}">
+	<html>
+	<head>
+		<title>LogWatcher Search: <c:out value="${query}"/></title>
+		<c:url value='/css/search-feed.css' var="cssUrl"/>
+		<link rel="stylesheet" href="${cssUrl}"/>
+	</head>
+	<body>
+	<h2>Search</h2>
+
+	<div class="queryBox givenQuery" rawQuery="${query}">
     <span id="query">
       <c:forEach items="${terms}" var="term">
-        <span class="keyword"><c:out value="${term.key}"/>:</span><span><c:out value="${term.value}"/>&amp;nbsp;</span>
-      </c:forEach>
+				<span class="keyword"><c:out value="${term.key}"/>:</span><span><c:out value="${term.value}"/>&amp;nbsp;</span>
+			</c:forEach>
     </span>
-  </div>
+	</div>
 
-  <c:choose>
-    <c:when test="${f:length(entries) > 0}">
-      <c:forEach var="entry" items="${entries}">
-        <lt:aggregated-entry entry="${entry}" />
-      </c:forEach>
+	<c:choose>
+		<c:when test="${f:length(entries) > 0}">
+			<c:forEach var="entry" items="${entries}">
+				<jsp:include page="/aggregated-entry">
+					<jsp:param name="entry" value="${entry}"/>
+				</jsp:include>
+				<!-- <lt:aggregated-entry entry="${entry}"/> -->
+			</c:forEach>
 
-      <div id="footer">
-        ${l:pluralize(f:length(entries), "entry entries entries")},
-        ${l:pluralize(times, "message messages messages")}
-      </div>
-    </c:when>
-    <c:otherwise>
-      <div id="notificationPanel">
-        <span>&amp;empty;</span><br/>No results found
-      </div>
-    </c:otherwise>
-  </c:choose>
-  </body>
-  </html>
+			<div id="footer">
+				${l:pluralize(f:length(entries), "entry entries entries")},
+				${l:pluralize(times, "message messages messages")}
+			</div>
+		</c:when>
+		<c:otherwise>
+			<div id="notificationPanel">
+				<span>&amp;empty;</span><br/>No results found
+			</div>
+		</c:otherwise>
+	</c:choose>
+	</body>
+	</html>
 </jsp:root>
