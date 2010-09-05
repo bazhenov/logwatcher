@@ -314,20 +314,4 @@ public class SqlLogStorage implements LogStorage {
 			}
 		}
 	}
-
-	public static void loadDump(DataSource ds, InputStream stream) throws IOException, SQLException {
-		StringBuffer buffer = new StringBuffer();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-		String line;
-		while ((line = reader.readLine()) != null) {
-			buffer.append(line).append("\n");
-		}
-
-		Connection connection = ds.getConnection();
-		try {
-			connection.prepareStatement(buffer.toString()).executeUpdate();
-		} finally {
-			connection.close();
-		}
-	}
 }

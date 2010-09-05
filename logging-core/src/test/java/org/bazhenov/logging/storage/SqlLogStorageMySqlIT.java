@@ -9,16 +9,24 @@ import org.bazhenov.logging.storage.sql.AnnotationDrivenMatcherMapperImpl;
 import org.bazhenov.logging.storage.sql.SqlLogStorage;
 import org.bazhenov.logging.storage.sql.SqlMatcherMapper;
 import org.bazhenov.logging.storage.sql.SqlMatcherMapperRules;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 
+import javax.sql.DataSource;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
 public class SqlLogStorageMySqlIT extends LogStorageTestCase {
 
-	protected LogStorage createStorage() throws IOException, SQLException {
+	private DataSource ds;
+
+	@BeforeClass
+	public void prepareDatasource() throws IOException, SQLException {
 		String pathToConfig = System.getProperty("mysql.config", "./mysql.properties");
 		Properties props = new Properties();
 		props.load(new FileReader(pathToConfig));
@@ -27,13 +35,26 @@ public class SqlLogStorageMySqlIT extends LogStorageTestCase {
 		ds.setUsername(props.getProperty("username"));
 		ds.setPassword(props.getProperty("password"));
 		ds.setUrl(props.getProperty("url"));
+		this.ds = ds;
 
-		InputStream initDump = DatabaseSchema.class.getResourceAsStream("/schema.sql");
-		InputStream cleanupDump = DatabaseSchema.class.getResourceAsStream("/schema-cleanup.sql");
-		DatabaseSchema schema = new DatabaseSchema(initDump, cleanupDump);
-		schema.cleanup(ds);
-		schema.init(ds);
+		ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+		populator.addScript(new ClassPathResource("schema-cleanup.sql"));
+		populator.addScript(new ClassPathResource("schema.sql"));
+		Connection connection = ds.getConnection();
+		populator.populate(connection);
+		connection.close();
+	}
 
+	@BeforeMethod
+	public void truncateData() throws SQLException {
+		ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+		populator.addScript(new ClassPathResource("schema-truncate.sql"));
+		Connection connection = ds.getConnection();
+		populator.populate(connection);
+		connection.close();
+	}
+
+	protected LogStorage createStorage() throws IOException, SQLException {
 		SqlMatcherMapper mapper = new AnnotationDrivenMatcherMapperImpl(new SqlMatcherMapperRules());
 		JDomMarshaller marshaller = new JDomMarshaller();
 		Aggregator aggregator = new SimpleAggregator(marshaller);
