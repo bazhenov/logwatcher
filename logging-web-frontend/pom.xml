@@ -37,6 +37,7 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
@@ -96,6 +97,10 @@
 		</dependency>
 	</dependencies>
 
+	<properties>
+		<buildNumber>dev</buildNumber>
+	</properties>
+
 	<build>
 		<finalName>${artifactId}-${version}-${buildNumber}</finalName>
 		<pluginManagement>
@@ -119,6 +124,7 @@
 					<version>1.2.138</version>
 				</dependency>
 			</dependencies>
+			
 			<build>
 				<plugins>
 					<plugin>

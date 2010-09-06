@@ -1,5 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-				 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.farpost.logging</groupId>
 	<artifactId>logging-parent</artifactId>
@@ -39,5 +39,6 @@
 		<module>logging-web-frontend</module>
 		<module>logwatcher-appender</module>
 		<module>logging-commons</module>
-	</modules>
+    <module>logging-web-frontend-functional-tests</module>
+  </modules>
 </project>
