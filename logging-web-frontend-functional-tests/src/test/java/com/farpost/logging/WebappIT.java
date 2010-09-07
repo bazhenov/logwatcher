@@ -10,11 +10,11 @@ import static java.lang.System.getProperty;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-public class WebappIT {
+public class WebAppIT {
 
 	private String applicationUrl;
 
-	public WebappIT() {
+	public WebAppIT() {
 		int port = parseInt(getProperty("it.port"));
 		applicationUrl = "http://localhost:" + port + "/";
 	}
