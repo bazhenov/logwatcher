@@ -15,6 +15,13 @@
 		<it.port>8181</it.port>
 	</properties>
 
+	<!--
+		Основной момент, который следует помнить внося изменения в конфигурацию функциональных тестов
+		заключается в том что процесс билда должен быть толернатен к другим билдам выполняющимся
+		параллельно. А это значит никаких "прошитых" номеров портов и переменных окружения.
+
+		CI-сервер должен иметь возможность изменить параметры окружения используемые билдом.
+	-->
 	<build>
 		<plugins>
 			<plugin>
@@ -40,7 +47,7 @@
 								</artifactItem>
 							</artifactItems>
 							<outputDirectory>${project.build.directory}</outputDirectory>
-							<silent>false</silent>
+							<silent>true</silent>
 						</configuration>
 					</execution>
 				</executions>
@@ -78,6 +85,16 @@
 							<value>file:${basedir}/resources.xml</value>
 						</systemProperty>
 					</systemProperties>
+					<!--
+						stopPort определяется как производная от ${it.port} специально. Этот паттерн должен
+						применятся во всех процедурах билда для того чтобы уникальность портов на которых запускаются
+						web-сервера гарантировала уникальность stopPort'ов.
+					-->
+					<stopPort>1${it.port}</stopPort>
+					<!--
+						В качестве stopKey берем groupId+artifactId, чтобы случайно не остановить чужой build. 
+					-->
+					<stopKey>com.farpost.logging:logging-web-frontend-functional-tests</stopKey>
 				</configuration>
 				<executions>
 					<execution>
