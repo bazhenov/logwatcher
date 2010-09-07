@@ -11,6 +11,10 @@
 	<packaging>pom</packaging>
 	<name>LogWatcher Functional Test Suite</name>
 
+	<properties>
+		<it.port>8181</it.port>
+	</properties>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -61,7 +65,11 @@
 				<version>6.1.24</version>
 				<configuration>
 					<contextPath>/</contextPath>
-					<scanIntervalSeconds>0</scanIntervalSeconds>
+					<connectors>
+						<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+							<port>${it.port}</port>
+						</connector>
+					</connectors>
 					<daemon>true</daemon>
 					<webApp>${project.build.directory}/SUT.war</webApp>
 					<systemProperties>
@@ -70,8 +78,6 @@
 							<value>file:${basedir}/resources.xml</value>
 						</systemProperty>
 					</systemProperties>
-					<stopKey>foo</stopKey>
-					<stopPort>9999</stopPort>
 				</configuration>
 				<executions>
 					<execution>
