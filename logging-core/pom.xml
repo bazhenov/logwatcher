@@ -15,21 +15,29 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+		</dependency>
+		
+		<dependency>
 			<groupId>com.farpost</groupId>
 			<artifactId>timepoint</artifactId>
-			<version>1.1-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.farpost.logging</groupId>
 			<artifactId>logging-commons</artifactId>
-			<version>1.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+		</dependency>
+
+		<!-- Тестовые зависимости -->
+		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<version>1.2.138</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -43,26 +51,7 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.6</version>
 			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-jdbc</artifactId>
-			<version>3.0.0.RELEASE</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.farpost</groupId>
-			<artifactId>attribute-marshaller</artifactId>
-			<version>1.0-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<version>1.2.138</version>
 		</dependency>
 	</dependencies>
 </project>

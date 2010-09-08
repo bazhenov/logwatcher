@@ -1,6 +1,5 @@
 package com.farpost.logging;
 
-import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.testng.annotations.Test;
