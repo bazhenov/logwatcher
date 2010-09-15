@@ -11,6 +11,8 @@ import org.bazhenov.logging.LogEntry;
 import org.bazhenov.logging.Severity;
 import org.bazhenov.logging.transport.TransportException;
 import org.bazhenov.logging.transport.UdpTransport;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.net.SocketException;
@@ -23,17 +25,29 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class LogWatcherAppenderIT {
 
-	@Test
-	public void appenderShouldSendUdpMessages() throws SocketException, TransportException,
-		InterruptedException, MarshallerException {
+	private BlockingQueue<String> messages;
+	private Marshaller marshaller;
+	private int port = 6590;
+	private UdpTransport transport;
 
-		Marshaller marshaller = new JDomMarshaller();
-		BlockingQueue<String> queue = new LinkedBlockingQueue<String>();
-		UdpTransport t = new UdpTransport(6589, new QueueAppendListener(queue));
-		t.setBufferSize(100*1024);
-		t.start();
+	@BeforeMethod
+	public void setUp() throws SocketException, TransportException {
+		messages = new LinkedBlockingQueue<String>();
+		transport = new UdpTransport(port, new QueueAppendListener(messages));
+		transport.setBufferSize(100 * 1024);
+		transport.start();
+		marshaller = new JDomMarshaller();
+	}
+
+	@AfterMethod
+	public void tearDown() throws TransportException {
+		transport.stop();
+	}
+
+	@Test
+	public void appenderShouldSendUdpMessages() throws InterruptedException, MarshallerException {
 		String applicationId = "foobar";
-		LogWatcherAppender appender = createAppender("127.0.0.1:6589", applicationId);
+		LogWatcherAppender appender = createAppender("0.0.0.0:" + port, applicationId);
 
 		Throwable cause = new RuntimeException("Ooops");
 		String message = "Сообщение";
@@ -43,8 +57,8 @@ public class LogWatcherAppenderIT {
 
 		Logger.getLogger(LogWatcherAppender.class).debug(message, cause);
 
-		String packet = queue.poll(1, TimeUnit.SECONDS);
-		LogEntry entry = marshaller.unmarshall(packet);
+		String lastMessage = messages.poll(1, TimeUnit.SECONDS);
+		LogEntry entry = marshaller.unmarshall(lastMessage);
 
 		rootLogger.removeAppender(appender);
 
