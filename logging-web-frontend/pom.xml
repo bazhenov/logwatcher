@@ -93,10 +93,6 @@
 		</dependency>
 	</dependencies>
 
-	<properties>
-		<buildNumber>dev</buildNumber>
-	</properties>
-
 	<build>
 		<finalName>${project.artifactId}-${project.version}-${buildNumber}</finalName>
 		<pluginManagement>
@@ -125,7 +121,11 @@
 					<version>1.2.138</version>
 				</dependency>
 			</dependencies>
-			
+
+			<properties>
+				<buildNumber>dev</buildNumber>
+			</properties>
+
 			<build>
 				<plugins>
 					<plugin>
