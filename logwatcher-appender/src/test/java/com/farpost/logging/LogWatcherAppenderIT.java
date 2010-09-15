@@ -16,6 +16,7 @@ import org.testng.annotations.Test;
 import java.net.SocketException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -42,7 +43,7 @@ public class LogWatcherAppenderIT {
 
 		Logger.getLogger(LogWatcherAppender.class).debug(message, cause);
 
-		String packet = queue.take();
+		String packet = queue.poll(1, TimeUnit.SECONDS);
 		LogEntry entry = marshaller.unmarshall(packet);
 
 		rootLogger.removeAppender(appender);
