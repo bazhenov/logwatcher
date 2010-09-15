@@ -11,6 +11,8 @@
 		<property name="storage" ref="storage"/>
 	</bean>
 
+	<bean class="org.bazhenov.logging.web.LayoutController"/>
+
 	<bean class="org.bazhenov.logging.web.SessionController"/>
 
 	<bean class="org.bazhenov.logging.web.DashboardController">

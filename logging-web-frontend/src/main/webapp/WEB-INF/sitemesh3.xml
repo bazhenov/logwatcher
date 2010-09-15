@@ -1,6 +1,6 @@
 <sitemesh>
   <mapping path="/service/*" exclude="true" />
 	
-  <mapping path="/*" decorator="/WEB-INF/layout/main.jspx" />
+  <mapping path="/*" decorator="/layout" />
   <mime-type>text/html</mime-type>
 </sitemesh>
