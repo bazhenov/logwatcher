@@ -28,6 +28,7 @@
 
 	<properties>
 		<it.port>8181</it.port>
+		<it.location>http://localhost:${it.port}</it.location>
 	</properties>
 
 	<!--
@@ -73,7 +74,7 @@
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<configuration>
 					<systemPropertyVariables>
-						<it.port>${it.port}</it.port>
+						<it.location>${it.location}</it.location>
 					</systemPropertyVariables>
 				</configuration>
 			</plugin>
@@ -139,6 +140,11 @@
 	<profiles>
 		<profile>
 			<id>development</id>
+
+			<properties>
+				<maven.test.skip>true</maven.test.skip>
+			</properties>
+
 			<build>
 				<plugins>
 					<plugin>

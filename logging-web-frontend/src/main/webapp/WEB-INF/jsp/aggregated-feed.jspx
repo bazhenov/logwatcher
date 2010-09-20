@@ -62,7 +62,7 @@
 
 	<c:url value="/feed/${applicationId}" var="baseUrl"/>
 	<fmt:formatDate pattern="yyyy" var="year" value="${date}"/>
-	<fmt:formatDate pattern="MM" var="month" value="${date}"/>
+	<fmt:formatDate pattern="M" var="month" value="${date}"/>
 	<script type="text/javascript">
 		var baseUrl = "${baseUrl}";
 		var baseDate = new Date("${year}", ${month}-1, 1);
