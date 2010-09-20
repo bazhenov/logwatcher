@@ -33,7 +33,6 @@
 
 	<dependencyManagement>
 		<dependencies>
-
 			<dependency>
 				<groupId>log4j</groupId>
 				<artifactId>log4j</artifactId>
@@ -50,6 +49,12 @@
 				<groupId>com.farpost.logging</groupId>
 				<artifactId>logging-commons</artifactId>
 				<version>1.0-SNAPSHOT</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.farpost.logging</groupId>
+				<artifactId>logging-core</artifactId>
+				<version>1.3-SNAPSHOT</version>
 			</dependency>
 
 			<dependency>
@@ -71,27 +76,32 @@
 			</dependency>
 
 			<dependency>
+				<groupId>commons-dbcp</groupId>
+				<artifactId>commons-dbcp</artifactId>
+				<version>1.2.2</version>
+			</dependency>
+
+			<!-- Spring dependencies -->
+			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-jdbc</artifactId>
 				<version>3.0.4.RELEASE</version>
 			</dependency>
-
 			<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-			<version>3.0.4.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc</artifactId>
-			<version>3.0.4.RELEASE</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<version>3.0.4.RELEASE</version>
-		</dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-core</artifactId>
+				<version>3.0.4.RELEASE</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-webmvc</artifactId>
+				<version>3.0.4.RELEASE</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-test</artifactId>
+				<version>3.0.4.RELEASE</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

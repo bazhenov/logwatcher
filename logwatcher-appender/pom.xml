@@ -19,7 +19,7 @@
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.farpost.logging</groupId>
 			<artifactId>logging-commons</artifactId>
@@ -28,7 +28,6 @@
 		<dependency>
 			<groupId>com.farpost.logging</groupId>
 			<artifactId>logging-core</artifactId>
-			<version>1.3-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
