@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class LogWatcherAppenderIT {
+public class LogWatcherAppenderTest {
 
 	private BlockingQueue<String> messages;
 	private Marshaller marshaller = new JDomMarshaller();
