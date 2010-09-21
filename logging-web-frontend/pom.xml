@@ -102,6 +102,29 @@
 			</extension>
 		</extensions>
 
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>wagon-maven-plugin</artifactId>
+				<version>1.0-beta-3</version>
+				<executions>
+					<execution>
+						<id>upload-artifact</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>upload-single</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<serverId>vfarm</serverId>
+					<url>scpexe://logwatcher</url>
+					<fromFile>${build.directory}/${artifactId}-${version}-${buildNumber}.war</fromFile>
+					<toFile>/home/tech/${artifactId}-${version}-${buildNumber}.jar</toFile>
+				</configuration>
+			</plugin>
+		</plugins>
+
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -114,27 +137,6 @@
 					<groupId>org.mortbay.jetty</groupId>
 					<artifactId>maven-jetty-plugin</artifactId>
 					<version>6.1.24</version>
-				</plugin>
-
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>wagon-maven-plugin</artifactId>
-					<version>1.0-beta-3</version>
-					<executions>
-						<execution>
-							<id>upload-artifact</id>
-							<phase>deploy</phase>
-							<goals>
-								<goal>upload-single</goal>
-							</goals>
-						</execution>
-					</executions>
-					<configuration>
-						<serverId>vfarm</serverId>
-						<url>scpexe://logwatcher</url>
-						<fromFile>${build.directory}/${artifactId}-${version}-${buildNumber}.war</fromFile>
-						<toFile>/home/tech/${artifactId}-${version}.jar</toFile>
-					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
