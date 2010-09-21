@@ -90,7 +90,7 @@ public class LogWatcherAppender extends AppenderSkeleton {
 		t.printStackTrace(new PrintWriter(buffer));
 		Cause cause = t.getCause() == null
 			? null
-			:constructCause(t.getCause());
+			: constructCause(t.getCause());
 		return new Cause(t.getClass().getSimpleName(), t.getMessage(), buffer.toString(), cause);
 	}
 
@@ -125,7 +125,7 @@ public class LogWatcherAppender extends AppenderSkeleton {
 		try {
 			String stringMessage = marshaller.marshall(entry);
 			sendMessage(port, stringMessage);
-		} catch ( MarshallerException e) {
+		} catch (MarshallerException e) {
 			throw new RuntimeException(e);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
