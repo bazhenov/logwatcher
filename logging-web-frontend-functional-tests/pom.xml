@@ -6,12 +6,24 @@
 	<parent>
 		<groupId>com.farpost.logging</groupId>
 		<artifactId>logging-parent</artifactId>
-		<version>1.3-SNAPSHOT</version>
+		<version>1.3</version>
 	</parent>
 
 	<artifactId>logging-web-frontend-functional-tests</artifactId>
 	<packaging>pom</packaging>
 	<name>LogWatcher Functional Test Suite</name>
+
+	<properties>
+		<it.port>8181</it.port>
+		<it.location>http://localhost:${it.port}</it.location>
+
+		<sut.groupId>com.farpost.logging</sut.groupId>
+		<sut.artifactId>logging-web-frontend</sut.artifactId>
+		<sut.version>1.3</sut.version>
+
+		<deploy.hostname>logwatcher</deploy.hostname>
+		<deploy.location>/home/tech</deploy.location>
+	</properties>
 
 	<dependencies>
 		<dependency>
@@ -26,11 +38,6 @@
 		</dependency>
 	</dependencies>
 
-	<properties>
-		<it.port>8181</it.port>
-		<it.location>http://localhost:${it.port}</it.location>
-	</properties>
-
 	<!--
 		Основной момент, который следует помнить внося изменения в конфигурацию функциональных тестов
 		заключается в том что процесс билда должен быть толернатен к другим билдам выполняющимся
@@ -39,7 +46,17 @@
 		CI-сервер должен иметь возможность изменить параметры окружения используемые билдом.
 	-->
 	<build>
+
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh-external</artifactId>
+				<version>1.0-beta-6</version>
+			</extension>
+		</extensions>
+
 		<plugins>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
@@ -54,12 +71,12 @@
 						<configuration>
 							<artifactItems>
 								<artifactItem>
-									<groupId>com.farpost.logging</groupId>
-									<artifactId>logging-web-frontend</artifactId>
-									<version>1.3-SNAPSHOT</version>
+									<groupId>${sut.groupId}</groupId>
+									<artifactId>${sut.artifactId}</artifactId>
+									<version>${sut.version}</version>
 									<type>war</type>
 									<overWrite>true</overWrite>
-									<destFileName>SUT.war</destFileName>
+									<destFileName>system-under-test.war</destFileName>
 								</artifactItem>
 							</artifactItems>
 							<outputDirectory>${project.build.directory}</outputDirectory>
@@ -92,7 +109,7 @@
 					</connectors>
 					<daemon>true</daemon>
 
-					<webApp>${project.build.directory}/SUT.war</webApp>
+					<webApp>${project.build.directory}/system-under-test.war</webApp>
 					<systemProperties>
 						<systemProperty>
 							<name>resources</name>
@@ -134,6 +151,29 @@
 					</execution>
 				</executions>
 			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>wagon-maven-plugin</artifactId>
+				<version>1.0-beta-3</version>
+				<executions>
+					<execution>
+						<id>upload-artifact</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>upload-single</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<serverId>vhost-gateway</serverId>
+					<url>scpexe://${deploy.hostname}</url>
+					<fromFile>${project.build.directory}/system-under-test.war</fromFile>
+					<!--suppress MavenModelInspection -->
+					<toFile>${deploy.location}/${sut.artifactId}-${sut.version}.${buildNumber}.war</toFile>
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</build>
 

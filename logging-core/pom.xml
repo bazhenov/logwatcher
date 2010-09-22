@@ -8,9 +8,9 @@
 	<parent>
 		<groupId>com.farpost.logging</groupId>
 		<artifactId>logging-parent</artifactId>
-		<version>1.3-SNAPSHOT</version>
+		<version>1.3</version>
 	</parent>
-	<version>1.3-SNAPSHOT</version>
+	<version>1.3</version>
 	<name>LogWatcher Storage API</name>
 
 	<dependencies>

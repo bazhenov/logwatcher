@@ -5,7 +5,7 @@
 	<groupId>com.farpost.logging</groupId>
 	<artifactId>logging-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>1.3-SNAPSHOT</version>
+	<version>1.3</version>
 	<name>LogWatcher</name>
 
 	<parent>
@@ -48,13 +48,13 @@
 			<dependency>
 				<groupId>com.farpost.logging</groupId>
 				<artifactId>logging-commons</artifactId>
-				<version>1.0-SNAPSHOT</version>
+				<version>1.0</version>
 			</dependency>
 
 			<dependency>
 				<groupId>com.farpost.logging</groupId>
 				<artifactId>logging-core</artifactId>
-				<version>1.3-SNAPSHOT</version>
+				<version>1.3</version>
 			</dependency>
 
 			<dependency>
