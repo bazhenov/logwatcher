@@ -59,3 +59,14 @@ FORM                { margin: 0 }
 
 #footer                         { font-size: 16px; font-family: 'Lucida Grande', Tahoma, Verdana, Helvetica, sans-serif;
 																	margin-top: 20px; color: #333; text-align: center; text-shadow: 1px 1px 0 #eee }
+
+#errorPanel 							{ text-align: center; margin-top: 20%; padding: 10px; background-color: #ffffe5;
+														border: 1px solid #ddddc3; max-width: 50% }
+
+#errorPanel h1						{ font-size: 26px; letter-spacing: -1px; color: #4f4f4f; margin: 5px 0 5px 0;
+														font-family: 'Lucida grande', helvetica, arial, clean, sans-serif;
+														font-weight: normal; }
+
+#errorPanel h2						{ font-size: 16px; letter-spacing: 0; }
+
+#errorPanel pre						{ font-family: monospace;	white-space: pre-wrap; color: #777; font-size: 15px;}
