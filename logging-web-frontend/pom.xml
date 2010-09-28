@@ -96,76 +96,45 @@
 		<finalName>${project.artifactId}-${project.version}.${buildNumber}</finalName>
 
 		<plugins>
-			
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>maven-jetty-plugin</artifactId>
+				<version>6.1.24</version>
+				<configuration>
+					<scanIntervalSeconds>1</scanIntervalSeconds>
+					<contextPath>/</contextPath>
+					<overrideWebXml>src/test/resources/web.xml</overrideWebXml>
+					<systemProperties>
+						<systemProperty>
+							<name>resources</name>
+							<value>development.xml</value>
+						</systemProperty>
+						<systemProperty>
+							<name>log4j.configuration</name>
+							<value>file:${basedir}/log4j.xml</value>
+						</systemProperty>
+					</systemProperties>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.slf4j</groupId>
+						<artifactId>slf4j-log4j12</artifactId>
+						<version>1.0.1</version>
+						<type>jar</type>
+					</dependency>
+					<dependency>
+						<groupId>log4j</groupId>
+						<artifactId>log4j</artifactId>
+						<version>1.2.14</version>
+						<type>jar</type>
+					</dependency>
+					<dependency>
+						<groupId>com.h2database</groupId>
+						<artifactId>h2</artifactId>
+						<version>1.2.138</version>
+					</dependency>
+				</dependencies>
+			</plugin>
 		</plugins>
-
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-war-plugin</artifactId>
-					<version>2.1-beta-1</version>
-				</plugin>
-
-				<plugin>
-					<groupId>org.mortbay.jetty</groupId>
-					<artifactId>maven-jetty-plugin</artifactId>
-					<version>6.1.24</version>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 	</build>
-
-	<profiles>
-		<profile>
-			<id>development</id>
-
-			<properties>
-				<buildNumber>dev</buildNumber>
-			</properties>
-
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.mortbay.jetty</groupId>
-						<artifactId>maven-jetty-plugin</artifactId>
-						<configuration>
-							<scanIntervalSeconds>1</scanIntervalSeconds>
-							<contextPath>/</contextPath>
-							<overrideWebXml>src/test/resources/web.xml</overrideWebXml>
-							<systemProperties>
-								<systemProperty>
-									<name>resources</name>
-									<value>development.xml</value>
-								</systemProperty>
-								<systemProperty>
-									<name>log4j.configuration</name>
-									<value>file:${basedir}/log4j.xml</value>
-								</systemProperty>
-							</systemProperties>
-						</configuration>
-						<dependencies>
-							<dependency>
-								<groupId>org.slf4j</groupId>
-								<artifactId>slf4j-log4j12</artifactId>
-								<version>1.0.1</version>
-								<type>jar</type>
-							</dependency>
-							<dependency>
-								<groupId>log4j</groupId>
-								<artifactId>log4j</artifactId>
-								<version>1.2.14</version>
-								<type>jar</type>
-							</dependency>
-							<dependency>
-								<groupId>com.h2database</groupId>
-								<artifactId>h2</artifactId>
-								<version>1.2.138</version>
-							</dependency>
-						</dependencies>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
 </project>
