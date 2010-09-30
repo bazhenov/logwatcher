@@ -11,9 +11,6 @@
 	<!--suppress SpringModelInspection -->
 	<import resource="${resources}"/>
 
-	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
-	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
-
 	<task:scheduler id="scheduler" pool-size="1"/>
 
 	<task:scheduled-tasks scheduler="scheduler">
