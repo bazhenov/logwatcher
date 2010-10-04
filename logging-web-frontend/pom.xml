@@ -107,7 +107,7 @@
 					<systemProperties>
 						<systemProperty>
 							<name>resources</name>
-							<value>development.xml</value>
+							<value>file:${basedir}/src/test/resources/resources.xml</value>
 						</systemProperty>
 						<systemProperty>
 							<name>log4j.configuration</name>
