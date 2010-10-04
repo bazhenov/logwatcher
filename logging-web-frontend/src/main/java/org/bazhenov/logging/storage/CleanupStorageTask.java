@@ -1,7 +1,8 @@
 package org.bazhenov.logging.storage;
 
 import com.farpost.timepoint.Date;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static com.farpost.timepoint.Date.today;
 
@@ -9,7 +10,7 @@ public class CleanupStorageTask implements Runnable {
 
 	private final LogStorage storage;
 	private int daysToKeep = 10;
-	private static Logger log = Logger.getLogger(CleanupStorageTask.class); 
+	private static Logger log = LoggerFactory.getLogger(CleanupStorageTask.class);
 
 	public CleanupStorageTask(LogStorage storage) {
 		this.storage = storage;

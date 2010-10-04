@@ -1,6 +1,7 @@
 package org.bazhenov.logging.transport;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -36,7 +37,7 @@ public class UdpTransport implements Transport {
 
 		private DatagramSocket socket;
 		private TransportListener listener;
-		private final Logger log = Logger.getLogger(UdpTransport.class);
+		private final Logger log = LoggerFactory.getLogger(UdpTransport.class);
 
 		public SocketThread(DatagramSocket socket, TransportListener listener) {
 			this.socket = socket;

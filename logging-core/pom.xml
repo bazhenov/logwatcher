@@ -15,11 +15,6 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-		</dependency>
-		
-		<dependency>
 			<groupId>com.farpost</groupId>
 			<artifactId>timepoint</artifactId>
 		</dependency>
@@ -32,6 +27,11 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
 		</dependency>
 
 		<!-- Тестовые зависимости -->
