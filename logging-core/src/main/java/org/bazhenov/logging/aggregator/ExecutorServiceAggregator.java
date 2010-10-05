@@ -1,11 +1,12 @@
 package org.bazhenov.logging.aggregator;
 
 import com.farpost.logging.marshalling.Marshaller;
-import org.apache.log4j.Logger;
 import org.bazhenov.logging.AggregatedEntry;
 import org.bazhenov.logging.AggregatedEntryImpl;
 import org.bazhenov.logging.LogEntry;
 import org.bazhenov.logging.storage.LogEntryMatcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -19,7 +20,7 @@ public class ExecutorServiceAggregator implements Aggregator {
 	private final Marshaller marshaller;
 	private final ExecutorService service;
 	private volatile int batchSize = 500;
-	private final Logger log = Logger.getLogger(ExecutorServiceAggregator.class);
+	private final Logger log = LoggerFactory.getLogger(ExecutorServiceAggregator.class);
 
 	public ExecutorServiceAggregator(Marshaller marshaller, ExecutorService service) {
 		this.marshaller = marshaller;

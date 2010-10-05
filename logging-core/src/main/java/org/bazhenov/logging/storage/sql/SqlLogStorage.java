@@ -4,22 +4,20 @@ import com.farpost.logging.marshalling.Marshaller;
 import com.farpost.logging.marshalling.MarshallerException;
 import com.farpost.timepoint.Date;
 import com.farpost.timepoint.DateTime;
-import org.apache.log4j.Logger;
 import org.bazhenov.logging.*;
 import org.bazhenov.logging.aggregator.Aggregator;
 import org.bazhenov.logging.storage.InvalidCriteriaException;
 import org.bazhenov.logging.storage.LogEntryMatcher;
 import org.bazhenov.logging.storage.LogStorage;
 import org.bazhenov.logging.storage.LogStorageException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
 import javax.sql.DataSource;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,7 +36,7 @@ public class SqlLogStorage implements LogStorage {
 	private final Marshaller marshaller;
 	private final SqlMatcherMapper mapper;
 	private final SimpleJdbcTemplate jdbc;
-	private final Logger log = Logger.getLogger(SqlLogStorage.class);
+	private final Logger log = LoggerFactory.getLogger(SqlLogStorage.class);
 	private final ParameterizedRowMapper<AggregatedEntry> aggregateEntryMapper;
 	private final ParameterizedRowMapper<LogEntry> entryMapper;
 
