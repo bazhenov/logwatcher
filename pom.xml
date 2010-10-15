@@ -30,6 +30,7 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- тестовые зависимости -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
@@ -75,12 +76,6 @@
 				<groupId>com.farpost.logging</groupId>
 				<artifactId>logging-core</artifactId>
 				<version>1.3</version>
-			</dependency>
-
-			<dependency>
-				<groupId>com.farpost</groupId>
-				<artifactId>attribute-marshaller</artifactId>
-				<version>1.0-SNAPSHOT</version>
 			</dependency>
 
 			<!-- Spring dependencies -->
