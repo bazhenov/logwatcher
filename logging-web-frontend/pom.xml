@@ -36,6 +36,11 @@
 			<artifactId>joda-time</artifactId>
 			<version>1.6</version>
 		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
 
 		<!-- Jetty provided dependencies -->
 		<dependency>
@@ -86,6 +91,9 @@
 				<version>6.1.24</version>
 				<configuration>
 					<scanIntervalSeconds>1</scanIntervalSeconds>
+					<webAppConfig>
+						<serverClasses />
+					</webAppConfig>
 					<contextPath>/</contextPath>
 					<overrideWebXml>src/test/resources/web.xml</overrideWebXml>
 					<systemProperties>
@@ -108,7 +116,7 @@
 					<dependency>
 						<groupId>ch.qos.logback</groupId>
 						<artifactId>logback-classic</artifactId>
-						<version>0.9.24</version>
+						<version>0.9.25</version>
 					</dependency>
 					<dependency>
 						<groupId>com.h2database</groupId>

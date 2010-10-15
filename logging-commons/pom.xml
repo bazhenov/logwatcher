@@ -23,7 +23,6 @@
 		<dependency>
 			<groupId>com.farpost</groupId>
 			<artifactId>timepoint</artifactId>
-			<version>1.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>
