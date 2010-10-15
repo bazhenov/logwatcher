@@ -1,5 +1,6 @@
 package org.bazhenov.logging.web;
 
+import com.farpost.logwatcher.web.vm.FeedViewModel;
 import com.farpost.timepoint.Date;
 import com.farpost.timepoint.DateTime;
 import org.bazhenov.logging.*;
@@ -117,12 +118,11 @@ public class FeedController {
 
 		map.addAttribute("applicationId", applicationId);
 
-		Set<String> uniqueApplicationIds = getUniqueApplicationId(storage.getAggregatedEntries(new Date(date), Severity.trace));
-		map.addAttribute("uniqueApplicationIds", uniqueApplicationIds);
 		map.addAttribute("entries", filter(entries, applicationId));
 		map.addAttribute("times", times);
+		map.addAttribute("vm", new FeedViewModel(request, storage, date, applicationId));
 
-		return "aggregated-feed";
+		return "feed/aggregated-feed";
 	}
 
 	private static int sumCount(List<AggregatedEntry> entries) {
@@ -222,15 +222,5 @@ public class FeedController {
 			}
 		}
 		return null;
-	}
-
-	public static Set<String> getUniqueApplicationId(List<AggregatedEntry> entries) {
-		Set<String> set = new TreeSet<String>();
-		for (AggregatedEntry entry : entries) {
-			if (!set.contains(entry.getApplicationId())) {
-				set.add(entry.getApplicationId());
-			}
-		}
-		return set;
 	}
 }

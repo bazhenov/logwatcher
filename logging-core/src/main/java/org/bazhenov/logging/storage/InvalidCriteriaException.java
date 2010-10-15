@@ -6,7 +6,7 @@ import java.util.Collection;
  * Генерируется имплементациями {@link LogStorage} в случае, если они не могу обработать
  * переданные клиентом критерии
  */
-public class InvalidCriteriaException extends Exception {
+public class InvalidCriteriaException extends RuntimeException {
 
 	public InvalidCriteriaException(String message) {
 		super(message);

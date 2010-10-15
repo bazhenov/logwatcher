@@ -8,11 +8,11 @@
 
 	<jsp:directive.page contentType="text/html"/>
 	<jsp:useBean id="applicationId" scope="request" type="java.lang.String"/>
-	<jsp:useBean id="uniqueApplicationIds" scope="request" type="java.util.Set"/>
 	<jsp:useBean id="entries" scope="request" type="java.util.List"/>
 	<jsp:useBean id="times" scope="request" type="java.lang.Integer"/>
 	<jsp:useBean id="date" scope="request" type="java.util.Date"/>
 	<jsp:useBean id="severity" scope="request" type="java.lang.String"/>
+	<jsp:useBean id="vm" scope="request" type="com.farpost.logwatcher.web.vm.FeedViewModel"/>
 
 	<html>
 	<head>
@@ -31,20 +31,19 @@
 	<body>
 	<h2>
 		<span id="applicationId"><c:out value="${applicationId}"/></span>
-		<span class="additionalInfo"> on <span id="date"><fmt:formatDate pattern="dd MMMM, yyyy"
-																																		 value="${date}"/></span></span>
+		<span class="additionalInfo">
+			on <span id="date"><fmt:formatDate pattern="dd MMMM, yyyy" value="${date}"/></span>
+		</span>
 	</h2>
 
 	<lt:severity-selector severity="${severity}"/>
 
 	<lt:popup id="applicationSelector">
+		<c:set value="${vm.applications}" var="applications"/>
 		<c:choose>
-			<c:when test="${f:length(uniqueApplicationIds) gt 0}">
-				<c:forEach items="${uniqueApplicationIds}" var="id">
-					<c:if test="${id ne applicationId}">
-						<c:url value="/feed/${id}" var="url"/>
-						<a class="applicationLink" href="${url}"><c:out value="${id}"/></a>
-					</c:if>
+			<c:when test="${f:length(applications) gt 0}">
+				<c:forEach items="${applications}" var="application">
+					<a class="applicationLink" href="${application.url}"><c:out value="${application.id}"/></a>
 				</c:forEach>
 			</c:when>
 			<c:otherwise>

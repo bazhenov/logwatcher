@@ -17,7 +17,7 @@ import java.util.List;
 import static com.farpost.timepoint.Date.today;
 import static java.util.Collections.sort;
 import static org.bazhenov.logging.web.FeedController.filter;
-import static org.bazhenov.logging.web.FeedController.getUniqueApplicationId;
+import static com.farpost.logwatcher.web.vm.FeedViewModel.groupByApplication;
 
 @Controller
 public class DashboardController {
@@ -47,7 +47,7 @@ public class DashboardController {
 
 	private List<ApplicationInfo> groupEntriesByApplicationId(List<AggregatedEntry> allEntries) {
 		List<ApplicationInfo> infos = new ArrayList<ApplicationInfo>();
-		for (String applicationId : getUniqueApplicationId(allEntries)) {
+		for (String applicationId : groupByApplication(allEntries)) {
 			List<AggregatedEntry> applicationsEntries = filter(allEntries, applicationId);
 			sort(applicationsEntries, new ByOccurenceCountComparator());
 			ApplicationInfo info = new ApplicationInfo(applicationId, applicationsEntries);
