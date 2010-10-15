@@ -29,12 +29,6 @@
 			<artifactId>spring-jdbc</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
 		<!-- Тестовые зависимости -->
 		<dependency>
 			<groupId>com.h2database</groupId>
