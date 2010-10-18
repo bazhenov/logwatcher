@@ -108,12 +108,18 @@
 						</connector>
 					</connectors>
 					<daemon>true</daemon>
-
+					<webAppConfig>
+						<serverClasses />
+					</webAppConfig>
 					<webApp>${project.build.directory}/system-under-test.war</webApp>
 					<systemProperties>
 						<systemProperty>
 							<name>resources</name>
-							<value>file:${basedir}/resources.xml</value>
+							<value>file:${basedir}/src/test/resources/resources.xml</value>
+						</systemProperty>
+						<systemProperty>
+							<name>logback.configurationFile</name>
+							<value>file:${basedir}/src/test/resources/logback.xml</value>
 						</systemProperty>
 					</systemProperties>
 					<!--
@@ -132,6 +138,21 @@
 						<groupId>com.h2database</groupId>
 						<artifactId>h2</artifactId>
 						<version>1.2.138</version>
+					</dependency>
+					<dependency>
+						<groupId>org.slf4j</groupId>
+						<artifactId>slf4j-api</artifactId>
+						<version>1.6.1</version>
+					</dependency>
+					<dependency>
+						<groupId>ch.qos.logback</groupId>
+						<artifactId>logback-classic</artifactId>
+						<version>0.9.25</version>
+					</dependency>
+					<dependency>
+						<groupId>org.slf4j</groupId>
+						<artifactId>jcl-over-slf4j</artifactId>
+						<version>1.6.1</version>
 					</dependency>
 				</dependencies>
 				<executions>
@@ -173,7 +194,6 @@
 					<toFile>${deploy.location}/${sut.artifactId}-${sut.version}.${buildNumber}.war</toFile>
 				</configuration>
 			</plugin>
-
 		</plugins>
 	</build>
 
