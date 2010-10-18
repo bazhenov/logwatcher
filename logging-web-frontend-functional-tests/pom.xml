@@ -109,7 +109,7 @@
 					</connectors>
 					<daemon>true</daemon>
 					<webAppConfig>
-						<serverClasses />
+						<serverClasses/>
 					</webAppConfig>
 					<webApp>${project.build.directory}/system-under-test.war</webApp>
 					<systemProperties>
@@ -119,7 +119,7 @@
 						</systemProperty>
 						<systemProperty>
 							<name>logback.configurationFile</name>
-							<value>file:${basedir}/src/test/resources/logback.xml</value>
+							<value>${logback.configurationFile}</value>
 						</systemProperty>
 					</systemProperties>
 					<!--

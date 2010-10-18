@@ -87,7 +87,7 @@
 				<configuration>
 					<scanIntervalSeconds>1</scanIntervalSeconds>
 					<webAppConfig>
-						<serverClasses />
+						<serverClasses/>
 					</webAppConfig>
 					<contextPath>/</contextPath>
 					<overrideWebXml>src/test/resources/web.xml</overrideWebXml>
@@ -98,7 +98,7 @@
 						</systemProperty>
 						<systemProperty>
 							<name>logback.configurationFile</name>
-							<value>file:${basedir}/logback.xml</value>
+							<value>${logback.configurationFile}</value>
 						</systemProperty>
 					</systemProperties>
 				</configuration>
