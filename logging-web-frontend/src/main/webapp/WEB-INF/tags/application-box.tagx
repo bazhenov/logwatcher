@@ -5,14 +5,14 @@
 
 	<c:if test="${f:length(applicationIds) gt 1}">
 		<div id="applicationBox">
-			<c:forEach items="${applicationIds}" var="id">
-				<c:url value="/feed/${id}" var="url"/>
+			<c:forEach items="${applicationIds}" var="application">
+				<c:url value="/feed/${application}" var="url"/>
 				<c:choose>
-					<c:when test="${id eq currentApplicationId}">
-						<span class="active"><a href='${url}'><c:out value="${id}"/></a></span>
+					<c:when test="${application eq currentApplicationId}">
+						<span class="active"><a href='${url}'><c:out value="${application}"/></a></span>
 					</c:when>
 					<c:otherwise>
-						<span><a href='${url}'><c:out value="${id}"/></a></span>
+						<span><a href='${url}'><c:out value="${application}"/></a></span>
 					</c:otherwise>
 				</c:choose>
 			</c:forEach>

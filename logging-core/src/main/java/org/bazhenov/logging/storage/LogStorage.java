@@ -33,6 +33,7 @@ public interface LogStorage {
 	 * записей
 	 *
 	 * @param date дата начиная с которой записи будут оставлены
+	 * @throws LogStorageException в случае возникновения внутренних ошибок хранилища
 	 */
 	void removeOldEntries(Date date) throws LogStorageException;
 
@@ -64,6 +65,7 @@ public interface LogStorage {
 	 *
 	 * @param checksum контролная сумма, которую надо смапить
 	 * @param alias		контрольная сумма - синоним
+	 * @throws LogStorageException в случае возникновения внутренних ошибок хранилища
 	 */
 	void createChecksumAlias(String checksum, String alias) throws LogStorageException;
 
@@ -72,7 +74,7 @@ public interface LogStorage {
 	 *
 	 * @param criterias критерии отбора записей
 	 * @return список записей
-	 * @throws LogStorageException			в случае внутренне ошибки хранилища
+	 * @throws LogStorageException			в случае внутренней ошибки хранилища
 	 * @throws InvalidCriteriaException в случае если указанные неверные критерии отбора
 	 */
 	List<LogEntry> findEntries(Collection<LogEntryMatcher> criterias)
@@ -84,7 +86,7 @@ public interface LogStorage {
 	 *
 	 * @param criterias критерии отбора записей
 	 * @return список записей
-	 * @throws LogStorageException			в случае внутренне ошибки хранилища
+	 * @throws LogStorageException			в случае внутренней ошибки хранилища
 	 * @throws InvalidCriteriaException в случае если указанные неверные критерии отбора
 	 */
 	List<AggregatedEntry> findAggregatedEntries(Collection<LogEntryMatcher> criterias)
@@ -111,6 +113,7 @@ public interface LogStorage {
 	 * @param severity уровень
 	 * @return список аггрегированных записей
 	 * @throws LogStorageException в случае возникновения внутренних ошибок хранилища
+	 * @throws InvalidCriteriaException в случае задания клиентом некорректных критериев отбора
 	 */
 	List<AggregatedEntry> getAggregatedEntries(Date date, Severity severity)
 		throws LogStorageException, InvalidCriteriaException;
@@ -124,6 +127,7 @@ public interface LogStorage {
 	 * @param severity			уровень
 	 * @return список аггрегированных записей
 	 * @throws LogStorageException в случае возникновения внутренних ошибок хранилища
+	 * @throws InvalidCriteriaException в случае задания клиентом некорректных критериев отбора
 	 */
 	List<AggregatedEntry> getAggregatedEntries(String applicationId, Date date, Severity severity)
 		throws LogStorageException, InvalidCriteriaException;
