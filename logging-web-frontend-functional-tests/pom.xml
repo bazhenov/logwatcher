@@ -21,8 +21,8 @@
 		<sut.artifactId>logging-web-frontend</sut.artifactId>
 		<sut.version>1.3</sut.version>
 
-		<deploy.hostname>logwatcher</deploy.hostname>
-		<deploy.location>/home/tech</deploy.location>
+		<deploy.hostname>artifacts</deploy.hostname>
+		<deploy.location>/home/tech/logwatcher</deploy.location>
 	</properties>
 
 	<dependencies>
