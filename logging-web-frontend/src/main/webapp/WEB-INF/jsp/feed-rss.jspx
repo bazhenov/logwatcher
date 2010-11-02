@@ -16,6 +16,8 @@
 			<c:forEach var="item" items="${entries}">
 				<item>
 					<title><c:out value="${item.message}" /></title>
+					<count><c:out value="${item.count}" /></count>
+					<severity><c:out value="${item.severity}" /></severity>
 					<description><pre><c:out value="${l:formatCause(item.sampleCause)}/feed" /></pre></description>
 					<link><c:url value="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/feed">
 						<c:param name="severity" value="${item.severity}" />
