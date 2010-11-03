@@ -189,6 +189,9 @@ public class FeedController {
 			: Severity.forName(s);
 		List<AggregatedEntry> entries = storage.getAggregatedEntries(today(), severity);
 
+		Comparator<AggregatedEntry> comparator = comparators.get("last-occurence");
+		sort(entries, comparator);
+
 		map.addAttribute("entries", entries);
 		map.addAttribute("date", new java.util.Date());
 
