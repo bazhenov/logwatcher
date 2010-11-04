@@ -184,10 +184,13 @@ public class FeedController {
 	public String handleRss(ModelMap map, @RequestParam(value = "severity", required = false) String s)
 		throws LogStorageException, InvalidCriteriaException {
 
-		Severity severity = s == null
+		Severity severity = (s == null)
 			? Severity.error
 			: Severity.forName(s);
 		List<AggregatedEntry> entries = storage.getAggregatedEntries(today(), severity);
+
+		Comparator<AggregatedEntry> comparator = comparators.get("last-occurence");
+		sort(entries, comparator);
 
 		map.addAttribute("entries", entries);
 		map.addAttribute("date", new java.util.Date());
