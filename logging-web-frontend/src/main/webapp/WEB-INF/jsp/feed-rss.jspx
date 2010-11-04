@@ -7,7 +7,7 @@
 
 	<jsp:directive.page contentType="application/rss+xml"/>
 
-	<rss version="2.0">
+	<rss version="2.0" xmlns:lw="http://logging.farpost.com/schema/v1.1">
 		<channel>
 			<title>LogViewer feed</title>
 			<description>Feed of recently happended errors</description>
@@ -15,9 +15,8 @@
 
 			<c:forEach var="item" items="${entries}">
 				<item>
+					<lw:entryInfo count="${item.count}" severity="${item.severity}"/>
 					<title><c:out value="${item.message}" /></title>
-					<count><c:out value="${item.count}" /></count>
-					<severity><c:out value="${item.severity}" /></severity>
 					<description><pre><c:out value="${l:formatCause(item.sampleCause)}/feed" /></pre></description>
 					<link><c:url value="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/feed">
 						<c:param name="severity" value="${item.severity}" />
