@@ -9,7 +9,7 @@ public class Matchers {
 		return new ContainsTextMatcher(text);
 	}
 
-	public static Matcher<SgmlPage> containsElementWithText (String xpath, String text) {
+	public static Matcher<SgmlPage> xpathContainsText(String xpath, String text) {
 		return new ContainsElementWithTextMatcher(xpath, text);
 	}
 }

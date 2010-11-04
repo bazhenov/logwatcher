@@ -23,7 +23,6 @@ public class ContainsElementWithTextMatcher extends BaseMatcher<SgmlPage> {
 
 	@Override
 	public void describeTo(Description description) {
-		description.appendText("element \"" + xpath +
-			"\" with text: " + text);
+		description.appendText("element \"" + xpath +	"\" with text: " + text);
 	}
 }
