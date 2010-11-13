@@ -1,6 +1,6 @@
 package com.farpost.logging;
 
-import com.farpost.logging.marshalling.JDomMarshaller;
+import com.farpost.logging.marshalling.Jaxb2Marshaller;
 import com.farpost.logging.marshalling.Marshaller;
 import com.farpost.logging.marshalling.MarshallerException;
 import com.farpost.timepoint.DateTime;
@@ -37,7 +37,7 @@ public class LogWatcherAppender extends AppenderSkeleton {
 	private DatagramSocket socket;
 	private InetAddress address;
 	private String applicationId = "anonymous";
-	private Marshaller marshaller = new JDomMarshaller();
+	private Marshaller marshaller = new Jaxb2Marshaller();
 
 	public String getAddress() {
 		return address.getHostName();

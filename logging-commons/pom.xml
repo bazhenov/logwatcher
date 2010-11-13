@@ -16,11 +16,6 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>jdom</groupId>
-			<artifactId>jdom</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
 			<groupId>com.farpost</groupId>
 			<artifactId>timepoint</artifactId>
 		</dependency>

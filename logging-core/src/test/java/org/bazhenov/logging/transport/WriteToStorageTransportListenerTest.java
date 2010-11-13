@@ -1,6 +1,6 @@
 package org.bazhenov.logging.transport;
 
-import com.farpost.logging.marshalling.JDomMarshaller;
+import com.farpost.logging.marshalling.Jaxb2Marshaller;
 import com.farpost.logging.marshalling.Marshaller;
 import com.farpost.logging.marshalling.MarshallerException;
 import com.farpost.timepoint.DateTime;
@@ -30,7 +30,7 @@ public class WriteToStorageTransportListenerTest {
 			null, cause);
 
 		LogStorage storage = new InMemoryLogStorage();
-		Marshaller marshaller = new JDomMarshaller();
+		Marshaller marshaller = new Jaxb2Marshaller();
 		TransportListener listener = new WriteToStorageTransportListener(storage, marshaller);
 		listener.onMessage(marshaller.marshall(entry));
 

@@ -1,6 +1,7 @@
 package org.bazhenov.logging.storage;
 
-import com.farpost.logging.marshalling.JDomMarshaller;
+import com.farpost.logging.marshalling.Jaxb2Marshaller;
+import com.farpost.logging.marshalling.Marshaller;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.bazhenov.logging.SimpleChecksumCalculator;
 import org.bazhenov.logging.aggregator.Aggregator;
@@ -56,7 +57,7 @@ public class SqlLogStorageMySqlIT extends LogStorageTestCase {
 
 	protected LogStorage createStorage() throws IOException, SQLException {
 		SqlMatcherMapper mapper = new AnnotationDrivenMatcherMapperImpl(new SqlMatcherMapperRules());
-		JDomMarshaller marshaller = new JDomMarshaller();
+		Marshaller marshaller = new Jaxb2Marshaller();
 		Aggregator aggregator = new SimpleAggregator(marshaller);
 		return new SqlLogStorage(aggregator, ds, marshaller, mapper, new SimpleChecksumCalculator());
 	}

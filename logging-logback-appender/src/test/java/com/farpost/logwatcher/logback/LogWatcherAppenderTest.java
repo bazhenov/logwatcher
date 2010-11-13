@@ -5,14 +5,13 @@ import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
 import com.farpost.logging.QueueAppendListener;
-import com.farpost.logging.marshalling.JDomMarshaller;
+import com.farpost.logging.marshalling.Jaxb2Marshaller;
 import com.farpost.logging.marshalling.Marshaller;
 import com.farpost.logging.marshalling.MarshallerException;
 import org.bazhenov.logging.LogEntry;
 import org.bazhenov.logging.Severity;
 import org.bazhenov.logging.transport.TransportException;
 import org.bazhenov.logging.transport.UdpTransport;
-import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -29,7 +28,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class LogWatcherAppenderTest {
 
 	private BlockingQueue<String> messages;
-	private Marshaller marshaller = new JDomMarshaller();
+	private Marshaller marshaller = new Jaxb2Marshaller();
 	private int port = 6590;
 	private UdpTransport transport;
 	private String applicationId = "foobar";

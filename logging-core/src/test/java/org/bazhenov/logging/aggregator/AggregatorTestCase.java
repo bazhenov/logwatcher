@@ -1,6 +1,6 @@
 package org.bazhenov.logging.aggregator;
 
-import com.farpost.logging.marshalling.JDomMarshaller;
+import com.farpost.logging.marshalling.Jaxb2Marshaller;
 import com.farpost.logging.marshalling.Marshaller;
 import com.farpost.logging.marshalling.MarshallerException;
 import com.farpost.timepoint.DateTime;
@@ -23,7 +23,7 @@ import static org.hamcrest.Matchers.equalTo;
 abstract public class AggregatorTestCase {
 
 	private Aggregator aggregator;
-	private Marshaller marshaller = new JDomMarshaller();
+	private Marshaller marshaller = new Jaxb2Marshaller();
 
 	@BeforeMethod
 	protected void setUp() throws Exception {

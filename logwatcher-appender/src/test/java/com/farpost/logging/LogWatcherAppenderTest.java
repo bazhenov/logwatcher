@@ -1,6 +1,6 @@
 package com.farpost.logging;
 
-import com.farpost.logging.marshalling.JDomMarshaller;
+import com.farpost.logging.marshalling.Jaxb2Marshaller;
 import com.farpost.logging.marshalling.Marshaller;
 import com.farpost.logging.marshalling.MarshallerException;
 import org.apache.log4j.Level;
@@ -24,7 +24,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class LogWatcherAppenderTest {
 
 	private BlockingQueue<String> messages;
-	private Marshaller marshaller = new JDomMarshaller();
+	private Marshaller marshaller = new Jaxb2Marshaller();
 	private int port = 6590;
 	private UdpTransport transport;
 	private String applicationId = "foobar";
