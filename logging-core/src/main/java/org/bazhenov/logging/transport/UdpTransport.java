@@ -11,7 +11,7 @@ import java.net.SocketException;
 public class UdpTransport implements Transport {
 
 	private final SocketThread thread;
-	private volatile int bufferSize = 4096;
+	private volatile int bufferSize = 100 * 1024;
 
 	public UdpTransport(int port, TransportListener listener) throws SocketException {
 		DatagramSocket socket = new DatagramSocket(port);

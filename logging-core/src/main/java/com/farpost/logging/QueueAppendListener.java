@@ -5,7 +5,7 @@ import org.bazhenov.logging.transport.TransportListener;
 
 import java.util.Queue;
 
-class QueueAppendListener implements TransportListener {
+public class QueueAppendListener implements TransportListener {
 
 	private Queue<String> queue;
 

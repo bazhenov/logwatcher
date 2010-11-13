@@ -18,7 +18,7 @@ public class LogEntryTest {
 		DateTime date = november(12, 2008).at("15:23");
 		String group = "group";
 		String checksum = "3d4f";
-		LogEntry logEntry = new LogEntry(date, group, logMessage, info, checksum, "default", null);
+		LogEntry logEntry = new LogEntryImpl(date, group, logMessage, info, checksum, "default", null);
 
 		assertThat(logEntry.getDate(), equalTo(date));
 		assertThat(logEntry.getCategory(), equalTo(group));

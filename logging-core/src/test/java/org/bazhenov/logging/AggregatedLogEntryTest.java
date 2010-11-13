@@ -17,7 +17,7 @@ public class AggregatedLogEntryTest {
 			put("server", "host1");
 			put("user", "john");
 		}};
-		LogEntry firstEntry = new LogEntry(now(), "group", "message", Severity.debug, "af1", "frontend",
+		LogEntry firstEntry = new LogEntryImpl(now(), "group", "message", Severity.debug, "af1", "frontend",
 			firstEntryAttributes, null);
 
 		Map<String, String> secondEntryAttributes = new HashMap<String, String>() {{

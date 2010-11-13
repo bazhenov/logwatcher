@@ -2,10 +2,7 @@ package org.bazhenov.logging.storage;
 
 import com.farpost.timepoint.Date;
 import com.farpost.timepoint.DateTime;
-import org.bazhenov.logging.AggregatedEntry;
-import org.bazhenov.logging.CountVisitor;
-import org.bazhenov.logging.LogEntry;
-import org.bazhenov.logging.Severity;
+import org.bazhenov.logging.*;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -196,7 +193,7 @@ abstract public class LogStorageTestCase {
 
 	@Test
 	public void storageCanCountEntries() throws Exception {
-		LogEntry entry = entry().create();
+		LogEntryImpl entry = entry().create();
 
 		storage.writeEntry(entry);
 

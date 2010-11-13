@@ -1,17 +1,35 @@
 package org.bazhenov.logging;
 
+import javax.xml.bind.annotation.*;
+
 /**
  * Причина ошибки. Запись лога {@link LogEntry} может иметь причину. Как правило - это
  * исключительная ситуация которая привела к ошибке.
  * <p/>
  * Причина, как и исключительная ситуация, описывается типом, сообщением и текстом (stacktrace'ом)
  */
+@XmlType
 public class Cause {
 
+	@XmlAttribute
 	private String type;
+
+	@XmlElement
 	private String message;
+
+	@XmlElement
 	private String stackTrace;
+
+	@XmlElement
 	private Cause cause;
+
+	/**
+	 * Этот конструктор не предназначен для прямого ипользования. Нужен для корректной работы JAXB.
+	 */
+	@Deprecated
+	public Cause() {
+		this(null, null, null);
+	}
 
 	public Cause(String type, String message, String stackTrace) {
 		this.type = type;

@@ -21,7 +21,7 @@ public interface Aggregator {
 	 * Аггрегирует и фильтрует объекты типа {@link org.bazhenov.logging.LogEntry}. На выходе
 	 * возвращает аггрегированные объекты типа {@link AggregatedEntry}.
 	 *
-	 * @param entries итератор по строковым представлениям объектов {@link org.bazhenov.logging.LogEntry}
+	 * @param entries итератор по строковым представлениям объектов {@link org.bazhenov.logging.LogEntryImpl}
 	 * @param matchers условия отбора
 	 * @return коллекцию отфильрованных и саггрегированных записей
 	 * @throws MarshallerException в случае ошибок десирализации

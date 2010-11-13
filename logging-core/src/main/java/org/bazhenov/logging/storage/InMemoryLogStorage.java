@@ -119,7 +119,7 @@ public class InMemoryLogStorage implements LogStorage {
 		withLock(readLock, new Callable<Void>() {
 
 			public Void call() throws Exception {
-				for (LogEntry entry : entries) {
+				for (LogEntryImpl entry : entries) {
 					if (isMatching(entry, criterias)) {
 						visitor.visit(entry);
 					}

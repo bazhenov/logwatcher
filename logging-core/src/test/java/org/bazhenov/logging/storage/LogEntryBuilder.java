@@ -3,6 +3,7 @@ package org.bazhenov.logging.storage;
 import com.farpost.timepoint.DateTime;
 import org.bazhenov.logging.Cause;
 import org.bazhenov.logging.LogEntry;
+import org.bazhenov.logging.LogEntryImpl;
 import org.bazhenov.logging.Severity;
 
 import java.util.HashMap;
@@ -58,7 +59,7 @@ public class LogEntryBuilder {
 	 * @see LogStorage#writeEntry(LogEntry)
 	 */
 	public LogEntry saveIn(LogStorage storage) throws LogStorageException {
-		LogEntry entry = create();
+		LogEntryImpl entry = create();
 		storage.writeEntry(entry);
 		return entry;
 	}
