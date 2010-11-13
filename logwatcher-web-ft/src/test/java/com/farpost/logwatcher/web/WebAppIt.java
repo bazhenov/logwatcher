@@ -1,4 +1,4 @@
-package com.farpost.logging;
+package com.farpost.logwatcher.web;
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.testng.annotations.Test;
