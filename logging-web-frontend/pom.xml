@@ -18,7 +18,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.farpost.logging</groupId>
-			<artifactId>logging-core</artifactId>
+			<artifactId>logwatcher-core</artifactId>
 		</dependency>
 
 		<dependency>

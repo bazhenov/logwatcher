@@ -1,6 +1,8 @@
 package com.farpost.logwatcher.marshalling;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
 
 /**
  * Причина ошибки. Запись лога {@link LogEntry} может иметь причину. Как правило - это

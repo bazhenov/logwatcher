@@ -25,11 +25,11 @@
 		<property name="daysToKeep" value="10"/>
 	</bean>
 
-	<bean class="org.bazhenov.logging.transport.UdpTransport" lazy-init="false" init-method="start"
+	<bean class="com.farpost.logwatcher.transport.UdpTransport" lazy-init="false" init-method="start"
 				destroy-method="stop">
 		<constructor-arg value="6578"/>
 		<constructor-arg>
-			<bean class="org.bazhenov.logging.transport.WriteToStorageTransportListener">
+			<bean class="com.farpost.logwatcher.transport.WriteToStorageTransportListener">
 				<constructor-arg ref="storage"/>
 				<constructor-arg ref="marshaller"/>
 			</bean>
@@ -37,23 +37,23 @@
 		<property name="bufferSize" value="120000"/>
 	</bean>
 
-	<bean id="storage" class="org.bazhenov.logging.storage.sql.SqlLogStorage">
+	<bean id="storage" class="com.farpost.logwatcher.storage.sql.SqlLogStorage">
 		<constructor-arg index="0" ref="aggregator"/>
 		<constructor-arg index="1" ref="datasource"/>
 		<constructor-arg index="2" ref="marshaller"/>
 		<constructor-arg index="3">
-			<bean class="org.bazhenov.logging.storage.sql.AnnotationDrivenMatcherMapperImpl">
+			<bean class="com.farpost.logwatcher.storage.sql.AnnotationDrivenMatcherMapperImpl">
 				<constructor-arg>
-					<bean class="org.bazhenov.logging.storage.sql.SqlMatcherMapperRules"/>
+					<bean class="com.farpost.logwatcher.storage.sql.SqlMatcherMapperRules"/>
 				</constructor-arg>
 			</bean>
 		</constructor-arg>
 		<constructor-arg>
-			<bean class="org.bazhenov.logging.SimpleChecksumCalculator"/>
+			<bean class="com.farpost.logwatcher.SimpleChecksumCalculator"/>
 		</constructor-arg>
 	</bean>
 
-	<bean id="aggregator" class="org.bazhenov.logging.aggregator.ExecutorServiceAggregator">
+	<bean id="aggregator" class="com.farpost.logwatcher.aggregator.ExecutorServiceAggregator">
 		<constructor-arg ref="marshaller"/>
 		<property name="batchSize" value="200"/>
 	</bean>

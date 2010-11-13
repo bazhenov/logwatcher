@@ -1,13 +1,10 @@
 package com.farpost.logwatcher.web.vm;
 
-import org.bazhenov.logging.AggregatedEntry;
+import com.farpost.logwatcher.AggregatedEntry;
+import com.farpost.logwatcher.storage.LogStorage;
 import org.bazhenov.logging.Severity;
-import org.bazhenov.logging.storage.LogStorage;
-import org.bazhenov.logging.web.FeedController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.*;
 
 public class FeedViewModel {

@@ -2,7 +2,7 @@
 					xmlns:f="http://java.sun.com/jsp/jstl/functions" xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
 					xmlns:l="urn:jsptagdir:/WEB-INF/tags" xmlns:lf="http://bazhenov.org/logging">
 
-	<jsp:directive.attribute name="entry" type="org.bazhenov.logging.AggregatedEntry" required="true"/>
+	<jsp:directive.attribute name="entry" type="com.farpost.logwatcher.AggregatedEntry" required="true"/>
 	<jsp:directive.attribute name="currentApplicationId" type="java.lang.String" required="false"/>
 
 	<a name='${entry.checksum}'><!----></a>

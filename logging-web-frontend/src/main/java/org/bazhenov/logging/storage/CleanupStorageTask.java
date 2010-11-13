@@ -1,5 +1,7 @@
 package org.bazhenov.logging.storage;
 
+import com.farpost.logwatcher.storage.LogStorage;
+import com.farpost.logwatcher.storage.LogStorageException;
 import com.farpost.timepoint.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

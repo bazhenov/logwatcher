@@ -2,7 +2,7 @@
 					xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:l="http://bazhenov.org/logging">
 
 	<jsp:directive.attribute name="name" required="true" type="java.lang.String"/>
-	<jsp:directive.attribute name="attribute" required="true" type="org.bazhenov.logging.AggregatedAttribute"/>
+	<jsp:directive.attribute name="attribute" required="true" type="com.farpost.logwatcher.AggregatedAttribute"/>
 
 	<c:set var="valuesLimit" value="6"/>
 	<c:set var="lengthLimit" value="20"/>

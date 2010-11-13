@@ -1,6 +1,6 @@
 package org.bazhenov.logging;
 
-import org.bazhenov.logging.storage.LogEntryMatcher;
+import com.farpost.logwatcher.storage.LogEntryMatcher;
 
 import java.util.List;
 

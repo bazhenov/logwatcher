@@ -3,10 +3,7 @@ package com.farpost.logwatcher.marshalling;
 import com.farpost.timepoint.DateTime;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * JAXB Адаптер сериализующий тип Map<String, String> в XML дерево аттрибутов 

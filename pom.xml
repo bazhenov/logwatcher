@@ -8,7 +8,7 @@
 	<name>LogWatcher</name>
 
 	<modules>
-		<module>logging-core</module>
+		<module>logwatcher-core</module>
 		<module>logging-web-frontend</module>
 		<module>logwatcher-appender</module>
 		<module>logwatcher-commons</module>
@@ -61,7 +61,7 @@
 
 			<dependency>
 				<groupId>com.farpost.logging</groupId>
-				<artifactId>logging-core</artifactId>
+				<artifactId>logwatcher-core</artifactId>
 				<version>1.3</version>
 			</dependency>
 

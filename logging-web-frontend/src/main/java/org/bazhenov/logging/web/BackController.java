@@ -1,11 +1,11 @@
 package org.bazhenov.logging.web;
 
+import com.farpost.logwatcher.AggregateAttributesVisitor;
+import com.farpost.logwatcher.AggregatedEntry;
+import com.farpost.logwatcher.storage.InvalidCriteriaException;
+import com.farpost.logwatcher.storage.LogStorage;
+import com.farpost.logwatcher.storage.LogStorageException;
 import com.farpost.timepoint.Date;
-import org.bazhenov.logging.AggregateAttributesVisitor;
-import org.bazhenov.logging.AggregatedEntry;
-import org.bazhenov.logging.storage.InvalidCriteriaException;
-import org.bazhenov.logging.storage.LogStorage;
-import org.bazhenov.logging.storage.LogStorageException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +16,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import static org.bazhenov.logging.storage.LogEntries.entries;
+import static com.farpost.logwatcher.storage.LogEntries.entries;
 
 @Controller
 public class BackController {

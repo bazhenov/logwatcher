@@ -1,6 +1,6 @@
 package org.bazhenov.logging;
 
-import org.bazhenov.logging.storage.LogEntryMatcher;
+import com.farpost.logwatcher.storage.LogEntryMatcher;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

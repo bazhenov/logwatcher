@@ -6,7 +6,7 @@
 
 	<jsp:directive.page contentType="text/html"/>
 
-	<jsp:useBean id="entry" scope="request" type="org.bazhenov.logging.AggregatedEntry"/>
+	<jsp:useBean id="entry" scope="request" type="com.farpost.logwatcher.AggregatedEntry"/>
 	<jsp:useBean id="attributes" scope="request" type="java.util.Map"/>
 
 	<div class='entryContent'>

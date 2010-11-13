@@ -1,6 +1,6 @@
 package org.bazhenov.logging.web;
 
-import org.bazhenov.logging.AggregatedEntry;
+import com.farpost.logwatcher.AggregatedEntry;
 
 import java.util.List;
 

@@ -1,8 +1,5 @@
 package com.farpost.logwatcher.marshalling;
 
-import com.farpost.logwatcher.marshalling.Attribute;
-import com.farpost.logwatcher.marshalling.AttributeList;
-
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.util.ArrayList;
 import java.util.HashMap;

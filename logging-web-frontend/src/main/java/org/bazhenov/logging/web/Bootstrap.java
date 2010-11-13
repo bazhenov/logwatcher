@@ -1,12 +1,11 @@
 package org.bazhenov.logging.web;
 
+import com.farpost.logwatcher.storage.LogStorage;
+import com.farpost.logwatcher.storage.LogStorageException;
 import com.farpost.timepoint.DateTime;
 import org.bazhenov.logging.Cause;
-import org.bazhenov.logging.LogEntry;
 import org.bazhenov.logging.LogEntryImpl;
 import org.bazhenov.logging.Severity;
-import org.bazhenov.logging.storage.LogStorage;
-import org.bazhenov.logging.storage.LogStorageException;
 
 import java.util.HashMap;
 

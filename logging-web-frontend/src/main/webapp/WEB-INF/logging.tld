@@ -17,7 +17,7 @@
 			<name>entry</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
-			<type>org.bazhenov.logging.AggregatedLogEntry</type>
+			<type>com.farpost.logwatcher.AggregatedLogEntry</type>
 		</attribute>
 	</tag>
 

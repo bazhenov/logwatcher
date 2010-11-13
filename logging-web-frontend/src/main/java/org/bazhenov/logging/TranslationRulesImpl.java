@@ -1,7 +1,7 @@
 package org.bazhenov.logging;
 
+import com.farpost.logwatcher.storage.*;
 import com.farpost.timepoint.Date;
-import org.bazhenov.logging.storage.*;
 
 import java.text.DateFormat;
 import java.text.ParseException;

@@ -1,7 +1,7 @@
 package org.bazhenov.logging;
 
+import com.farpost.logwatcher.storage.*;
 import com.farpost.timepoint.Date;
-import org.bazhenov.logging.storage.*;
 import org.testng.annotations.Test;
 
 import static com.farpost.timepoint.Date.today;

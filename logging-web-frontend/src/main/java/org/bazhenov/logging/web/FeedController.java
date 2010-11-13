@@ -1,10 +1,13 @@
 package org.bazhenov.logging.web;
 
+import com.farpost.logwatcher.AggregatedEntry;
+import com.farpost.logwatcher.ByLastOccurenceDateComparator;
+import com.farpost.logwatcher.ByOccurenceCountComparator;
+import com.farpost.logwatcher.storage.*;
 import com.farpost.logwatcher.web.vm.FeedViewModel;
 import com.farpost.timepoint.Date;
 import com.farpost.timepoint.DateTime;
 import org.bazhenov.logging.*;
-import org.bazhenov.logging.storage.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -22,9 +25,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static com.farpost.logwatcher.storage.LogEntries.entries;
 import static com.farpost.timepoint.Date.today;
 import static java.util.Collections.sort;
-import static org.bazhenov.logging.storage.LogEntries.entries;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @Controller

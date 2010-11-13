@@ -1,7 +1,7 @@
 package org.bazhenov.logging.web.tags;
 
+import com.farpost.logwatcher.AggregatedEntry;
 import com.farpost.timepoint.Date;
-import org.bazhenov.logging.AggregatedEntry;
 import org.bazhenov.logging.Cause;
 
 import java.text.DateFormat;
