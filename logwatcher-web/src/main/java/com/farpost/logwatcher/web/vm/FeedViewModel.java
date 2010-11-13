@@ -17,7 +17,7 @@ public class FeedViewModel {
 	public FeedViewModel(HttpServletRequest request, LogStorage storage, Date date, String applicationId) {
 		this.request = request;
 		this.storage = storage;
-		this.date = date;
+		this.date = new Date(date.getTime());
 		this.applicationId = applicationId;
 	}
 
