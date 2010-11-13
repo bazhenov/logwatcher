@@ -55,15 +55,16 @@ public class SqlLogStorage implements LogStorage {
 
 	public synchronized void writeEntry(LogEntry entry) throws LogStorageException {
 		try {
-			Timestamp entryTimestamp = timestamp(entry.getDate());
-			java.sql.Date entryDate = date(entry.getDate());
-			String checksum = checksumCalculator.calculateChecksum(entry);
-			entry.setChecksum(checksum);
-			String marshalledEntry = marshaller.marshall(entry);
+			LogEntryImpl impl = (LogEntryImpl)entry;
+			Timestamp entryTimestamp = timestamp(impl.getDate());
+			java.sql.Date entryDate = date(impl.getDate());
+			String checksum = checksumCalculator.calculateChecksum(impl);
+			impl.setChecksum(checksum);
+			String marshalledEntry = marshaller.marshall(impl);
 			jdbc.update(
 				"INSERT INTO entry (time, date, checksum, category, severity, application_id, content) VALUES (?, ?, ?, ?, ?, ?, ?)",
-				entryTimestamp, entryDate, checksum, entry.getCategory(),
-				entry.getSeverity().getCode(), entry.getApplicationId(), marshalledEntry);
+				entryTimestamp, entryDate, checksum, impl.getCategory(),
+				impl.getSeverity().getCode(), impl.getApplicationId(), marshalledEntry);
 
 			int affectedRows = jdbc.update(
 				"UPDATE aggregated_entry SET count = count + 1, last_time = ? WHERE date = ? AND checksum = ?",
@@ -71,8 +72,8 @@ public class SqlLogStorage implements LogStorage {
 			if (affectedRows == 0) {
 				jdbc.update(
 					"INSERT INTO aggregated_entry (date, checksum, last_time, category, severity, application_id, count, content) VALUES (?, ?, ?, ?, ?, ?, 1, ?)",
-					entryDate, checksum, entryTimestamp, entry.getCategory(),
-					entry.getSeverity().getCode(), entry.getApplicationId(), marshalledEntry);
+					entryDate, checksum, entryTimestamp, impl.getCategory(),
+					impl.getSeverity().getCode(), impl.getApplicationId(), marshalledEntry);
 			}
 
 			if (log.isDebugEnabled()) {

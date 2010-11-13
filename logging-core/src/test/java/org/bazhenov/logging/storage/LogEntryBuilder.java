@@ -3,6 +3,7 @@ package org.bazhenov.logging.storage;
 import com.farpost.timepoint.DateTime;
 import org.bazhenov.logging.Cause;
 import org.bazhenov.logging.LogEntry;
+import org.bazhenov.logging.LogEntryImpl;
 import org.bazhenov.logging.Severity;
 
 import java.util.HashMap;
@@ -37,7 +38,7 @@ public class LogEntryBuilder {
 	private Map<String, String> attributes = new HashMap<String, String>();
 
 	public LogEntry create() {
-		return new LogEntry(time, group, message, severity, checksum, applicationId, attributes, cause);
+		return new LogEntryImpl(time, group, message, severity, checksum, applicationId, attributes, cause);
 	}
 
 	/**

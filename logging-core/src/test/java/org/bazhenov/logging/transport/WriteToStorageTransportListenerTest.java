@@ -6,6 +6,7 @@ import com.farpost.logging.marshalling.MarshallerException;
 import com.farpost.timepoint.DateTime;
 import org.bazhenov.logging.Cause;
 import org.bazhenov.logging.LogEntry;
+import org.bazhenov.logging.LogEntryImpl;
 import org.bazhenov.logging.Severity;
 import org.bazhenov.logging.storage.InMemoryLogStorage;
 import org.bazhenov.logging.storage.InvalidCriteriaException;
@@ -25,7 +26,7 @@ public class WriteToStorageTransportListenerTest {
 		throws TransportException, MarshallerException, LogStorageException, InvalidCriteriaException {
 		DateTime date = now();
 		Cause cause = new Cause("type", "message", "stack");
-		LogEntry entry = new LogEntry(date, "group", "message", Severity.error, "checksum", "default",
+		LogEntry entry = new LogEntryImpl(date, "group", "message", Severity.error, "checksum", "default",
 			null, cause);
 
 		LogStorage storage = new InMemoryLogStorage();

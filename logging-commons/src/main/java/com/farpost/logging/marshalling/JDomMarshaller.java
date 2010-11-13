@@ -3,6 +3,7 @@ package com.farpost.logging.marshalling;
 import com.farpost.timepoint.DateTime;
 import org.bazhenov.logging.Cause;
 import org.bazhenov.logging.LogEntry;
+import org.bazhenov.logging.LogEntryImpl;
 import org.bazhenov.logging.Severity;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -132,7 +133,7 @@ public class JDomMarshaller implements Marshaller {
 				}
 			}
 
-			return new LogEntry(dateTime, group, message, severity, checksum, application, attributes,
+			return new LogEntryImpl(dateTime, group, message, severity, checksum, application, attributes,
 				cause);
 		} catch ( JDOMException e ) {
 			throw new MarshallerException(e);

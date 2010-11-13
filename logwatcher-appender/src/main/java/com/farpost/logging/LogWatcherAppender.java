@@ -9,6 +9,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.spi.LoggingEvent;
 import org.bazhenov.logging.Cause;
 import org.bazhenov.logging.LogEntry;
+import org.bazhenov.logging.LogEntryImpl;
 import org.bazhenov.logging.Severity;
 
 import java.io.IOException;
@@ -118,9 +119,9 @@ public class LogWatcherAppender extends AppenderSkeleton {
 		LogEntry entry;
 		if (event.getThrowableInformation() != null) {
 			Throwable t = event.getThrowableInformation().getThrowable();
-			entry = new LogEntry(now, location, message, severity, checksum, applicationId, null, constructCause(t));
+			entry = new LogEntryImpl(now, location, message, severity, checksum, applicationId, null, constructCause(t));
 		} else {
-			entry = new LogEntry(now, location, message, severity, checksum, applicationId, null);
+			entry = new LogEntryImpl(now, location, message, severity, checksum, applicationId, null);
 		}
 		try {
 			String stringMessage = marshaller.marshall(entry);
