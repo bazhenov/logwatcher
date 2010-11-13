@@ -1,10 +1,10 @@
 package com.farpost.logwatcher.storage;
 
-import com.farpost.logging.marshalling.Jaxb2Marshaller;
-import com.farpost.logging.marshalling.Marshaller;
 import com.farpost.logwatcher.SimpleChecksumCalculator;
 import com.farpost.logwatcher.aggregator.Aggregator;
 import com.farpost.logwatcher.aggregator.SimpleAggregator;
+import com.farpost.logwatcher.marshalling.Jaxb2Marshaller;
+import com.farpost.logwatcher.marshalling.Marshaller;
 import com.farpost.logwatcher.storage.sql.AnnotationDrivenMatcherMapperImpl;
 import com.farpost.logwatcher.storage.sql.SqlLogStorage;
 import com.farpost.logwatcher.storage.sql.SqlMatcherMapper;

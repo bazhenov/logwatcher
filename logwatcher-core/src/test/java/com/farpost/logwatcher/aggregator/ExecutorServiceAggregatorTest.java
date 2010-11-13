@@ -1,6 +1,6 @@
 package com.farpost.logwatcher.aggregator;
 
-import com.farpost.logging.marshalling.Marshaller;
+import com.farpost.logwatcher.marshalling.Marshaller;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
