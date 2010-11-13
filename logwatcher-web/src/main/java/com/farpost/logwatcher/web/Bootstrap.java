@@ -3,9 +3,9 @@ package com.farpost.logwatcher.web;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
 import com.farpost.timepoint.DateTime;
-import org.bazhenov.logging.Cause;
-import org.bazhenov.logging.LogEntryImpl;
-import org.bazhenov.logging.Severity;
+import com.farpost.logwatcher.Cause;
+import com.farpost.logwatcher.LogEntryImpl;
+import com.farpost.logwatcher.Severity;
 
 import java.util.HashMap;
 

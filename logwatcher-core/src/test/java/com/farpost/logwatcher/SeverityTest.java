@@ -1,10 +1,10 @@
 package com.farpost.logwatcher;
 
-import org.bazhenov.logging.Severity;
+import com.farpost.logwatcher.Severity;
 import org.testng.annotations.Test;
 
-import static org.bazhenov.logging.Severity.trace;
-import static org.bazhenov.logging.Severity.warning;
+import static com.farpost.logwatcher.Severity.trace;
+import static com.farpost.logwatcher.Severity.warning;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 

@@ -1,5 +1,9 @@
 package com.farpost.logwatcher.marshalling;
 
+import com.farpost.logwatcher.Cause;
+import com.farpost.logwatcher.LogEntry;
+import com.farpost.logwatcher.LogEntryImpl;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -23,7 +27,7 @@ public class Jaxb2Marshaller implements Marshaller {
 		}
 	}
 
-	public synchronized String marshall(LogEntry entry) throws MarshallerException {
+	public synchronized String marshall(LogEntry entry) {
 		StringWriter writer = new StringWriter();
 		try {
 			marshaller.marshal(entry, writer);
@@ -33,7 +37,7 @@ public class Jaxb2Marshaller implements Marshaller {
 		return writer.toString();
 	}
 
-	public synchronized LogEntry unmarshall(String data) throws MarshallerException {
+	public synchronized LogEntry unmarshall(String data) {
 		try {
 			JAXBElement<LogEntryImpl> container = unmarshaller.unmarshal(new StreamSource(new StringReader(data)), LogEntryImpl.class);
 			return container.getValue();

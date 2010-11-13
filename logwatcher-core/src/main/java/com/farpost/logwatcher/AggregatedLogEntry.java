@@ -1,12 +1,12 @@
 package com.farpost.logwatcher;
 
 import com.farpost.timepoint.DateTime;
-import org.bazhenov.logging.LogEntry;
+import com.farpost.logwatcher.LogEntry;
 
 import java.util.Map;
 
 /**
- * Представляет собой результат аггрегирования нескольких записей {@link org.bazhenov.logging.LogEntry}
+ * Представляет собой результат аггрегирования нескольких записей {@link com.farpost.logwatcher.LogEntry}
  */
 public interface AggregatedLogEntry {
 

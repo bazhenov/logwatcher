@@ -4,14 +4,13 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
-import com.farpost.logging.marshalling.Jaxb2Marshaller;
-import com.farpost.logging.marshalling.Marshaller;
-import com.farpost.logging.marshalling.MarshallerException;
 import com.farpost.logwatcher.QueueAppendListener;
+import com.farpost.logwatcher.marshalling.Jaxb2Marshaller;
+import com.farpost.logwatcher.marshalling.Marshaller;
 import com.farpost.logwatcher.transport.TransportException;
 import com.farpost.logwatcher.transport.UdpTransport;
-import org.bazhenov.logging.LogEntry;
-import org.bazhenov.logging.Severity;
+import com.farpost.logwatcher.LogEntry;
+import com.farpost.logwatcher.Severity;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -58,7 +57,7 @@ public class LogWatcherAppenderTest {
 	}
 
 	@Test
-	public void appenderShouldSendUdpMessages() throws InterruptedException, MarshallerException {
+	public void appenderShouldSendUdpMessages() throws InterruptedException {
 		Throwable cause = new RuntimeException("This exception is generated intentionally");
 		String message = "Сообщение";
 

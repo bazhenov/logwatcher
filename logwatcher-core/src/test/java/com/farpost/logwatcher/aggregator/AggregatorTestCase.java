@@ -1,14 +1,12 @@
 package com.farpost.logwatcher.aggregator;
 
-import com.farpost.logging.marshalling.Jaxb2Marshaller;
-import com.farpost.logging.marshalling.Marshaller;
-import com.farpost.logging.marshalling.MarshallerException;
 import com.farpost.logwatcher.AggregatedEntry;
-import com.farpost.logwatcher.aggregator.Aggregator;
+import com.farpost.logwatcher.marshalling.Jaxb2Marshaller;
+import com.farpost.logwatcher.marshalling.Marshaller;
 import com.farpost.logwatcher.storage.AttributeValueMatcher;
 import com.farpost.logwatcher.storage.LogEntryMatcher;
 import com.farpost.timepoint.DateTime;
-import org.bazhenov.logging.LogEntry;
+import com.farpost.logwatcher.LogEntry;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -32,7 +30,7 @@ abstract public class AggregatorTestCase {
 	}
 
 	@Test
-	public void testAggregatorCanFilterEntries() throws MarshallerException {
+	public void testAggregatorCanFilterEntries() {
 		DateTime date = november(12, 2009).at(15, 12);
 		int problemSize = 333;
 		List<String> entries = new ArrayList<String>(problemSize);

@@ -2,9 +2,9 @@ package com.farpost.logwatcher.storage;
 
 import com.farpost.logwatcher.*;
 import com.farpost.timepoint.Date;
-import org.bazhenov.logging.LogEntry;
-import org.bazhenov.logging.LogEntryImpl;
-import org.bazhenov.logging.Severity;
+import com.farpost.logwatcher.LogEntry;
+import com.farpost.logwatcher.LogEntryImpl;
+import com.farpost.logwatcher.Severity;
 
 import java.util.*;
 import java.util.concurrent.Callable;

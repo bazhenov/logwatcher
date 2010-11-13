@@ -1,12 +1,7 @@
 package com.farpost.logwatcher;
 
-import com.farpost.logwatcher.AnnotationDrivenQueryTranslator;
-import com.farpost.logwatcher.InvalidQueryException;
-import com.farpost.logwatcher.QueryTranslator;
-import com.farpost.logwatcher.TranslationRulesImpl;
 import com.farpost.logwatcher.storage.*;
 import com.farpost.timepoint.Date;
-import org.bazhenov.logging.Severity;
 import org.testng.annotations.Test;
 
 import static com.farpost.timepoint.Date.today;

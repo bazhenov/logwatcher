@@ -3,8 +3,8 @@ package com.farpost.logwatcher.storage;
 import com.farpost.logwatcher.AggregatedEntry;
 import com.farpost.logwatcher.Visitor;
 import com.farpost.timepoint.Date;
-import org.bazhenov.logging.LogEntry;
-import org.bazhenov.logging.Severity;
+import com.farpost.logwatcher.LogEntry;
+import com.farpost.logwatcher.Severity;
 
 import java.util.Collection;
 import java.util.List;

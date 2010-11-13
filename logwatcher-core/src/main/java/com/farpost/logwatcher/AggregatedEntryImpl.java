@@ -1,9 +1,9 @@
 package com.farpost.logwatcher;
 
 import com.farpost.timepoint.DateTime;
-import org.bazhenov.logging.Cause;
-import org.bazhenov.logging.LogEntry;
-import org.bazhenov.logging.Severity;
+import com.farpost.logwatcher.Cause;
+import com.farpost.logwatcher.LogEntry;
+import com.farpost.logwatcher.Severity;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

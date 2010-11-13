@@ -1,11 +1,9 @@
 package com.farpost.logwatcher;
 
 import com.farpost.timepoint.DateTime;
-import org.bazhenov.logging.Cause;
-import org.bazhenov.logging.Severity;
 
 /**
- * Представляет собой результат аггрегирования нескольких записей {@link org.bazhenov.logging.LogEntry}
+ * Представляет собой результат аггрегирования нескольких записей {@link com.farpost.logwatcher.LogEntry}
  */
 public interface AggregatedEntry {
 

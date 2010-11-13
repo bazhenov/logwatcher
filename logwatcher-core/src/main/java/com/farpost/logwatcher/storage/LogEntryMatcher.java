@@ -1,7 +1,7 @@
 package com.farpost.logwatcher.storage;
 
 import com.farpost.logwatcher.AggregatedLogEntry;
-import org.bazhenov.logging.LogEntry;
+import com.farpost.logwatcher.LogEntry;
 
 /**
  * Имплементации этого интерфейса фильтруют обьекты типа {@link LogEntry}.

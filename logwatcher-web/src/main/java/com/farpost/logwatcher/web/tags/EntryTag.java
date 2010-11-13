@@ -2,19 +2,11 @@ package com.farpost.logwatcher.web.tags;
 
 import com.farpost.logwatcher.AggregatedEntry;
 import com.farpost.timepoint.Date;
-import org.bazhenov.logging.Cause;
-
-import java.text.DateFormat;
+import com.farpost.logwatcher.Cause;
 
 import static java.lang.Math.abs;
 
 public class EntryTag {
-
-	private static final DateFormat shortFormat = new DateTimeFormat();
-
-	public static String shortFormat(java.util.Date date) {
-		return shortFormat.format(date);
-	}
 
 	public static String formatCause(Cause rootCause) {
 		if ( rootCause == null ) {

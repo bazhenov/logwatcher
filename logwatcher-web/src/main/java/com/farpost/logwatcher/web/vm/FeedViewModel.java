@@ -2,7 +2,7 @@ package com.farpost.logwatcher.web.vm;
 
 import com.farpost.logwatcher.AggregatedEntry;
 import com.farpost.logwatcher.storage.LogStorage;
-import org.bazhenov.logging.Severity;
+import com.farpost.logwatcher.Severity;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;

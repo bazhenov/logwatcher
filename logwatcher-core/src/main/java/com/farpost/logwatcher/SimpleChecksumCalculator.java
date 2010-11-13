@@ -1,7 +1,7 @@
 package com.farpost.logwatcher;
 
-import org.bazhenov.logging.Cause;
-import org.bazhenov.logging.LogEntry;
+import com.farpost.logwatcher.Cause;
+import com.farpost.logwatcher.LogEntry;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

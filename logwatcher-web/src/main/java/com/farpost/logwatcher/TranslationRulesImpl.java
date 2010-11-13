@@ -2,7 +2,7 @@ package com.farpost.logwatcher;
 
 import com.farpost.logwatcher.storage.*;
 import com.farpost.timepoint.Date;
-import org.bazhenov.logging.Severity;
+import com.farpost.logwatcher.Severity;
 
 import java.text.DateFormat;
 import java.text.ParseException;

@@ -1,10 +1,10 @@
 package com.farpost.logwatcher.storage;
 
 import com.farpost.timepoint.DateTime;
-import org.bazhenov.logging.Cause;
-import org.bazhenov.logging.LogEntry;
-import org.bazhenov.logging.LogEntryImpl;
-import org.bazhenov.logging.Severity;
+import com.farpost.logwatcher.Cause;
+import com.farpost.logwatcher.LogEntry;
+import com.farpost.logwatcher.LogEntryImpl;
+import com.farpost.logwatcher.Severity;
 
 import java.util.HashMap;
 import java.util.Map;

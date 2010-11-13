@@ -1,6 +1,6 @@
 package com.farpost.logwatcher;
 
-import org.bazhenov.logging.LogEntry;
+import com.farpost.logwatcher.LogEntry;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,10 +1,10 @@
 package com.farpost.logwatcher.aggregator;
 
-import com.farpost.logging.marshalling.Marshaller;
 import com.farpost.logwatcher.AggregatedEntry;
 import com.farpost.logwatcher.AggregatedEntryImpl;
+import com.farpost.logwatcher.marshalling.Marshaller;
 import com.farpost.logwatcher.storage.LogEntryMatcher;
-import org.bazhenov.logging.LogEntry;
+import com.farpost.logwatcher.LogEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

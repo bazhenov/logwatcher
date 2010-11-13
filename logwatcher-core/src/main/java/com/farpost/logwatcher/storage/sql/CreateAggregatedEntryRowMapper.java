@@ -1,12 +1,12 @@
 package com.farpost.logwatcher.storage.sql;
 
-import com.farpost.logging.marshalling.Marshaller;
-import com.farpost.logging.marshalling.MarshallerException;
 import com.farpost.logwatcher.AggregatedEntry;
 import com.farpost.logwatcher.AggregatedEntryImpl;
+import com.farpost.logwatcher.marshalling.Marshaller;
+import com.farpost.logwatcher.marshalling.MarshallerException;
 import com.farpost.timepoint.DateTime;
-import org.bazhenov.logging.LogEntry;
-import org.bazhenov.logging.Severity;
+import com.farpost.logwatcher.LogEntry;
+import com.farpost.logwatcher.Severity;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 
 import java.sql.ResultSet;
@@ -21,13 +21,9 @@ class CreateAggregatedEntryRowMapper implements ParameterizedRowMapper<Aggregate
 	}
 
 	public AggregatedEntry mapRow(ResultSet rs, int rowNum) throws SQLException {
-		try {
-			LogEntry entry = marshaller.unmarshall(rs.getString("content"));
-			return new AggregatedEntryImpl(entry.getMessage(), rs.getString("checksum"),
-				rs.getString("application_id"), Severity.forCode(rs.getInt("severity")), rs.getInt("count"),
-				new DateTime(rs.getTimestamp("last_time").getTime()), entry.getCause());
-		} catch ( MarshallerException e ) {
-			throw new RuntimeException(e);
-		}
+		LogEntry entry = marshaller.unmarshall(rs.getString("content"));
+		return new AggregatedEntryImpl(entry.getMessage(), rs.getString("checksum"),
+			rs.getString("application_id"), Severity.forCode(rs.getInt("severity")), rs.getInt("count"),
+			new DateTime(rs.getTimestamp("last_time").getTime()), entry.getCause());
 	}
 }

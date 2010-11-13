@@ -1,5 +1,7 @@
-package com.farpost.logwatcher.marshalling;
+package com.farpost.logwatcher;
 
+import com.farpost.logwatcher.marshalling.JaxbAttributesMapAdapter;
+import com.farpost.logwatcher.marshalling.JaxbDateAdapter;
 import com.farpost.timepoint.DateTime;
 
 import javax.xml.bind.annotation.XmlAttribute;

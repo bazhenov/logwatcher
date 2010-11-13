@@ -8,8 +8,8 @@ import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
 import com.farpost.timepoint.Date;
 import com.farpost.timepoint.DateTime;
-import org.bazhenov.logging.LogEntry;
-import org.bazhenov.logging.Severity;
+import com.farpost.logwatcher.LogEntry;
+import com.farpost.logwatcher.Severity;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 

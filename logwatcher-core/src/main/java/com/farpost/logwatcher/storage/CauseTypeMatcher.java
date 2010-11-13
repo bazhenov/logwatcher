@@ -1,8 +1,8 @@
 package com.farpost.logwatcher.storage;
 
 import com.farpost.logwatcher.AggregatedLogEntry;
-import org.bazhenov.logging.Cause;
-import org.bazhenov.logging.LogEntry;
+import com.farpost.logwatcher.Cause;
+import com.farpost.logwatcher.LogEntry;
 
 public class CauseTypeMatcher implements LogEntryMatcher {
 

@@ -2,7 +2,7 @@ package com.farpost.logwatcher.storage;
 
 import com.farpost.logwatcher.AggregatedLogEntry;
 import com.farpost.timepoint.Date;
-import org.bazhenov.logging.LogEntry;
+import com.farpost.logwatcher.LogEntry;
 
 /**
  * Matcher по дате возникновения ошибки.

@@ -2,9 +2,9 @@ package com.farpost.logwatcher;
 
 import com.farpost.logwatcher.AggregatedAttribute;
 import com.farpost.logwatcher.AggregatedLogEntryImpl;
-import org.bazhenov.logging.LogEntry;
-import org.bazhenov.logging.LogEntryImpl;
-import org.bazhenov.logging.Severity;
+import com.farpost.logwatcher.LogEntry;
+import com.farpost.logwatcher.LogEntryImpl;
+import com.farpost.logwatcher.Severity;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;

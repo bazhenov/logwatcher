@@ -1,6 +1,9 @@
-package com.farpost.logging.marshalling;
+package com.farpost.logwatcher.marshalling;
 
-import com.farpost.logwatcher.marshalling.*;
+import com.farpost.logwatcher.Cause;
+import com.farpost.logwatcher.LogEntry;
+import com.farpost.logwatcher.LogEntryImpl;
+import com.farpost.logwatcher.Severity;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -21,7 +24,7 @@ public abstract class AbstractLogEntryMarshallerTest {
 	}
 
 	@Test
-	public void marshalling() throws MarshallerException {
+	public void marshalling() {
 		Cause cause = new Cause("type", "msg", "stacktrace");
 		LogEntry entry = new LogEntryImpl(now(), "group", "message", Severity.info, "2fe", "default", null,
 			cause);
@@ -32,7 +35,7 @@ public abstract class AbstractLogEntryMarshallerTest {
 	}
 
 	@Test
-	public void marshallingEntryWithAttributes() throws MarshallerException {
+	public void marshallingEntryWithAttributes() {
 		Map<String, String> attributes = new HashMap<String, String>();
 		attributes.put("foo", "bar");
 		attributes.put("bar", "foo");

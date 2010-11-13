@@ -1,8 +1,8 @@
 package com.farpost.logwatcher.storage;
 
 import com.farpost.logwatcher.AggregatedLogEntry;
-import org.bazhenov.logging.LogEntry;
-import org.bazhenov.logging.Severity;
+import com.farpost.logwatcher.LogEntry;
+import com.farpost.logwatcher.Severity;
 
 public class SeverityMatcher implements LogEntryMatcher {
 

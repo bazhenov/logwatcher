@@ -5,7 +5,7 @@ import com.farpost.logwatcher.storage.*;
 import com.farpost.logwatcher.web.vm.FeedViewModel;
 import com.farpost.timepoint.Date;
 import com.farpost.timepoint.DateTime;
-import org.bazhenov.logging.*;
+import com.farpost.logwatcher.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;

@@ -1,11 +1,10 @@
 package com.farpost.logwatcher.aggregator;
 
-import com.farpost.logging.marshalling.Marshaller;
-import com.farpost.logging.marshalling.MarshallerException;
 import com.farpost.logwatcher.AggregatedEntry;
 import com.farpost.logwatcher.AggregatedEntryImpl;
+import com.farpost.logwatcher.marshalling.Marshaller;
 import com.farpost.logwatcher.storage.LogEntryMatcher;
-import org.bazhenov.logging.LogEntry;
+import com.farpost.logwatcher.LogEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,10 +24,7 @@ public class SimpleAggregator implements Aggregator {
 		this.marshaller = marshaller;
 	}
 
-	public Collection<AggregatedEntry> aggregate(Iterable<String> entries,
-	                                             Collection<LogEntryMatcher> matchers)
-		throws MarshallerException {
-
+	public Collection<AggregatedEntry> aggregate(Iterable<String> entries, Collection<LogEntryMatcher> matchers) {
 		Map<String, AggregatedEntry> result = new HashMap<String, AggregatedEntry>();
 		long start = System.currentTimeMillis();
 		int size = 0;

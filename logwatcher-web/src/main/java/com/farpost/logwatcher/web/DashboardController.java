@@ -5,7 +5,7 @@ import com.farpost.logwatcher.ByOccurenceCountComparator;
 import com.farpost.logwatcher.storage.InvalidCriteriaException;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
-import org.bazhenov.logging.Severity;
+import com.farpost.logwatcher.Severity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;

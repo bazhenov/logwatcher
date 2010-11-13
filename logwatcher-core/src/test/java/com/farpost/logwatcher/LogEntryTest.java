@@ -1,15 +1,15 @@
 package com.farpost.logwatcher;
 
 import com.farpost.timepoint.DateTime;
-import org.bazhenov.logging.Cause;
-import org.bazhenov.logging.LogEntry;
-import org.bazhenov.logging.LogEntryImpl;
+import com.farpost.logwatcher.Cause;
+import com.farpost.logwatcher.LogEntry;
+import com.farpost.logwatcher.LogEntryImpl;
 import org.testng.annotations.Test;
 
 import static com.farpost.timepoint.Date.november;
 import static com.farpost.timepoint.DateTime.now;
-import static org.bazhenov.logging.Severity.info;
-import static org.bazhenov.logging.Severity.warning;
+import static com.farpost.logwatcher.Severity.info;
+import static com.farpost.logwatcher.Severity.warning;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 

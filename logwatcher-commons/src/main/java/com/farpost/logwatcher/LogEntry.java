@@ -1,4 +1,4 @@
-package com.farpost.logwatcher.marshalling;
+package com.farpost.logwatcher;
 
 import com.farpost.timepoint.DateTime;
 

@@ -1,16 +1,15 @@
 package com.farpost.logwatcher.log4j;
 
-import com.farpost.logging.marshalling.Jaxb2Marshaller;
-import com.farpost.logging.marshalling.Marshaller;
-import com.farpost.logging.marshalling.MarshallerException;
+import com.farpost.logwatcher.marshalling.Jaxb2Marshaller;
+import com.farpost.logwatcher.marshalling.Marshaller;
 import com.farpost.timepoint.DateTime;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Level;
 import org.apache.log4j.spi.LoggingEvent;
-import org.bazhenov.logging.Cause;
-import org.bazhenov.logging.LogEntry;
-import org.bazhenov.logging.LogEntryImpl;
-import org.bazhenov.logging.Severity;
+import com.farpost.logwatcher.Cause;
+import com.farpost.logwatcher.LogEntry;
+import com.farpost.logwatcher.LogEntryImpl;
+import com.farpost.logwatcher.Severity;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -126,8 +125,6 @@ public class LogWatcherAppender extends AppenderSkeleton {
 		try {
 			String stringMessage = marshaller.marshall(entry);
 			sendMessage(port, stringMessage);
-		} catch (MarshallerException e) {
-			throw new RuntimeException(e);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

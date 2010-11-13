@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.farpost.logging</groupId>
+		<groupId>com.farpost.logwatcher</groupId>
 		<artifactId>logwatcher-parent</artifactId>
 		<version>1.3</version>
 	</parent>
@@ -17,7 +17,7 @@
 		<it.port>8181</it.port>
 		<it.location>http://localhost:${it.port}</it.location>
 
-		<sut.groupId>com.farpost.logging</sut.groupId>
+		<sut.groupId>com.farpost.logwatcher</sut.groupId>
 		<sut.artifactId>logwatcher-web</sut.artifactId>
 		<sut.version>1.3</sut.version>
 
@@ -131,7 +131,7 @@
 					<!--
 						В качестве stopKey берем groupId+artifactId, чтобы случайно не остановить чужой build. 
 					-->
-					<stopKey>com.farpost.logging:logging-web-frontend-functional-tests</stopKey>
+					<stopKey>com.farpost.logwatcher:logwatcher-web-ft</stopKey>
 				</configuration>
 				<dependencies>
 					<dependency>

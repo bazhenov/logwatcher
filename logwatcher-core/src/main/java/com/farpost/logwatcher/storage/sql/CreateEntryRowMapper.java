@@ -1,8 +1,7 @@
 package com.farpost.logwatcher.storage.sql;
 
-import com.farpost.logging.marshalling.Marshaller;
-import com.farpost.logging.marshalling.MarshallerException;
-import org.bazhenov.logging.LogEntry;
+import com.farpost.logwatcher.LogEntry;
+import com.farpost.logwatcher.marshalling.Marshaller;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 
 import java.sql.ResultSet;
@@ -17,10 +16,6 @@ class CreateEntryRowMapper implements ParameterizedRowMapper<LogEntry> {
 	}
 
 	public LogEntry mapRow(ResultSet rs, int rowNum) throws SQLException {
-		try {
-			return marshaller.unmarshall(rs.getString("content"));
-		} catch ( MarshallerException e ) {
-			throw new RuntimeException(e);
-		}
+		return marshaller.unmarshall(rs.getString("content"));
 	}
 }

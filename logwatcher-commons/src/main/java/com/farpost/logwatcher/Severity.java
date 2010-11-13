@@ -1,4 +1,4 @@
-package com.farpost.logwatcher.marshalling;
+package com.farpost.logwatcher;
 
 public enum Severity {
 

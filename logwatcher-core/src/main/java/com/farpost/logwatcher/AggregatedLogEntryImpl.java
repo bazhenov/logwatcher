@@ -1,7 +1,7 @@
 package com.farpost.logwatcher;
 
 import com.farpost.timepoint.DateTime;
-import org.bazhenov.logging.LogEntry;
+import com.farpost.logwatcher.LogEntry;
 
 import java.util.HashMap;
 import java.util.Map;

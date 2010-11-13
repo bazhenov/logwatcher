@@ -1,7 +1,4 @@
-package com.farpost.logging.marshalling;
-
-import com.farpost.logwatcher.marshalling.Jaxb2Marshaller;
-import com.farpost.logwatcher.marshalling.Marshaller;
+package com.farpost.logwatcher.marshalling;
 
 public class Jaxb2MarshallerTest extends AbstractLogEntryMarshallerTest {
 

@@ -1,16 +1,14 @@
 package com.farpost.logwatcher.log4j;
 
-import com.farpost.logging.marshalling.Jaxb2Marshaller;
-import com.farpost.logging.marshalling.Marshaller;
-import com.farpost.logging.marshalling.MarshallerException;
 import com.farpost.logwatcher.QueueAppendListener;
-import com.farpost.logwatcher.log4j.LogWatcherAppender;
+import com.farpost.logwatcher.marshalling.Jaxb2Marshaller;
+import com.farpost.logwatcher.marshalling.Marshaller;
 import com.farpost.logwatcher.transport.TransportException;
 import com.farpost.logwatcher.transport.UdpTransport;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.bazhenov.logging.LogEntry;
-import org.bazhenov.logging.Severity;
+import com.farpost.logwatcher.LogEntry;
+import com.farpost.logwatcher.Severity;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -57,7 +55,7 @@ public class LogWatcherAppenderTest {
 	}
 
 	@Test
-	public void appenderShouldSendUdpMessages() throws InterruptedException, MarshallerException {
+	public void appenderShouldSendUdpMessages() throws InterruptedException {
 		Throwable cause = new RuntimeException("Ooops");
 		String message = "Сообщение";
 

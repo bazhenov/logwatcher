@@ -1,20 +1,19 @@
 package com.farpost.logwatcher.storage.sql;
 
-import com.farpost.logging.marshalling.Marshaller;
-import com.farpost.logging.marshalling.MarshallerException;
 import com.farpost.logwatcher.AggregatedEntry;
 import com.farpost.logwatcher.ChecksumCalculator;
 import com.farpost.logwatcher.Visitor;
 import com.farpost.logwatcher.aggregator.Aggregator;
+import com.farpost.logwatcher.marshalling.Marshaller;
 import com.farpost.logwatcher.storage.InvalidCriteriaException;
 import com.farpost.logwatcher.storage.LogEntryMatcher;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
 import com.farpost.timepoint.Date;
 import com.farpost.timepoint.DateTime;
-import org.bazhenov.logging.LogEntry;
-import org.bazhenov.logging.LogEntryImpl;
-import org.bazhenov.logging.Severity;
+import com.farpost.logwatcher.LogEntry;
+import com.farpost.logwatcher.LogEntryImpl;
+import com.farpost.logwatcher.Severity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -85,8 +84,6 @@ public class SqlLogStorage implements LogStorage {
 				log.debug("Entry with checksum: " + checksum + " wrote to database");
 			}
 
-		} catch (MarshallerException e) {
-			throw new LogStorageException(e);
 		} catch (DataAccessException e) {
 			throw new LogStorageException(e);
 		}
@@ -138,8 +135,6 @@ public class SqlLogStorage implements LogStorage {
 			throw new LogStorageException(e);
 		} catch (MatcherMapperException e) {
 			throw new LogStorageException(e);
-		} catch (MarshallerException e) {
-			throw new LogStorageException(e);
 		} finally {
 			close(result);
 			close(statement);
@@ -184,8 +179,6 @@ public class SqlLogStorage implements LogStorage {
 		} catch (SQLException e) {
 			throw new LogStorageException(e);
 		} catch (MatcherMapperException e) {
-			throw new LogStorageException(e);
-		} catch (MarshallerException e) {
 			throw new LogStorageException(e);
 		} finally {
 			close(result);
