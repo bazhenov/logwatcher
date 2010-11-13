@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib version="2.1"
+				xmlns="http://java.sun.com/xml/ns/javaee"
+				xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd">
+
+	<tlib-version>1.1</tlib-version>
+	<short-name>logging</short-name>
+	<uri>http://bazhenov.org/logging</uri>
+
+	<tag>
+		<name>entry</name>
+		<tag-class>com.farpost.logwatcher.web.tags.EntryTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>Ссылка на запись типа AggregatedLogEntry</description>
+			<name>entry</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>com.farpost.logwatcher.AggregatedLogEntry</type>
+		</attribute>
+	</tag>
+
+	<function>
+		<description>Форматирует Cause объект</description>
+		<name>formatCause</name>
+		<function-class>com.farpost.logwatcher.web.tags.EntryTag</function-class>
+		<function-signature>java.lang.String formatCause(com.farpost.logwatcher.marshalling.Cause)</function-signature>
+		<example>formatCause(cause)</example>
+	</function>
+
+	<function>
+		<name>pluralize</name>
+		<function-class>com.farpost.logwatcher.web.tags.EntryTag</function-class>
+		<function-signature>java.lang.String pluralize(int, java.lang.String)</function-signature>
+	</function>
+
+	<function>
+		<name>isNew</name>
+		<function-class>com.farpost.logwatcher.web.tags.EntryTag</function-class>
+		<function-signature>boolean isNew(org.bazhenov.logging.AggregatedEntry)</function-signature>
+	</function>
+
+	<function>
+		<name>shortFormar</name>
+		<function-class>com.farpost.logwatcher.web.tags.EntryTag</function-class>
+		<function-signature>java.lang.String shortFormat(java.util.Date)</function-signature>
+	</function>
+
+	<function>
+		<name>date</name>
+		<function-class>com.farpost.logwatcher.web.tags.EntryTag</function-class>
+		<function-signature>java.util.Date date(com.farpost.timepoint.Date)</function-signature>
+	</function>
+
+	<function>
+		<name>trim</name>
+		<function-class>com.farpost.logwatcher.web.tags.EntryTag</function-class>
+		<function-signature>java.lang.String trim(java.lang.String, int, java.lang.String)</function-signature>
+	</function>
+
+	<function>
+		<name>thousands</name>
+		<function-class>com.farpost.logwatcher.web.tags.EntryTag</function-class>
+		<function-signature>int thousands(int)</function-signature>
+	</function>
+
+	<function>
+		<name>magnitude</name>
+		<function-class>com.farpost.logwatcher.web.tags.EntryTag</function-class>
+		<function-signature>int magnitude(int)</function-signature>
+	</function>
+
+	<function>
+		<name>rootCause</name>
+		<function-class>com.farpost.logwatcher.web.tags.EntryTag</function-class>
+		<function-signature>com.farpost.logwatcher.marshalling.Cause rootCause(com.farpost.logwatcher.marshalling.Cause)</function-signature>
+	</function>
+</taglib>

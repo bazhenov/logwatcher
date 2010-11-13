@@ -1,0 +1,26 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns="http://www.w3.org/1999/xhtml"
+					version="2.1"
+					xmlns:c="http://java.sun.com/jsp/jstl/core"
+					xmlns:l="http://bazhenov.org/logging">
+
+	<jsp:directive.page contentType="text/html"/>
+
+	<jsp:useBean id="info" type="com.farpost.logwatcher.web.ApplicationInfo" scope="request"/>
+
+	<div class="dashboardWidget">
+		<div class="title">
+			<a href="/feed/${info.applicationId}"><c:out value="${info.applicationId}"/></a>
+		</div>
+		<ul>
+			<c:forEach items="${info.entries}" var="entry" varStatus="status">
+				<c:if test="${status.count lt 5}">
+					<c:url var="url" value="/feed/${entry.applicationId}">
+						<c:param name="severity" value="${entry.severity}"/>
+					</c:url>
+
+					<li><a href="${url}\#${entry.checksum}"><c:out value="${l:trim(entry.message, 33, '...')}"/></a></li>
+				</c:if>
+			</c:forEach>
+		</ul>
+	</div>
+</jsp:root>

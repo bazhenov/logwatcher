@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+			 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			 xmlns:task="http://www.springframework.org/schema/task" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+			 xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+			 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+			 http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+			 http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
+
+	<jdbc:initialize-database data-source="datasource">
+		<jdbc:script location="classpath:/schema.sql"/>
+	</jdbc:initialize-database>
+
+	<!--suppress SpringModelInspection -->
+	<import resource="${resources}"/>
+
+	<task:scheduler id="scheduler" pool-size="1"/>
+
+	<task:scheduled-tasks scheduler="scheduler">
+		<task:scheduled ref="cleanupTask" method="run" fixed-rate="60000"/>
+	</task:scheduled-tasks>
+
+	<bean id='cleanupTask' class="com.farpost.logwatcher.storage.CleanupStorageTask">
+		<constructor-arg ref="storage"/>
+		<property name="daysToKeep" value="10"/>
+	</bean>
+
+	<bean class="com.farpost.logwatcher.transport.UdpTransport" lazy-init="false" init-method="start"
+				destroy-method="stop">
+		<constructor-arg value="6578"/>
+		<constructor-arg>
+			<bean class="com.farpost.logwatcher.transport.WriteToStorageTransportListener">
+				<constructor-arg ref="storage"/>
+				<constructor-arg ref="marshaller"/>
+			</bean>
+		</constructor-arg>
+		<property name="bufferSize" value="120000"/>
+	</bean>
+
+	<bean id="storage" class="com.farpost.logwatcher.storage.sql.SqlLogStorage">
+		<constructor-arg index="0" ref="aggregator"/>
+		<constructor-arg index="1" ref="datasource"/>
+		<constructor-arg index="2" ref="marshaller"/>
+		<constructor-arg index="3">
+			<bean class="com.farpost.logwatcher.storage.sql.AnnotationDrivenMatcherMapperImpl">
+				<constructor-arg>
+					<bean class="com.farpost.logwatcher.storage.sql.SqlMatcherMapperRules"/>
+				</constructor-arg>
+			</bean>
+		</constructor-arg>
+		<constructor-arg>
+			<bean class="com.farpost.logwatcher.SimpleChecksumCalculator"/>
+		</constructor-arg>
+	</bean>
+
+	<bean id="aggregator" class="com.farpost.logwatcher.aggregator.ExecutorServiceAggregator">
+		<constructor-arg ref="marshaller"/>
+		<property name="batchSize" value="200"/>
+	</bean>
+
+	<bean id="marshaller" class="com.farpost.logwatcher.marshalling.Jaxb2Marshaller"/>
+</beans>
