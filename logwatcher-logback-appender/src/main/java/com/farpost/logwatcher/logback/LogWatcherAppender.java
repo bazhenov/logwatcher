@@ -88,8 +88,8 @@ public class LogWatcherAppender extends UnsynchronizedAppenderBase<ILoggingEvent
 			} catch (SocketException e) {
 				throw new RuntimeException(e);
 			}
+			super.start();
 		}
-		super.start();
 	}
 
 	@Override
@@ -97,8 +97,8 @@ public class LogWatcherAppender extends UnsynchronizedAppenderBase<ILoggingEvent
 		if (isStarted()) {
 			socket.close();
 			socket = null;
+			super.stop();
 		}
-		super.stop();
 	}
 
 	public void setAddress(String address) {
