@@ -13,7 +13,7 @@
 		<module>logwatcher-appender</module>
 		<module>logwatcher-commons</module>
 		<module>logging-web-frontend-functional-tests</module>
-    <module>logging-logback-appender</module>
+    <module>logwatcher-logback-appender</module>
   </modules>
 
 	<parent>
