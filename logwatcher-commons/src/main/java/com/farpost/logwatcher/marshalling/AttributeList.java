@@ -1,13 +1,13 @@
-package org.bazhenov.logging;
+package com.farpost.logwatcher.marshalling;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.List;
 
 /**
- * Вспомогательный класс для JAXB используемый при сериализации атрибутов записи {@link org.bazhenov.logging.LogEntry}
+ * Вспомогательный класс для JAXB используемый при сериализации атрибутов записи {@link LogEntry}
  *
- * @see org.bazhenov.logging.JaxbAttributesMapAdapter 
+ * @see JaxbAttributesMapAdapter
  */
 @XmlType
 public class AttributeList {

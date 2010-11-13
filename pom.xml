@@ -11,7 +11,7 @@
 		<module>logging-core</module>
 		<module>logging-web-frontend</module>
 		<module>logwatcher-appender</module>
-		<module>logging-commons</module>
+		<module>logwatcher-commons</module>
 		<module>logging-web-frontend-functional-tests</module>
     <module>logging-logback-appender</module>
   </modules>

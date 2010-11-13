@@ -10,7 +10,7 @@
 		<version>1.3</version>
 	</parent>
 	<groupId>com.farpost.logging</groupId>
-	<artifactId>logging-commons</artifactId>
+	<artifactId>logwatcher-commons</artifactId>
 	<version>1.1</version>
 	<name>LogWatcher Commons API</name>
 

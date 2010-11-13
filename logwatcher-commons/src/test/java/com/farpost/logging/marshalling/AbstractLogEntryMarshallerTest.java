@@ -1,9 +1,6 @@
 package com.farpost.logging.marshalling;
 
-import org.bazhenov.logging.Cause;
-import org.bazhenov.logging.LogEntry;
-import org.bazhenov.logging.LogEntryImpl;
-import org.bazhenov.logging.Severity;
+import com.farpost.logwatcher.marshalling.*;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 

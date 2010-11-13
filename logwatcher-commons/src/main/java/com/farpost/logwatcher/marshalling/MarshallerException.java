@@ -1,4 +1,4 @@
-package com.farpost.logging.marshalling;
+package com.farpost.logwatcher.marshalling;
 
 public class MarshallerException extends RuntimeException {
 

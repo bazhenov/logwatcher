@@ -1,8 +1,4 @@
-package com.farpost.logging.marshalling;
-
-import org.bazhenov.logging.Cause;
-import org.bazhenov.logging.LogEntry;
-import org.bazhenov.logging.LogEntryImpl;
+package com.farpost.logwatcher.marshalling;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;

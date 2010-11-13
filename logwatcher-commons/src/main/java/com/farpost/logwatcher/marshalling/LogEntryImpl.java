@@ -1,4 +1,4 @@
-package org.bazhenov.logging;
+package com.farpost.logwatcher.marshalling;
 
 import com.farpost.timepoint.DateTime;
 

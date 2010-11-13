@@ -58,5 +58,5 @@
 		<property name="batchSize" value="200"/>
 	</bean>
 
-	<bean id="marshaller" class="com.farpost.logging.marshalling.Jaxb2Marshaller"/>
+	<bean id="marshaller" class="com.farpost.logwatcher.marshalling.Jaxb2Marshaller"/>
 </beans>

@@ -1,9 +1,7 @@
-package com.farpost.logging.marshalling;
-
-import org.bazhenov.logging.LogEntry;
+package com.farpost.logwatcher.marshalling;
 
 /**
- * Имплементации данного интерфейса сериализуют и десериализуют обьекты типа {@link org.bazhenov.logging.LogEntryImpl}
+ * Имплементации данного интерфейса сериализуют и десериализуют обьекты типа {@link com.farpost.logwatcher.marshalling.LogEntryImpl}
  * в формат wire протокола.
  * <p />
  * Внимание, все имплементации этого интерфейса должны быть потокобезопасны.

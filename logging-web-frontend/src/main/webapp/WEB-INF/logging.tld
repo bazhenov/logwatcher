@@ -25,7 +25,7 @@
 		<description>Форматирует Cause объект</description>
 		<name>formatCause</name>
 		<function-class>org.bazhenov.logging.web.tags.EntryTag</function-class>
-		<function-signature>java.lang.String formatCause(org.bazhenov.logging.Cause)</function-signature>
+		<function-signature>java.lang.String formatCause(com.farpost.logwatcher.marshalling.Cause)</function-signature>
 		<example>formatCause(cause)</example>
 	</function>
 
@@ -74,6 +74,6 @@
 	<function>
 		<name>rootCause</name>
 		<function-class>org.bazhenov.logging.web.tags.EntryTag</function-class>
-		<function-signature>org.bazhenov.logging.Cause rootCause(org.bazhenov.logging.Cause)</function-signature>
+		<function-signature>com.farpost.logwatcher.marshalling.Cause rootCause(com.farpost.logwatcher.marshalling.Cause)</function-signature>
 	</function>
 </taglib>
