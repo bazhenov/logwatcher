@@ -183,7 +183,11 @@ public class LogEntryImpl implements LogEntry {
 			SeverityContainer that = (SeverityContainer) o;
 
 			return severity == that.severity;
+		}
 
+		@Override
+		public int hashCode() {
+			return severity != null ? severity.hashCode() : 0;
 		}
 	}
 
@@ -213,7 +217,11 @@ public class LogEntryImpl implements LogEntry {
 			ApplicationContainer that = (ApplicationContainer) o;
 
 			return !(applicationId != null ? !applicationId.equals(that.applicationId) : that.applicationId != null);
+		}
 
+		@Override
+		public int hashCode() {
+			return applicationId != null ? applicationId.hashCode() : 0;
 		}
 	}
 
@@ -243,7 +251,11 @@ public class LogEntryImpl implements LogEntry {
 			GroupContainer that = (GroupContainer) o;
 
 			return !(group != null ? !group.equals(that.group) : that.group != null);
+		}
 
+		@Override
+		public int hashCode() {
+			return group != null ? group.hashCode() : 0;
 		}
 	}
 }

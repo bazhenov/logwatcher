@@ -28,6 +28,7 @@ public class LogWatcherAppender extends UnsynchronizedAppenderBase<ILoggingEvent
 	private String applicationId;
 	private DatagramSocket socket;
 	private final Marshaller marshaller;
+	private final Object socketLock = new Object();
 
 	public LogWatcherAppender() {
 		marshaller = new Jaxb2Marshaller();
@@ -47,7 +48,12 @@ public class LogWatcherAppender extends UnsynchronizedAppenderBase<ILoggingEvent
 			byte[] data = marshaller.marshall(entry).getBytes("utf8");
 			DatagramPacket packet = new DatagramPacket(data, data.length);
 
-			socket.send(packet);
+			synchronized (socketLock) {
+				if (socket == null) {
+					return;
+				}
+				socket.send(packet);
+			}
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -80,24 +86,28 @@ public class LogWatcherAppender extends UnsynchronizedAppenderBase<ILoggingEvent
 	}
 
 	@Override
-	public synchronized void start() {
-		if (!isStarted()) {
-			try {
-				socket = new DatagramSocket();
-				socket.connect(address, port);
-			} catch (SocketException e) {
-				throw new RuntimeException(e);
+	public void start() {
+		synchronized (socketLock) {
+			if (!isStarted()) {
+				try {
+					socket = new DatagramSocket();
+					socket.connect(address, port);
+				} catch (SocketException e) {
+					throw new RuntimeException(e);
+				}
+				super.start();
 			}
-			super.start();
 		}
 	}
 
 	@Override
-	public synchronized void stop() {
-		if (isStarted()) {
-			socket.close();
-			socket = null;
-			super.stop();
+	public void stop() {
+		synchronized (socketLock) {
+			if (isStarted()) {
+				socket.close();
+				socket = null;
+				super.stop();
+			}
 		}
 	}
 

@@ -9,3 +9,4 @@ test-output
 target
 mysql.properties
 /tags
+.DS_Store
