@@ -24,7 +24,7 @@ public class AggregatedLogEntryTest {
 			put("server", "host1");
 			put("user", "david");
 		}};
-		LogEntry secondEntry = new LogEntry(now(), "group", "message", Severity.debug, "af1", "frontend",
+		LogEntry secondEntry = new LogEntryImpl(now(), "group", "message", Severity.debug, "af1", "frontend",
 			secondEntryAttributes, null);
 
 		AggregatedLogEntryImpl aggregated = new AggregatedLogEntryImpl(firstEntry);

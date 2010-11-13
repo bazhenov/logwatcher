@@ -42,7 +42,7 @@ public class LogEntryTest {
 	@Test
 	public void entryMayHaveCause() {
 		Cause cause = createCause();
-		LogEntry entry = new LogEntry(now(), "group", "message", warning, "3d", "default", null, cause);
+		LogEntry entry = new LogEntryImpl(now(), "group", "message", warning, "3d", "default", null, cause);
 
 		assertThat(entry.getCause(), equalTo(cause));
 	}

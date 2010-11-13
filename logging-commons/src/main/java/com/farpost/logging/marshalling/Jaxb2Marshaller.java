@@ -17,10 +17,14 @@ public class Jaxb2Marshaller implements Marshaller {
 	private javax.xml.bind.Marshaller marshaller;
 	private Unmarshaller unmarshaller;
 
-	public Jaxb2Marshaller() throws JAXBException {
-		JAXBContext context = JAXBContext.newInstance(LogEntryImpl.class, Cause.class);
-		marshaller = context.createMarshaller();
-		unmarshaller = context.createUnmarshaller();
+	public Jaxb2Marshaller() {
+		try {
+			JAXBContext context = JAXBContext.newInstance(LogEntryImpl.class, Cause.class);
+			marshaller = context.createMarshaller();
+			unmarshaller = context.createUnmarshaller();
+		} catch (JAXBException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public synchronized String marshall(LogEntry entry) throws MarshallerException {

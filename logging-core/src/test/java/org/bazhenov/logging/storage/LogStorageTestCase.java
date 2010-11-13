@@ -193,7 +193,7 @@ abstract public class LogStorageTestCase {
 
 	@Test
 	public void storageCanCountEntries() throws Exception {
-		LogEntryImpl entry = entry().create();
+		LogEntry entry = entry().create();
 
 		storage.writeEntry(entry);
 

@@ -38,7 +38,7 @@ public class LogEntryBuilder {
 	private Map<String, String> attributes = new HashMap<String, String>();
 
 	public LogEntry create() {
-		return new LogEntry(time, group, message, severity, checksum, applicationId, attributes, cause);
+		return new LogEntryImpl(time, group, message, severity, checksum, applicationId, attributes, cause);
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class LogEntryBuilder {
 	 * @see LogStorage#writeEntry(LogEntry)
 	 */
 	public LogEntry saveIn(LogStorage storage) throws LogStorageException {
-		LogEntryImpl entry = create();
+		LogEntry entry = create();
 		storage.writeEntry(entry);
 		return entry;
 	}

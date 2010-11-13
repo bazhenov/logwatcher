@@ -2,16 +2,19 @@ package org.bazhenov.logging;
 
 import com.farpost.timepoint.DateTime;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.farpost.timepoint.DateTime.now;
-
 @XmlRootElement(name = "logEntry")
 public class LogEntryImpl implements LogEntry {
 
+	@XmlJavaTypeAdapter(value = JaxbDateAdapter.class)
+	@XmlAttribute
 	private final DateTime date;
 
 	@XmlElement
@@ -20,7 +23,6 @@ public class LogEntryImpl implements LogEntry {
 	@XmlElement(name = "severity")
 	private final SeverityContainer severity;
 
-	@XmlAttribute
 	private volatile String checksum;
 
 	@XmlJavaTypeAdapter(value = JaxbAttributesMapAdapter.class)
@@ -40,7 +42,7 @@ public class LogEntryImpl implements LogEntry {
 	 */
 	@Deprecated
 	public LogEntryImpl() {
-		this(now(), null, null, null, null, null, null, null);
+		this(null, null, null, null, null, null, null, null);
 	}
 
 	public LogEntryImpl(DateTime date, String group, String message, Severity severity, String checksum,
@@ -95,7 +97,12 @@ public class LogEntryImpl implements LogEntry {
 		return cause;
 	}
 
+	public void setChecksum(String checksum) {
+		this.checksum = checksum;
+	}
+
 	@Override
+	@XmlAttribute
 	public String getChecksum() {
 		return checksum;
 	}
