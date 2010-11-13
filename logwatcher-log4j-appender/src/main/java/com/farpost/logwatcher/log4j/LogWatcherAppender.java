@@ -1,4 +1,4 @@
-package com.farpost.logging;
+package com.farpost.logwatcher.log4j;
 
 import com.farpost.logging.marshalling.Jaxb2Marshaller;
 import com.farpost.logging.marshalling.Marshaller;
@@ -24,7 +24,7 @@ import static java.lang.Math.min;
  * <p/>
  * Configuration:
  * <pre>
- * &lt;appender name="remote" class="com.farpost.logging.LogWatcherAppender">
+ * &lt;appender name="remote" class="com.farpost.logwatcher.log4j.LogWatcherAppender">
  *   &lt;param name="address" value="aux2.srv.loc:6578" />
  *   &lt;param name="threshold" value="WARNING" />
  *   &lt;param name="applicationId" value="serviceName" />

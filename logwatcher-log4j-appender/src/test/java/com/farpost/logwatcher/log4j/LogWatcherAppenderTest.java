@@ -1,9 +1,10 @@
-package com.farpost.logging;
+package com.farpost.logwatcher.log4j;
 
 import com.farpost.logging.marshalling.Jaxb2Marshaller;
 import com.farpost.logging.marshalling.Marshaller;
 import com.farpost.logging.marshalling.MarshallerException;
 import com.farpost.logwatcher.QueueAppendListener;
+import com.farpost.logwatcher.log4j.LogWatcherAppender;
 import com.farpost.logwatcher.transport.TransportException;
 import com.farpost.logwatcher.transport.UdpTransport;
 import org.apache.log4j.Level;

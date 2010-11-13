@@ -10,7 +10,7 @@
 	<modules>
 		<module>logwatcher-core</module>
 		<module>logging-web-frontend</module>
-		<module>logwatcher-appender</module>
+		<module>logwatcher-log4j-appender</module>
 		<module>logwatcher-commons</module>
 		<module>logging-web-frontend-functional-tests</module>
     <module>logwatcher-logback-appender</module>
