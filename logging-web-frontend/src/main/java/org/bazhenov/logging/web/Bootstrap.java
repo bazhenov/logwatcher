@@ -19,7 +19,7 @@ public class Bootstrap {
 	}
 
 	public void load() throws LogStorageException {
-		storage.writeEntry(new LogEntry(DateTime.now(), "group", "AdvertServiceException: Error Fetching http headers", Severity.error, "sum", "advertisement", null));
+		storage.writeEntry(new LogEntryImpl(DateTime.now(), "group", "AdvertServiceException: Error Fetching http headers", Severity.error, "sum", "advertisement", null));
 		Cause cause = new Cause("RuntimeException", "Socket reading timeout", "AdvertServiceException: Error Fetching http headers\n" +
 			"  at /var/www/baza.farpost.ru/rev/20100325-1520/slr/advert/src/remote/AdvertSoapDecorator.class.php:16\n" +
 			"  10: slrSoapDecorator.class.php:94 AdvertSoapDecorator->handleException(\"Error Fetc...\", SoapFault)\n" +
@@ -32,12 +32,12 @@ public class Bootstrap {
 			"  3 : advertUnpopularDeactivationService.class.php:34 AdvertRemoteAdvertisement->getLinks(true)\n" +
 			"  2 : advertUnpopularDeactivationService.class.php:23 advertUnpopularDeactivationService->deactivateByMaxViews([849])\n" +
 			"  1 : service_runner.php:38 advertUnpopularDeactivationService->run()");
-		storage.writeEntry(new LogEntry(DateTime.now().minusHour(2), "group", "OverflowFundsException", Severity.warning, "sum2",
+		storage.writeEntry(new LogEntryImpl(DateTime.now().minusHour(2), "group", "OverflowFundsException", Severity.warning, "sum2",
 			"billing", new HashMap<String, String>() {{
 				put("url" ,"/some/foo/very/long/url/to/fit/in/screen");
 				put("machine", "aux1.srv.loc");
 			}}, cause));
-		storage.writeEntry(new LogEntry(DateTime.now().minusHour(2), "group", "OverflowFundsException", Severity.warning, "sum2",
+		storage.writeEntry(new LogEntryImpl(DateTime.now().minusHour(2), "group", "OverflowFundsException", Severity.warning, "sum2",
 			"billing", new HashMap<String, String>(){{
 				put("url" ,"/some/foo/bar?uri=1");
 				put("machine", "aux1.srv.loc");
@@ -64,14 +64,14 @@ public class Bootstrap {
 
 		storage.writeEntry(new LogEntryImpl(DateTime.now().minusHour(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
 			"frontend", null, cause));
-		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
+		storage.writeEntry(new LogEntryImpl(DateTime.now().minusHour(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
 			"frontend", null, cause));
-		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
+		storage.writeEntry(new LogEntryImpl(DateTime.now().minusHour(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
 			"frontend", null, cause));
-		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very very long longvery very long longvery very very long long Exception", Severity.error, "sum4",
+		storage.writeEntry(new LogEntryImpl(DateTime.now().minusHour(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very very long longvery very long longvery very very long long Exception", Severity.error, "sum4",
 			"frontend", null, cause));
 
-		storage.writeEntry(new LogEntry(DateTime.now().minusHour(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum5",
+		storage.writeEntry(new LogEntryImpl(DateTime.now().minusHour(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum5",
 			"frontend", null, null));
 	}
 }

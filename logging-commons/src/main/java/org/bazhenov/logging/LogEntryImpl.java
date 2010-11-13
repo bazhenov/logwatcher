@@ -17,6 +17,9 @@ public class LogEntryImpl implements LogEntry {
 	@XmlAttribute
 	private final DateTime date;
 
+	@XmlElement(name = "application")
+	private ApplicationContainer applicationContainer;
+
 	@XmlElement
 	private final String message;
 
@@ -28,14 +31,11 @@ public class LogEntryImpl implements LogEntry {
 	@XmlJavaTypeAdapter(value = JaxbAttributesMapAdapter.class)
 	private final Map<String, String> attributes;
 
-	@XmlElement
-	private final Cause cause;
-
-	@XmlElement(name = "application")
-	private ApplicationContainer applicationContainer;
-
 	@XmlElement(name = "group")
 	private GroupContainer groupContainer;
+
+	@XmlElement
+	private final Cause cause;
 
 	/**
 	 * Этот конструктор не предназначен для прямого ипользования. Нужен для корректной работы JAXB.
