@@ -27,7 +27,7 @@ public class SimpleChecksumCalculator implements ChecksumCalculator {
 		String checksum = entry.getApplicationId() + ":" + entry.getSeverity();
 		Cause cause = entry.getCause();
 		if ( cause != null ) {
-			checksum += ":" + cause.getRootCause().getType();
+			checksum += ":" + cause.getRootCause().getType() + ":" + cause.getRootCause().getMessage();
 		} else {
 			checksum += ":" + entry.getMessage();
 		}
@@ -40,7 +40,7 @@ public class SimpleChecksumCalculator implements ChecksumCalculator {
 			return null;
 		}
 		final StringBuilder hex = new StringBuilder(2 * raw.length);
-		for ( final byte b : raw ) {
+		for ( byte b : raw ) {
 			hex.
 				append(HEXES.charAt((b & 0xF0) >> 4)).
 				append(HEXES.charAt((b & 0x0F)));
