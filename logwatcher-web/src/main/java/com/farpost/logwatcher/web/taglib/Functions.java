@@ -1,12 +1,20 @@
-package com.farpost.logwatcher.web.tags;
+package com.farpost.logwatcher.web.taglib;
 
 import com.farpost.logwatcher.AggregatedEntry;
 import com.farpost.timepoint.Date;
 import com.farpost.logwatcher.Cause;
 
+import java.text.DateFormat;
+
 import static java.lang.Math.abs;
 
-public class EntryTag {
+public class Functions {
+
+	public static DateFormat shortFormat = new DateTimeFormat();
+
+	public static String shortFormat(java.util.Date date) {
+		return shortFormat.format(date);
+	}
 
 	public static String formatCause(Cause rootCause) {
 		if ( rootCause == null ) {
@@ -15,22 +23,20 @@ public class EntryTag {
 		StringBuilder prefix = new StringBuilder();
 		StringBuilder stackTrace = new StringBuilder();
 
-		if ( rootCause != null ) {
-			Cause cause = rootCause;
-			while ( cause != null ) {
-				if ( cause != rootCause ) {
-					stackTrace.append("\n\n").append(prefix).append("Caused by ");
-				}
-				String iStack = cause.getStackTrace().replaceAll("\n", "\n" + prefix);
-				stackTrace.append(cause.getType())
-					.append(": ")
-					.append(cause.getMessage())
-					.append("\n")
-					.append(prefix)
-					.append(iStack);
-				cause = cause.getCause();
-				prefix.append("  ");
+		Cause cause = rootCause;
+		while ( cause != null ) {
+			if ( cause != rootCause ) {
+				stackTrace.append("\n\n").append(prefix).append("Caused by ");
 			}
+			String iStack = cause.getStackTrace().replaceAll("\n", "\n" + prefix);
+			stackTrace.append(cause.getType())
+				.append(": ")
+				.append(cause.getMessage())
+				.append("\n")
+				.append(prefix)
+				.append(iStack);
+			cause = cause.getCause();
+			prefix.append("  ");
 		}
 		return stackTrace.toString();
 	}
