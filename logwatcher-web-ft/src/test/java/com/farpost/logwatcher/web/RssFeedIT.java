@@ -8,7 +8,7 @@ import java.io.IOException;
 import static com.farpost.htmlunit.Matchers.xpathContainsText;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class RssFeedIt extends FunctionalTestsBase {
+public class RssFeedIT extends FunctionalTestsBase {
 
 	@Test
 	public void FeedShouldContainsTitle() throws IOException {

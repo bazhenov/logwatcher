@@ -17,8 +17,9 @@
   <h2>Search</h2>
 
   <div class="queryBox">
-		<form action="/search" method="get">
+		<form action="/search" name="searchForm" method="get">
     	<input name="q" value=""/>
+			<input name="submit" type="submit" value=">>" style="display: none"/>
 		</form>
   </div>
 
