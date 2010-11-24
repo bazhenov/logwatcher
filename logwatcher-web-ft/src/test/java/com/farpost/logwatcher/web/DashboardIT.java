@@ -6,7 +6,7 @@ import org.testng.annotations.Test;
 import static com.farpost.htmlunit.Matchers.containsText;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class DahsboardIT extends FunctionalTestsBase {
+public class DashboardIT extends FunctionalTestsBase {
 
 	@Test
 	public void testCallIndexPage() throws Exception {
