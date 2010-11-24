@@ -32,10 +32,7 @@
 	<c:choose>
 		<c:when test="${f:length(entries) > 0}">
 			<c:forEach var="entry" items="${entries}">
-				<jsp:include page="/aggregated-entry">
-					<jsp:param name="entry" value="${entry}"/>
-				</jsp:include>
-				<!-- <lt:aggregated-entry entry="${entry}"/> -->
+				<lt:aggregated-entry entry="${entry}"/>
 			</c:forEach>
 
 			<div id="footer">

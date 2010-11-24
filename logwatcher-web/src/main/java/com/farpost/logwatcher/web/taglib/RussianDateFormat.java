@@ -1,4 +1,4 @@
-package com.farpost.logwatcher.web.tags;
+package com.farpost.logwatcher.web.taglib;
 
 import java.text.DateFormat;
 import java.text.FieldPosition;

@@ -3,19 +3,14 @@ package com.farpost.logwatcher.web;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
-
 import static com.farpost.htmlunit.Matchers.containsText;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class WebAppIt extends FunctionalTestsBase {
-
-	public WebAppIt() throws IOException {
-	}
+public class DahsboardIT extends FunctionalTestsBase {
 
 	@Test
 	public void testCallIndexPage() throws Exception {
-		HtmlPage page = browser.getPage(applicationUrl + "/dashboard");
+		HtmlPage page = goTo("/dashboard");
 		assertThat(page, containsText("frontend"));
 		HtmlPage frontendPage = page.getAnchorByText("frontend").click();
 		assertThat(frontendPage, containsText("frontend"));
