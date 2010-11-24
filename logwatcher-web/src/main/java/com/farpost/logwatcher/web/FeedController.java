@@ -5,7 +5,6 @@ import com.farpost.logwatcher.storage.*;
 import com.farpost.logwatcher.web.vm.FeedViewModel;
 import com.farpost.timepoint.Date;
 import com.farpost.timepoint.DateTime;
-import com.farpost.logwatcher.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -157,19 +156,25 @@ public class FeedController {
 	}
 
 	@RequestMapping("/entries/{checksum}")
-	public String handleEntries(@PathVariable String checksum, ModelMap map, @RequestParam("date") String dateAsString)
+	public String handleEntries(@PathVariable String checksum, ModelMap map,
+															@RequestParam @DateTimeFormat(iso = DATE) java.util.Date date)
 		throws LogStorageException, InvalidCriteriaException, ParseException {
 
-		java.util.Date date = format.get().parse(dateAsString);
+		map.addAttribute("checksum", checksum);
+		map.addAttribute("date", date);
+
 		List<LogEntry> entries = entries().
 			checksum(checksum).
 			date(new Date(date)).
 			find(storage);
-		map.addAttribute("checksum", checksum);
-		map.addAttribute("entries", entries);
-		map.addAttribute("date", date);
-		map.addAttribute("applicationId", entries.get(0).getApplicationId());
-		return "entries";
+
+		if (entries.isEmpty()) {
+			return "entries-empty";
+		} else {
+			map.addAttribute("entries", entries);
+			map.addAttribute("applicationId", entries.get(0).getApplicationId());
+			return "entries";
+		}
 	}
 
 	private boolean contains(List<LogEntryMatcher> matchers, Class<? extends LogEntryMatcher> type) {
