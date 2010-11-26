@@ -1,10 +1,8 @@
-package com.farpost.logwatcher.storage;
+package com.farpost.logwatcher;
 
+import com.farpost.logwatcher.storage.LogStorage;
+import com.farpost.logwatcher.storage.LogStorageException;
 import com.farpost.timepoint.DateTime;
-import com.farpost.logwatcher.Cause;
-import com.farpost.logwatcher.LogEntry;
-import com.farpost.logwatcher.LogEntryImpl;
-import com.farpost.logwatcher.Severity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +17,7 @@ import static com.farpost.timepoint.DateTime.now;
  * LogEntry enrty = LogEntryBuilder.newEntry().
  *   occuredAt(now()).
  *   saveIn(storage);
- *
+ * <p/>
  * // без записи в хранилище
  * LogEntry entry = LogEntryBuilder.newEntry().
  *   occuredAt(now()).
@@ -43,6 +41,7 @@ public class LogEntryBuilder {
 
 	/**
 	 * Устанавливает время когда произошло событие
+	 *
 	 * @param time время возникновения события
 	 */
 	public LogEntryBuilder occured(DateTime time) {
@@ -55,12 +54,35 @@ public class LogEntryBuilder {
 	 *
 	 * @param storage хранилище
 	 * @return новая сконструированая запись
-	 * @throws com.farpost.logwatcher.storage.LogStorageException в случае ошибки во время сохранения хаписи
+	 * @throws LogStorageException в случае ошибки во время сохранения хаписи
 	 * @see LogStorage#writeEntry(LogEntry)
 	 */
 	public LogEntry saveIn(LogStorage storage) throws LogStorageException {
 		LogEntry entry = create();
 		storage.writeEntry(entry);
+		return entry;
+	}
+
+	/**
+	 * Записывает запись в постоянное хранилище.
+	 * <p/>
+	 * Этот метод идентичен методу {@link #saveIn(LogStorage)}, за тем лишь исключением,
+	 * что он сохраняет запись в хранилище указанное количество раз. Очень удобно в целях тестирования.
+	 *
+	 * @param storage хранилище
+	 * @param times	 сколько раз произвести запись
+	 * @return запись
+	 * @throws IllegalArgumentException в случае, если передано не положительное число указывающее количество
+	 *                                  записей производимых в хранилище.
+	 */
+	public LogEntry saveMultipleTimesIn(LogStorage storage, int times) {
+		if (times <= 0) {
+			throw new IllegalArgumentException("Times argument should be positive integer");
+		}
+		LogEntry entry = create();
+		for (int i = 0; i < times; i++) {
+			storage.writeEntry(entry);
+		}
 		return entry;
 	}
 
