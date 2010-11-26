@@ -2,22 +2,18 @@ package com.farpost.logwatcher.storage;
 
 import com.farpost.logwatcher.AggregatedEntry;
 import com.farpost.logwatcher.CountVisitor;
-import com.farpost.logwatcher.storage.InvalidCriteriaException;
-import com.farpost.logwatcher.storage.LogEntryMatcher;
-import com.farpost.logwatcher.storage.LogStorage;
-import com.farpost.logwatcher.storage.LogStorageException;
-import com.farpost.timepoint.Date;
-import com.farpost.timepoint.DateTime;
 import com.farpost.logwatcher.LogEntry;
 import com.farpost.logwatcher.Severity;
+import com.farpost.timepoint.Date;
+import com.farpost.timepoint.DateTime;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.List;
 
+import static com.farpost.logwatcher.LogEntryBuilder.entry;
 import static com.farpost.logwatcher.storage.LogEntries.entries;
 import static com.farpost.timepoint.Date.*;
-import static com.farpost.logwatcher.TestSupport.entry;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;

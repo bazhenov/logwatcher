@@ -1,12 +1,12 @@
 package com.farpost.logwatcher.aggregator;
 
 import com.farpost.logwatcher.AggregatedEntry;
+import com.farpost.logwatcher.LogEntry;
 import com.farpost.logwatcher.marshalling.Jaxb2Marshaller;
 import com.farpost.logwatcher.marshalling.Marshaller;
 import com.farpost.logwatcher.storage.AttributeValueMatcher;
 import com.farpost.logwatcher.storage.LogEntryMatcher;
 import com.farpost.timepoint.DateTime;
-import com.farpost.logwatcher.LogEntry;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static com.farpost.logwatcher.LogEntryBuilder.entry;
 import static com.farpost.timepoint.Date.november;
-import static com.farpost.logwatcher.TestSupport.entry;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -35,7 +35,7 @@ abstract public class AggregatorTestCase {
 		int problemSize = 333;
 		List<String> entries = new ArrayList<String>(problemSize);
 
-		for ( int i = 0; i < problemSize; i++ ) {
+		for (int i = 0; i < problemSize; i++) {
 			LogEntry entry = entry().
 				occured(date).
 				attribute("machine", "aux" + (i % 3) + ".srv.loc").

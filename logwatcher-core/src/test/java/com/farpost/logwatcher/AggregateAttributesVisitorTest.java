@@ -20,11 +20,11 @@ public class AggregateAttributesVisitorTest {
 
 		LogStorage storage = new InMemoryLogStorage();
 
-		TestSupport.entry().attribute("foo", "foo").saveIn(storage);
-		TestSupport.entry().attribute("foo", "foo").saveIn(storage);
-		TestSupport.entry().attribute("foo", "bar").saveIn(storage);
+		LogEntryBuilder.entry().attribute("foo", "foo").saveIn(storage);
+		LogEntryBuilder.entry().attribute("foo", "foo").saveIn(storage);
+		LogEntryBuilder.entry().attribute("foo", "bar").saveIn(storage);
 
-		TestSupport.entry().attribute("bar", "foo").saveIn(storage);
+		LogEntryBuilder.entry().attribute("bar", "foo").saveIn(storage);
 
 		storage.walk(entries().all(), visitor);
 

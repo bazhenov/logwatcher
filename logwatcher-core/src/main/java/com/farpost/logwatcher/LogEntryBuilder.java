@@ -14,12 +14,11 @@ import static com.farpost.timepoint.DateTime.now;
  * <p/>
  * Пример использования:
  * <pre>
- * LogEntry enrty = LogEntryBuilder.newEntry().
+ * LogEntry enrty = entry().
  *   occuredAt(now()).
  *   saveIn(storage);
- * <p/>
  * // без записи в хранилище
- * LogEntry entry = LogEntryBuilder.newEntry().
+ * LogEntry entry = entry().
  *   occuredAt(now()).
  *   create();
  * </pre>
@@ -33,6 +32,16 @@ public class LogEntryBuilder {
 	private String checksum = "2fde43";
 	private String applicationId = "some-application";
 	private Map<String, String> attributes = new HashMap<String, String>();
+
+	/**
+	 * Создает новый экземпляр {@link LogEntryBuilder}, позволяющий создать и записать новую
+	 * запись в хранилище.
+	 *
+	 * @return новый экземпляр {@link LogEntryBuilder}
+	 */
+	public static LogEntryBuilder entry() {
+		return new LogEntryBuilder();
+	}
 
 	public LogEntry create() {
 		return new LogEntryImpl(time, group, message, severity, checksum, applicationId, attributes, null);
