@@ -31,12 +31,11 @@ public class LogEntryBuilder {
 	private String message = "message";
 	private Severity severity = Severity.error;
 	private String checksum = "2fde43";
-	private Cause cause;
 	private String applicationId = "some-application";
 	private Map<String, String> attributes = new HashMap<String, String>();
 
 	public LogEntry create() {
-		return new LogEntryImpl(time, group, message, severity, checksum, applicationId, attributes, cause);
+		return new LogEntryImpl(time, group, message, severity, checksum, applicationId, attributes, null);
 	}
 
 	/**

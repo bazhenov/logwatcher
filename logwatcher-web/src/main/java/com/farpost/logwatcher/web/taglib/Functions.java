@@ -1,8 +1,8 @@
 package com.farpost.logwatcher.web.taglib;
 
 import com.farpost.logwatcher.AggregatedEntry;
-import com.farpost.timepoint.Date;
 import com.farpost.logwatcher.Cause;
+import com.farpost.timepoint.Date;
 
 import java.text.DateFormat;
 
@@ -10,22 +10,27 @@ import static java.lang.Math.abs;
 
 public class Functions {
 
-	public static final DateFormat shortFormat = new DateTimeFormat();
+	public static final ThreadLocal<DateFormat> shortFormat = new ThreadLocal<DateFormat>() {
+		@Override
+		protected DateFormat initialValue() {
+			return new DateTimeFormat();
+		}
+	};
 
 	public static String shortFormat(java.util.Date date) {
-		return shortFormat.format(date);
+		return shortFormat.get().format(date);
 	}
 
 	public static String formatCause(Cause rootCause) {
-		if ( rootCause == null ) {
+		if (rootCause == null) {
 			return "";
 		}
 		StringBuilder prefix = new StringBuilder();
 		StringBuilder stackTrace = new StringBuilder();
 
 		Cause cause = rootCause;
-		while ( cause != null ) {
-			if ( cause != rootCause ) {
+		while (cause != null) {
+			if (cause != rootCause) {
 				stackTrace.append("\n\n").append(prefix).append("Caused by ");
 			}
 			String iStack = cause.getStackTrace().replaceAll("\n", "\n" + prefix);
@@ -42,14 +47,14 @@ public class Functions {
 	}
 
 	public static boolean isNew(AggregatedEntry entry) {
-		return entry.getLastTime().plusMinute(30).isInFuture();		
+		return entry.getLastTime().plusMinute(30).isInFuture();
 	}
 
 	public static Cause rootCause(Cause cause) {
-		if ( cause == null ) {
+		if (cause == null) {
 			return null;
 		}
-		while ( cause.getCause() != null ) {
+		while (cause.getCause() != null) {
 			cause = cause.getCause();
 		}
 		return cause;
@@ -64,7 +69,7 @@ public class Functions {
 			return append != null && append.length() > 0
 				? string + append
 				: string;
-		}else{
+		} else {
 			return string;
 		}
 	}
@@ -80,7 +85,7 @@ public class Functions {
 	}
 
 	public static int thousands(int number) {
-		return number/1000;
+		return number / 1000;
 	}
 
 	public static int magnitude(int number) {
