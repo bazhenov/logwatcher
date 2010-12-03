@@ -30,9 +30,6 @@
 		<c:url value="/js/events.js" var="jsUrl"/>
 		<script type="text/javascript" src="${jsUrl}">/**/</script>
 
-		<c:url value="/feed/rss" var="rssUrl"/>
-		<link rel="alternate" type="application/rss+xml" title="LogWatcher RSS"
-					href="${rssUrl}?severity=${severity}"/>
 		<sitemesh:write property="head"/>
 	</head>
 

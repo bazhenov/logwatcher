@@ -26,6 +26,10 @@
 			var severityLevel = '${severity}';
 			var entrySortOrder = '${sortOrder}';
 		</script>
+
+		<c:url value="/rss/${applicationId}" var="rssUrl"/>
+		<link rel="alternate" type="application/rss+xml" title="LogWatcher RSS"
+					href="${rssUrl}?severity=${severity}"/>
 	</head>
 
 	<body>

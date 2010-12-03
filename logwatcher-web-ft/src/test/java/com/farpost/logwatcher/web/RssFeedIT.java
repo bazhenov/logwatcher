@@ -12,7 +12,7 @@ public class RssFeedIT extends FunctionalTestsBase {
 
 	@Test
 	public void FeedShouldContainsTitle() throws IOException {
-		SgmlPage page = goTo("/feed/rss");
+		SgmlPage page = goTo("/rss/frontend");
 		assertThat(page, xpathContainsText("//title", "LogViewer feed"));
 	}
 }

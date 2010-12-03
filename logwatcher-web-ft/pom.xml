@@ -17,9 +17,9 @@
 		<it.port>8181</it.port>
 		<it.location>http://localhost:${it.port}</it.location>
 
-		<sut.groupId>com.farpost.logwatcher</sut.groupId>
 		<sut.artifactId>logwatcher-web</sut.artifactId>
 		<sut.version>1.3</sut.version>
+		<sut.location>${basedir}/../${sut.artifactId}/target/${sut.artifactId}-${sut.version}.war</sut.location>
 
 		<deploy.hostname>artifacts</deploy.hostname>
 		<deploy.location>/home/tech/logwatcher</deploy.location>
@@ -56,36 +56,6 @@
 		</extensions>
 
 		<plugins>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.1</version>
-				<executions>
-					<execution>
-						<id>copy</id>
-						<phase>pre-integration-test</phase>
-						<goals>
-							<goal>copy</goal>
-						</goals>
-						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>${sut.groupId}</groupId>
-									<artifactId>${sut.artifactId}</artifactId>
-									<version>${sut.version}</version>
-									<type>war</type>
-									<overWrite>true</overWrite>
-									<destFileName>system-under-test.war</destFileName>
-								</artifactItem>
-							</artifactItems>
-							<outputDirectory>${project.build.directory}</outputDirectory>
-							<silent>true</silent>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
@@ -108,7 +78,7 @@
 						</connector>
 					</connectors>
 					<daemon>true</daemon>
-					<webApp>${project.build.directory}/system-under-test.war</webApp>
+					<webApp>${sut.location}</webApp>
 					<!--
 						stopPort определяется как производная от ${it.port} специально. Этот паттерн должен
 						применятся во всех процедурах билда для того чтобы уникальность портов на которых запускаются
@@ -176,7 +146,7 @@
 				<configuration>
 					<serverId>vhost-gateway</serverId>
 					<url>scpexe://${deploy.hostname}</url>
-					<fromFile>${project.build.directory}/system-under-test.war</fromFile>
+					<fromFile>${sut.location}</fromFile>
 					<!--suppress MavenModelInspection -->
 					<toFile>${deploy.location}/${sut.artifactId}-${sut.version}.${buildNumber}.war</toFile>
 				</configuration>
