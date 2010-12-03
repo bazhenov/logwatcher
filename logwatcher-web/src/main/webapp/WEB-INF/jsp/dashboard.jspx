@@ -7,7 +7,7 @@
 
 	<jsp:directive.page contentType="text/html"/>
 
-	<jsp:useBean id="infos" scope="request" type="java.util.Collection"/>
+	<jsp:useBean id="applicationIds" scope="request" type="java.util.Collection"/>
 
 	<html>
 	<head>
@@ -19,20 +19,18 @@
 	<h2>Dashboard</h2>
 
 	<c:choose>
-		<c:when test="${f:length(infos) gt 0}">
-			<c:forEach items="${infos}" var="info">
-				<jsp:include page="/widget/dashboard-widget?applicationId=${info.applicationId}" />
+		<c:when test="${f:length(applicationIds) gt 0}">
+			<c:forEach items="${applicationIds}" var="id">
+				<jsp:include page="/widget/dashboard-widget?applicationId=${id}"/>
 			</c:forEach>
 		</c:when>
 		<c:otherwise>
 			<div id="notificationPanel">
-				<span>&amp;empty;</span><br />
+				<span>&amp;empty;</span><br/>
 				No entries found
 			</div>
 		</c:otherwise>
 	</c:choose>
-
-
 
 	<div style="clear: both;"></div>
 	</body>

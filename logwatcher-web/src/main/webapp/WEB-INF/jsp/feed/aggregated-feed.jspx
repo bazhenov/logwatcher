@@ -7,7 +7,6 @@
 					xmlns:lt="urn:jsptagdir:/WEB-INF/tags">
 
 	<jsp:directive.page contentType="text/html"/>
-	<jsp:useBean id="applicationId" scope="request" type="java.lang.String"/>
 	<jsp:useBean id="entries" scope="request" type="java.util.List"/>
 	<jsp:useBean id="times" scope="request" type="java.lang.Integer"/>
 	<jsp:useBean id="date" scope="request" type="java.util.Date"/>
@@ -16,7 +15,7 @@
 
 	<html>
 	<head>
-		<title>LogWatcher: <c:out value="${applicationId}"/> feed</title>
+		<title>LogWatcher: <c:out value="${vm.applicationId}"/> feed</title>
 		<c:url value='/css/aggregated-feed.css' var="cssUrl"/>
 		<link rel="stylesheet" href="${cssUrl}"/>
 		<c:url value='/css/popup.css' var="cssUrl"/>
@@ -27,14 +26,14 @@
 			var entrySortOrder = '${sortOrder}';
 		</script>
 
-		<c:url value="/rss/${applicationId}" var="rssUrl"/>
+		<c:url value="/rss/${vm.applicationId}" var="rssUrl"/>
 		<link rel="alternate" type="application/rss+xml" title="LogWatcher RSS"
 					href="${rssUrl}?severity=${severity}"/>
 	</head>
 
 	<body>
 	<h2>
-		<span id="applicationId"><c:out value="${applicationId}"/></span>
+		<span id="applicationId"><c:out value="${vm.applicationId}"/></span>
 		<span class="additionalInfo">
 			on <span id="date"><fmt:formatDate pattern="dd MMMM, yyyy" value="${date}"/></span>
 		</span>
@@ -63,7 +62,7 @@
 	</lt:popup>
 
 
-	<c:url value="/feed/${applicationId}" var="baseUrl"/>
+	<c:url value="/feed/${vm.applicationId}" var="baseUrl"/>
 	<fmt:formatDate pattern="yyyy" var="year" value="${date}"/>
 	<fmt:formatDate pattern="M" var="month" value="${date}"/>
 	<script type="text/javascript">
@@ -72,12 +71,12 @@
 		var urlCallback = function(date) {
 			return baseUrl + '?date=' + date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
 		};
-		$("a.prevMonthLink").live("click", function(e) {
+		$("a.prevMonthLink").live("click", function() {
 			baseDate.setMonth(baseDate.getMonth() - 1);
 			var newContent = buildCal(baseDate, urlCallback);
 			$("#dateSelector .innerBlock").html(newContent);
 		});
-		$("a.nextMonthLink").live("click", function(e) {
+		$("a.nextMonthLink").live("click", function() {
 			baseDate.setMonth(baseDate.getMonth() + 1);
 			var newContent = buildCal(baseDate, urlCallback);
 			$("#dateSelector .innerBlock").html(newContent);
@@ -93,7 +92,7 @@
 		<c:when test="${f:length(entries) > 0}">
 			<div class="entries">
 				<c:forEach var="entry" items="${entries}">
-					<lt:aggregated-entry entry="${entry}" currentApplicationId="${applicationId}"/>
+					<lt:aggregated-entry entry="${entry}" currentApplicationId="${vm.applicationId}"/>
 				</c:forEach>
 			</div>
 

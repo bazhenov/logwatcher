@@ -17,10 +17,11 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.farpost.logwatcher.storage.LogEntries.entries;
 import static com.farpost.timepoint.Date.today;
@@ -30,12 +31,6 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 @Controller
 public class FeedController {
 
-	private final ThreadLocal<DateFormat> format = new ThreadLocal<DateFormat>() {
-		@Override
-		protected DateFormat initialValue() {
-			return new SimpleDateFormat("yyyy-MM-dd");
-		}
-	};
 	private LogStorage storage;
 	private final QueryTranslator translator = new AnnotationDrivenQueryTranslator(
 		new TranslationRulesImpl());
@@ -106,7 +101,7 @@ public class FeedController {
 		Severity severity = getSeverity(request);
 		map.addAttribute("severity", severity.toString());
 
-		List<AggregatedEntry> entries = storage.getAggregatedEntries(new Date(date), severity);
+		List<AggregatedEntry> entries = storage.getAggregatedEntries(applicationId, new Date(date), severity);
 
 		int times = sumCount(entries);
 		String sortOrder = getSortOrder(request);
@@ -116,9 +111,7 @@ public class FeedController {
 		sort(entries, comparator);
 		map.addAttribute("sortOrder", sortOrder);
 
-		map.addAttribute("applicationId", applicationId);
-
-		map.addAttribute("entries", filter(entries, applicationId));
+		map.addAttribute("entries", entries);
 		map.addAttribute("times", times);
 		map.addAttribute("vm", new FeedViewModel(request, storage, date, applicationId));
 
@@ -131,16 +124,6 @@ public class FeedController {
 			times += e.getCount();
 		}
 		return times;
-	}
-
-	public static List<AggregatedEntry> filter(List<AggregatedEntry> entries, String applicationId) {
-		List<AggregatedEntry> result = new ArrayList<AggregatedEntry>();
-		for (AggregatedEntry entry : entries) {
-			if (entry.getApplicationId().equals(applicationId)) {
-				result.add(entry);
-			}
-		}
-		return result;
 	}
 
 	private String buildQuery(Map<String, String> queryTerms) {

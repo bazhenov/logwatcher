@@ -8,10 +8,12 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.List;
+import java.util.Set;
 
 import static com.farpost.logwatcher.LogEntryBuilder.entry;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 
 public class DashboardControllerTest {
@@ -35,15 +37,14 @@ public class DashboardControllerTest {
 			saveMultipleTimesIn(storage, 4);
 		controller.doDashboard(map);
 
-		assertThat(map.get("infos"), instanceOf(List.class));
-		List<ApplicationInfo> info = (List<ApplicationInfo>) map.get("infos");
+		assertThat(map.get("applicationIds"), instanceOf(Set.class));
+		Set<String> info = (Set<String>) map.get("applicationIds");
 
 		// Проверяем что показывается информация об одном приложении
 		assertThat(info.size(), equalTo(1));
 
 		// это приложение должно называтся "frontend"
-		ApplicationInfo frontend = info.get(0);
-		assertThat(frontend.getApplicationId(), equalTo("frontend"));
+		assertThat(info, hasItem("frontend"));
 	}
 
 	@Test

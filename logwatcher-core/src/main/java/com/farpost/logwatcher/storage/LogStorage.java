@@ -1,13 +1,14 @@
 package com.farpost.logwatcher.storage;
 
 import com.farpost.logwatcher.AggregatedEntry;
-import com.farpost.logwatcher.Visitor;
-import com.farpost.timepoint.Date;
 import com.farpost.logwatcher.LogEntry;
 import com.farpost.logwatcher.Severity;
+import com.farpost.logwatcher.Visitor;
+import com.farpost.timepoint.Date;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Имплементации этого интерфейса сохраняют обьекты типа LogEntry в постоянном хранилище.
@@ -107,16 +108,12 @@ public interface LogStorage {
 		throws LogStorageException, InvalidCriteriaException;
 
 	/**
-	 * Возвращает список аггрегированных записей за указанную дату с указанным severity.
+	 * Возвращает множество applicationId для которых в хранилище существуют записи за указанную дату
 	 *
-	 * @param date		 дата
-	 * @param severity уровень
-	 * @return список аггрегированных записей
-	 * @throws LogStorageException в случае возникновения внутренних ошибок хранилища
-	 * @throws InvalidCriteriaException в случае задания клиентом некорректных критериев отбора
+	 * @param date дата выборки
+	 * @return множество идентификаторов приложений
 	 */
-	List<AggregatedEntry> getAggregatedEntries(Date date, Severity severity)
-		throws LogStorageException, InvalidCriteriaException;
+	Set<String> getUniquieApplicationIds(Date date);
 
 	/**
 	 * Возвращает список аггрегированных записей за указанную дату с указанным severity произошедших
@@ -126,7 +123,7 @@ public interface LogStorage {
 	 * @param date					дата
 	 * @param severity			уровень
 	 * @return список аггрегированных записей
-	 * @throws LogStorageException в случае возникновения внутренних ошибок хранилища
+	 * @throws LogStorageException			в случае возникновения внутренних ошибок хранилища
 	 * @throws InvalidCriteriaException в случае задания клиентом некорректных критериев отбора
 	 */
 	List<AggregatedEntry> getAggregatedEntries(String applicationId, Date date, Severity severity)

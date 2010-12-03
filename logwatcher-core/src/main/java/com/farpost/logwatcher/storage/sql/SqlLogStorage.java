@@ -1,8 +1,6 @@
 package com.farpost.logwatcher.storage.sql;
 
-import com.farpost.logwatcher.AggregatedEntry;
-import com.farpost.logwatcher.ChecksumCalculator;
-import com.farpost.logwatcher.Visitor;
+import com.farpost.logwatcher.*;
 import com.farpost.logwatcher.aggregator.Aggregator;
 import com.farpost.logwatcher.marshalling.Marshaller;
 import com.farpost.logwatcher.storage.InvalidCriteriaException;
@@ -11,26 +9,23 @@ import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
 import com.farpost.timepoint.Date;
 import com.farpost.timepoint.DateTime;
-import com.farpost.logwatcher.LogEntry;
-import com.farpost.logwatcher.LogEntryImpl;
-import com.farpost.logwatcher.Severity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import static com.farpost.logwatcher.storage.MatcherUtils.isMatching;
 import static java.sql.ResultSet.CONCUR_READ_ONLY;
 import static java.sql.ResultSet.TYPE_FORWARD_ONLY;
+
+import com.farpost.timepoint.Date;
 
 public class SqlLogStorage implements LogStorage {
 
@@ -59,7 +54,7 @@ public class SqlLogStorage implements LogStorage {
 
 	public synchronized void writeEntry(LogEntry entry) throws LogStorageException {
 		try {
-			LogEntryImpl impl = (LogEntryImpl)entry;
+			LogEntryImpl impl = (LogEntryImpl) entry;
 			Timestamp entryTimestamp = timestamp(impl.getDate());
 			java.sql.Date entryDate = date(impl.getDate());
 			String checksum = checksumCalculator.calculateChecksum(impl);
@@ -187,10 +182,23 @@ public class SqlLogStorage implements LogStorage {
 		}
 	}
 
-	public List<AggregatedEntry> getAggregatedEntries(Date date, Severity severity) {
-		return jdbc.query(
-			"SELECT checksum, application_id, last_time, count, severity, content FROM aggregated_entry WHERE date = ? AND severity >= ?",
-			aggregateEntryMapper, date(date), severity.getCode());
+	@Override
+	public Set<String> getUniquieApplicationIds(Date date) {
+		List<String> ids = jdbc.query("SELECT application_id FROM entry WHERE date = ?", takeFirst(), date(date));
+		Set<String> applicationIds = new HashSet<String>();
+		for (String id : ids) {
+			applicationIds.add(id);
+		}
+		return applicationIds;
+	}
+
+	private RowMapper<String> takeFirst() {
+		return new RowMapper<String>() {
+			@Override
+			public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return rs.getString(1);
+			}
+		};
 	}
 
 	public List<AggregatedEntry> getAggregatedEntries(String applicationId, Date date, Severity severity) {
@@ -257,6 +265,7 @@ public class SqlLogStorage implements LogStorage {
 	 *
 	 * @param criterias критерии отбора
 	 * @return список критериев, которые не могут быть обработаны {@link SqlMatcherMapper}'ом
+	 * @throws MatcherMapperException если не все критерии могут быть обработаны хранилищем
 	 */
 	private CriteriaStatement fillWhereClause(Collection<LogEntryMatcher> criterias)
 		throws MatcherMapperException {

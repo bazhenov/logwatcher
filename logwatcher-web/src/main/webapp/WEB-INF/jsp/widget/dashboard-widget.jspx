@@ -12,15 +12,23 @@
 			<a href="/feed/${info.applicationId}"><c:out value="${info.applicationId}"/></a>
 		</div>
 		<ul>
-			<c:forEach items="${info.entries}" var="entry" varStatus="status">
-				<c:if test="${status.count lt 5}">
-					<c:url var="url" value="/feed/${entry.applicationId}">
-						<c:param name="severity" value="${entry.severity}"/>
-					</c:url>
+			<c:choose>
+				<c:when test="${!empty(info.entries)}">
+					<c:forEach items="${info.entries}" var="entry" varStatus="status">
+						<c:if test="${status.count lt 5}">
+							<c:url var="url" value="/feed/${entry.applicationId}">
+								<c:param name="severity" value="${entry.severity}"/>
+							</c:url>
+							<li><a href="${url}\#${entry.checksum}"><c:out value="${l:trim(entry.message, 33, '...')}"/></a></li>
+						</c:if>
+					</c:forEach>
+				</c:when>
 
-					<li><a href="${url}\#${entry.checksum}"><c:out value="${l:trim(entry.message, 33, '...')}"/></a></li>
-				</c:if>
-			</c:forEach>
+				<c:otherwise>
+					<li>No errors for today</li>
+				</c:otherwise>
+			</c:choose>
+
 		</ul>
 	</div>
 </jsp:root>

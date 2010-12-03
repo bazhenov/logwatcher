@@ -1,11 +1,11 @@
 package com.farpost.logwatcher.web.vm;
 
-import com.farpost.logwatcher.AggregatedEntry;
 import com.farpost.logwatcher.storage.LogStorage;
-import com.farpost.logwatcher.Severity;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 public class FeedViewModel {
 
@@ -27,45 +27,18 @@ public class FeedViewModel {
 	 * @return множество всех уникальных идентификаторов приложений
 	 */
 	public Set<Application> getApplications() {
-		List<AggregatedEntry> entries = storage.getAggregatedEntries(new com.farpost.timepoint.Date(date), Severity.trace);
-		return groupByApplication(entries, request);
-	}
-
-	/**
-	 * Группирует записи по applicationId и возвращает множество всех уникальных
-	 * идентификаторов приложений, которые встречаются в записях.
-	 *
-	 * @param entries записи логов
-	 * @param request HTTP-запрос
-	 * @return множество всех уникальных идентификаторов приложений
-	 */
-	private Set<Application> groupByApplication(List<AggregatedEntry> entries, HttpServletRequest request) {
+		Set<String> applicationIds = storage.getUniquieApplicationIds(new com.farpost.timepoint.Date(date));
 		Set<Application> set = new HashSet<Application>();
-		for (AggregatedEntry entry : entries) {
-			String id = entry.getApplicationId();
-			if (!id.equalsIgnoreCase(applicationId)) {
-				String dateAsString = new com.farpost.timepoint.Date(date).toString();
-				String url = request.getContextPath() + "/feed/" + id + "?date=" + dateAsString;
-				set.add(new Application(id, url));
-			}
+		for (String applicationId : applicationIds) {
+			String dateAsString = new com.farpost.timepoint.Date(date).toString();
+			String url = request.getContextPath() + "/feed/" + applicationId + "?date=" + dateAsString;
+			set.add(new Application(applicationId, url));
 		}
 		return set;
-
 	}
 
-	/**
-	 * Группирует записи по applicationId и возвращает множество всех уникальных
-	 * идентификаторов приложений, которые встречаются в записях.
-	 *
-	 * @param entries записи логов
-	 * @return множество всех уникальных идентификаторов приложений
-	 */
-	public static Set<String> groupByApplication(List<AggregatedEntry> entries) {
-		Set<String> set = new TreeSet<String>();
-		for (AggregatedEntry entry : entries) {
-			set.add(entry.getApplicationId());
-		}
-		return set;
+	public String getApplicationId() {
+		return applicationId;
 	}
 
 	public static class Application {

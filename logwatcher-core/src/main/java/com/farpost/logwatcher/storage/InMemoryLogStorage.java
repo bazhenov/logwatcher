@@ -2,15 +2,14 @@ package com.farpost.logwatcher.storage;
 
 import com.farpost.logwatcher.*;
 import com.farpost.timepoint.Date;
-import com.farpost.logwatcher.LogEntry;
-import com.farpost.logwatcher.LogEntryImpl;
-import com.farpost.logwatcher.Severity;
 
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import static com.farpost.logwatcher.storage.LogEntries.entries;
 
 /**
  * Реализация {@link LogStorage}, которая хранит все записи в памяти. Потокобезопасна.
@@ -56,9 +55,7 @@ public class InMemoryLogStorage implements LogStorage {
 		});
 	}
 
-	public List<LogEntry> findEntries(final Collection<LogEntryMatcher> criterias)
-		throws LogStorageException, InvalidCriteriaException {
-
+	public List<LogEntry> findEntries(final Collection<LogEntryMatcher> criterias) {
 		return withLock(readLock, new Callable<List<LogEntry>>() {
 
 			public List<LogEntry> call() throws Exception {
@@ -73,9 +70,7 @@ public class InMemoryLogStorage implements LogStorage {
 		});
 	}
 
-	public List<AggregatedEntry> findAggregatedEntries(final Collection<LogEntryMatcher> criterias)
-		throws LogStorageException, InvalidCriteriaException {
-
+	public List<AggregatedEntry> findAggregatedEntries(final Collection<LogEntryMatcher> criterias) {
 		return withLock(readLock, new Callable<List<AggregatedEntry>>() {
 
 			public List<AggregatedEntry> call() throws Exception {
@@ -95,28 +90,25 @@ public class InMemoryLogStorage implements LogStorage {
 		});
 	}
 
-	public List<AggregatedEntry> getAggregatedEntries(Date date, Severity severity)
-		throws LogStorageException, InvalidCriteriaException {
-
-		return LogEntries.entries().
-			date(date).
-			severity(severity).
-			findAggregated(this);
+	@Override
+	public Set<String> getUniquieApplicationIds(Date date) {
+		List<LogEntry> entries = findEntries(entries().date(date).criterias());
+		HashSet<String> applicationIds = new HashSet<String>();
+		for (LogEntry entry : entries) {
+			applicationIds.add(entry.getApplicationId());
+		}
+		return applicationIds;
 	}
 
-	public List<AggregatedEntry> getAggregatedEntries(String applicationId, Date date, Severity severity)
-		throws LogStorageException, InvalidCriteriaException {
-
-		return LogEntries.entries().
+	public List<AggregatedEntry> getAggregatedEntries(String applicationId, Date date, Severity severity) {
+		return entries().
 			applicationId(applicationId).
 			date(date).
 			severity(severity).
 			findAggregated(this);
 	}
 
-	public void walk(final Collection<LogEntryMatcher> criterias, final Visitor<LogEntry> visitor)
-		throws LogStorageException, InvalidCriteriaException {
-
+	public void walk(final Collection<LogEntryMatcher> criterias, final Visitor<LogEntry> visitor) {
 		withLock(readLock, new Callable<Void>() {
 
 			public Void call() throws Exception {
@@ -130,9 +122,7 @@ public class InMemoryLogStorage implements LogStorage {
 		});
 	}
 
-	public int countEntries(Collection<LogEntryMatcher> criterias)
-		throws LogStorageException, InvalidCriteriaException {
-
+	public int countEntries(Collection<LogEntryMatcher> criterias) {
 		return findAggregatedEntries(criterias).size();
 	}
 

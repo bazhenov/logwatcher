@@ -10,6 +10,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.List;
+import java.util.Set;
 
 import static com.farpost.logwatcher.LogEntryBuilder.entry;
 import static com.farpost.logwatcher.storage.LogEntries.entries;
@@ -23,6 +24,9 @@ abstract public class LogStorageTestCase {
 
 	private LogStorage storage;
 
+	private final Date today = today();
+	private final Date yesterday = today().minusDay(1);
+
 	@BeforeMethod
 	public void setUp() throws Exception {
 		storage = createStorage();
@@ -30,8 +34,6 @@ abstract public class LogStorageTestCase {
 
 	@Test
 	public void storageCanSaveEntry() throws Exception {
-		Date today = today();
-
 		DateTime date = today.at("11:35");
 		LogEntry entry = entry().
 			occured(date).
@@ -195,6 +197,27 @@ abstract public class LogStorageTestCase {
 	}
 
 	@Test
+	public void storageCanReturnUniqueApplicationIdSet() {
+		entry().
+			applicationId("foo").
+			occured(today.at("12:00")).
+			saveIn(storage);
+		entry().
+			applicationId("bar").
+			occured(today.at("12:00")).
+			saveIn(storage);
+		entry().
+			applicationId("baz").
+			occured(yesterday.at("13:32")).
+			saveIn(storage);
+
+		Set<String> ids = storage.getUniquieApplicationIds(today());
+		assertThat(ids.size(), equalTo(2));
+		assertThat(ids, hasItem("foo"));
+		assertThat(ids, hasItem("bar"));
+	}
+
+	@Test
 	public void storageCanCountEntries() throws Exception {
 		LogEntry entry = entry().create();
 
@@ -205,10 +228,7 @@ abstract public class LogStorageTestCase {
 	}
 
 	@Test
-	public void storageCanCountEntriesByCriteria()
-		throws LogStorageException, InvalidCriteriaException {
-		Date yesterday = yesterday();
-
+	public void storageCanCountEntriesByCriteria() {
 		entry().
 			occured(yesterday.at("12:23")).
 			message("foo").
@@ -260,20 +280,20 @@ abstract public class LogStorageTestCase {
 	public void storageCanRemoveEntriesByCriteria()
 		throws LogStorageException, InvalidCriteriaException {
 
-		Date today = today();
-		Date yesterday = yesterday();
-
 		entry().
+			applicationId("application").
 			occured(today.at("12:35")).
 			message("foo").
 			saveIn(storage);
 
 		entry().
+			applicationId("application").
 			occured(today.at("12:35")).
 			message("bar").
 			saveIn(storage);
 
 		LogEntry entry = entry().
+			applicationId("application").
 			message("foo").
 			occured(yesterday.at("11:36")).
 			saveIn(storage);
@@ -281,7 +301,7 @@ abstract public class LogStorageTestCase {
 		storage.removeEntries(entry.getChecksum());
 
 		assertThat(entries().count(storage), equalTo(1));
-		for (AggregatedEntry en : storage.getAggregatedEntries(today, Severity.info)) {
+		for (AggregatedEntry en : storage.getAggregatedEntries("application", today, Severity.info)) {
 			if (en.getChecksum().equals("FF")) {
 				fail("Collection must not contains entries with checksum '" + entry.getChecksum() + "'");
 			}
@@ -290,7 +310,7 @@ abstract public class LogStorageTestCase {
 
 	@Test
 	public void storageCanRemoveOldEntries() throws LogStorageException, InvalidCriteriaException {
-		LogEntry yesterdayEntry = entry().
+		entry().
 			applicationId("foo").
 			occured(yesterday().at("15:32")).
 			saveIn(storage);
