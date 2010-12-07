@@ -39,18 +39,20 @@ public class InMemoryLogStorage implements LogStorage {
 		throw new UnsupportedOperationException();
 	}
 
-	public void removeOldEntries(final Date date) throws LogStorageException {
-		withLock(writeLock, new Callable<Void>() {
+	public int removeOldEntries(final Date date) throws LogStorageException {
+		return withLock(writeLock, new Callable<Integer>() {
 
-			public Void call() throws Exception {
+			public Integer call() throws Exception {
 				Iterator<LogEntry> iterator = entries.iterator();
+				int removed = 0;
 				while (iterator.hasNext()) {
 					LogEntry entry = iterator.next();
 					if (entry.getDate().getDate().lessThan(date)) {
 						iterator.remove();
+						removed++;
 					}
 				}
-				return null;
+				return removed;
 			}
 		});
 	}
@@ -126,7 +128,7 @@ public class InMemoryLogStorage implements LogStorage {
 		return findAggregatedEntries(criterias).size();
 	}
 
-	public void removeEntries(final String checksum) throws LogStorageException {
+	public void removeEntriesWithChecksum(final String checksum) throws LogStorageException {
 		withLock(writeLock, new Callable<Void>() {
 
 			public Void call() throws Exception {

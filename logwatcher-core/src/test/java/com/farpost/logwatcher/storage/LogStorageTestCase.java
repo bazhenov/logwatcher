@@ -298,7 +298,7 @@ abstract public class LogStorageTestCase {
 			occured(yesterday.at("11:36")).
 			saveIn(storage);
 
-		storage.removeEntries(entry.getChecksum());
+		storage.removeEntriesWithChecksum(entry.getChecksum());
 
 		assertThat(entries().count(storage), equalTo(1));
 		for (AggregatedEntry en : storage.getAggregatedEntries("application", today, Severity.info)) {
@@ -320,7 +320,9 @@ abstract public class LogStorageTestCase {
 			occured(today().at("16:00")).
 			saveIn(storage);
 
-		storage.removeOldEntries(today());
+		int removedEntriesCount = storage.removeOldEntries(today());
+		assertThat(removedEntriesCount, equalTo(1));
+
 		List<LogEntryMatcher> criteria = entries().
 			applicationId("foo").
 			criterias();

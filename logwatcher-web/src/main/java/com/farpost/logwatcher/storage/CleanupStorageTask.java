@@ -32,10 +32,10 @@ public class CleanupStorageTask implements Runnable {
 	public void run() {
 		try {
 			Date date = today().minusDay(daysToKeep);
-			log.info("Removing from storage entries older than: " + date);
-			storage.removeOldEntries(date);
+			int removed = storage.removeOldEntries(date);
+			log.info("Removed " + removed + " entries from storage older than: " + date);
 		} catch (LogStorageException e) {
-			log.error("Error while removing old entries from storage", e);
+			log.warn("Error while removing old entries from storage", e);
 		}
 	}
 }
