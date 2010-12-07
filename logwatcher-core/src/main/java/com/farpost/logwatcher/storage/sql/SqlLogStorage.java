@@ -184,7 +184,10 @@ public class SqlLogStorage implements LogStorage {
 
 	@Override
 	public Set<String> getUniquieApplicationIds(Date date) {
-		List<String> ids = jdbc.query("SELECT application_id FROM entry WHERE date = ?", takeFirst(), date(date));
+		if (date == null) {
+			throw new NullPointerException("Date should not be null");
+		}
+		List<String> ids = jdbc.query("SELECT application_id FROM aggregated_entry WHERE date = ?", takeFirst(), date(date));
 		Set<String> applicationIds = new HashSet<String>();
 		for (String id : ids) {
 			applicationIds.add(id);
