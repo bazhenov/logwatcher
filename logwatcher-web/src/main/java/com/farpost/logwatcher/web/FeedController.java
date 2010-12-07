@@ -53,7 +53,7 @@ public class FeedController {
 	@RequestMapping("/entry/remove")
 	@ResponseBody
 	public String removeEntry(@RequestParam("checksum") String checksum) throws LogStorageException {
-		storage.removeEntries(checksum);
+		storage.removeEntriesWithChecksum(checksum);
 		return "Ok";
 	}
 

@@ -36,7 +36,7 @@ public interface LogStorage {
 	 * @param date дата начиная с которой записи будут оставлены
 	 * @throws LogStorageException в случае возникновения внутренних ошибок хранилища
 	 */
-	void removeOldEntries(Date date) throws LogStorageException;
+	int removeOldEntries(Date date) throws LogStorageException;
 
 	/**
 	 * Подсчитывает колличество записей в хранилище с заданными условиями.
@@ -56,7 +56,7 @@ public interface LogStorage {
 	 * @param checksum контрольная сумма
 	 * @throws LogStorageException в случае внутренней ошибки
 	 */
-	void removeEntries(String checksum) throws LogStorageException;
+	void removeEntriesWithChecksum(String checksum) throws LogStorageException;
 
 	/**
 	 * Создает синоним для контрольной суммы. Все записи с первой переданной контрольной суммой будут

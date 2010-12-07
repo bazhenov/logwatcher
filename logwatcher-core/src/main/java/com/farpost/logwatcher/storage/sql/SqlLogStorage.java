@@ -85,9 +85,9 @@ public class SqlLogStorage implements LogStorage {
 	}
 
 	@Override
-	public void removeOldEntries(Date date) throws LogStorageException {
+	public int removeOldEntries(Date date) throws LogStorageException {
 		try {
-			jdbc.update("DELETE FROM entry WHERE date < ?", date(date));
+			return jdbc.update("DELETE FROM entry WHERE date < ?", date(date));
 		} catch (DataAccessException e) {
 			throw new LogStorageException(e);
 		}
@@ -250,7 +250,7 @@ public class SqlLogStorage implements LogStorage {
 		}
 	}
 
-	public void removeEntries(String checksum) throws LogStorageException {
+	public void removeEntriesWithChecksum(String checksum) throws LogStorageException {
 		try {
 			jdbc.update("DELETE FROM entry WHERE checksum = ?", checksum);
 			jdbc.update("DELETE FROM aggregated_entry WHERE checksum = ?", checksum);
