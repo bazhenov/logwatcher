@@ -4,13 +4,13 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
+import com.farpost.logwatcher.LogEntry;
 import com.farpost.logwatcher.QueueAppendListener;
+import com.farpost.logwatcher.Severity;
 import com.farpost.logwatcher.marshalling.Jaxb2Marshaller;
 import com.farpost.logwatcher.marshalling.Marshaller;
 import com.farpost.logwatcher.transport.TransportException;
 import com.farpost.logwatcher.transport.UdpTransport;
-import com.farpost.logwatcher.LogEntry;
-import com.farpost.logwatcher.Severity;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -61,16 +61,37 @@ public class LogWatcherAppenderTest {
 		Throwable cause = new RuntimeException("This exception is generated intentionally");
 		String message = "Сообщение";
 
-		getLogger(LogWatcherAppender.class).debug(message, cause);
+		root.debug(message, cause);
 
-		String lastMessage = messages.poll(1, TimeUnit.SECONDS);
-		LogEntry entry = marshaller.unmarshall(lastMessage);
+		LogEntry entry = getLastMessage();
 
 		assertThat(entry.getMessage(), equalTo(message));
 		assertThat(entry.getSeverity(), equalTo(Severity.debug));
 		assertThat(entry.getApplicationId(), equalTo(applicationId));
 		assertThat(entry.getCause().getMessage(), equalTo("This exception is generated intentionally"));
 		assertThat(entry.getCause().getType(), equalTo(RuntimeException.class.getSimpleName()));
+	}
+
+	@Test
+	public void appenderShouldBeAbleToSendMessagesWithoutException() throws InterruptedException {
+		String message = "Debug message";
+		root.debug(message);
+
+		LogEntry entry = getLastMessage();
+
+		assertThat(entry.getMessage(), equalTo(message));
+	}
+
+	/**
+	 * Возвращает последнее сообщение принятое от logback UDP appender'а. Если сообщение еще не принято, то
+	 * данный метод будет ждать получения сообщения в течении одной секунды.
+	 *
+	 * @return последнее принятое сообщение
+	 * @throws InterruptedException если истек timeout ожидания
+	 */
+	private LogEntry getLastMessage() throws InterruptedException {
+		String lastMessage = messages.poll(1, TimeUnit.SECONDS);
+		return marshaller.unmarshall(lastMessage);
 	}
 
 	private static Appender<ILoggingEvent> createAppender(String address, String applicationId) throws SocketException {

@@ -4,13 +4,13 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.ThrowableProxy;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
-import com.farpost.logwatcher.marshalling.Jaxb2Marshaller;
-import com.farpost.logwatcher.marshalling.Marshaller;
-import com.farpost.timepoint.DateTime;
 import com.farpost.logwatcher.Cause;
 import com.farpost.logwatcher.LogEntry;
 import com.farpost.logwatcher.LogEntryImpl;
 import com.farpost.logwatcher.Severity;
+import com.farpost.logwatcher.marshalling.Jaxb2Marshaller;
+import com.farpost.logwatcher.marshalling.Marshaller;
+import com.farpost.timepoint.DateTime;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -40,7 +40,9 @@ public class LogWatcherAppender extends UnsynchronizedAppenderBase<ILoggingEvent
 			DateTime time = new DateTime(event.getTimeStamp());
 			Severity severity = severity(event.getLevel());
 			ThrowableProxy throwableProxy = (ThrowableProxy) event.getThrowableProxy();
-			Cause cause = constructCause(throwableProxy.getThrowable());
+			Cause cause = throwableProxy != null
+				? constructCause(throwableProxy.getThrowable())
+				: null;
 
 			LogEntry entry = new LogEntryImpl(time, event.getLoggerName(), event.getMessage(), severity, null, applicationId,
 				new HashMap<String, String>(), cause);
