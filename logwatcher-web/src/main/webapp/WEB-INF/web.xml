@@ -34,7 +34,7 @@
 		<servlet-class>org.mortbay.jetty.servlet.DefaultServlet</servlet-class>
 		<init-param>
 			<param-name>cacheControl</param-name>
-			<param-value>max-age=86400,public</param-value>
+			<param-value>public, cache, store, s-maxage=86400, max-age=86400</param-value>
 		</init-param>
 	</servlet>
 
