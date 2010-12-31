@@ -227,10 +227,6 @@ public class SqlLogStorage implements LogStorage {
 		}
 	}
 
-	public void createChecksumAlias(String checksum, String alias) {
-		jdbc.update("UPDATE entry SET checksum = ? WHERE checksum = ?", alias, checksum);
-	}
-
 	public int countEntries(Collection<LogEntryMatcher> criterias)
 		throws LogStorageException, InvalidCriteriaException {
 

@@ -35,10 +35,6 @@ public class InMemoryLogStorage implements LogStorage {
 		});
 	}
 
-	public void createChecksumAlias(String checksum, String alias) {
-		throw new UnsupportedOperationException();
-	}
-
 	public int removeOldEntries(final Date date) throws LogStorageException {
 		return withLock(writeLock, new Callable<Integer>() {
 

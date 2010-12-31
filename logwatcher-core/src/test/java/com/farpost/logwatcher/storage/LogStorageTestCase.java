@@ -163,24 +163,6 @@ abstract public class LogStorageTestCase {
 		assertThat(count, equalTo(0));
 	}
 
-	@Test(enabled = false)
-	public void storageCanMaintainChecksumAliases()
-		throws LogStorageException, InvalidCriteriaException {
-
-		entry().
-			saveIn(storage);
-
-		entry().
-			saveIn(storage);
-
-		storage.createChecksumAlias("foo", "bar");
-
-		int count = entries().
-			checksum("bar").
-			count(storage);
-		assertThat(count, equalTo(1));
-	}
-
 	@Test
 	public void storageShouldNotAggregateEntriesWithNonEqualsChecksum() throws Exception {
 		entry().

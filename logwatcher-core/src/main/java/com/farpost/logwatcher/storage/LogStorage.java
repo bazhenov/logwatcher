@@ -34,6 +34,7 @@ public interface LogStorage {
 	 * записей
 	 *
 	 * @param date дата начиная с которой записи будут оставлены
+	 * @return возвращает количество удаленных записей
 	 * @throws LogStorageException в случае возникновения внутренних ошибок хранилища
 	 */
 	int removeOldEntries(Date date) throws LogStorageException;
@@ -57,18 +58,6 @@ public interface LogStorage {
 	 * @throws LogStorageException в случае внутренней ошибки
 	 */
 	void removeEntriesWithChecksum(String checksum) throws LogStorageException;
-
-	/**
-	 * Создает синоним для контрольной суммы. Все записи с первой переданной контрольной суммой будут
-	 * превращены в записи со второй контрольной суммой. Так же имплементация обязана предоставлять
-	 * гарантию сохранения этого маппинга в будущем. Другими словами, если позже приходят записи с изначальной
-	 * контрольной суммой, им автоматически должен назначатся alias контрольной суммы.
-	 *
-	 * @param checksum контролная сумма, которую надо смапить
-	 * @param alias		контрольная сумма - синоним
-	 * @throws LogStorageException в случае возникновения внутренних ошибок хранилища
-	 */
-	void createChecksumAlias(String checksum, String alias) throws LogStorageException;
 
 	/**
 	 * Возвращает список записей удовлетворяющих заданным критериям.
