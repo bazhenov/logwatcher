@@ -1,6 +1,5 @@
 package com.farpost.logwatcher.storage;
 
-import com.farpost.logwatcher.AggregatedLogEntry;
 import com.farpost.logwatcher.LogEntry;
 
 public class ContainsMatcher implements LogEntryMatcher {
@@ -9,10 +8,6 @@ public class ContainsMatcher implements LogEntryMatcher {
 
 	public ContainsMatcher(String needle) {
 		this.needle = needle;
-	}
-
-	public boolean isMatch(AggregatedLogEntry entry) {
-		return false;
 	}
 
 	public boolean isMatch(LogEntry entry) {

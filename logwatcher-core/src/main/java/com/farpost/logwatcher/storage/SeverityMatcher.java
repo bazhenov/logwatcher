@@ -1,6 +1,5 @@
 package com.farpost.logwatcher.storage;
 
-import com.farpost.logwatcher.AggregatedLogEntry;
 import com.farpost.logwatcher.LogEntry;
 import com.farpost.logwatcher.Severity;
 
@@ -9,15 +8,10 @@ public class SeverityMatcher implements LogEntryMatcher {
 	private final Severity severity;
 
 	public SeverityMatcher(Severity severity) {
-		if ( severity == null ) {
+		if (severity == null) {
 			throw new NullPointerException("Severity must not be null");
 		}
 		this.severity = severity;
-	}
-
-	public boolean isMatch(AggregatedLogEntry entry) {
-		LogEntry sampleEntry = entry.getSampleEntry();
-		return sampleEntry.getSeverity().isMoreImportantThan(severity);
 	}
 
 	public boolean isMatch(LogEntry entry) {
@@ -35,10 +29,10 @@ public class SeverityMatcher implements LogEntryMatcher {
 
 	@Override
 	public boolean equals(Object o) {
-		if ( this == o ) {
+		if (this == o) {
 			return true;
 		}
-		if ( o == null || getClass() != o.getClass() ) {
+		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
 

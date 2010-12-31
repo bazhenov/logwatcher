@@ -1,12 +1,11 @@
 package com.farpost.logwatcher.storage;
 
-import com.farpost.logwatcher.AggregatedLogEntry;
-import com.farpost.timepoint.Date;
 import com.farpost.logwatcher.LogEntry;
+import com.farpost.timepoint.Date;
 
 /**
  * Matcher по дате возникновения ошибки.
- *
+ * <p/>
  * Может фильтровать как по одной дате так и по диапазону дат. В случае если фильтрация
  * происходит по диапазону дат, то начальная дата исключается из поискового диапазона.
  */
@@ -16,7 +15,7 @@ public class DateMatcher implements LogEntryMatcher {
 	private final Date to;
 
 	public DateMatcher(Date date) {
-		if ( date == null ) {
+		if (date == null) {
 			throw new NullPointerException("Date must not be null");
 		}
 		this.to = this.from = date;
@@ -29,13 +28,13 @@ public class DateMatcher implements LogEntryMatcher {
 	 * {@link DateMatcher#DateMatcher(Date)}.
 	 *
 	 * @param from начало диапазона дат (исключается из диапазона поиска)
-	 * @param to   конец диапазона дат
+	 * @param to	 конец диапазона дат
 	 */
 	public DateMatcher(Date from, Date to) {
-		if ( from == null || to == null ) {
+		if (from == null || to == null) {
 			throw new NullPointerException("Dates must not be null");
 		}
-		if ( from.greaterThan(to) ) {
+		if (from.greaterThan(to)) {
 			this.to = from;
 			this.from = to;
 		} else {
@@ -52,18 +51,9 @@ public class DateMatcher implements LogEntryMatcher {
 		return to;
 	}
 
-	public boolean isMatch(AggregatedLogEntry entry) {
-		Date date = entry.getLastTime().getDate();
-		if ( from.equals(to) ) {
-			return date.equals(from);
-		} else {
-			return date.greaterThan(from) && date.lessOrEqualThan(to);
-		}
-	}
-
 	public boolean isMatch(LogEntry entry) {
 		Date date = entry.getDate().getDate();
-		if ( from.equals(to) ) {
+		if (from.equals(to)) {
 			return date.equals(from);
 		} else {
 			return date.greaterThan(from) && date.lessOrEqualThan(to);
@@ -72,7 +62,7 @@ public class DateMatcher implements LogEntryMatcher {
 
 	@Override
 	public String toString() {
-		if ( from.lessThan(to) ) {
+		if (from.lessThan(to)) {
 			return "occured:" + from + "/" + to;
 		} else {
 			return "occured:" + from;
@@ -81,10 +71,10 @@ public class DateMatcher implements LogEntryMatcher {
 
 	@Override
 	public boolean equals(Object o) {
-		if ( this == o ) {
+		if (this == o) {
 			return true;
 		}
-		if ( o == null || getClass() != o.getClass() ) {
+		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
 

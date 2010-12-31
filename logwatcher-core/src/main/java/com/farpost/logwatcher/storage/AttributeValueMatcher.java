@@ -1,6 +1,5 @@
 package com.farpost.logwatcher.storage;
 
-import com.farpost.logwatcher.AggregatedLogEntry;
 import com.farpost.logwatcher.LogEntry;
 
 import java.util.Map;
@@ -14,33 +13,29 @@ public class AttributeValueMatcher implements LogEntryMatcher {
 	private final String value;
 
 	public AttributeValueMatcher(String name, String value) {
-		if ( name == null || value == null ) {
+		if (name == null || value == null) {
 			throw new NullPointerException("Name and value should not be null");
 		}
 		this.name = name;
 		this.value = value;
 	}
 
-	public boolean isMatch(AggregatedLogEntry entry) {
-		throw new UnsupportedOperationException();
-	}
-
 	public boolean isMatch(LogEntry entry) {
-		Map<String,String> map = entry.getAttributes();
+		Map<String, String> map = entry.getAttributes();
 		return map.containsKey(name) && map.get(name).equals(value);
 	}
 
 	@Override
 	public String toString() {
-		return "@"+name+":"+value;
+		return "@" + name + ":" + value;
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		if ( this == o ) {
+		if (this == o) {
 			return true;
 		}
-		if ( o == null || getClass() != o.getClass() ) {
+		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
 

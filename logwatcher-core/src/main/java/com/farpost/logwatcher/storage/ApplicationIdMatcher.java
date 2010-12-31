@@ -1,6 +1,5 @@
 package com.farpost.logwatcher.storage;
 
-import com.farpost.logwatcher.AggregatedLogEntry;
 import com.farpost.logwatcher.LogEntry;
 
 public class ApplicationIdMatcher implements LogEntryMatcher {
@@ -8,14 +7,10 @@ public class ApplicationIdMatcher implements LogEntryMatcher {
 	private final String applicationId;
 
 	public ApplicationIdMatcher(String applicationId) {
-		if ( applicationId == null ) {
+		if (applicationId == null) {
 			throw new NullPointerException("Application id must not be null");
 		}
 		this.applicationId = applicationId;
-	}
-
-	public boolean isMatch(AggregatedLogEntry entry) {
-		return entry.getSampleEntry().getApplicationId().equals(applicationId);
 	}
 
 	public boolean isMatch(LogEntry entry) {
@@ -28,15 +23,15 @@ public class ApplicationIdMatcher implements LogEntryMatcher {
 
 	@Override
 	public String toString() {
-		return "at:"+applicationId;
+		return "at:" + applicationId;
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		if ( this == o ) {
+		if (this == o) {
 			return true;
 		}
-		if ( o == null || getClass() != o.getClass() ) {
+		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
 
