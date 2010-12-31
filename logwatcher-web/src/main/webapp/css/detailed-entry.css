@@ -1,30 +1,4 @@
-.entry              { font-size: 16px; }
-.entryHeader .message     { overflow: hidden; white-space: nowrap;
-														position: absolute; left: 110px; top: 2px; right: 50px; }
+.log						{ font-family: monospace; font-size: 12px; color: #666 }
 
-.selectedEntry .entryHeader .message { top: 14px; }
-
-.entryHeader        { padding: 3px 8px; position: relative; height: 40px; }
-
-.entryHeader .timestamp { position: absolute; font-size: 26px; white-space: nowrap; left: 10px; top: 5px; bottom: 5px; }
-.timestamp .hours       { color: #666; }
-.timestamp .seconds     { color: #bbb; font-size: 70% }
-
-.entryHeader .message     {  }
-.entryHeader .attributes  { position: absolute; left: 110px; top: 25px;
-														font-size: 12px; }
-
-.entryHeader .attributes code { background-color: #ffe; border: 1px dotted #ddd; padding: 0 2px }
-
-.selectedEntry .entryHeader .attributes { visibility: hidden; }
-
-.entryContainer     { padding-left: 8px; }
-.stacktrace         { padding-top: 10px; padding-bottom: 10px; }
-
-.entryContainer .attributes         { padding-top: 10px; }
-.entryContainer .attributes label   { margin-right: 5px; }
-
-.entryContainer .attributes code    { background-color: #eec; border: 1px dotted #997;
-																			padding: 0 2px;
-										                  font-family: monospace; margin-right: 5px; }
-
+.logEntry				{ padding: 5px; }
+.logEntry:hover	{ background-color: #ffffee; color: black; }

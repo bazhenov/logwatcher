@@ -1,51 +1,23 @@
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.1"
-					xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+					xmlns:c="http://java.sun.com/jsp/jstl/core"
 					xmlns:lf="http://bazhenov.org/logging" xmlns:fmt="http://java.sun.com/jsp/jstl/fmt">
 
 	<jsp:directive.attribute name="entry" type="com.farpost.logwatcher.LogEntry" required="true"/>
 
-	<c:set var="lengthLimit" value="20"/>
-
-	<div class="entry">
-		<div class="entryHeader">
-			<div class="timestamp"><span class="hours"><fmt:formatDate
-				value="${lf:date(entry.date)}"
-				pattern="HH:mm"/></span><span class="seconds"><fmt:formatDate
-				value="${lf:date(entry.date)}"
-				pattern=".ss"/></span></div>
-			<span class="message"><c:out value="${entry.message}"/></span>
-
-			<c:if test="${not empty(entry.attributes)}">
-				<span class="attributes">
-					<c:forEach items="${entry.attributes}" var="row">
-						<c:choose>
-							<c:when test="${fn:length(row.value) > lengthLimit}">
-								<code><c:out value="${fn:substring(row.value, 0, lengthLimit - 3)}"/>&amp;hellip;</code>
-							</c:when>
-							<c:otherwise><code><c:out value="${row.value}"/></code></c:otherwise>
-						</c:choose>
-					</c:forEach>
-				</span>
-			</c:if>
-		</div>
-		<div class="entryContainer">
-			<c:if test="${not empty(entry.attributes)}">
-				<div class="attributes">
-					<c:forEach items="${entry.attributes}" var="row">
-					<span><label><c:out value="${row.key}"/>:</label>
-						<code><c:out value="${row.value}"/></code></span>
-					</c:forEach>
-				</div>
-			</c:if>
-			<pre class="stacktrace"><c:choose
-				><c:when test="${not empty(entry.cause)}"
-				><c:out value="${lf:formatCause(entry.cause)}"
-				/></c:when
-				><c:otherwise
-				><c:out value="${entry.message}"
-				/></c:otherwise
-				></c:choose></pre>
-		</div>
+	<div class="logEntry">
+		[<fmt:formatDate value="${lf:date(entry.date)}" pattern="HH:mm:ss"/>]
+		<c:out value="${entry.message}"/>
+		<c:if test="${!empty(entry.attributes)}">
+			(<c:forEach items="${entry.attributes}" var="row" varStatus="status">
+			<c:out value="${row.key}"/>: <c:out value="${row.value}"/>
+			<c:if test="${!status.last}">&amp;nbsp;</c:if>
+		</c:forEach>)
+		</c:if>
+		<c:if test="${!empty(entry.cause)}">
+			<pre>
+			<c:out value="${lf:formatCause(entry.cause)}"/>
+			</pre>
+		</c:if>
 	</div>
 
 </jsp:root>
