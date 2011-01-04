@@ -1,10 +1,10 @@
 package com.farpost.logwatcher.storage;
 
 import com.farpost.logwatcher.AggregatedEntry;
-import com.farpost.logwatcher.Visitor;
-import com.farpost.timepoint.Date;
 import com.farpost.logwatcher.LogEntry;
 import com.farpost.logwatcher.Severity;
+import com.farpost.logwatcher.Visitor;
+import com.farpost.timepoint.Date;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,7 +24,7 @@ public class LogEntriesFinder {
 	 * Добавляет критерий поиска по диапазону дат.
 	 *
 	 * @param from начало диапазона (исключая саму дату)
-	 * @param to   конец диапазона (включительно)
+	 * @param to	 конец диапазона (включительно)
 	 */
 	public LogEntriesFinder date(Date from, Date to) {
 		criterias.add(new DateMatcher(from, to));
@@ -68,23 +68,6 @@ public class LogEntriesFinder {
 	}
 
 	/**
-	 * Возвращает первую запись с данными условиями отбора или {@code null}, если таких записей не
-	 * существует.
-	 * <p/>
-	 * Данный метод не дает никаких гарантий в отношении порядка извлекаемых записей.
-	 *
-	 * @return первая запись подпадающиая под условия
-	 * @throws LogStorageException в случае возникновения внутренней ошибки  @param storage
-	 */
-	public AggregatedEntry findFirst(LogStorage storage)
-		throws LogStorageException, InvalidCriteriaException {
-		List<AggregatedEntry> entries = findAggregated(storage);
-		return entries.size() > 0
-			? entries.get(0)
-			: null;
-	}
-
-	/**
 	 * Возвращает коллекцию matcher'ов по заданным finder'ом критериям.
 	 *
 	 * @return коллекция matcher'ов
@@ -109,7 +92,7 @@ public class LogEntriesFinder {
 	 * @param storage хранилище
 	 * @return список записей
 	 * @throws InvalidCriteriaException в случае если неверно заданы критерии фильтрации
-	 * @throws LogStorageException в случае внутренней ошибки хранилища
+	 * @throws LogStorageException			в случае внутренней ошибки хранилища
 	 * @see LogStorage#findEntries(Collection)
 	 */
 	public List<LogEntry> find(LogStorage storage) throws LogStorageException,
@@ -124,7 +107,7 @@ public class LogEntriesFinder {
 	 * @param storage хранилище
 	 * @return список аггрегированных записей
 	 * @throws InvalidCriteriaException в случае если неверно заданы критерии фильтрации
-	 * @throws LogStorageException в случае внутренней ошибки хранилища
+	 * @throws LogStorageException			в случае внутренней ошибки хранилища
 	 * @see LogStorage#findAggregatedEntries(Collection)
 	 */
 	public List<AggregatedEntry> findAggregated(LogStorage storage)

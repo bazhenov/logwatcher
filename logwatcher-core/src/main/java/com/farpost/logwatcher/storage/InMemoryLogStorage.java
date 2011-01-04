@@ -99,11 +99,12 @@ public class InMemoryLogStorage implements LogStorage {
 	}
 
 	public List<AggregatedEntry> getAggregatedEntries(String applicationId, Date date, Severity severity) {
-		return entries().
+		List<LogEntryMatcher> criterias = entries().
 			applicationId(applicationId).
 			date(date).
 			severity(severity).
-			findAggregated(this);
+			criterias();
+		return findAggregatedEntries(criterias);
 	}
 
 	public void walk(final Collection<LogEntryMatcher> criterias, final Visitor<LogEntry> visitor) {

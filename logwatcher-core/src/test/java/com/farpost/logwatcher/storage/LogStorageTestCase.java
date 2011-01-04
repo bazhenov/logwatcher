@@ -15,9 +15,10 @@ import java.util.Set;
 import static com.farpost.logwatcher.LogEntryBuilder.entry;
 import static com.farpost.logwatcher.storage.LogEntries.entries;
 import static com.farpost.timepoint.Date.*;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasItem;
 import static org.testng.Assert.fail;
 
 abstract public class LogStorageTestCase {
@@ -41,20 +42,21 @@ abstract public class LogStorageTestCase {
 			create();
 		storage.writeEntry(entry);
 
-		AggregatedEntry aggreagatedEntry = entries().
+		LogEntry entryRef = entries().
 			date(today).
-			findFirst(storage);
+			find(storage).
+			get(0);
 
-		assertThat(entry.getChecksum(), notNullValue());
-		assertThat(aggreagatedEntry.getLastTime(), equalTo(date));
+		assertThat(entryRef.getChecksum(), notNullValue());
+		assertThat(entryRef.getDate(), equalTo(date));
 	}
 
 	@Test
 	public void storageShouldReturnNullIfEntryNotFound()
 		throws LogStorageException, InvalidCriteriaException {
 
-		AggregatedEntry entry = entries().applicationId("foo").findFirst(storage);
-		assertThat(entry, nullValue());
+		List<LogEntry> entries = entries().applicationId("foo").find(storage);
+		assertThat(entries.size(), equalTo(0));
 	}
 
 	@Test

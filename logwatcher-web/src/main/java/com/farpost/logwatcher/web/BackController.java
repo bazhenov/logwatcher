@@ -1,7 +1,6 @@
 package com.farpost.logwatcher.web;
 
 import com.farpost.logwatcher.AggregateAttributesVisitor;
-import com.farpost.logwatcher.AggregatedEntry;
 import com.farpost.logwatcher.storage.InvalidCriteriaException;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.List;
 
 import static com.farpost.logwatcher.storage.LogEntries.entries;
 
@@ -35,7 +33,7 @@ public class BackController {
 
 	@RequestMapping("/service/content")
 	public String handleAttributes(ModelMap map, @RequestParam("checksum") String checksum,
-	                               @RequestParam("date") String date)
+																 @RequestParam("date") String date)
 		throws LogStorageException, InvalidCriteriaException, ParseException {
 
 		AggregateAttributesVisitor visitor = new AggregateAttributesVisitor();
@@ -45,13 +43,8 @@ public class BackController {
 			date(dt).
 			walk(storage, visitor);
 
-		List<AggregatedEntry> entries = entries().
-			checksum(checksum).
-			date(dt).
-			findAggregated(storage);
-
 		map.addAttribute("attributes", visitor.getAttributeMap());
-		map.addAttribute("entry", entries.get(0));
+		map.addAttribute("entry", visitor.getFirstEntry());
 		return "service/aggregated-entry-content";
 	}
 }
