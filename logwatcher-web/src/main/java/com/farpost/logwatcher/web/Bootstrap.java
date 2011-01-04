@@ -72,5 +72,7 @@ public class Bootstrap {
 
 		storage.writeEntry(new LogEntryImpl(DateTime.now().minusHour(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum5",
 			"frontend", null, null));
+		storage.writeEntry(new LogEntryImpl(DateTime.now().minusHour(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum5",
+			"frontend", null, null));
 	}
 }
