@@ -6,18 +6,18 @@
 
 	<jsp:directive.page contentType="text/html"/>
 
-	<jsp:useBean id="entry" scope="request" type="com.farpost.logwatcher.AggregatedEntry"/>
+	<jsp:useBean id="entry" scope="request" type="com.farpost.logwatcher.LogEntry"/>
 	<jsp:useBean id="attributes" scope="request" type="java.util.Map"/>
 
 	<div class='entryContent'>
 		<ol class='attributes'>
 			<c:forEach var="row" items="${attributes}">
-				<li><l:attribute name="${row.key}" attribute="${row.value}" /></li>
+				<li><l:attribute name="${row.key}" attribute="${row.value}"/></li>
 			</c:forEach>
 		</ol>
 		<c:choose>
-			<c:when test="${not empty entry.sampleCause}">
-				<pre class="stacktrace noBubble"><c:out value="${lf:formatCause(entry.sampleCause)}"/></pre>
+			<c:when test="${not empty entry.cause}">
+				<pre class="stacktrace noBubble"><c:out value="${lf:formatCause(entry.cause)}"/></pre>
 			</c:when>
 			<c:otherwise>
 				<pre class="stacktrace noBubble"><c:out value="${entry.message}"/></pre>
@@ -26,19 +26,19 @@
 	</div>
 
 	<c:url var="permaLink" value="/feed/${entry.applicationId}">
-		<c:param name="date" value="${entry.lastTime.date}"/>
+		<c:param name="date" value="${entry.date}"/>
 		<c:param name="severity" value="${entry.severity}"/>
 	</c:url>
 	<c:set var="permaLink" value="${permaLink}\#${entry.checksum}"/>
 
 	<c:set var="issueDescription">${lf:trim(entry.message, 300, '')}
-		<c:if test="${entry.sampleCause ne null}">
+		<c:if test="${entry.cause ne null}">
 
-Stacktrace:
-${lf:trim(lf:formatCause(entry.sampleCause), 500, '')}
+			Stacktrace:
+			${lf:trim(lf:formatCause(entry.cause), 500, '')}
 		</c:if>
 
-http://${pageContext.request.serverName}:${pageContext.request.serverPort}${permaLink}</c:set>
+		http://${pageContext.request.serverName}:${pageContext.request.serverPort}${permaLink}</c:set>
 
 	<div class="entryFooter">
 		<c:url value="http://jira.dev.loc:8080/secure/CreateIssueDetails.jspa" var="jiraLink">
@@ -53,8 +53,7 @@ http://${pageContext.request.serverName}:${pageContext.request.serverPort}${perm
 		<a href='${permaLink}'>Permalink</a>
 
 		<c:url value="/entries/${entry.checksum}" var="detailsLink">
-			<c:param name="date"><fmt:formatDate value="${lf:date(entry.lastTime)}"
-																					 pattern="yyyy-MM-dd"/></c:param>
+			<c:param name="date"><fmt:formatDate value="${lf:date(entry.date)}" pattern="yyyy-MM-dd"/></c:param>
 		</c:url>
 		<a href="${detailsLink}">Details</a>
 		<a class='removeEntry asynchronous' href='#'>Remove</a>
