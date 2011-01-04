@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
 
-public class ResultSetIterable implements Iterable<String> {
+class ResultSetIterable implements Iterable<String> {
 
 	private final ResultSet result;
 
@@ -21,7 +21,7 @@ public class ResultSetIterable implements Iterable<String> {
 		public boolean hasNext() {
 			try {
 				return result.next();
-			} catch ( SQLException e ) {
+			} catch (SQLException e) {
 				throw new RuntimeException(e);
 			}
 		}
@@ -29,7 +29,7 @@ public class ResultSetIterable implements Iterable<String> {
 		public String next() {
 			try {
 				return result.getString(1);
-			} catch ( SQLException e ) {
+			} catch (SQLException e) {
 				throw new RuntimeException(e);
 			}
 		}

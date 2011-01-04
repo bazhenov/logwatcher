@@ -5,10 +5,7 @@ import com.farpost.logwatcher.aggregator.Aggregator;
 import com.farpost.logwatcher.aggregator.SimpleAggregator;
 import com.farpost.logwatcher.marshalling.Jaxb2Marshaller;
 import com.farpost.logwatcher.marshalling.Marshaller;
-import com.farpost.logwatcher.storage.sql.AnnotationDrivenMatcherMapperImpl;
 import com.farpost.logwatcher.storage.sql.SqlLogStorage;
-import com.farpost.logwatcher.storage.sql.SqlMatcherMapper;
-import com.farpost.logwatcher.storage.sql.SqlMatcherMapperRules;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
@@ -56,9 +53,8 @@ public class SqlLogStorageMySqlIT extends LogStorageTestCase {
 	}
 
 	protected LogStorage createStorage() throws IOException, SQLException {
-		SqlMatcherMapper mapper = new AnnotationDrivenMatcherMapperImpl(new SqlMatcherMapperRules());
 		Marshaller marshaller = new Jaxb2Marshaller();
 		Aggregator aggregator = new SimpleAggregator(marshaller);
-		return new SqlLogStorage(aggregator, ds, marshaller, mapper, new SimpleChecksumCalculator());
+		return new SqlLogStorage(aggregator, ds, marshaller, new SimpleChecksumCalculator());
 	}
 }

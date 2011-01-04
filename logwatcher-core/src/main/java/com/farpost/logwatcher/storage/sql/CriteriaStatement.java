@@ -10,8 +10,7 @@ class CriteriaStatement {
 	private final Object[] arguments;
 	private final Collection<LogEntryMatcher> lateBoundMatchers;
 
-	CriteriaStatement(String whereClause, Object[] arguments,
-	                  Collection<LogEntryMatcher> lateBoundMatchers) {
+	CriteriaStatement(String whereClause, Object[] arguments, Collection<LogEntryMatcher> lateBoundMatchers) {
 		this.whereClause = whereClause;
 		this.arguments = arguments;
 		this.lateBoundMatchers = lateBoundMatchers;

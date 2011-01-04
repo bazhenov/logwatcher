@@ -1,4 +1,4 @@
-package com.farpost.logwatcher.storage.sql;
+package com.farpost.logwatcher.storage.spi;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

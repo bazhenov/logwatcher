@@ -1,4 +1,4 @@
-package com.farpost.logwatcher.storage.sql;
+package com.farpost.logwatcher.storage.spi;
 
 public class MatcherMapperException extends Exception {
 

@@ -38,16 +38,9 @@
 	</bean>
 
 	<bean id="storage" class="com.farpost.logwatcher.storage.sql.SqlLogStorage">
-		<constructor-arg index="0" ref="aggregator"/>
-		<constructor-arg index="1" ref="datasource"/>
-		<constructor-arg index="2" ref="marshaller"/>
-		<constructor-arg index="3">
-			<bean class="com.farpost.logwatcher.storage.sql.AnnotationDrivenMatcherMapperImpl">
-				<constructor-arg>
-					<bean class="com.farpost.logwatcher.storage.sql.SqlMatcherMapperRules"/>
-				</constructor-arg>
-			</bean>
-		</constructor-arg>
+		<constructor-arg ref="aggregator"/>
+		<constructor-arg ref="datasource"/>
+		<constructor-arg ref="marshaller"/>
 		<constructor-arg>
 			<bean class="com.farpost.logwatcher.SimpleChecksumCalculator"/>
 		</constructor-arg>

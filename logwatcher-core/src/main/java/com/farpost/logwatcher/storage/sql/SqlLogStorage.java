@@ -7,6 +7,9 @@ import com.farpost.logwatcher.storage.InvalidCriteriaException;
 import com.farpost.logwatcher.storage.LogEntryMatcher;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
+import com.farpost.logwatcher.storage.spi.AnnotationDrivenMatcherMapperImpl;
+import com.farpost.logwatcher.storage.spi.MatcherMapper;
+import com.farpost.logwatcher.storage.spi.MatcherMapperException;
 import com.farpost.timepoint.Date;
 import com.farpost.timepoint.DateTime;
 import org.slf4j.Logger;
@@ -33,18 +36,18 @@ public class SqlLogStorage implements LogStorage {
 	private final DataSource datasource;
 	private final ChecksumCalculator checksumCalculator;
 	private final Marshaller marshaller;
-	private final SqlMatcherMapper mapper;
+	private final MatcherMapper<SqlWhereStatement> mapper;
 	private final SimpleJdbcTemplate jdbc;
 	private final Logger log = LoggerFactory.getLogger(SqlLogStorage.class);
 	private final ParameterizedRowMapper<AggregatedEntry> aggregateEntryMapper;
 	private final ParameterizedRowMapper<LogEntry> entryMapper;
 
 	public SqlLogStorage(Aggregator aggregator, DataSource datasource, Marshaller marshaller,
-											 SqlMatcherMapper mapper, ChecksumCalculator checksumCalculator)
+											 ChecksumCalculator checksumCalculator)
 		throws IOException, SQLException {
 		this.aggregator = aggregator;
 		this.marshaller = marshaller;
-		this.mapper = mapper;
+		this.mapper = new AnnotationDrivenMatcherMapperImpl<SqlWhereStatement>(new SqlMatcherMapperRules());
 		this.datasource = datasource;
 		this.checksumCalculator = checksumCalculator;
 		this.jdbc = new SimpleJdbcTemplate(datasource);
@@ -263,7 +266,7 @@ public class SqlLogStorage implements LogStorage {
 	 * буффер куда писать WHERE clause и список куда добавлять sql аргументы.
 	 *
 	 * @param criterias критерии отбора
-	 * @return список критериев, которые не могут быть обработаны {@link SqlMatcherMapper}'ом
+	 * @return список критериев, которые не могут быть обработаны {@link MatcherMapper}'ом
 	 * @throws MatcherMapperException если не все критерии могут быть обработаны хранилищем
 	 */
 	private CriteriaStatement fillWhereClause(Collection<LogEntryMatcher> criterias)
@@ -271,12 +274,17 @@ public class SqlLogStorage implements LogStorage {
 
 		StringBuilder builder = new StringBuilder();
 		List<Object> arguments = new ArrayList<Object>();
-		WhereClause where = new WhereClause(builder, arguments);
 		Iterator<LogEntryMatcher> iterator = criterias.iterator();
 		while (iterator.hasNext()) {
 			LogEntryMatcher matcher = iterator.next();
-			if (mapper.handle(matcher, where)) {
+			SqlWhereStatement statement = mapper.handle(matcher);
+			if (statement != null) {
 				iterator.remove();
+				if (builder.length() > 0) {
+					builder.append(" AND ");
+				}
+				builder.append(statement.getStatement());
+				arguments.addAll(statement.getArguments());
 			}
 		}
 		return new CriteriaStatement(builder.toString(), arguments.toArray(), criterias);
