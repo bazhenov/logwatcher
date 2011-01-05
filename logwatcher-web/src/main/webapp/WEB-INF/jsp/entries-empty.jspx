@@ -14,7 +14,7 @@
 	<html>
 	<head>
 		<title>LogWatcher: detailed information for entry</title>
-		<c:url value='/css/detailed-entry.css' var="cssUrl"/>
+		<c:url value='/css/detailed-entry.log.css' var="cssUrl"/>
 		<link rel="stylesheet" href="${cssUrl}"/>
 	</head>
 

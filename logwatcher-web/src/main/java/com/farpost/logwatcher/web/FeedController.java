@@ -2,9 +2,9 @@ package com.farpost.logwatcher.web;
 
 import com.farpost.logwatcher.*;
 import com.farpost.logwatcher.storage.*;
-import com.farpost.logwatcher.web.vm.FeedViewModel;
+import com.farpost.logwatcher.web.page.FeedPage;
+import com.farpost.logwatcher.web.page.SearchPage;
 import com.farpost.timepoint.Date;
-import com.farpost.timepoint.DateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -32,8 +32,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 public class FeedController {
 
 	private LogStorage storage;
-	private final QueryTranslator translator = new AnnotationDrivenQueryTranslator(
-		new TranslationRulesImpl());
+	private final QueryTranslator translator = new AnnotationDrivenQueryTranslator(new TranslationRulesImpl());
 	private final QueryParser parser = new QueryParser();
 	private final HashMap<String, Comparator<AggregatedEntry>> comparators = new HashMap<String, Comparator<AggregatedEntry>>() {{
 		put(null, new ByLastOccurenceDateComparator());
@@ -64,7 +63,6 @@ public class FeedController {
 		if (q == null || q.isEmpty()) {
 			return "search-form";
 		}
-		List<AggregatedEntry> entries;
 		List<LogEntryMatcher> matchers;
 		try {
 			matchers = translator.translate(q.trim());
@@ -77,14 +75,10 @@ public class FeedController {
 		if (!contains(matchers, SeverityMatcher.class)) {
 			matchers.add(new SeverityMatcher(Severity.error));
 		}
-		entries = entries().withCriteria(matchers).findAggregated(storage);
-		map.put("entries", entries);
-		map.put("times", sumCount(entries));
-		map.put("date", DateTime.now().asDate());
-		Map<String, String> queryTerms = parser.parse(q);
-		map.put("query", buildQuery(queryTerms));
-		map.put("terms", queryTerms);
-		return "search-feed";
+		List<LogEntry> entries = entries().withCriteria(matchers).find(storage);
+
+		map.put("p", new SearchPage(q, entries));
+		return "search-page";
 	}
 
 	@RequestMapping("/feed/{applicationId}")
@@ -113,7 +107,7 @@ public class FeedController {
 
 		map.addAttribute("entries", entries);
 		map.addAttribute("times", times);
-		map.addAttribute("vm", new FeedViewModel(request, storage, date, applicationId));
+		map.addAttribute("vm", new FeedPage(request, storage, date, applicationId));
 
 		return "feed/aggregated-feed";
 	}

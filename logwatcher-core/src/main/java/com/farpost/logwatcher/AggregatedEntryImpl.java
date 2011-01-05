@@ -1,9 +1,6 @@
 package com.farpost.logwatcher;
 
 import com.farpost.timepoint.DateTime;
-import com.farpost.logwatcher.Cause;
-import com.farpost.logwatcher.LogEntry;
-import com.farpost.logwatcher.Severity;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -18,7 +15,7 @@ public class AggregatedEntryImpl implements AggregatedEntry {
 	private final String applicationId;
 
 	public AggregatedEntryImpl(String message, String checksum, String applicationId,
-	                           Severity severity, int count, DateTime lastTime, Cause sampleCause) {
+														 Severity severity, int count, DateTime lastTime, Cause sampleCause) {
 		this.applicationId = applicationId;
 		this.severity = severity;
 		this.lastTime = lastTime;
@@ -61,12 +58,8 @@ public class AggregatedEntryImpl implements AggregatedEntry {
 		return checksum;
 	}
 
-	public void merge(AggregatedEntry entry) {
-		happensAgain(entry.getCount(), entry.getLastTime());
-	}
-
 	public void happensAgain(int times, DateTime lastTime) {
-		if ( lastTime.greaterThan(this.lastTime) ) {
+		if (lastTime.greaterThan(this.lastTime)) {
 			this.lastTime = lastTime;
 		}
 		count.addAndGet(times);

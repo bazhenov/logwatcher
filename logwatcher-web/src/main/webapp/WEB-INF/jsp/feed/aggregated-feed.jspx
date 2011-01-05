@@ -11,7 +11,7 @@
 	<jsp:useBean id="times" scope="request" type="java.lang.Integer"/>
 	<jsp:useBean id="date" scope="request" type="java.util.Date"/>
 	<jsp:useBean id="severity" scope="request" type="java.lang.String"/>
-	<jsp:useBean id="vm" scope="request" type="com.farpost.logwatcher.web.vm.FeedViewModel"/>
+	<jsp:useBean id="vm" scope="request" type="com.farpost.logwatcher.web.page.FeedPage"/>
 
 	<html>
 	<head>

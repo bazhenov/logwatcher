@@ -1,18 +1,11 @@
 package com.farpost.logwatcher;
 
-import com.farpost.logwatcher.AggregatedAttribute;
-import com.farpost.logwatcher.AggregatedLogEntryImpl;
-import com.farpost.logwatcher.LogEntry;
-import com.farpost.logwatcher.LogEntryImpl;
-import com.farpost.logwatcher.Severity;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.farpost.timepoint.DateTime.now;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 
 public class AggregatedLogEntryTest {
 
@@ -34,10 +27,5 @@ public class AggregatedLogEntryTest {
 
 		AggregatedLogEntryImpl aggregated = new AggregatedLogEntryImpl(firstEntry);
 		aggregated.merge(new AggregatedLogEntryImpl(secondEntry));
-
-		Map<String, AggregatedAttribute> attributes = aggregated.getAttributes();
-		assertThat(attributes.get("server").getCountFor("host1"), equalTo(2));
-		assertThat(attributes.get("user").getCountFor("david"), equalTo(1));
-		assertThat(attributes.get("user").getCountFor("john"), equalTo(1));
 	}
 }

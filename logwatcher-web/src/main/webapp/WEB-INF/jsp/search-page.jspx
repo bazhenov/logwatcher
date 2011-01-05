@@ -5,39 +5,40 @@
 					xmlns:f="http://java.sun.com/jsp/jstl/functions"
 					xmlns:lt="urn:jsptagdir:/WEB-INF/tags">
 
-	<jsp:useBean id="entries" type="java.util.Collection" scope="request"/>
-	<jsp:useBean id="query" type="java.lang.String" scope="request"/>
-	<jsp:useBean id="terms" type="java.util.Map" scope="request"/>
-	<jsp:useBean id="times" type="java.lang.Integer" scope="request"/>
+	<jsp:useBean id="p" type="com.farpost.logwatcher.web.page.SearchPage" scope="request"/>
 
 	<jsp:directive.page contentType="text/html"/>
 
 	<html>
 	<head>
-		<title>LogWatcher Search: <c:out value="${query}"/></title>
+		<title>LogWatcher Search: <c:out value="${p.query}"/></title>
 		<c:url value='/css/search-feed.css' var="cssUrl"/>
+		<link rel="stylesheet" href="${cssUrl}"/>
+
+		<c:url value='/css/log.css' var="cssUrl"/>
 		<link rel="stylesheet" href="${cssUrl}"/>
 	</head>
 	<body>
 	<h2>Search</h2>
 
-	<div class="queryBox givenQuery" rawQuery="${query}">
+	<div class="queryBox givenQuery" rawQuery="${p.query}">
     <span id="query">
-      <c:forEach items="${terms}" var="term">
+      <c:forEach items="${p.queryTerms}" var="term">
 				<span class="keyword"><c:out value="${term.key}"/>:</span><span><c:out value="${term.value}"/>&amp;nbsp;</span>
 			</c:forEach>
     </span>
 	</div>
 
 	<c:choose>
-		<c:when test="${f:length(entries) > 0}">
-			<c:forEach var="entry" items="${entries}">
-				<lt:aggregated-entry entry="${entry}"/>
-			</c:forEach>
+		<c:when test="${f:length(p.entries) > 0}">
+			<div class="log">
+				<c:forEach var="entry" items="${p.entries}">
+					<lt:entry entry="${entry}"/>
+				</c:forEach>
+			</div>
 
 			<div id="footer">
-				${l:pluralize(f:length(entries), "entry entries entries")},
-				${l:pluralize(times, "message messages messages")}
+				${l:pluralize(f:length(p.entries), "entry entries entries")}
 			</div>
 		</c:when>
 		<c:otherwise>

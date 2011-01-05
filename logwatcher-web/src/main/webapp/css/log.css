@@ -1,0 +1,14 @@
+.log {
+	font-family: monospace;
+	font-size: 12px;
+	color: #666
+}
+
+.logEntry {
+	padding: 5px;
+}
+
+.logEntry:hover {
+	background-color: #ffffee;
+	color: black;
+}

@@ -1,4 +1,4 @@
-package com.farpost.logwatcher.web.vm;
+package com.farpost.logwatcher.web.page;
 
 import com.farpost.logwatcher.storage.LogStorage;
 
@@ -7,14 +7,14 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-public class FeedViewModel {
+public class FeedPage {
 
 	private final HttpServletRequest request;
 	private final LogStorage storage;
 	private final Date date;
 	private final String applicationId;
 
-	public FeedViewModel(HttpServletRequest request, LogStorage storage, Date date, String applicationId) {
+	public FeedPage(HttpServletRequest request, LogStorage storage, Date date, String applicationId) {
 		this.request = request;
 		this.storage = storage;
 		this.date = new Date(date.getTime());
