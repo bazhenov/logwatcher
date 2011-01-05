@@ -168,15 +168,15 @@ abstract public class LogStorageTestCase {
 	@Test
 	public void storageShouldNotAggregateEntriesWithNonEqualsChecksum() throws Exception {
 		entry().
+			applicationId("appl").
 			message("foo").
 			saveIn(storage);
 		entry().
+			applicationId("appl").
 			message("bar").
 			saveIn(storage);
 
-		List<AggregatedEntry> list = entries().
-			date(today()).
-			findAggregated(storage);
+		List<AggregatedEntry> list = storage.getAggregatedEntries("appl", today(), Severity.debug);
 		assertThat(list.size(), equalTo(2));
 	}
 

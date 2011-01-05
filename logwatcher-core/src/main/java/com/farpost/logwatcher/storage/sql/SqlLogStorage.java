@@ -110,36 +110,6 @@ public class SqlLogStorage implements LogStorage {
 		}
 	}
 
-	public List<AggregatedEntry> findAggregatedEntries(Collection<LogEntryMatcher> criterias)
-		throws LogStorageException, InvalidCriteriaException {
-		Connection connection = null;
-		PreparedStatement statement = null;
-		ResultSet result = null;
-		try {
-			StringBuilder sql = new StringBuilder("SELECT content FROM `entry` l");
-			CriteriaStatement st = fillWhereClause(criterias);
-
-			sql.append(" WHERE ").append(st.getWhereClause());
-			connection = datasource.getConnection();
-			statement = connection.prepareStatement(sql.toString(), TYPE_FORWARD_ONLY, CONCUR_READ_ONLY);
-			enableServerSideCursor(statement);
-			fill(statement, st.getArguments());
-
-			result = statement.executeQuery();
-			Collection<AggregatedEntry> aggregated = aggregator.aggregate(new ResultSetIterable(result),
-				st.getLateBoundMatchers());
-			return new ArrayList<AggregatedEntry>(aggregated);
-		} catch (SQLException e) {
-			throw new LogStorageException(e);
-		} catch (MatcherMapperException e) {
-			throw new LogStorageException(e);
-		} finally {
-			close(result);
-			close(statement);
-			close(connection);
-		}
-	}
-
 	private boolean enableServerSideCursor(PreparedStatement statement) {
 		try {
 			statement.setFetchSize(Integer.MIN_VALUE);

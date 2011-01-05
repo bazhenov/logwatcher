@@ -1,6 +1,5 @@
 package com.farpost.logwatcher.storage;
 
-import com.farpost.logwatcher.AggregatedEntry;
 import com.farpost.logwatcher.LogEntry;
 import com.farpost.logwatcher.Severity;
 import com.farpost.logwatcher.Visitor;
@@ -98,21 +97,6 @@ public class LogEntriesFinder {
 	public List<LogEntry> find(LogStorage storage) throws LogStorageException,
 		InvalidCriteriaException {
 		return storage.findEntries(criterias);
-	}
-
-	/**
-	 * Возвращает список записей удовлетворяющих заданным критериям сгруппированных по контрольной
-	 * сумме.
-	 *
-	 * @param storage хранилище
-	 * @return список аггрегированных записей
-	 * @throws InvalidCriteriaException в случае если неверно заданы критерии фильтрации
-	 * @throws LogStorageException			в случае внутренней ошибки хранилища
-	 * @see LogStorage#findAggregatedEntries(Collection)
-	 */
-	public List<AggregatedEntry> findAggregated(LogStorage storage)
-		throws LogStorageException, InvalidCriteriaException {
-		return storage.findAggregatedEntries(criterias);
 	}
 
 	public void walk(LogStorage storage, Visitor<LogEntry> visitor)

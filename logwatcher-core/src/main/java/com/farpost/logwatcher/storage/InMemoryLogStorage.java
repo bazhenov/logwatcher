@@ -68,7 +68,7 @@ public class InMemoryLogStorage implements LogStorage {
 		});
 	}
 
-	public List<AggregatedEntry> findAggregatedEntries(final Collection<LogEntryMatcher> criterias) {
+	private List<AggregatedEntry> findAggregatedEntries(final Collection<LogEntryMatcher> criterias) {
 		return withLock(readLock, new Callable<List<AggregatedEntry>>() {
 
 			public List<AggregatedEntry> call() throws Exception {

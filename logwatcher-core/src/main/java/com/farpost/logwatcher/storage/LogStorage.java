@@ -71,18 +71,6 @@ public interface LogStorage {
 		throws LogStorageException, InvalidCriteriaException;
 
 	/**
-	 * Возвращает список записей удовлетворяющих заданным критериям сгруппированных по контрольной
-	 * сумме
-	 *
-	 * @param criterias критерии отбора записей
-	 * @return список записей
-	 * @throws LogStorageException			в случае внутренней ошибки хранилища
-	 * @throws InvalidCriteriaException в случае если указанные неверные критерии отбора
-	 */
-	List<AggregatedEntry> findAggregatedEntries(Collection<LogEntryMatcher> criterias)
-		throws LogStorageException, InvalidCriteriaException;
-
-	/**
 	 * Данный метод проходит по записям {@link LogEntry} передавая каждую в заданный visitor. Visitor
 	 * не должен менять передаваемые ему записи. Имплементации этих методов не дают никаких гаранитий
 	 * относительно того в каком потоке будет вызыватся vistor, поэтому имплементация visitor'а должна
