@@ -62,7 +62,7 @@ public class SqlLogStorage implements LogStorage {
 			java.sql.Date entryDate = date(impl.getDate());
 			String checksum = checksumCalculator.calculateChecksum(impl);
 			impl.setChecksum(checksum);
-			String marshalledEntry = marshaller.marshall(impl);
+			byte[] marshalledEntry = marshaller.marshall(impl);
 			jdbc.update(
 				"INSERT INTO entry (time, date, checksum, category, severity, application_id, content) VALUES (?, ?, ?, ?, ?, ?, ?)",
 				entryTimestamp, entryDate, checksum, impl.getCategory(),
@@ -139,7 +139,7 @@ public class SqlLogStorage implements LogStorage {
 			result = statement.executeQuery();
 			Collection<LogEntryMatcher> lateBoundMatchers = st.getLateBoundMatchers();
 			while (result.next()) {
-				LogEntry entry = marshaller.unmarshall(result.getString("content"));
+				LogEntry entry = marshaller.unmarshall(result.getBytes("content"));
 				if (isMatching(entry, lateBoundMatchers)) {
 					visitor.visit(entry);
 				}

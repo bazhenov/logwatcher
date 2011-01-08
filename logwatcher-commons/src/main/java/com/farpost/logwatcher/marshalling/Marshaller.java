@@ -5,12 +5,12 @@ import com.farpost.logwatcher.LogEntry;
 /**
  * Имплементации данного интерфейса сериализуют и десериализуют обьекты типа {@link com.farpost.logwatcher.LogEntryImpl}
  * в формат wire протокола.
- * <p />
+ * <p/>
  * Внимание, все имплементации этого интерфейса должны быть потокобезопасны.
  */
 public interface Marshaller {
 
-	String marshall(LogEntry entry) throws MarshallerException;
+	byte[] marshall(LogEntry entry) throws MarshallerException;
 
-	LogEntry unmarshall(String data) throws MarshallerException;
+	LogEntry unmarshall(byte[] data) throws MarshallerException;
 }

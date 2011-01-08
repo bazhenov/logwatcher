@@ -47,7 +47,7 @@ public class LogWatcherAppender extends UnsynchronizedAppenderBase<ILoggingEvent
 			LogEntry entry = new LogEntryImpl(time, event.getLoggerName(), event.getMessage(), severity, null, applicationId,
 				new HashMap<String, String>(), cause);
 
-			byte[] data = marshaller.marshall(entry).getBytes("utf8");
+			byte[] data = marshaller.marshall(entry);
 			DatagramPacket packet = new DatagramPacket(data, data.length);
 
 			synchronized (socketLock) {

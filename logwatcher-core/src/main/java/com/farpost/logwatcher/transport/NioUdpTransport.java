@@ -7,6 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.ClosedByInterruptException;
 import java.nio.channels.DatagramChannel;
 
+import static java.lang.System.arraycopy;
 import static java.lang.Thread.currentThread;
 import static java.lang.Thread.interrupted;
 
@@ -33,7 +34,7 @@ public class NioUdpTransport implements Transport {
 		try {
 			threadWrapper.interrupt();
 			threadWrapper.join();
-		} catch ( InterruptedException e ) {
+		} catch (InterruptedException e) {
 			throw new TransportException(e);
 		}
 	}
@@ -50,24 +51,26 @@ public class NioUdpTransport implements Transport {
 				channel = DatagramChannel.open();
 				channel.configureBlocking(true);
 				channel.socket().bind(address);
-			} catch ( IOException e ) {
+			} catch (IOException e) {
 				throw new TransportException(e);
 			}
 		}
 
 		public void run() {
 			try {
-				while ( !interrupted() ) {
+				while (!interrupted()) {
 					buffer.clear();
 					channel.receive(buffer);
-					String message = new String(buffer.array(), 0, buffer.position());
-					listener.onMessage(message);
+					int receivedBytes = buffer.position();
+					byte[] data = new byte[receivedBytes];
+					arraycopy(buffer.array(), 0, data, 0, receivedBytes);
+					listener.onMessage(data);
 				}
-			} catch ( ClosedByInterruptException e ) {
+			} catch (ClosedByInterruptException e) {
 				currentThread().interrupt();
-			} catch ( IOException e ) {
+			} catch (IOException e) {
 				throw new RuntimeException(e);
-			} catch ( TransportException e ) {
+			} catch (TransportException e) {
 				throw new RuntimeException(e);
 			}
 		}

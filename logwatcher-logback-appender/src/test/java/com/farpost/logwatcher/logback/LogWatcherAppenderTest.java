@@ -26,7 +26,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class LogWatcherAppenderTest {
 
-	private BlockingQueue<String> messages;
+	private BlockingQueue<byte[]> messages;
 	private Marshaller marshaller = new Jaxb2Marshaller();
 	private int port = 6590;
 	private UdpTransport transport;
@@ -37,7 +37,7 @@ public class LogWatcherAppenderTest {
 
 	@BeforeMethod
 	public void setUp() throws SocketException, TransportException {
-		messages = new LinkedBlockingQueue<String>();
+		messages = new LinkedBlockingQueue<byte[]>();
 		transport = new UdpTransport(port, new QueueAppendListener(messages));
 		transport.start();
 
@@ -90,7 +90,7 @@ public class LogWatcherAppenderTest {
 	 * @throws InterruptedException если истек timeout ожидания
 	 */
 	private LogEntry getLastMessage() throws InterruptedException {
-		String lastMessage = messages.poll(1, TimeUnit.SECONDS);
+		byte[] lastMessage = messages.poll(1, TimeUnit.SECONDS);
 		return marshaller.unmarshall(lastMessage);
 	}
 

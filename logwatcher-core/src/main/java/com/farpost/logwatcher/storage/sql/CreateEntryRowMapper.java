@@ -16,6 +16,6 @@ class CreateEntryRowMapper implements ParameterizedRowMapper<LogEntry> {
 	}
 
 	public LogEntry mapRow(ResultSet rs, int rowNum) throws SQLException {
-		return marshaller.unmarshall(rs.getString("content"));
+		return marshaller.unmarshall(rs.getBytes("content"));
 	}
 }

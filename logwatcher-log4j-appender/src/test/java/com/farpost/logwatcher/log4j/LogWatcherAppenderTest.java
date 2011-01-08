@@ -1,14 +1,14 @@
 package com.farpost.logwatcher.log4j;
 
+import com.farpost.logwatcher.LogEntry;
 import com.farpost.logwatcher.QueueAppendListener;
+import com.farpost.logwatcher.Severity;
 import com.farpost.logwatcher.marshalling.Jaxb2Marshaller;
 import com.farpost.logwatcher.marshalling.Marshaller;
 import com.farpost.logwatcher.transport.TransportException;
 import com.farpost.logwatcher.transport.UdpTransport;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import com.farpost.logwatcher.LogEntry;
-import com.farpost.logwatcher.Severity;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -23,7 +23,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class LogWatcherAppenderTest {
 
-	private BlockingQueue<String> messages;
+	private BlockingQueue<byte[]> messages;
 	private Marshaller marshaller = new Jaxb2Marshaller();
 	private int port = 6590;
 	private UdpTransport transport;
@@ -34,7 +34,7 @@ public class LogWatcherAppenderTest {
 
 	@BeforeMethod
 	public void setUp() throws SocketException, TransportException {
-		messages = new LinkedBlockingQueue<String>();
+		messages = new LinkedBlockingQueue<byte[]>();
 		transport = new UdpTransport(port, new QueueAppendListener(messages));
 		transport.setBufferSize(100 * 1024);
 		transport.start();
@@ -61,7 +61,7 @@ public class LogWatcherAppenderTest {
 
 		Logger.getLogger(LogWatcherAppender.class).debug(message, cause);
 
-		String lastMessage = messages.poll(1, TimeUnit.SECONDS);
+		byte[] lastMessage = messages.poll(1, TimeUnit.SECONDS);
 		LogEntry entry = marshaller.unmarshall(lastMessage);
 
 		assertThat(entry.getMessage(), equalTo(message));

@@ -7,13 +7,13 @@ import java.util.Queue;
 
 public class QueueAppendListener implements TransportListener {
 
-	private Queue<String> queue;
+	private Queue<byte[]> queue;
 
-	public QueueAppendListener(Queue<String> queue) {
+	public QueueAppendListener(Queue<byte[]> queue) {
 		this.queue = queue;
 	}
 
-	public void onMessage(String message) throws TransportException {
+	public void onMessage(byte[] message) throws TransportException {
 		queue.add(message);
 	}
 }

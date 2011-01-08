@@ -7,6 +7,7 @@ import com.farpost.logwatcher.Severity;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +30,7 @@ public abstract class AbstractLogEntryMarshallerTest {
 		Cause cause = new Cause("type", "msg", "stacktrace");
 		LogEntry entry = new LogEntryImpl(now(), "group", "message", Severity.info, "2fe", "default", null,
 			cause);
-		String data = marshaller.marshall(entry);
+		byte[] data = marshaller.marshall(entry);
 		LogEntry entryCopy = marshaller.unmarshall(data);
 
 		assertThat(entryCopy, equalTo(entry));
@@ -41,14 +42,14 @@ public abstract class AbstractLogEntryMarshallerTest {
 		attributes.put("foo", "bar");
 		attributes.put("bar", "foo");
 		LogEntry entry = new LogEntryImpl(now(), "group", "message", Severity.info, null, "default", attributes, null);
-		String data = marshaller.marshall(entry);
+		byte[] data = marshaller.marshall(entry);
 		LogEntry entryCopy = marshaller.unmarshall(data);
 
 		assertThat(entryCopy, equalTo(entry));
 	}
 
 	@Test
-	public void marshallerShouldDemarshallMessages() {
+	public void marshallerShouldDemarshallMessages() throws UnsupportedEncodingException {
 		String xml = "<?xml version='1.0' encoding='UTF-8'?>\n" +
 			"<logEntry xmlns='http://logging.farpost.com/schema/v1.1' checksum='ff01f41d0e73d0da2129e1e49dbeb44b' date='2010-11-24T12:33:38+10:00'>\n" +
 			"  <message>OutOfMemoryException</message>\n" +
@@ -64,7 +65,7 @@ public abstract class AbstractLogEntryMarshallerTest {
 			"    <attribute name='ip' value='172.16.7.5' />\n" +
 			"  </attributes>\n" +
 			"</logEntry>";
-		LogEntry entry = marshaller.unmarshall(xml);
+		LogEntry entry = marshaller.unmarshall(xml.getBytes("utf8"));
 		assertThat(entry.getMessage(), equalTo("OutOfMemoryException"));
 		assertThat(entry.getSeverity(), equalTo(Severity.error));
 		assertThat(entry.getAttributes(), hasEntry("machine", "n22.baza.loc"));

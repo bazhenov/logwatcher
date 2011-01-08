@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.util.Arrays;
+
+import static java.lang.System.arraycopy;
 
 public class UdpTransport implements Transport {
 
@@ -38,23 +41,26 @@ public class UdpTransport implements Transport {
 		private DatagramSocket socket;
 		private TransportListener listener;
 		private final Logger log = LoggerFactory.getLogger(UdpTransport.class);
+		private byte[] buffer;
+		private DatagramPacket packet;
 
 		public SocketThread(DatagramSocket socket, TransportListener listener) {
 			this.socket = socket;
 			this.listener = listener;
+			buffer = new byte[bufferSize];
+			packet = new DatagramPacket(buffer, buffer.length);
 		}
 
 		public void run() {
 			while (true) {
-				String message;
+				byte[] message;
 				try {
-					byte[] buffer = new byte[bufferSize];
-					DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 					socket.receive(packet);
-					byte[] data = packet.getData();
-					message = new String(data, 0, packet.getLength(), "utf8");
+					int receivedLength = packet.getLength();
+					message = new byte[receivedLength];
+					arraycopy(buffer, 0, message, 0, receivedLength);
 					if (log.isDebugEnabled()) {
-						log.debug("Packet received: " + message);
+						log.debug("Packet received: " + Arrays.toString(message));
 					}
 				} catch (IOException e) {
 					if (socket.isClosed()) {
@@ -68,7 +74,7 @@ public class UdpTransport implements Transport {
 				try {
 					listener.onMessage(message);
 				} catch (Exception e) {
-					log.error("Listener failed at message: " + message, e);
+					log.error("Listener failed at message: " + Arrays.toString(message), e);
 				}
 			}
 		}

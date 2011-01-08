@@ -18,6 +18,6 @@ CREATE TABLE IF NOT EXISTS entry (
 	category VARCHAR(255) NULL,
 	severity INT NOT NULL,
 	application_id VARCHAR(255) NOT NULL,
-	content TEXT NOT NULL,
+	content BLOB NOT NULL,
 	PRIMARY KEY(id)
 );

@@ -1,9 +1,5 @@
 package com.farpost.logwatcher.transport;
 
-import com.farpost.logwatcher.transport.Transport;
-import com.farpost.logwatcher.transport.TransportException;
-import com.farpost.logwatcher.transport.TransportListener;
-import com.farpost.logwatcher.transport.UdpTransport;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
@@ -25,9 +21,9 @@ public class UdpTransportIT {
 		t.start();
 
 		sendMessage(30054, "msg");
-		synchronized ( listener ) {
+		synchronized (listener) {
 			listener.wait(1000);
-			assertThat(listener.getData(), equalTo("msg"));
+			assertThat(listener.getData(), equalTo("msg".getBytes("utf8")));
 		}
 		t.stop();
 	}
@@ -38,7 +34,7 @@ public class UdpTransportIT {
 		InetAddress address;
 		try {
 			address = InetAddress.getLocalHost();
-		} catch ( UnknownHostException e ) {
+		} catch (UnknownHostException e) {
 			throw new RuntimeException(e);
 		}
 		packet.setAddress(address);
@@ -48,16 +44,16 @@ public class UdpTransportIT {
 
 	static class Listener implements TransportListener {
 
-		private String data;
+		private byte[] data;
 
-		public void onMessage(String message) throws TransportException {
+		public void onMessage(byte[] message) throws TransportException {
 			data = message;
-			synchronized ( this ) {
+			synchronized (this) {
 				notify();
 			}
 		}
 
-		public String getData() {
+		public byte[] getData() {
 			return data;
 		}
 	}

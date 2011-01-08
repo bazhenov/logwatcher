@@ -14,10 +14,10 @@ public class WriteToStorageTransportListener implements TransportListener {
 		this.marshaller = marshaller;
 	}
 
-	public void onMessage(String message) throws TransportException {
+	public void onMessage(byte[] message) throws TransportException {
 		try {
 			storage.writeEntry(marshaller.unmarshall(message));
-		} catch ( LogStorageException e ) {
+		} catch (LogStorageException e) {
 			throw new TransportException(e);
 		}
 	}

@@ -33,7 +33,7 @@ abstract public class AggregatorTestCase {
 	public void testAggregatorCanFilterEntries() {
 		DateTime date = november(12, 2009).at(15, 12);
 		int problemSize = 333;
-		List<String> entries = new ArrayList<String>(problemSize);
+		List<byte[]> entries = new ArrayList<byte[]>(problemSize);
 
 		for (int i = 0; i < problemSize; i++) {
 			LogEntry entry = entry().

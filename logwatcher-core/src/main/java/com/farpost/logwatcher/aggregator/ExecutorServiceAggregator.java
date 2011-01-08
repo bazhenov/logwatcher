@@ -2,9 +2,9 @@ package com.farpost.logwatcher.aggregator;
 
 import com.farpost.logwatcher.AggregatedEntry;
 import com.farpost.logwatcher.AggregatedEntryImpl;
+import com.farpost.logwatcher.LogEntry;
 import com.farpost.logwatcher.marshalling.Marshaller;
 import com.farpost.logwatcher.storage.LogEntryMatcher;
-import com.farpost.logwatcher.LogEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,13 +36,13 @@ public class ExecutorServiceAggregator implements Aggregator {
 		this.service = executor;
 	}
 
-	public Collection<AggregatedEntry> aggregate(Iterable<String> entries,
-	                                             Collection<LogEntryMatcher> matchers) {
+	public Collection<AggregatedEntry> aggregate(Iterable<byte[]> entries,
+																							 Collection<LogEntryMatcher> matchers) {
 		long start = currentTimeMillis();
 		List<Future<Collection<AggregatedEntry>>> futures = emitTasks(entries, matchers);
 		Map<String, AggregatedEntry> result = aggregateResults(futures);
 		long end = currentTimeMillis();
-		if ( log.isInfoEnabled() ) {
+		if (log.isInfoEnabled()) {
 			log.info("Filtering and aggregating complete in " + (end - start) + "ms.");
 		}
 		return result.values();
@@ -56,48 +56,48 @@ public class ExecutorServiceAggregator implements Aggregator {
 		List<Future<Collection<AggregatedEntry>>> futures) {
 		Map<String, AggregatedEntry> result = new HashMap<String, AggregatedEntry>();
 		long start = currentTimeMillis();
-		for ( Future<Collection<AggregatedEntry>> future : futures ) {
+		for (Future<Collection<AggregatedEntry>> future : futures) {
 			try {
 				Collection<AggregatedEntry> aggregatedEntries = future.get();
-				for ( AggregatedEntry entry : aggregatedEntries ) {
+				for (AggregatedEntry entry : aggregatedEntries) {
 					String checksum = entry.getChecksum();
-					if ( result.containsKey(checksum) ) {
+					if (result.containsKey(checksum)) {
 						AggregatedEntryImpl impl = (AggregatedEntryImpl) result.get(checksum);
 						impl.happensAgain(entry.getCount(), entry.getLastTime());
 					} else {
 						result.put(checksum, entry);
 					}
 				}
-			} catch ( InterruptedException e ) {
+			} catch (InterruptedException e) {
 				interrupted();
-			} catch ( ExecutionException e ) {
+			} catch (ExecutionException e) {
 				throw new RuntimeException(e);
 			}
 		}
 		long end = currentTimeMillis();
-		if ( log.isInfoEnabled() ) {
+		if (log.isInfoEnabled()) {
 			log.info("Waiting results and aggregating complete in " + (end - start) + "ms.");
 		}
 		return result;
 	}
 
-	private List<Future<Collection<AggregatedEntry>>> emitTasks(Iterable<String> entries,
-	                                                            Collection<LogEntryMatcher> matchers) {
+	private List<Future<Collection<AggregatedEntry>>> emitTasks(Iterable<byte[]> entries,
+																															Collection<LogEntryMatcher> matchers) {
 		LinkedList<Future<Collection<AggregatedEntry>>> futures = new LinkedList<Future<Collection<AggregatedEntry>>>();
-		Iterator<String> iterator = entries.iterator();
+		Iterator<byte[]> iterator = entries.iterator();
 		int size = 0;
 		long start = currentTimeMillis();
-		while ( iterator.hasNext() ) {
-			String[] batch = new String[batchSize];
+		while (iterator.hasNext()) {
+			Collection<byte[]> batch = new LinkedList<byte[]>();
 			int batchIndex = 0;
 			do {
-				batch[batchIndex++] = iterator.next();
+				batch.add(iterator.next());
 				size++;
-			} while ( batchIndex < batchSize && iterator.hasNext() );
+			} while (batchIndex < batchSize && iterator.hasNext());
 			futures.add(service.submit(new Task(batch, matchers)));
 		}
 		long end = currentTimeMillis();
-		if ( log.isInfoEnabled() ) {
+		if (log.isInfoEnabled()) {
 			log.info("Emiting tasks complete in " + (end - start) + "ms. (" + size + " entries)");
 		}
 		return futures;
@@ -106,9 +106,9 @@ public class ExecutorServiceAggregator implements Aggregator {
 	private class Task implements Callable<Collection<AggregatedEntry>> {
 
 		private final Collection<LogEntryMatcher> matchers;
-		private String[] batch;
+		private Collection<byte[]> batch;
 
-		public Task(String[] batch, Collection<LogEntryMatcher> matchers) {
+		public Task(Collection<byte[]> batch, Collection<LogEntryMatcher> matchers) {
 			this.batch = batch;
 			this.matchers = matchers;
 		}
@@ -117,13 +117,13 @@ public class ExecutorServiceAggregator implements Aggregator {
 			Map<String, AggregatedEntry> result = new HashMap<String, AggregatedEntry>();
 			long start = currentTimeMillis();
 			int processedCnt = 0;
-			for ( String marshalledEntry : batch ) {
-				if ( marshalledEntry == null ) {
+			for (byte[] marshalledEntry : batch) {
+				if (marshalledEntry == null) {
 					continue;
 				}
 				LogEntry entry = marshaller.unmarshall(marshalledEntry);
-				if ( isMatching(entry, matchers) ) {
-					if ( result.containsKey(entry.getChecksum()) ) {
+				if (isMatching(entry, matchers)) {
+					if (result.containsKey(entry.getChecksum())) {
 						AggregatedEntryImpl aggregated = (AggregatedEntryImpl) result.get(entry.getChecksum());
 						aggregated.happensAgain(1, entry.getDate());
 					} else {
@@ -137,7 +137,7 @@ public class ExecutorServiceAggregator implements Aggregator {
 			 */
 			batch = null;
 			long end = currentTimeMillis();
-			if ( log.isInfoEnabled() ) {
+			if (log.isInfoEnabled()) {
 				log.info(
 					"Batch processing of " + processedCnt + " entries done in " + (end - start) + "ms.");
 			}
