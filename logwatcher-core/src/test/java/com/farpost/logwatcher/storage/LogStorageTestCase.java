@@ -134,7 +134,9 @@ abstract public class LogStorageTestCase {
 			saveIn(storage);
 
 		int count = entries().applicationId("frontend").count(storage);
+		assertThat(count, equalTo(1));
 
+		count = entries().applicationId("fronTend").count(storage);
 		assertThat(count, equalTo(1));
 	}
 

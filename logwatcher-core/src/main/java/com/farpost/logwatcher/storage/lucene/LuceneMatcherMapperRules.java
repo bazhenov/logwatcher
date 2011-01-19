@@ -1,6 +1,7 @@
 package com.farpost.logwatcher.storage.lucene;
 
 import com.farpost.logwatcher.Severity;
+import com.farpost.logwatcher.storage.ApplicationIdMatcher;
 import com.farpost.logwatcher.storage.DateMatcher;
 import com.farpost.logwatcher.storage.SeverityMatcher;
 import com.farpost.logwatcher.storage.spi.Matcher;
@@ -10,7 +11,8 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TermRangeQuery;
 
-import static com.farpost.logwatcher.storage.lucene.LuceneBdbLogStorage.normilizeDate;
+import static com.farpost.logwatcher.storage.lucene.LuceneUtils.normalizeTerm;
+import static com.farpost.logwatcher.storage.lucene.LuceneUtils.normilizeDate;
 import static org.apache.lucene.search.BooleanClause.Occur;
 
 final public class LuceneMatcherMapperRules {
@@ -38,5 +40,10 @@ final public class LuceneMatcherMapperRules {
 		}
 
 		return query;
+	}
+
+	@Matcher
+	public Query applicationId(ApplicationIdMatcher matcher) {
+		return new TermQuery(new Term("applicationId", normalizeTerm(matcher.getApplicationId())));
 	}
 }

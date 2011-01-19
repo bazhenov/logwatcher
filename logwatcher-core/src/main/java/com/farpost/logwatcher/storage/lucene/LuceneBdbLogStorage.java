@@ -24,8 +24,7 @@ import org.apache.lucene.util.Version;
 import java.io.IOException;
 import java.util.*;
 
-import static com.farpost.logwatcher.storage.lucene.FieldUtils.storedTerm;
-import static com.farpost.logwatcher.storage.lucene.FieldUtils.term;
+import static com.farpost.logwatcher.storage.lucene.LuceneUtils.*;
 import static java.lang.System.nanoTime;
 import static org.apache.lucene.index.IndexWriter.MaxFieldLength;
 import static org.apache.lucene.search.BooleanClause.Occur;
@@ -101,7 +100,7 @@ public class LuceneBdbLogStorage implements LogStorage {
 
 	private Document createLuceneDocument(LogEntry entry, int entryId) {
 		Document document = new Document();
-		document.add(term("applicationId", entry.getApplicationId()));
+		document.add(term("applicationId", normalizeTerm(entry.getApplicationId())));
 		document.add(term("date", normilizeDate(entry.getDate())));
 		document.add(term("severity", entry.getSeverity().name()));
 		document.add(storedTerm("id", Integer.toString(entryId)));
@@ -155,16 +154,6 @@ public class LuceneBdbLogStorage implements LogStorage {
 		return query;
 	}
 
-	/**
-	 * Для заданной даты возвращает строку в формате YYYYMMDD. Например, "20110118"
-	 *
-	 * @param date дата
-	 * @return строковое представление даты в формате без разделителей
-	 */
-	static String normilizeDate(Date date) {
-		return String.format("%d%02d%02d", date.getYear(), date.getMonth(), date.getDay());
-	}
-
 	@Override
 	public int removeOldEntries(Date date) throws LogStorageException {
 		return 0;	//To change body of implemented methods use File | Settings | File Templates.
@@ -174,7 +163,9 @@ public class LuceneBdbLogStorage implements LogStorage {
 	public int countEntries(Collection<LogEntryMatcher> criterias) throws LogStorageException, InvalidCriteriaException {
 		try {
 			Searcher searcher = searcherRef.getSearcher();
-			Query query = createLuceneQuery(criterias);
+			Query query = criterias.isEmpty()
+				? new MatchAllDocsQuery()
+				: createLuceneQuery(criterias);
 			return searcher.search(query, 1).totalHits;
 		} catch (MatcherMapperException e) {
 			throw new LogStorageException(e);
