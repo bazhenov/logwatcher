@@ -25,7 +25,9 @@ final public class LuceneMatcherMapperRules {
 		String upperTerm = matcher.getDateTo() != null
 			? normilizeDate(matcher.getDateTo())
 			: "99999999";
-		return new TermRangeQuery("date", lowerTerm, upperTerm, true, true);
+		return upperTerm.equals(lowerTerm)
+			? new TermQuery(new Term("date", upperTerm))
+			: new TermRangeQuery("date", lowerTerm, upperTerm, false, true);
 	}
 
 	@Matcher
