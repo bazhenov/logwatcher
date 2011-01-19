@@ -1,11 +1,12 @@
-package com.farpost.logwatcher.storage;
+package com.farpost.logwatcher.storage.sql;
 
 import com.farpost.logwatcher.SimpleChecksumCalculator;
 import com.farpost.logwatcher.aggregator.Aggregator;
 import com.farpost.logwatcher.aggregator.SimpleAggregator;
 import com.farpost.logwatcher.marshalling.Jaxb2Marshaller;
 import com.farpost.logwatcher.marshalling.Marshaller;
-import com.farpost.logwatcher.storage.sql.SqlLogStorage;
+import com.farpost.logwatcher.storage.LogStorage;
+import com.farpost.logwatcher.storage.LogStorageTestCase;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
