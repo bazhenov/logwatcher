@@ -15,7 +15,7 @@ public class SeverityMatcher implements LogEntryMatcher {
 	}
 
 	public boolean isMatch(LogEntry entry) {
-		return entry.getSeverity().isMoreImportantThan(severity);
+		return entry.getSeverity().isEqualOrMoreImportantThan(severity);
 	}
 
 	public Severity getSeverity() {

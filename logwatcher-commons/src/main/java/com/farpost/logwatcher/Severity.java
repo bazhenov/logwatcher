@@ -10,8 +10,8 @@ public enum Severity {
 	}
 
 	public static Severity forName(String name) {
-		for ( Severity i : values() ) {
-			if ( i.toString().equalsIgnoreCase(name) ) {
+		for (Severity i : values()) {
+			if (i.toString().equalsIgnoreCase(name)) {
 				return i;
 			}
 		}
@@ -19,8 +19,8 @@ public enum Severity {
 	}
 
 	public static Severity forCode(int code) {
-		for ( Severity i : values() ) {
-			if ( i.getCode() == code ) {
+		for (Severity i : values()) {
+			if (i.getCode() == code) {
 				return i;
 			}
 		}
@@ -31,7 +31,7 @@ public enum Severity {
 		return code;
 	}
 
-	public boolean isMoreImportantThan(Severity severity) {
+	public boolean isEqualOrMoreImportantThan(Severity severity) {
 		return getCode() >= severity.getCode();
 	}
 }

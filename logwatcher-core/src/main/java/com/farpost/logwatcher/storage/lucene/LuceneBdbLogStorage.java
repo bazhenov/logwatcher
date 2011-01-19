@@ -14,7 +14,6 @@ import com.farpost.logwatcher.storage.spi.MatcherMapperException;
 import com.farpost.timepoint.Date;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
@@ -25,9 +24,9 @@ import org.apache.lucene.util.Version;
 import java.io.IOException;
 import java.util.*;
 
+import static com.farpost.logwatcher.storage.lucene.FieldUtils.storedTerm;
+import static com.farpost.logwatcher.storage.lucene.FieldUtils.term;
 import static java.lang.System.nanoTime;
-import static org.apache.lucene.document.Field.Index;
-import static org.apache.lucene.document.Field.Store;
 import static org.apache.lucene.index.IndexWriter.MaxFieldLength;
 import static org.apache.lucene.search.BooleanClause.Occur;
 
@@ -102,9 +101,10 @@ public class LuceneBdbLogStorage implements LogStorage {
 
 	private Document createLuceneDocument(LogEntry entry, int entryId) {
 		Document document = new Document();
-		document.add(new Field("applicationId", entry.getApplicationId(), Store.NO, Index.ANALYZED_NO_NORMS));
-		document.add(new Field("date", normilizeDate(entry.getDate()), Store.NO, Index.ANALYZED_NO_NORMS));
-		document.add(new Field("id", Integer.toString(entryId), Store.YES, Index.NOT_ANALYZED_NO_NORMS));
+		document.add(term("applicationId", entry.getApplicationId()));
+		document.add(term("date", normilizeDate(entry.getDate())));
+		document.add(term("severity", entry.getSeverity().name()));
+		document.add(storedTerm("id", Integer.toString(entryId)));
 		return document;
 	}
 
@@ -142,6 +142,7 @@ public class LuceneBdbLogStorage implements LogStorage {
 		}
 	}
 
+
 	private Query createLuceneQuery(Collection<LogEntryMatcher> criterias) throws MatcherMapperException {
 		BooleanQuery query = new BooleanQuery();
 		for (LogEntryMatcher matcher : criterias) {
@@ -171,7 +172,16 @@ public class LuceneBdbLogStorage implements LogStorage {
 
 	@Override
 	public int countEntries(Collection<LogEntryMatcher> criterias) throws LogStorageException, InvalidCriteriaException {
-		return 0;	//To change body of implemented methods use File | Settings | File Templates.
+		try {
+			Searcher searcher = searcherRef.getSearcher();
+			Query query = createLuceneQuery(criterias);
+			return searcher.search(query, 1).totalHits;
+		} catch (MatcherMapperException e) {
+			throw new LogStorageException(e);
+		} catch (IOException e) {
+			throw new LogStorageException(e);
+		}
+
 	}
 
 	@Override
@@ -194,38 +204,5 @@ public class LuceneBdbLogStorage implements LogStorage {
 	public List<AggregatedEntry> getAggregatedEntries(String applicationId, Date date, Severity severity)
 		throws LogStorageException, InvalidCriteriaException {
 		return null;	//To change body of implemented methods use File | Settings | File Templates.
-	}
-
-	/**
-	 * Tuple хранящий ссылки на {@link IndexSearcher} и связанный с ним {@link FieldCache} по полю id
-	 * <p/>
-	 * Для корректного закрытия {@link IndexSearcher}'а и {@link IndexReader}'а, используется финализация.
-	 */
-	static private final class SearcherReference {
-
-		private final IndexReader indexReader;
-		private final Searcher searcher;
-		private final String[] idFieldCache;
-
-		private SearcherReference(IndexReader indexReader, Searcher searcher, String[] idFieldCache) {
-			this.indexReader = indexReader;
-			this.searcher = searcher;
-			this.idFieldCache = idFieldCache;
-		}
-
-		public Searcher getSearcher() {
-			return searcher;
-		}
-
-		public String[] getIdFieldCache() {
-			return idFieldCache;
-		}
-
-		@Override
-		protected void finalize() throws Throwable {
-			super.finalize();
-			searcher.close();
-			indexReader.close();
-		}
 	}
 }
