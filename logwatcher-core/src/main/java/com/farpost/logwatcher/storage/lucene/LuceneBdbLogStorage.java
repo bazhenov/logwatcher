@@ -1,9 +1,6 @@
 package com.farpost.logwatcher.storage.lucene;
 
-import com.farpost.logwatcher.AggregatedEntry;
-import com.farpost.logwatcher.LogEntry;
-import com.farpost.logwatcher.Severity;
-import com.farpost.logwatcher.Visitor;
+import com.farpost.logwatcher.*;
 import com.farpost.logwatcher.storage.InvalidCriteriaException;
 import com.farpost.logwatcher.storage.LogEntryMatcher;
 import com.farpost.logwatcher.storage.LogStorage;
@@ -17,6 +14,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.util.Version;
@@ -40,6 +38,7 @@ public class LuceneBdbLogStorage implements LogStorage {
 	private volatile int commitThreshold = 5;
 	private final IndexWriter writer;
 	private volatile SearcherReference searcherRef;
+	private final ChecksumCalculator checksumCalculator = new SimpleChecksumCalculator();
 
 	public LuceneBdbLogStorage(Directory directory) throws IOException {
 		this.directory = directory;
@@ -70,6 +69,10 @@ public class LuceneBdbLogStorage implements LogStorage {
 	@Override
 	public void writeEntry(LogEntry entry) throws LogStorageException {
 		try {
+			LogEntryImpl impl = (LogEntryImpl) entry;
+			String checksum = checksumCalculator.calculateChecksum(entry);
+			impl.setChecksum(checksum);
+
 			int entryId = getNextId();
 			Document document = createLuceneDocument(entry, entryId);
 			writer.addDocument(document);
@@ -103,6 +106,7 @@ public class LuceneBdbLogStorage implements LogStorage {
 		document.add(term("applicationId", normalizeTerm(entry.getApplicationId())));
 		document.add(term("date", normilizeDate(entry.getDate())));
 		document.add(term("severity", entry.getSeverity().name()));
+		document.add(term("checksum", normalizeTerm(entry.getChecksum())));
 		document.add(storedTerm("id", Integer.toString(entryId)));
 		return document;
 	}
@@ -177,7 +181,13 @@ public class LuceneBdbLogStorage implements LogStorage {
 
 	@Override
 	public void removeEntriesWithChecksum(String checksum) throws LogStorageException {
-		//To change body of implemented methods use File | Settings | File Templates.
+		try {
+			writer.deleteDocuments(new Term("checksum", normalizeTerm(checksum)));
+
+			commitChangesIfNeeded();
+		} catch (IOException e) {
+			throw new LogStorageException(e);
+		}
 	}
 
 	@Override

@@ -263,7 +263,7 @@ abstract public class LogStorageTestCase {
 	}
 
 	@Test
-	public void storageCanRemoveEntriesByCriteria()
+	public void storageCanRemoveEntriesWithSpecifiedChecksum()
 		throws LogStorageException, InvalidCriteriaException {
 
 		entry().
