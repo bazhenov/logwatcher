@@ -9,6 +9,8 @@ import com.farpost.logwatcher.storage.spi.AnnotationDrivenMatcherMapperImpl;
 import com.farpost.logwatcher.storage.spi.MatcherMapper;
 import com.farpost.logwatcher.storage.spi.MatcherMapperException;
 import com.farpost.timepoint.Date;
+import com.google.common.base.Predicate;
+import com.sleepycat.je.Environment;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
@@ -23,6 +25,7 @@ import java.io.IOException;
 import java.util.*;
 
 import static com.farpost.logwatcher.storage.lucene.LuceneUtils.*;
+import static com.google.common.collect.Iterables.find;
 import static java.lang.System.nanoTime;
 import static org.apache.lucene.index.IndexWriter.MaxFieldLength;
 import static org.apache.lucene.search.BooleanClause.Occur;
@@ -40,11 +43,12 @@ public class LuceneBdbLogStorage implements LogStorage {
 	private volatile SearcherReference searcherRef;
 	private final ChecksumCalculator checksumCalculator = new SimpleChecksumCalculator();
 
-	public LuceneBdbLogStorage(Directory directory) throws IOException {
+	public LuceneBdbLogStorage(Directory directory, Environment environment) throws IOException {
 		this.directory = directory;
 		matcherMapper = new AnnotationDrivenMatcherMapperImpl<Query>(new LuceneMatcherMapperRules());
 		writer = new IndexWriter(directory, new StandardAnalyzer(Version.LUCENE_30), MaxFieldLength.UNLIMITED);
 		searcherRef = reopenSearcher(directory);
+		//environment.openDatabase(null, "")
 	}
 
 	/**
@@ -67,16 +71,28 @@ public class LuceneBdbLogStorage implements LogStorage {
 	}
 
 	@Override
-	public void writeEntry(LogEntry entry) throws LogStorageException {
+	public synchronized void writeEntry(LogEntry entry) throws LogStorageException {
 		try {
 			LogEntryImpl impl = (LogEntryImpl) entry;
-			String checksum = checksumCalculator.calculateChecksum(entry);
+			final String checksum = checksumCalculator.calculateChecksum(entry);
 			impl.setChecksum(checksum);
 
 			int entryId = getNextId();
 			Document document = createLuceneDocument(entry, entryId);
 			writer.addDocument(document);
 			entries.put(entryId, entry);
+
+			List<AggregatedEntry> aggregatedEntries = getAggregatedEntries(entry.getApplicationId(), entry.getDate(), Severity.trace);
+			AggregatedEntry aggregatedEntry = find(aggregatedEntries, new Predicate<AggregatedEntry>() {
+				public boolean apply(AggregatedEntry o) {
+					return checksum.equalsIgnoreCase(o.getChecksum());
+				}
+			});
+			if (aggregatedEntry == null) {
+				aggregatedEntry = new AggregatedEntryImpl(entry);
+			} else {
+				((AggregatedEntryImpl) aggregatedEntry).happensAgain(1, entry.getDate());
+			}
 
 			commitChangesIfNeeded();
 		} catch (IOException e) {
