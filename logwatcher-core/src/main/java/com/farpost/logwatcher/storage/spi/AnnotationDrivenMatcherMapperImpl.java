@@ -15,7 +15,7 @@ import java.lang.reflect.Method;
  * {@link LogEntryMatcher}.
  *
  * @param <T> тип объектов которые представляют собой критерии отбора на низком уровне
- * @see com.farpost.logwatcher.storage.sql.SqlMatcherMapperRules
+ * @see com.farpost.logwatcher.storage.SqlMatcherMapperRules
  */
 public class AnnotationDrivenMatcherMapperImpl<T> implements MatcherMapper<T> {
 

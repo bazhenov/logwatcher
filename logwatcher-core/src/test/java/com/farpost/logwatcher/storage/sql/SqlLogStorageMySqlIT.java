@@ -7,6 +7,7 @@ import com.farpost.logwatcher.marshalling.Jaxb2Marshaller;
 import com.farpost.logwatcher.marshalling.Marshaller;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageTestCase;
+import com.farpost.logwatcher.storage.SqlLogStorage;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
@@ -38,7 +39,7 @@ public class SqlLogStorageMySqlIT extends LogStorageTestCase {
 
 		ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
 		populator.addScript(new ClassPathResource("schema-cleanup.sql"));
-		populator.addScript(new ClassPathResource("schema.sql"));
+		populator.addScript(new ClassPathResource("com/farpost/logwatcher/storage/schema.sql"));
 		Connection connection = ds.getConnection();
 		populator.populate(connection);
 		connection.close();

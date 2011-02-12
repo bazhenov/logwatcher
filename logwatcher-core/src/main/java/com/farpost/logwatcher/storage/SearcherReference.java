@@ -1,4 +1,4 @@
-package com.farpost.logwatcher.storage.lucene;
+package com.farpost.logwatcher.storage;
 
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.search.Searcher;

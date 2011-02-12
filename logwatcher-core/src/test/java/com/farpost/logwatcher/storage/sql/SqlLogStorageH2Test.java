@@ -7,6 +7,7 @@ import com.farpost.logwatcher.marshalling.Jaxb2Marshaller;
 import com.farpost.logwatcher.marshalling.Marshaller;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageTestCase;
+import com.farpost.logwatcher.storage.SqlLogStorage;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.testng.annotations.AfterMethod;
@@ -24,7 +25,7 @@ public class SqlLogStorageH2Test extends LogStorageTestCase {
 		EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
 		db = builder.
 			setType(H2).
-			addScript("schema.sql").
+			addScript("com/farpost/logwatcher/storage/schema.sql").
 			build();
 
 		Marshaller marshaller = new Jaxb2Marshaller();

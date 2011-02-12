@@ -1,13 +1,9 @@
-package com.farpost.logwatcher.storage.sql;
+package com.farpost.logwatcher.storage;
 
-import com.farpost.logwatcher.storage.ApplicationIdMatcher;
-import com.farpost.logwatcher.storage.ChecksumMatcher;
-import com.farpost.logwatcher.storage.DateMatcher;
-import com.farpost.logwatcher.storage.SeverityMatcher;
 import com.farpost.logwatcher.storage.spi.Matcher;
 import com.farpost.timepoint.Date;
 
-import static com.farpost.logwatcher.storage.sql.SqlLogStorage.date;
+import static com.farpost.logwatcher.storage.SqlLogStorage.date;
 
 public class SqlMatcherMapperRules {
 

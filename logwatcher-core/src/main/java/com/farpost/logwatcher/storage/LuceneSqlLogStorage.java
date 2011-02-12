@@ -1,16 +1,13 @@
-package com.farpost.logwatcher.storage.lucene;
+package com.farpost.logwatcher.storage;
 
 import com.farpost.logwatcher.*;
-import com.farpost.logwatcher.storage.InvalidCriteriaException;
-import com.farpost.logwatcher.storage.LogEntryMatcher;
-import com.farpost.logwatcher.storage.LogStorage;
-import com.farpost.logwatcher.storage.LogStorageException;
+import com.farpost.logwatcher.marshalling.BinaryMarshallerV1;
+import com.farpost.logwatcher.marshalling.Marshaller;
 import com.farpost.logwatcher.storage.spi.AnnotationDrivenMatcherMapperImpl;
 import com.farpost.logwatcher.storage.spi.MatcherMapper;
 import com.farpost.logwatcher.storage.spi.MatcherMapperException;
 import com.farpost.timepoint.Date;
-import com.google.common.base.Predicate;
-import com.sleepycat.je.Environment;
+import com.farpost.timepoint.DateTime;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
@@ -20,35 +17,101 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.util.Version;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 
+import javax.sql.DataSource;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.*;
 
-import static com.farpost.logwatcher.storage.lucene.LuceneUtils.*;
-import static com.google.common.collect.Iterables.find;
+import static com.farpost.logwatcher.storage.LuceneUtils.*;
+import static com.farpost.timepoint.Date.january;
+import static com.google.common.base.Preconditions.checkNotNull;
 import static java.lang.System.nanoTime;
 import static org.apache.lucene.index.IndexWriter.MaxFieldLength;
 import static org.apache.lucene.search.BooleanClause.Occur;
 
-public class LuceneBdbLogStorage implements LogStorage {
+public class LuceneSqlLogStorage implements LogStorage {
 
 	private final Directory directory;
 	private final MatcherMapper<Query> matcherMapper;
 	private final Map<Integer, LogEntry> entries = new HashMap<Integer, LogEntry>();
-	private int nextId = 1;
+	private int nextId;
 
-	private long lastCommitTime = nanoTime();
-	private volatile int commitThreshold = 5;
+	private final JdbcTemplate jdbc;
 	private final IndexWriter writer;
-	private volatile SearcherReference searcherRef;
 	private final ChecksumCalculator checksumCalculator = new SimpleChecksumCalculator();
 
-	public LuceneBdbLogStorage(Directory directory, Environment environment) throws IOException {
+	private static final Logger log = LoggerFactory.getLogger(LuceneSqlLogStorage.class);
+
+	private volatile int commitThreshold = 5;
+	private volatile SearcherReference searcherRef;
+	private volatile long lastCommitTime = nanoTime();
+	private Marshaller marshaller;
+	private final RowMapper<AggregatedEntry> aggregateEntryMapper;
+
+	public LuceneSqlLogStorage(Directory directory, DataSource dataSource) throws IOException {
 		this.directory = directory;
 		matcherMapper = new AnnotationDrivenMatcherMapperImpl<Query>(new LuceneMatcherMapperRules());
 		writer = new IndexWriter(directory, new StandardAnalyzer(Version.LUCENE_30), MaxFieldLength.UNLIMITED);
 		searcherRef = reopenSearcher(directory);
-		//environment.openDatabase(null, "")
+		this.jdbc = new JdbcTemplate(dataSource);
+		this.marshaller = new BinaryMarshallerV1();
+		this.aggregateEntryMapper = new CreateAggregatedEntryRowMapper(marshaller);
+		nextId = jdbc.queryForInt("SELECT MAX(id) + 1 FROM entry");
+	}
+
+	// TODO: объективных причин для сериализации потоков при записи нет
+	@Override
+	public synchronized void writeEntry(LogEntry entry) throws LogStorageException {
+		try {
+			checkNotNull(entry);
+			// TODO: контрольная сумма должна расчитыватся где-то в другом месте. Это слой хранения данных
+			LogEntryImpl impl = (LogEntryImpl) entry;
+			final String checksum = checksumCalculator.calculateChecksum(entry);
+			impl.setChecksum(checksum);
+
+			int entryId = getNextId();
+
+			Timestamp entryTimestamp = timestamp(impl.getDate());
+			java.sql.Date entryDate = date(impl.getDate());
+			byte[] marshalledEntry = marshaller.marshall(impl);
+
+			jdbc.update("INSERT INTO entry (id, value) VALUES (?, ?)", entryId, marshalledEntry);
+
+			int affectedRows = jdbc.update(
+				"UPDATE aggregated_entry SET count = count + 1, last_time = ? WHERE date = ? AND checksum = ?",
+				entryTimestamp, entryDate, checksum);
+			if (affectedRows == 0) {
+				jdbc.update(
+					"INSERT INTO aggregated_entry (date, checksum, last_time, category, severity, application_id, count, content) VALUES (?, ?, ?, ?, ?, ?, 1, ?)",
+					entryDate, checksum, entryTimestamp, impl.getCategory(),
+					impl.getSeverity().getCode(), impl.getApplicationId(), marshalledEntry);
+			}
+
+			if (log.isDebugEnabled()) {
+				log.debug("Entry with checksum: " + checksum + " wrote to database");
+			}
+
+			writer.addDocument(createLuceneDocument(entry, entryId));
+
+			commitChangesIfNeeded();
+
+		} catch (IOException e) {
+			throw new LogStorageException(e);
+		}
+	}
+
+	private static java.sql.Date date(Date date) {
+		return new java.sql.Date(date.asTimestamp());
+	}
+
+	private static Timestamp timestamp(DateTime date) {
+		return new Timestamp(date.asTimestamp());
 	}
 
 	/**
@@ -68,36 +131,6 @@ public class LuceneBdbLogStorage implements LogStorage {
 
 	public void setCommitThreshold(int commitThreshold) {
 		this.commitThreshold = commitThreshold;
-	}
-
-	@Override
-	public synchronized void writeEntry(LogEntry entry) throws LogStorageException {
-		try {
-			LogEntryImpl impl = (LogEntryImpl) entry;
-			final String checksum = checksumCalculator.calculateChecksum(entry);
-			impl.setChecksum(checksum);
-
-			int entryId = getNextId();
-			Document document = createLuceneDocument(entry, entryId);
-			writer.addDocument(document);
-			entries.put(entryId, entry);
-
-			List<AggregatedEntry> aggregatedEntries = getAggregatedEntries(entry.getApplicationId(), entry.getDate(), Severity.trace);
-			AggregatedEntry aggregatedEntry = find(aggregatedEntries, new Predicate<AggregatedEntry>() {
-				public boolean apply(AggregatedEntry o) {
-					return checksum.equalsIgnoreCase(o.getChecksum());
-				}
-			});
-			if (aggregatedEntry == null) {
-				aggregatedEntry = new AggregatedEntryImpl(entry);
-			} else {
-				((AggregatedEntryImpl) aggregatedEntry).happensAgain(1, entry.getDate());
-			}
-
-			commitChangesIfNeeded();
-		} catch (IOException e) {
-			throw new LogStorageException(e);
-		}
 	}
 
 	private int getNextId() {
@@ -131,11 +164,22 @@ public class LuceneBdbLogStorage implements LogStorage {
 	public List<LogEntry> findEntries(Collection<LogEntryMatcher> criterias)
 		throws LogStorageException, InvalidCriteriaException {
 
+		int[] ids = findEntriesIds(criterias);
+
+		List<LogEntry> result = new ArrayList<LogEntry>();
+		for (int id : ids) {
+			byte[] data = jdbc.queryForObject("SELECT value FROM entry where id = ?", byte[].class, id);
+			result.add(marshaller.unmarshall(data));
+		}
+		return result;
+	}
+
+	private int[] findEntriesIds(Collection<LogEntryMatcher> criterias) {
 		try {
 			Query query = createLuceneQuery(criterias);
 
 			/**
-			 * Сохраняем ссылку на tuple({@link IndexSearcher}, {@link FieldCache}) локально
+			 * Сохраняем ссылку на tuple({@link org.apache.lucene.search.IndexSearcher}, {@link org.apache.lucene.search.FieldCache}) локально
 			 * чтобы избежать race condition
 			 */
 			SearcherReference ref = searcherRef;
@@ -144,23 +188,18 @@ public class LuceneBdbLogStorage implements LogStorage {
 
 			TopDocs topDocs = searcher.search(query, 100);
 
-			List<LogEntry> result = new ArrayList<LogEntry>(topDocs.scoreDocs.length);
-			for (ScoreDoc doc : topDocs.scoreDocs) {
-				int entryId = Integer.parseInt(ids[doc.doc]);
-				result.add(entries.get(entryId));
+			int result[] = new int[topDocs.scoreDocs.length];
+			for (int i = 0; i < topDocs.scoreDocs.length; i++) {
+				result[i] = Integer.parseInt(ids[topDocs.scoreDocs[i].doc]);
 			}
-
 			return result;
 
 		} catch (MatcherMapperException e) {
-			throw new InvalidCriteriaException(e);
-		} catch (CorruptIndexException e) {
 			throw new LogStorageException(e);
 		} catch (IOException e) {
 			throw new LogStorageException(e);
 		}
 	}
-
 
 	private Query createLuceneQuery(Collection<LogEntryMatcher> criterias) throws MatcherMapperException {
 		BooleanQuery query = new BooleanQuery();
@@ -176,7 +215,32 @@ public class LuceneBdbLogStorage implements LogStorage {
 
 	@Override
 	public int removeOldEntries(Date date) throws LogStorageException {
-		return 0;	//To change body of implemented methods use File | Settings | File Templates.
+		try {
+			checkNotNull(date);
+			Collection<LogEntryMatcher> criterias = new ArrayList<LogEntryMatcher>();
+			criterias.add(new DateMatcher(january(1, 1980), date.minusDay(1)));
+			int[] ids;
+			int recordsRemoved = 0;
+
+			do {
+				ids = findEntriesIds(criterias);
+				for (int id : ids) {
+					jdbc.update("DELETE FROM entry WHERE id = ?", id);
+					writer.deleteDocuments(new Term("id", Integer.toString(id)));
+				}
+				recordsRemoved += ids.length;
+				commitChangesIfNeeded();
+			} while (ids.length > 0);
+
+			return recordsRemoved;
+
+		} catch (DataAccessException e) {
+			throw new LogStorageException(e);
+		} catch (CorruptIndexException e) {
+			throw new LogStorageException(e);
+		} catch (IOException e) {
+			throw new LogStorageException(e);
+		}
 	}
 
 	@Override
@@ -214,12 +278,17 @@ public class LuceneBdbLogStorage implements LogStorage {
 
 	@Override
 	public Set<String> getUniquieApplicationIds(Date date) {
-		return null;	//To change body of implemented methods use File | Settings | File Templates.
+		checkNotNull(date);
+		List<String> ids = jdbc.queryForList("SELECT application_id FROM aggregated_entry WHERE date = ?", String.class,
+			date(date));
+		return new HashSet<String>(ids);
 	}
 
 	@Override
 	public List<AggregatedEntry> getAggregatedEntries(String applicationId, Date date, Severity severity)
 		throws LogStorageException, InvalidCriteriaException {
-		return null;	//To change body of implemented methods use File | Settings | File Templates.
+		return jdbc.query(
+			"SELECT checksum, application_id, last_time, count, severity, content FROM aggregated_entry WHERE application_id = ? AND date = ? AND severity >= ?",
+			aggregateEntryMapper, applicationId, date(date), severity.getCode());
 	}
 }

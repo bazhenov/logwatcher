@@ -1,4 +1,4 @@
-package com.farpost.logwatcher.storage.sql;
+package com.farpost.logwatcher.storage;
 
 import com.farpost.logwatcher.AggregatedEntry;
 import com.farpost.logwatcher.AggregatedEntryImpl;

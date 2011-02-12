@@ -1,12 +1,8 @@
-package com.farpost.logwatcher.storage.sql;
+package com.farpost.logwatcher.storage;
 
 import com.farpost.logwatcher.*;
 import com.farpost.logwatcher.aggregator.Aggregator;
 import com.farpost.logwatcher.marshalling.Marshaller;
-import com.farpost.logwatcher.storage.InvalidCriteriaException;
-import com.farpost.logwatcher.storage.LogEntryMatcher;
-import com.farpost.logwatcher.storage.LogStorage;
-import com.farpost.logwatcher.storage.LogStorageException;
 import com.farpost.logwatcher.storage.spi.AnnotationDrivenMatcherMapperImpl;
 import com.farpost.logwatcher.storage.spi.MatcherMapper;
 import com.farpost.logwatcher.storage.spi.MatcherMapperException;
@@ -90,6 +86,7 @@ public class SqlLogStorage implements LogStorage {
 	@Override
 	public int removeOldEntries(Date date) throws LogStorageException {
 		try {
+
 			return jdbc.update("DELETE FROM entry WHERE date < ?", date(date));
 		} catch (DataAccessException e) {
 			throw new LogStorageException(e);

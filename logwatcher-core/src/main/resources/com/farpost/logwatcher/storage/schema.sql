@@ -11,13 +11,7 @@ CREATE TABLE IF NOT EXISTS aggregated_entry (
 );
 
 CREATE TABLE IF NOT EXISTS entry (
-	id INT NOT NULL AUTO_INCREMENT,
-	time TIMESTAMP NOT NULL,
-	date DATE NOT NULL,
-	checksum VARCHAR(255) NOT NULL,
-	category VARCHAR(255) NULL,
-	severity INT NOT NULL,
-	application_id VARCHAR(255) NOT NULL,
-	content BLOB NOT NULL,
+	id INT NOT NULL,
+	value BLOB NOT NULL,
 	PRIMARY KEY(id)
 );

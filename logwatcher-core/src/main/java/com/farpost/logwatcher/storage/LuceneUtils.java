@@ -1,4 +1,4 @@
-package com.farpost.logwatcher.storage.lucene;
+package com.farpost.logwatcher.storage;
 
 import com.farpost.timepoint.Date;
 import org.apache.lucene.document.Field;
