@@ -73,6 +73,14 @@ public class LogWatcherAppenderTest {
 	}
 
 	@Test
+	public void appenderShouldProcessPlaceholders() throws InterruptedException {
+		root.debug("Hi there, {}", "to you");
+
+		LogEntry entry = getLastMessage();
+		assertThat(entry.getMessage(), equalTo("Hi there, to you"));
+	}
+
+	@Test
 	public void appenderShouldBeAbleToSendMessagesWithoutException() throws InterruptedException {
 		String message = "Debug message";
 		root.debug(message);
