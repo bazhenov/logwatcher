@@ -26,7 +26,7 @@
 	</div>
 
 	<c:url var="permaLink" value="/feed/${entry.applicationId}">
-		<c:param name="date" value="${entry.date}"/>
+		<c:param name="date"><fmt:formatDate value="${lf:date(entry.date)}" pattern="yyyy-MM-dd"/></c:param>
 		<c:param name="severity" value="${entry.severity}"/>
 	</c:url>
 	<c:set var="permaLink" value="${permaLink}\#${entry.checksum}"/>
