@@ -10,6 +10,22 @@ function changeSeverity(url) {
 	});
 }
 
+function highlight(element) {
+	var text = element.html();
+	var highlighted = text.replace(/[0-9a-z_A-Z\-\.\/]+:\d+/g, '<a class="ajax-link" href="/openinide?fileName=$&">$&</a>');
+	element.html(highlighted);
+
+	$('a.ajax-link').click(function(e) {
+		e.preventDefault();
+		var url = $(this).attr("href");
+		$.ajax({
+			type: "GET",
+			url: url
+		});
+	});
+}
+
+
 $(document).ready(function() {
 
 	function toggleEntry(entry) {
@@ -23,6 +39,8 @@ $(document).ready(function() {
 			content.load("/service/content", {'checksum': checksum, 'date': lastOccurredDate}, function(response, code) {
 				if (code != "success") {
 					content.html("Error while loading content");
+				} else {
+					highlight(content.children(".entryContent"));
 				}
 				entry.removeClass("loadingContent");
 
