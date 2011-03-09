@@ -15,8 +15,6 @@
 
 	<bean class="com.farpost.logwatcher.web.SessionController"/>
 
-	<bean class="com.farpost.logwatcher.web.OpenInIdeController"/>
-
 	<bean class="com.farpost.logwatcher.web.DashboardController">
 		<constructor-arg ref="storage"/>
 	</bean>
