@@ -12,16 +12,16 @@ function changeSeverity(url) {
 
 function highlight(element) {
 	var text = element.html();
-	var highlighted = text.replace(/[0-9a-z_A-Z\-\.\/]+:\d+/g, '<a class="ajax-link" href="/openinide?fileName=$&">$&</a>');
+	var highlighted = text.replace(/[0-9a-z_A-Z\-\.\/]+:\d+/g, '<a class="ajax-link" href="/?message=$&">$&</a>');
 	element.html(highlighted);
 
 	$('a.ajax-link').click(function(e) {
 		e.preventDefault();
 		var url = $(this).attr("href");
-		$.ajax({
-			type: "GET",
-			url: url
+		$.getJSON('http://localhost:8091' + url + '&callback=?', function(json) {
+			//do nothing
 		});
+
 	});
 }
 
