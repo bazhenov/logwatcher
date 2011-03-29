@@ -37,7 +37,7 @@ public class TranslationRulesImpl {
 	@Criteria("occurred")
 	public LogEntryMatcher date(String dateString) throws ParseException {
 		if ( dateString.startsWith("last") ) {
-			// Парсим строчку вида occured: last X (days|weeks|month)
+			// Парсим строчку вида occurred: last X (days|weeks|month)
 			String[] parts = dateString.split(" ", 3);
 			int period;
 			String quantificatorStr;
@@ -62,14 +62,14 @@ public class TranslationRulesImpl {
 			return new DateMatcher(from, to);
 
 		} else if ( dateString.contains("/") ) {
-			// Парсим строчку вида occured: 2009-12-19/2009-12-21
+			// Парсим строчку вида occurred: 2009-12-19/2009-12-21
 			String[] parts = dateString.split("/", 2);
 			Date from = new Date(dateFormat.get().parse(parts[0]));
 			Date to = new Date(dateFormat.get().parse(parts[1]));
 			return new DateMatcher(from, to);
 
 		} else {
-			// Парсим строчку вида occured: 2009-12-19
+			// Парсим строчку вида occurred: 2009-12-19
 			Date date = new Date(dateFormat.get().parse(dateString));
 			return new DateMatcher(date);
 		}

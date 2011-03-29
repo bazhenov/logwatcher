@@ -78,7 +78,7 @@ $(document).ready(function() {
 					entry.hide('normal');
 				},
 				error: function(request, status, error) {
-					alert("There is an error occured while removing entry: " + status + ", " + error)
+					alert("There is an error occurred while removing entry: " + status + ", " + error)
 				}
 			})
 		}

@@ -63,9 +63,9 @@ public class DateMatcher implements LogEntryMatcher {
 	@Override
 	public String toString() {
 		if (from.lessThan(to)) {
-			return "occured:" + from + "/" + to;
+			return "occurred:" + from + "/" + to;
 		} else {
-			return "occured:" + from;
+			return "occurred:" + from;
 		}
 	}
 

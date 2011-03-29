@@ -11,7 +11,7 @@
 	</attributes>
 
 	<cause type="RuntimeException">
-		<message>Error occured</message>
+		<message>Error occurred</message>
 		<stackTrace>Stacktrace</stackTrace>
 		<cause type="InternalException">
 			<message>Another message</message>

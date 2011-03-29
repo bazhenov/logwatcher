@@ -37,7 +37,7 @@ abstract public class AggregatorTestCase {
 
 		for (int i = 0; i < problemSize; i++) {
 			LogEntry entry = entry().
-				occured(date).
+				occurred(date).
 				attribute("machine", "aux" + (i % 3) + ".srv.loc").
 				create();
 			entries.add(marshaller.marshall(entry));

@@ -37,7 +37,7 @@ abstract public class LogStorageTestCase {
 	public void storageCanSaveEntry() throws Exception {
 		DateTime date = today.at("11:35");
 		LogEntry entry = entry().
-			occured(date).
+			occurred(date).
 			attribute("foo", "bar").
 			create();
 		storage.writeEntry(entry);
@@ -94,17 +94,17 @@ abstract public class LogStorageTestCase {
 		entry().
 			applicationId("search").
 			message("Error in search").
-			occured(morning).
+			occurred(morning).
 			saveIn(storage);
 		entry().
 			applicationId("billing").
 			message("Error in billing").
-			occured(evening).
+			occurred(evening).
 			saveIn(storage);
 		entry().
 			applicationId("billing").
 			message("Error in billing").
-			occured(evening).
+			occurred(evening).
 			saveIn(storage);
 
 		List<AggregatedEntry> list = storage.getAggregatedEntries("billing", date, Severity.info);
@@ -141,11 +141,11 @@ abstract public class LogStorageTestCase {
 	@Test
 	public void storageCanFilterEntriesByDate() throws LogStorageException, InvalidCriteriaException {
 		entry().
-			occured(today().at("12:22")).message("a").
+			occurred(today().at("12:22")).message("a").
 			saveIn(storage);
 
 		entry().
-			occured(yesterday().at("10:00")).message("b").
+			occurred(yesterday().at("10:00")).message("b").
 			saveIn(storage);
 
 		int count = entries().date(today(), today()).
@@ -184,15 +184,15 @@ abstract public class LogStorageTestCase {
 	public void storageCanReturnUniqueApplicationIdSet() {
 		entry().
 			applicationId("foo").
-			occured(today.at("12:00")).
+			occurred(today.at("12:00")).
 			saveIn(storage);
 		entry().
 			applicationId("bar").
-			occured(today.at("12:00")).
+			occurred(today.at("12:00")).
 			saveIn(storage);
 		entry().
 			applicationId("baz").
-			occured(yesterday.at("13:32")).
+			occurred(yesterday.at("13:32")).
 			saveIn(storage);
 
 		Set<String> ids = storage.getUniquieApplicationIds(today());
@@ -214,7 +214,7 @@ abstract public class LogStorageTestCase {
 	@Test
 	public void storageCanCountEntriesByCriteria() {
 		entry().
-			occured(yesterday.at("12:23")).
+			occurred(yesterday.at("12:23")).
 			message("foo").
 			saveIn(storage);
 		entry().
@@ -266,20 +266,20 @@ abstract public class LogStorageTestCase {
 
 		entry().
 			applicationId("application").
-			occured(today.at("12:35")).
+			occurred(today.at("12:35")).
 			message("foo").
 			saveIn(storage);
 
 		entry().
 			applicationId("application").
-			occured(today.at("12:35")).
+			occurred(today.at("12:35")).
 			message("bar").
 			saveIn(storage);
 
 		LogEntry entry = entry().
 			applicationId("application").
 			message("foo").
-			occured(yesterday.at("11:36")).
+			occurred(yesterday.at("11:36")).
 			saveIn(storage);
 
 		storage.removeEntriesWithChecksum(entry.getChecksum());
@@ -296,12 +296,12 @@ abstract public class LogStorageTestCase {
 	public void storageCanRemoveOldEntries() throws LogStorageException, InvalidCriteriaException {
 		entry().
 			applicationId("foo").
-			occured(yesterday().at("15:32")).
+			occurred(yesterday().at("15:32")).
 			saveIn(storage);
 
 		LogEntry todayEntry = entry().
 			applicationId("foo").
-			occured(today().at("16:00")).
+			occurred(today().at("16:00")).
 			saveIn(storage);
 
 		int removedEntriesCount = storage.removeOldEntries(today());

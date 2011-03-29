@@ -15,11 +15,11 @@ import static com.farpost.timepoint.DateTime.now;
  * Пример использования:
  * <pre>
  * LogEntry enrty = entry().
- *   occuredAt(now()).
+ *   occurredAt(now()).
  *   saveIn(storage);
  * // без записи в хранилище
  * LogEntry entry = entry().
- *   occuredAt(now()).
+ *   occurredAt(now()).
  *   create();
  * </pre>
  */
@@ -52,7 +52,7 @@ public class LogEntryBuilder {
 	 *
 	 * @param time время возникновения события
 	 */
-	public LogEntryBuilder occured(DateTime time) {
+	public LogEntryBuilder occurred(DateTime time) {
 		this.time = time;
 		return this;
 	}

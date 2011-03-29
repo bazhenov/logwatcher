@@ -273,7 +273,7 @@ public class SqlLogStorage implements LogStorage {
 			try {
 				connection.close();
 			} catch (SQLException e) {
-				log.error("Error occured while closing connection", e);
+				log.error("Error occurred while closing connection", e);
 			}
 		}
 	}
@@ -283,7 +283,7 @@ public class SqlLogStorage implements LogStorage {
 			try {
 				statement.close();
 			} catch (SQLException e) {
-				log.error("Error occured while closing statement", e);
+				log.error("Error occurred while closing statement", e);
 			}
 		}
 	}
@@ -293,7 +293,7 @@ public class SqlLogStorage implements LogStorage {
 			try {
 				resultSet.close();
 			} catch (SQLException e) {
-				log.error("Error occured while closing result set", e);
+				log.error("Error occurred while closing result set", e);
 			}
 		}
 	}

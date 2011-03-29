@@ -33,7 +33,7 @@
           </tr>
           <tr>
             <td class="sampleDescription">relative date</td>
-            <td><span>occured: last N (days|week|month)</span></td>
+            <td><span>occurred: last N (days|week|month)</span></td>
           </tr>
           <tr>
             <td class="sampleDescription">absoulte date</td>
