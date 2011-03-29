@@ -27,7 +27,7 @@
 
 	<p>
 		<a href="${backUrl}">&amp;larr; Back</a> to <c:out value="${applicationId}"/> &amp;mdash;
-		<fmt:formatDate value="${date}" pattern="MMMM dd, 2010"/>
+		<fmt:formatDate value="${date}" pattern="MMMM dd, yyyy"/>
 	</p>
 
 	<div class="log">
