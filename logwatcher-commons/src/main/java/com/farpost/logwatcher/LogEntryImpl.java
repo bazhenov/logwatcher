@@ -42,9 +42,16 @@ public class LogEntryImpl implements LogEntry {
 	/**
 	 * Этот конструктор не предназначен для прямого ипользования. Нужен для корректной работы JAXB.
 	 */
-	@Deprecated
-	public LogEntryImpl() {
-		this(null, null, null, null, null, null, null, null);
+	@SuppressWarnings("unused")
+	private LogEntryImpl() {
+		this.date = null;
+		this.groupContainer = null;
+		this.message = null;
+		this.severity = null;
+		this.checksum = null;
+		this.applicationContainer = null;
+		this.cause = null;
+		this.attributes = new HashMap<String, String>();
 	}
 
 	public LogEntryImpl(DateTime date, String group, String message, Severity severity, String checksum,
