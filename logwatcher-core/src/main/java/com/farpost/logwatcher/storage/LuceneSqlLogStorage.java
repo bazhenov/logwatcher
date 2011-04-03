@@ -39,7 +39,6 @@ public class LuceneSqlLogStorage implements LogStorage {
 
 	private final Directory directory;
 	private final MatcherMapper<Query> matcherMapper;
-	private final Map<Integer, LogEntry> entries = new HashMap<Integer, LogEntry>();
 	private int nextId;
 
 	private final JdbcTemplate jdbc;
@@ -154,6 +153,7 @@ public class LuceneSqlLogStorage implements LogStorage {
 		Document document = new Document();
 		document.add(term("applicationId", normalizeTerm(entry.getApplicationId())));
 		document.add(term("date", normilizeDate(entry.getDate())));
+		document.add(term("message", normalizeTerm(entry.getMessage())));
 		document.add(term("severity", entry.getSeverity().name()));
 		document.add(term("checksum", normalizeTerm(entry.getChecksum())));
 		document.add(storedTerm("id", Integer.toString(entryId)));
@@ -208,7 +208,7 @@ public class LuceneSqlLogStorage implements LogStorage {
 			if (q == null) {
 				throw new InvalidCriteriaException("Unable to map matcher of type: " + matcher.getClass().getName());
 			}
-			query.add(q, Occur.SHOULD);
+			query.add(q, Occur.MUST);
 		}
 		return query;
 	}
@@ -273,7 +273,11 @@ public class LuceneSqlLogStorage implements LogStorage {
 	@Override
 	public void walk(Collection<LogEntryMatcher> criterias, Visitor<LogEntry> visitor)
 		throws LogStorageException, InvalidCriteriaException {
-		//To change body of implemented methods use File | Settings | File Templates.
+		int[] ids = findEntriesIds(criterias);
+		for (int id : ids) {
+			byte[] data = jdbc.queryForObject("SELECT value FROM entry where id = ?", byte[].class, id);
+			visitor.visit(marshaller.unmarshall(data));
+		}
 	}
 
 	@Override

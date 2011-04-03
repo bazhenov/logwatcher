@@ -7,6 +7,7 @@ import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TermRangeQuery;
+import org.apache.lucene.search.WildcardQuery;
 
 import static org.apache.lucene.search.BooleanClause.Occur;
 
@@ -37,6 +38,12 @@ final public class LuceneMatcherMapperRules {
 		}
 
 		return query;
+	}
+
+	@Matcher
+	public Query contains(ContainsMatcher matcher) {
+		return new WildcardQuery(new Term("message",
+			"*" + LuceneUtils.normalizeTerm(matcher.getNeedle()) + "*"));
 	}
 
 	@Matcher
