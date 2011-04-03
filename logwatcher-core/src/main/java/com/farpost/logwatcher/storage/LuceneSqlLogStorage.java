@@ -165,15 +165,9 @@ public class LuceneSqlLogStorage implements LogStorage {
 	public List<LogEntry> findEntries(Collection<LogEntryMatcher> criterias)
 		throws LogStorageException, InvalidCriteriaException {
 
-		Integer[] ids = findEntriesIds(criterias);
-		String idString = StringUtils.arrayToCommaDelimitedString(ids);
-
-		List<LogEntry> result = new ArrayList<LogEntry>();
-		List<byte[]> rows = jdbc.queryForList("SELECT value FROM entry WHERE id IN ( "+ idString + " )", byte[].class);
-		for (byte[] row : rows) {
-			result.add(marshaller.unmarshall(row));
-		}
-		return result;
+		CollectingVisitor<LogEntry> visitor = new CollectingVisitor<LogEntry>();
+		walk(criterias, visitor);
+		return visitor.getEntries();
 	}
 
 	private Integer[] findEntriesIds(Collection<LogEntryMatcher> criterias) {
