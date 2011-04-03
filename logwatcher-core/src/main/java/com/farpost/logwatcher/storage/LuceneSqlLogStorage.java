@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -164,17 +165,18 @@ public class LuceneSqlLogStorage implements LogStorage {
 	public List<LogEntry> findEntries(Collection<LogEntryMatcher> criterias)
 		throws LogStorageException, InvalidCriteriaException {
 
-		int[] ids = findEntriesIds(criterias);
+		Integer[] ids = findEntriesIds(criterias);
+		String idString = StringUtils.arrayToCommaDelimitedString(ids);
 
 		List<LogEntry> result = new ArrayList<LogEntry>();
-		for (int id : ids) {
-			byte[] data = jdbc.queryForObject("SELECT value FROM entry where id = ?", byte[].class, id);
-			result.add(marshaller.unmarshall(data));
+		List<byte[]> rows = jdbc.queryForList("SELECT value FROM entry WHERE id IN ( "+ idString + " )", byte[].class);
+		for (byte[] row : rows) {
+			result.add(marshaller.unmarshall(row));
 		}
 		return result;
 	}
 
-	private int[] findEntriesIds(Collection<LogEntryMatcher> criterias) {
+	private Integer[] findEntriesIds(Collection<LogEntryMatcher> criterias) {
 		try {
 			Query query = createLuceneQuery(criterias);
 
@@ -188,7 +190,7 @@ public class LuceneSqlLogStorage implements LogStorage {
 
 			TopDocs topDocs = searcher.search(query, 100);
 
-			int result[] = new int[topDocs.scoreDocs.length];
+			Integer result[] = new Integer[topDocs.scoreDocs.length];
 			for (int i = 0; i < topDocs.scoreDocs.length; i++) {
 				result[i] = Integer.parseInt(ids[topDocs.scoreDocs[i].doc]);
 			}
@@ -219,13 +221,13 @@ public class LuceneSqlLogStorage implements LogStorage {
 			checkNotNull(date);
 			Collection<LogEntryMatcher> criterias = new ArrayList<LogEntryMatcher>();
 			criterias.add(new DateMatcher(january(1, 1980), date.minusDay(1)));
-			int[] ids;
+			Integer[] ids;
 			int recordsRemoved = 0;
 
 			do {
 				ids = findEntriesIds(criterias);
+				jdbc.update("DELETE FROM entry WHERE id IN ( " + StringUtils.arrayToCommaDelimitedString(ids) + ")");
 				for (int id : ids) {
-					jdbc.update("DELETE FROM entry WHERE id = ?", id);
 					writer.deleteDocuments(new Term("id", Integer.toString(id)));
 				}
 				recordsRemoved += ids.length;
@@ -273,9 +275,11 @@ public class LuceneSqlLogStorage implements LogStorage {
 	@Override
 	public void walk(Collection<LogEntryMatcher> criterias, Visitor<LogEntry> visitor)
 		throws LogStorageException, InvalidCriteriaException {
-		int[] ids = findEntriesIds(criterias);
-		for (int id : ids) {
-			byte[] data = jdbc.queryForObject("SELECT value FROM entry where id = ?", byte[].class, id);
+		Integer[] ids = findEntriesIds(criterias);
+		String idString = StringUtils.arrayToCommaDelimitedString(ids);
+
+		List<byte[]> rows = jdbc.queryForList("SELECT value FROM entry WHERE id IN ( " + idString + " )", byte[].class);
+		for (byte[] data : rows) {
 			visitor.visit(marshaller.unmarshall(data));
 		}
 	}
