@@ -78,11 +78,12 @@ abstract public class LogStorageTestCase {
 		entry().message("bar").saveIn(storage);
 
 		CountVisitor<LogEntry> visitor = new CountVisitor<LogEntry>();
-		entries().
+		int count = entries().
 			date(today()).
 			contains("foo").
 			walk(storage, visitor);
-		assertThat(visitor.getCount(), equalTo(2));
+
+		assertThat(count, equalTo(2));
 	}
 
 	@Test

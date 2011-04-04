@@ -164,10 +164,7 @@ public class LuceneSqlLogStorage implements LogStorage {
 	@Override
 	public List<LogEntry> findEntries(Collection<LogEntryMatcher> criterias)
 		throws LogStorageException, InvalidCriteriaException {
-
-		CollectingVisitor<LogEntry> visitor = new CollectingVisitor<LogEntry>();
-		walk(criterias, visitor);
-		return visitor.getEntries();
+		return walk(criterias, new CollectingVisitor<LogEntry>());
 	}
 
 	private Integer[] findEntriesIds(Collection<LogEntryMatcher> criterias) {
@@ -267,7 +264,7 @@ public class LuceneSqlLogStorage implements LogStorage {
 	}
 
 	@Override
-	public void walk(Collection<LogEntryMatcher> criterias, Visitor<LogEntry> visitor)
+	public <T> T walk(Collection<LogEntryMatcher> criterias, Visitor<LogEntry, T> visitor)
 		throws LogStorageException, InvalidCriteriaException {
 		Integer[] ids = findEntriesIds(criterias);
 		String idString = StringUtils.arrayToCommaDelimitedString(ids);
@@ -276,6 +273,7 @@ public class LuceneSqlLogStorage implements LogStorage {
 		for (byte[] data : rows) {
 			visitor.visit(marshaller.unmarshall(data));
 		}
+		return visitor.getResult();
 	}
 
 	@Override

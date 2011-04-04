@@ -1,6 +1,7 @@
 package com.farpost.logwatcher.web;
 
 import com.farpost.logwatcher.AggregateAttributesVisitor;
+import com.farpost.logwatcher.AggregationResult;
 import com.farpost.logwatcher.storage.InvalidCriteriaException;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
@@ -38,13 +39,14 @@ public class BackController {
 
 		AggregateAttributesVisitor visitor = new AggregateAttributesVisitor();
 		Date dt = new Date(format.get().parse(date).getTime());
-		entries().
+
+		AggregationResult result = entries().
 			checksum(checksum).
 			date(dt).
 			walk(storage, visitor);
 
-		map.addAttribute("attributes", visitor.getAttributeMap());
-		map.addAttribute("entry", visitor.getFirstEntry());
+		map.addAttribute("attributes", result.getAttributeMap());
+		map.addAttribute("entry", result.getFirstEntry());
 		return "service/aggregated-entry-content";
 	}
 }

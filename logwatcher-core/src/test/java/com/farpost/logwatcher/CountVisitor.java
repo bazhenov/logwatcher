@@ -2,15 +2,16 @@ package com.farpost.logwatcher;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class CountVisitor<T> implements Visitor<T> {
+public class CountVisitor<I> implements Visitor<I, Integer> {
 
 	private final AtomicInteger count = new AtomicInteger(0);
 
-	public void visit(T entry) {
+	public void visit(I entry) {
 		count.incrementAndGet();
 	}
 
-	public int getCount() {
+	@Override
+	public Integer getResult() {
 		return count.intValue();
 	}
 }

@@ -3,16 +3,16 @@ package com.farpost.logwatcher;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CollectingVisitor<T> implements Visitor<T> {
+public class CollectingVisitor<I> implements Visitor<I, List<I>> {
 
-	private final List<T> collectedEntries = new ArrayList<T>();
+	private List<I> collectedEntries = new ArrayList<I>();
 
 	@Override
-	public void visit(T entry) {
+	public void visit(I entry) {
 		collectedEntries.add(entry);
 	}
 
-	public List<T> getEntries() {
+	public List<I> getResult() {
 		return collectedEntries;
 	}
 }
