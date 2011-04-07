@@ -7,6 +7,7 @@ import org.hamcrest.Description;
 public class ContainsTextMatcher extends BaseMatcher<SgmlPage> {
 
 	private final String text;
+	private String pageContent;
 
 	public ContainsTextMatcher(String text) {
 		this.text = text;
@@ -17,11 +18,12 @@ public class ContainsTextMatcher extends BaseMatcher<SgmlPage> {
 
 	@Override
 	public boolean matches(Object page) {
-		return ((SgmlPage)page).asText().contains(text);
+		pageContent = ((SgmlPage)page).asText();
+		return pageContent.contains(text);
 	}
 
 	@Override
 	public void describeTo(Description description) {
-		description.appendText("should contains text: " + text);
+		description.appendText("'" + pageContent + "' should contains text: " + text);
 	}
 }

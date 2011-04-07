@@ -14,7 +14,7 @@ public class ApplicationIdMatcher implements LogEntryMatcher {
 	}
 
 	public boolean isMatch(LogEntry entry) {
-		return applicationId.equals(entry.getApplicationId());
+		return applicationId.equalsIgnoreCase(entry.getApplicationId());
 	}
 
 	public String getApplicationId() {

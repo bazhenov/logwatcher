@@ -44,7 +44,7 @@ public class LogWatcherAppender extends UnsynchronizedAppenderBase<ILoggingEvent
 				? constructCause(throwableProxy.getThrowable())
 				: null;
 
-			LogEntry entry = new LogEntryImpl(time, event.getLoggerName(), event.getFormattedMessage(), severity, null, applicationId,
+			LogEntry entry = new LogEntryImpl(time, event.getLoggerName(), event.getFormattedMessage(), severity, "", applicationId,
 				new HashMap<String, String>(), cause);
 
 			byte[] data = marshaller.marshall(entry);

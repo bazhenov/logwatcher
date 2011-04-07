@@ -10,3 +10,7 @@ target
 mysql.properties
 /tags
 .DS_Store
+.classpath
+.settings
+.project
+/.metadata

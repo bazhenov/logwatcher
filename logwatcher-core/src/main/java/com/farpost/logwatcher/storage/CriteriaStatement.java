@@ -1,6 +1,4 @@
-package com.farpost.logwatcher.storage.sql;
-
-import com.farpost.logwatcher.storage.LogEntryMatcher;
+package com.farpost.logwatcher.storage;
 
 import java.util.Collection;
 

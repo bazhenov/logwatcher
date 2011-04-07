@@ -4,7 +4,7 @@
 					xmlns:l="http://bazhenov.org/logging"
 					xmlns:f="http://java.sun.com/jsp/jstl/functions"
 					xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
-					xmlns:lt="urn:jsptagdir:/WEB-INF/tags">
+					xmlns:lt="urn:jsptagdir:/WEB-INF/tags" xmlns:s="http://www.springframework.org/tags">
 
 	<jsp:directive.page contentType="text/html"/>
 	<jsp:useBean id="entries" scope="request" type="java.util.List"/>
@@ -16,19 +16,26 @@
 	<html>
 	<head>
 		<title>LogWatcher: <c:out value="${vm.applicationId}"/> feed</title>
-		<c:url value='/css/aggregated-feed.css' var="cssUrl"/>
+
+		<s:url value='/css/aggregated-feed.css' var="cssUrl"/>
 		<link rel="stylesheet" href="${cssUrl}"/>
-		<c:url value='/css/popup.css' var="cssUrl"/>
+
+		<s:url value='/css/popup.css' var="cssUrl"/>
 		<link rel="stylesheet" href="${cssUrl}"/>
+
 		<script type="text/javascript" src="/js/calendar.js"></script>
+
 		<script type="text/javascript">
 			var severityLevel = '${severity}';
 			var entrySortOrder = '${sortOrder}';
 		</script>
 
-		<c:url value="/rss/${vm.applicationId}" var="rssUrl"/>
+		<s:url value="/rss/{applicationId}" var="rssUrl">
+			<s:param name="applicationId" value="${vm.applicationId}"/>
+			<s:param name="severity" value="${severity}"/>
+		</s:url>
 		<link rel="alternate" type="application/rss+xml" title="LogWatcher RSS"
-					href="${rssUrl}?severity=${severity}"/>
+					href="${rssUrl}"/>
 	</head>
 
 	<body>

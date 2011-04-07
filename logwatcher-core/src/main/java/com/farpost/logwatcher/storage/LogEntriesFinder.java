@@ -99,10 +99,10 @@ public class LogEntriesFinder {
 		return storage.findEntries(criterias);
 	}
 
-	public void walk(LogStorage storage, Visitor<LogEntry> visitor)
+	public <T> T walk(LogStorage storage, Visitor<LogEntry, T> visitor)
 		throws LogStorageException, InvalidCriteriaException {
 
-		storage.walk(criterias, visitor);
+		return storage.walk(criterias, visitor);
 	}
 
 	public List<LogEntryMatcher> all() {

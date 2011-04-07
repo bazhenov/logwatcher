@@ -42,18 +42,32 @@ public class LogEntryImpl implements LogEntry {
 	/**
 	 * Этот конструктор не предназначен для прямого ипользования. Нужен для корректной работы JAXB.
 	 */
-	@Deprecated
-	public LogEntryImpl() {
-		this(null, null, null, null, null, null, null, null);
+	@SuppressWarnings("unused")
+	private LogEntryImpl() {
+		this.date = null;
+		this.groupContainer = null;
+		this.message = null;
+		this.severity = null;
+		this.checksum = null;
+		this.applicationContainer = null;
+		this.cause = null;
+		this.attributes = new HashMap<String, String>();
 	}
 
 	public LogEntryImpl(DateTime date, String group, String message, Severity severity, String checksum,
-	                String applicationId, Map<String, String> attributes) {
+											String applicationId, Map<String, String> attributes) {
 		this(date, group, message, severity, checksum, applicationId, attributes, null);
 	}
 
 	public LogEntryImpl(DateTime date, String group, String message, Severity severity, String checksum,
-	                String applicationId, Map<String, String> attributes, Cause cause) {
+											String applicationId, Map<String, String> attributes, Cause cause) {
+		checkNotNull(date);
+		checkNotNull(group);
+		checkNotNull(message);
+		checkNotNull(severity);
+		checkNotNull(checksum);
+		checkNotNull(applicationId);
+
 		this.date = date;
 		this.groupContainer = new GroupContainer(group);
 		this.message = message;
@@ -64,6 +78,12 @@ public class LogEntryImpl implements LogEntry {
 		this.attributes = attributes == null
 			? new HashMap<String, String>()
 			: new HashMap<String, String>(attributes);
+	}
+
+	private static void checkNotNull(Object argument) {
+		if (argument == null) {
+			throw new NullPointerException("Argument should not bu null");
+		}
 	}
 
 	@Override

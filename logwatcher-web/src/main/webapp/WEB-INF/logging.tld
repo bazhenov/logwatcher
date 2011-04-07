@@ -8,19 +8,6 @@
 	<short-name>logging</short-name>
 	<uri>http://bazhenov.org/logging</uri>
 
-	<tag>
-		<name>entry</name>
-		<tag-class>com.farpost.logwatcher.web.taglib.Functions</tag-class>
-		<body-content>empty</body-content>
-		<attribute>
-			<description>Ссылка на запись типа AggregatedLogEntry</description>
-			<name>entry</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-			<type>com.farpost.logwatcher.AggregatedLogEntry</type>
-		</attribute>
-	</tag>
-
 	<function>
 		<description>Форматирует Cause объект</description>
 		<name>formatCause</name>

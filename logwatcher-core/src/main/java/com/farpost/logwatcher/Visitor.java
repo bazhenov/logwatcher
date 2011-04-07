@@ -1,6 +1,8 @@
 package com.farpost.logwatcher;
 
-public interface Visitor<T> {
+public interface Visitor<I, O> {
 
-	void visit(T entry);
+	void visit(I entry);
+
+	O getResult();
 }

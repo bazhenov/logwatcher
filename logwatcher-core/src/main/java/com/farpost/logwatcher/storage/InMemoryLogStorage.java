@@ -107,7 +107,7 @@ public class InMemoryLogStorage implements LogStorage {
 		return findAggregatedEntries(criterias);
 	}
 
-	public void walk(final Collection<LogEntryMatcher> criterias, final Visitor<LogEntry> visitor) {
+	public <T> T walk(final Collection<LogEntryMatcher> criterias, final Visitor<LogEntry, T> visitor) {
 		withLock(readLock, new Callable<Void>() {
 
 			public Void call() throws Exception {
@@ -119,6 +119,8 @@ public class InMemoryLogStorage implements LogStorage {
 				return null;
 			}
 		});
+
+		return visitor.getResult();
 	}
 
 	public int countEntries(Collection<LogEntryMatcher> criterias) {

@@ -78,11 +78,12 @@ abstract public class LogStorageTestCase {
 		entry().message("bar").saveIn(storage);
 
 		CountVisitor<LogEntry> visitor = new CountVisitor<LogEntry>();
-		entries().
+		int count = entries().
 			date(today()).
 			contains("foo").
 			walk(storage, visitor);
-		assertThat(visitor.getCount(), equalTo(2));
+
+		assertThat(count, equalTo(2));
 	}
 
 	@Test
@@ -134,7 +135,9 @@ abstract public class LogStorageTestCase {
 			saveIn(storage);
 
 		int count = entries().applicationId("frontend").count(storage);
+		assertThat(count, equalTo(1));
 
+		count = entries().applicationId("fronTend").count(storage);
 		assertThat(count, equalTo(1));
 	}
 
@@ -261,7 +264,7 @@ abstract public class LogStorageTestCase {
 	}
 
 	@Test
-	public void storageCanRemoveEntriesByCriteria()
+	public void storageCanRemoveEntriesWithSpecifiedChecksum()
 		throws LogStorageException, InvalidCriteriaException {
 
 		entry().

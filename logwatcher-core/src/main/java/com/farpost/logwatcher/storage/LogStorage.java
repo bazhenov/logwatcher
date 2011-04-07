@@ -73,7 +73,7 @@ public interface LogStorage {
 	/**
 	 * Данный метод проходит по записям {@link LogEntry} передавая каждую в заданный visitor. Visitor
 	 * не должен менять передаваемые ему записи. Имплементации этих методов не дают никаких гаранитий
-	 * относительно того в каком потоке будет вызыватся vistor, поэтому имплементация visitor'а должна
+	 * относительно того в каком потоке будет вызыватся visitor, поэтому имплементация visitor'а должна
 	 * быть потокобезопасна.
 	 *
 	 * @param criterias критерии по которым осуществляется итерация
@@ -81,7 +81,7 @@ public interface LogStorage {
 	 * @throws LogStorageException			в случае внутренней ошибки хранилища
 	 * @throws InvalidCriteriaException в случае если некорректно заданы критерии поиска
 	 */
-	void walk(Collection<LogEntryMatcher> criterias, Visitor<LogEntry> visitor)
+	<T> T walk(Collection<LogEntryMatcher> criterias, Visitor<LogEntry, T> visitor)
 		throws LogStorageException, InvalidCriteriaException;
 
 	/**
