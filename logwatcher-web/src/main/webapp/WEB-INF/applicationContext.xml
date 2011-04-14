@@ -1,18 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 			 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-			 xmlns:task="http://www.springframework.org/schema/task" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+			 xmlns:task="http://www.springframework.org/schema/task"
+			 xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+			 xmlns:p="http://www.springframework.org/schema/p"
 			 xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-			 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 			 http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
 			 http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
 
-	<jdbc:initialize-database data-source="datasource">
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:resources.properties</value>
+				<value>${resourcesFile}</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driverClassName}"/>
+		<property name="url" value="${jdbc.url}"/>
+		<property name="username" value="${jdbc.username}"/>
+		<property name="password" value="${jdbc.password}"/>
+	</bean>
+
+	<jdbc:initialize-database data-source="dataSource">
 		<jdbc:script location="classpath:/com/farpost/logwatcher/storage/schema.sql"/>
 	</jdbc:initialize-database>
 
-	<!--suppress SpringModelInspection -->
-	<import resource="${resources}"/>
+	<bean class="com.farpost.logwatcher.web.Bootstrap"
+				init-method="load"
+				lazy-init="false"
+				p:storage-ref="storage"
+				p:loadSampleDump="${loadSampleDump}"/>
 
 	<task:scheduler id="scheduler" pool-size="1"/>
 
@@ -41,7 +61,7 @@
 		<constructor-arg>
 			<bean class="org.apache.lucene.store.RAMDirectory"/>
 		</constructor-arg>
-		<constructor-arg ref="datasource"/>
+		<constructor-arg ref="dataSource"/>
 		<property name="commitThreshold" value="0"/>
 	</bean>
 

@@ -6,18 +6,37 @@ import com.farpost.timepoint.DateTime;
 import com.farpost.logwatcher.Cause;
 import com.farpost.logwatcher.LogEntryImpl;
 import com.farpost.logwatcher.Severity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class Bootstrap {
 
+	private static final Logger log = getLogger(Bootstrap.class);
+
+
 	private LogStorage storage;
+	private boolean loadSampleDump = false;
 
 	public void setStorage(LogStorage storage) {
 		this.storage = storage;
 	}
 
+	public void setLoadSampleDump(boolean loadSampleDump) {
+		this.loadSampleDump = loadSampleDump;
+	}
+
 	public void load() throws LogStorageException {
+		if (loadSampleDump) {
+			loadSampleDump();
+		}
+	}
+
+	private void loadSampleDump() {
+		log.info("Loading sample dump...");
 		storage.writeEntry(new LogEntryImpl(DateTime.now(), "group", "AdvertServiceException: Error Fetching http headers", Severity.error, "sum", "advertisement", null));
 		Cause cause = new Cause("RuntimeException", "Socket reading timeout", "AdvertServiceException: Error Fetching http headers\n" +
 			"  at /var/www/baza.farpost.ru/rev/20100325-1520/slr/advert/src/remote/AdvertSoapDecorator.class.php:16\n" +
@@ -33,22 +52,22 @@ public class Bootstrap {
 			"  1 : service_runner.php:38 advertUnpopularDeactivationService->run()");
 		storage.writeEntry(new LogEntryImpl(DateTime.now().minusHour(2), "group", "OverflowFundsException", Severity.warning, "sum2",
 			"billing", new HashMap<String, String>() {{
-				put("url" ,"/some/foo/very/long/url/to/fit/in/screen");
+				put("url", "/some/foo/very/long/url/to/fit/in/screen");
 				put("machine", "aux1.srv.loc");
 			}}, cause));
 		storage.writeEntry(new LogEntryImpl(DateTime.now().minusHour(2), "group", "OverflowFundsException", Severity.warning, "sum2",
-			"billing", new HashMap<String, String>(){{
-				put("url" ,"/some/foo/bar?uri=1");
+			"billing", new HashMap<String, String>() {{
+				put("url", "/some/foo/bar?uri=1");
 				put("machine", "aux1.srv.loc");
 			}}, cause));
 		storage.writeEntry(new LogEntryImpl(DateTime.now().minusHour(2), "group", "OverflowFundsException", Severity.warning, "sum2",
-			"billing", new HashMap<String, String>(){{
-				put("url" ,"/some/foo/bar?uri=2");
+			"billing", new HashMap<String, String>() {{
+				put("url", "/some/foo/bar?uri=2");
 				put("machine", "aux4.srv.loc");
 			}}, cause));
 		storage.writeEntry(new LogEntryImpl(DateTime.now().minusHour(2), "group", "OverflowFundsException", Severity.warning, "sum2",
-			"billing", new HashMap<String, String>(){{
-				put("url" ,"/some/foo/bar?uri=3");
+			"billing", new HashMap<String, String>() {{
+				put("url", "/some/foo/bar?uri=3");
 				put("machine", "aux5.srv.loc");
 			}}, cause));
 		storage.writeEntry(new LogEntryImpl(DateTime.now().minusMinute(18), "group", "java.lang.OutOfMemoryException", Severity.info, "sum3", "search", null));

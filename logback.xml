@@ -10,4 +10,6 @@
 		<appender-ref ref="stdout"/>
 	</root>
 
+	<logger name="com.farpost" level="info" />
+
 </configuration>
