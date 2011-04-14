@@ -83,8 +83,8 @@ public class FeedController {
 
 	@RequestMapping("/feed/{applicationId}")
 	public String handleFeed(@PathVariable String applicationId,
-													 @RequestParam(required = false) @DateTimeFormat(iso = DATE) java.util.Date date, ModelMap map,
-													 HttpServletRequest request)
+													 @RequestParam(required = false) @DateTimeFormat(iso = DATE) java.util.Date date,
+													 ModelMap map, HttpServletRequest request)
 		throws ParseException, LogStorageException, InvalidCriteriaException, InvalidQueryException {
 
 		if (date == null) {

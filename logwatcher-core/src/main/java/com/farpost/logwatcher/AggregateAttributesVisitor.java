@@ -6,8 +6,7 @@ import java.util.Map;
 public class AggregateAttributesVisitor implements Visitor<LogEntry, AggregationResult> {
 
 	private Map<String, AggregatedAttribute> attributeMap = new HashMap<String, AggregatedAttribute>();
-	private LogEntry firstEntry;
-	private AggregationResult aggregationResult;
+	private LogEntry lastEntry;
 
 	@Override
 	public synchronized void visit(LogEntry entry) {
@@ -19,16 +18,14 @@ public class AggregateAttributesVisitor implements Visitor<LogEntry, Aggregation
 			}
 			aggregate.incrementCountFor(row.getValue());
 		}
-		if (firstEntry == null) {
-			firstEntry = entry;
+		if (lastEntry == null) {
+			lastEntry = entry;
 		}
-
-		aggregationResult = new AggregationResult(attributeMap, firstEntry);
 	}
 
 	@Override
 	public AggregationResult getResult() {
-		return aggregationResult;
+		return new AggregationResult(attributeMap, lastEntry);
 	}
 
 }

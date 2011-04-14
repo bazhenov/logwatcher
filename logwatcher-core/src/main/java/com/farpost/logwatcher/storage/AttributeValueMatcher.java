@@ -10,24 +10,32 @@ import java.util.Map;
 public class AttributeValueMatcher implements LogEntryMatcher {
 
 	private final String name;
-	private final String value;
+	private final String expectedValue;
 
-	public AttributeValueMatcher(String name, String value) {
-		if (name == null || value == null) {
-			throw new NullPointerException("Name and value should not be null");
+	public AttributeValueMatcher(String name, String expectedValue) {
+		if (name == null || expectedValue == null) {
+			throw new NullPointerException("Name and expected value should not be null");
 		}
 		this.name = name;
-		this.value = value;
+		this.expectedValue = expectedValue;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getExpectedValue() {
+		return expectedValue;
 	}
 
 	public boolean isMatch(LogEntry entry) {
 		Map<String, String> map = entry.getAttributes();
-		return map.containsKey(name) && map.get(name).equals(value);
+		return map.containsKey(name) && map.get(name).equals(expectedValue);
 	}
 
 	@Override
 	public String toString() {
-		return "@" + name + ":" + value;
+		return "@" + name + ":" + expectedValue;
 	}
 
 	@Override
@@ -41,11 +49,11 @@ public class AttributeValueMatcher implements LogEntryMatcher {
 
 		AttributeValueMatcher that = (AttributeValueMatcher) o;
 
-		return name.equals(that.name) && value.equals(that.value);
+		return name.equals(that.name) && expectedValue.equals(that.expectedValue);
 	}
 
 	@Override
 	public int hashCode() {
-		return 31 * name.hashCode() + value.hashCode();
+		return 31 * name.hashCode() + expectedValue.hashCode();
 	}
 }

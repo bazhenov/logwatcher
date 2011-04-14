@@ -56,6 +56,10 @@ public class LogEntriesFinder {
 		return withCriteria(new ContainsMatcher(part));
 	}
 
+	public LogEntriesFinder attribute(String name, String expectedValue) {
+		return withCriteria(new AttributeValueMatcher(name, expectedValue));
+	}
+
 	private LogEntriesFinder withCriteria(LogEntryMatcher matcher) {
 		criterias.add(matcher);
 		return this;

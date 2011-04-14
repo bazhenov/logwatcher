@@ -218,10 +218,12 @@ abstract public class LogStorageTestCase {
 	public void storageCanCountEntriesByCriteria() {
 		entry().
 			occurred(yesterday.at("12:23")).
+			checksum("ffe").
 			message("foo").
 			saveIn(storage);
 		entry().
 			message("bar").
+			checksum("fff").
 			saveIn(storage);
 
 		int count = entries().
@@ -238,6 +240,21 @@ abstract public class LogStorageTestCase {
 			date(yesterday.minusDay(1)).
 			count(storage);
 		assertThat(count, equalTo(0));
+
+		count = entries().
+			checksum("ffe").
+			count(storage);
+		assertThat(count, equalTo(0));
+	}
+
+	@Test
+	public void storageCanFindEntriesByAttributeValue() {
+		LogEntry entry = entry().attribute("foo", "bar").saveIn(storage);
+
+		List<LogEntry> entries = entries().attribute("foo", "bar").find(storage);
+
+		assertThat(entries.size(), equalTo(1));
+		assertThat(entries.get(0), equalTo(entry));
 	}
 
 	@Test
@@ -289,7 +306,7 @@ abstract public class LogStorageTestCase {
 
 		assertThat(entries().count(storage), equalTo(1));
 		for (AggregatedEntry en : storage.getAggregatedEntries("application", today, Severity.info)) {
-			if (en.getChecksum().equals("FF")) {
+			if (en.getChecksum().equals(entry.getChecksum())) {
 				fail("Collection must not contains entries with checksum '" + entry.getChecksum() + "'");
 			}
 		}

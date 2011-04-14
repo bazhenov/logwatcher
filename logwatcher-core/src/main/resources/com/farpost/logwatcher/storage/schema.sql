@@ -13,5 +13,7 @@ CREATE TABLE IF NOT EXISTS aggregated_entry (
 CREATE TABLE IF NOT EXISTS entry (
 	id INT NOT NULL,
 	value BLOB NOT NULL,
+	checksum VARCHAR(255) NOT NULL,
+	date DATE NOT NULL,
 	PRIMARY KEY(id)
 );

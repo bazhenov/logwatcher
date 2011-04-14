@@ -48,13 +48,13 @@
 .selectedEntry .messageOverlay  { background: url("../images/sha-hover.png") repeat-y; }
 
 
-.entryContent .attributes       { list-style: none; padding: 0; line-height: 18px; }
-.entryContent .attributes label { font-variant: normal; font-size: 120% }
-.entryContent .attributes span  { border-left: 1px dotted #997; margin-left: 4px;
+.entryContainer .attributes       { list-style: none; padding-left: 34px; line-height: 18px; }
+.entryContainer .attributes label { font-variant: normal; font-size: 120% }
+.entryContainer .attributes span  { border-left: 1px dotted #997; margin-left: 4px;
 																	padding-left: 4px; padding-right: 2px; color: #777 !important;
 																	font-family: monospace; }
 
-.entryContent .attributes code  { background-color: #eec; border: 1px dotted #997; padding: 0 2px; font-family: monospace;
+.entryContainer .attributes code  { background-color: #eec; border: 1px dotted #997; padding: 0 2px; font-family: monospace;
 																	margin-right: 10px;}
 .entryContent ul                { list-style-type: none; padding: 0; color: gray }
 .entryContent li span           { color: black }

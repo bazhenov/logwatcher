@@ -80,6 +80,7 @@ public interface LogStorage {
 	 * @param visitor	 visitor
 	 * @throws LogStorageException			в случае внутренней ошибки хранилища
 	 * @throws InvalidCriteriaException в случае если некорректно заданы критерии поиска
+	 * @return результат расчитанный имплементацией {@link Visitor}.
 	 */
 	<T> T walk(Collection<LogEntryMatcher> criterias, Visitor<LogEntry, T> visitor)
 		throws LogStorageException, InvalidCriteriaException;

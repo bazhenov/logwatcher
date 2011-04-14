@@ -58,8 +58,54 @@
 			</div>
 		</div>
 
-		<div class="entryContainer" loaded="false">
-			<div class="spinner"><!----></div>
+		<div class="entryContainer" >
+			<div class="attributesContainer" loaded="false">
+				<div class="spinner"><!----></div>
+			</div>
+			<div class='entryContent'>
+				<c:choose>
+					<c:when test="${not empty entry.sampleCause}">
+						<pre class="stacktrace noBubble"><c:out value="${lf:formatCause(entry.sampleCause)}"/></pre>
+					</c:when>
+					<c:otherwise>
+						<pre class="stacktrace noBubble"><c:out value="${entry.message}"/></pre>
+					</c:otherwise>
+				</c:choose>
+			</div>
+
+			<c:url var="permaLink" value="/feed/${entry.applicationId}">
+				<c:param name="date"><fmt:formatDate value="${lf:date(entry.lastTime)}" pattern="yyyy-MM-dd"/></c:param>
+				<c:param name="severity" value="${entry.severity}"/>
+			</c:url>
+			<c:set var="permaLink" value="${permaLink}\#${entry.checksum}"/>
+
+			<c:set var="issueDescription">${lf:trim(entry.message, 300, '')}
+				<c:if test="${entry.sampleCause ne null}">
+
+					Stacktrace:
+					${lf:trim(lf:formatCause(entry.sampleCause), 500, '')}
+				</c:if>
+
+				http://${pageContext.request.serverName}:${pageContext.request.serverPort}${permaLink}</c:set>
+
+			<div class="entryFooter">
+				<c:url value="http://jira.dev.loc:8080/secure/CreateIssueDetails.jspa" var="jiraLink">
+					<c:param name="pid">10000</c:param>
+					<c:param name="issuetype">1</c:param>
+					<c:param name="summary" value="${lf:trim(entry.message, 100, '...')}"/>
+					<c:param name="description" value="${issueDescription}"/>
+					<c:param name="priority">3</c:param>
+				</c:url>
+				<c:set var="jiraLink"><c:out value="${jiraLink}"/></c:set>
+				<a href="${jiraLink}" target='_blank'>Create task</a>
+				<a href='${permaLink}'>Permalink</a>
+
+				<c:url value="/entries/${entry.checksum}" var="detailsLink">
+					<c:param name="date"><fmt:formatDate value="${lf:date(entry.lastTime)}" pattern="yyyy-MM-dd"/></c:param>
+				</c:url>
+				<a href="${detailsLink}">Details</a>
+				<a class='removeEntry asynchronous' href='#'>Remove</a>
+			</div>
 		</div>
 
 	</div>

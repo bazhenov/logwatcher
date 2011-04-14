@@ -81,7 +81,8 @@ public class LuceneSqlLogStorage implements LogStorage {
 			java.sql.Date entryDate = date(impl.getDate());
 			byte[] marshalledEntry = marshaller.marshall(impl);
 
-			jdbc.update("INSERT INTO entry (id, value) VALUES (?, ?)", entryId, marshalledEntry);
+			jdbc.update("INSERT INTO entry (id, date, checksum,value) VALUES (?, ?, ?, ?)", entryId, entryDate,
+				checksum, marshalledEntry);
 
 			int affectedRows = jdbc.update(
 				"UPDATE aggregated_entry SET count = count + 1, last_time = ? WHERE date = ? AND checksum = ?",
@@ -143,7 +144,10 @@ public class LuceneSqlLogStorage implements LogStorage {
 	 * @throws IOException в случае ошибки ввода/вывода при коммите изменений в индекс
 	 */
 	private synchronized void commitChangesIfNeeded() throws IOException {
-		if (commitThreshold <= 0 || lastCommitTime < nanoTime() - commitThreshold * 1e+9) {
+		boolean realTimeModeEnabled = commitThreshold <= 0;
+		boolean commitThresholdReached = lastCommitTime < nanoTime() - commitThreshold * 1e+9;
+		
+		if (realTimeModeEnabled || commitThresholdReached) {
 			writer.commit();
 			searcherRef = reopenSearcher(directory);
 			lastCommitTime = nanoTime();
@@ -152,12 +156,15 @@ public class LuceneSqlLogStorage implements LogStorage {
 
 	private Document createLuceneDocument(LogEntry entry, int entryId) {
 		Document document = new Document();
-		document.add(term("applicationId", normalizeTerm(entry.getApplicationId())));
+		document.add(term("applicationId", normalize(entry.getApplicationId())));
 		document.add(term("date", normilizeDate(entry.getDate())));
-		document.add(term("message", normalizeTerm(entry.getMessage())));
+		document.add(term("message", normalize(entry.getMessage())));
 		document.add(term("severity", entry.getSeverity().name()));
-		document.add(term("checksum", normalizeTerm(entry.getChecksum())));
+		document.add(term("checksum", normalize(entry.getChecksum())));
 		document.add(storedTerm("id", Integer.toString(entryId)));
+		for (Map.Entry<String, String> row : entry.getAttributes().entrySet()) {
+			document.add(term("@" + row.getKey(), normalize(row.getValue())));
+		}
 		return document;
 	}
 
@@ -255,7 +262,9 @@ public class LuceneSqlLogStorage implements LogStorage {
 	@Override
 	public void removeEntriesWithChecksum(String checksum) throws LogStorageException {
 		try {
-			writer.deleteDocuments(new Term("checksum", normalizeTerm(checksum)));
+			writer.deleteDocuments(new Term("checksum", normalize(checksum)));
+			jdbc.update("DELETE FROM entry WHERE checksum = ?", checksum);
+			jdbc.update("DELETE FROM aggregated_entry WHERE checksum = ?", checksum);
 
 			commitChangesIfNeeded();
 		} catch (IOException e) {

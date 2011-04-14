@@ -13,7 +13,7 @@ class LuceneUtils {
 		return new Field(name, value, Field.Store.YES, Field.Index.NOT_ANALYZED_NO_NORMS);
 	}
 
-	static String normalizeTerm(String term) {
+	static String normalize(String term) {
 		return term.toLowerCase().trim();
 	}
 

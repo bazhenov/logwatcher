@@ -37,13 +37,12 @@
 		<property name="bufferSize" value="120000"/>
 	</bean>
 
-	<bean id="storage" class="com.farpost.logwatcher.storage.SqlLogStorage">
-		<constructor-arg ref="aggregator"/>
-		<constructor-arg ref="datasource"/>
-		<constructor-arg ref="marshaller"/>
+	<bean id="storage" class="com.farpost.logwatcher.storage.LuceneSqlLogStorage">
 		<constructor-arg>
-			<bean class="com.farpost.logwatcher.SimpleChecksumCalculator"/>
+			<bean class="org.apache.lucene.store.RAMDirectory"/>
 		</constructor-arg>
+		<constructor-arg ref="datasource"/>
+		<property name="commitThreshold" value="0"/>
 	</bean>
 
 	<bean id="aggregator" class="com.farpost.logwatcher.aggregator.ExecutorServiceAggregator">

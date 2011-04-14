@@ -32,21 +32,20 @@ $(document).ready(function() {
 		entry.toggleClass('selectedEntry');
 		var checksum = entry.attr("checksum");
 		var lastOccurredDate = entry.attr("lastOccurredDate");
-		var content = entry.find('.entryContainer');
+		var content = entry.find('.entryContainer .attributesContainer');
 		if (content.attr("loaded") == "false") {
 			content.attr("loaded", "true");
 			entry.addClass("loadingContent");
 			content.load("/service/content", {'checksum': checksum, 'date': lastOccurredDate}, function(response, code) {
-				if (code != "success") {
-					content.html("Error while loading content");
+				if (code == "success") {
+					highlight(content);
 				} else {
-					highlight(content.children(".entryContent"));
+					content.html("");
 				}
 				entry.removeClass("loadingContent");
 
 			});
 		}
-
 	}
 
 	$('.givenQuery').click(function(target) {

@@ -9,6 +9,7 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.WildcardQuery;
 
+import static com.farpost.logwatcher.storage.LuceneUtils.normalize;
 import static org.apache.lucene.search.BooleanClause.Occur;
 
 final public class LuceneMatcherMapperRules {
@@ -41,13 +42,22 @@ final public class LuceneMatcherMapperRules {
 	}
 
 	@Matcher
+	public Query checksum(ChecksumMatcher matcher) {
+		return new TermQuery(new Term("checksum", normalize(matcher.getChecksum())));
+	}
+
+	@Matcher
+	public Query attribute(AttributeValueMatcher matcher) {
+		return new TermQuery(new Term("@" + matcher.getName(), matcher.getExpectedValue()));
+	}
+
+	@Matcher
 	public Query contains(ContainsMatcher matcher) {
-		return new WildcardQuery(new Term("message",
-			"*" + LuceneUtils.normalizeTerm(matcher.getNeedle()) + "*"));
+		return new WildcardQuery(new Term("message", "*" + normalize(matcher.getNeedle()) + "*"));
 	}
 
 	@Matcher
 	public Query applicationId(ApplicationIdMatcher matcher) {
-		return new TermQuery(new Term("applicationId", LuceneUtils.normalizeTerm(matcher.getApplicationId())));
+		return new TermQuery(new Term("applicationId", normalize(matcher.getApplicationId())));
 	}
 }

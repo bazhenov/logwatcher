@@ -33,8 +33,9 @@ public class BackController {
 	}
 
 	@RequestMapping("/service/content")
-	public String handleAttributes(ModelMap map, @RequestParam("checksum") String checksum,
-																 @RequestParam("date") String date)
+	public String handleAttributes(@RequestParam("checksum") String checksum,
+																 @RequestParam("date") String date,
+																 ModelMap map)
 		throws LogStorageException, InvalidCriteriaException, ParseException {
 
 		AggregateAttributesVisitor visitor = new AggregateAttributesVisitor();
@@ -46,7 +47,6 @@ public class BackController {
 			walk(storage, visitor);
 
 		map.addAttribute("attributes", result.getAttributeMap());
-		map.addAttribute("entry", result.getFirstEntry());
 		return "service/aggregated-entry-content";
 	}
 }
