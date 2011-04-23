@@ -1,6 +1,7 @@
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.1" xmlns:c="http://java.sun.com/jsp/jstl/core"
-					xmlns:f="http://java.sun.com/jsp/jstl/functions" xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
-					xmlns:l="urn:jsptagdir:/WEB-INF/tags" xmlns:lf="http://bazhenov.org/logging">
+					xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+					xmlns:lf="http://bazhenov.org/logging"
+					xmlns:s="http://www.springframework.org/tags">
 
 	<jsp:directive.attribute name="entry" type="com.farpost.logwatcher.AggregatedEntry" required="true"/>
 	<jsp:directive.attribute name="currentApplicationId" type="java.lang.String" required="false"/>
@@ -11,9 +12,11 @@
 
 	<fmt:formatDate value="${lastDate}" pattern="yyyy-MM-dd" var="lastOccurredDate"/>
 
-	<c:url value="/entries/${entry.checksum}" var="detailsLink">
-		<c:param name="date" value="${lastOccurredDate}"/>
-	</c:url>
+	<s:url value="/entries/{applicationId}/{checksum}" var="detailsLink">
+		<s:param name="applicationId" value="${entry.applicationId}"/>
+		<s:param name="checksum" value="${entry.checksum}"/>
+		<s:param name="date" value="${lastOccurredDate}"/>
+	</s:url>
 
 	<div class='entry ${entry.severity}' checksum='${entry.checksum}' lastOccurredDate='${lastOccurredDate}'>
 		<div class='entryHeader'>
@@ -51,14 +54,11 @@
 			</div>
 
 			<div class="operations noBubble">
-				<c:url value="/entries/${entry.checksum}" var="detailsLink">
-					<c:param name="date"><fmt:formatDate value="${lastDate}" pattern="yyyy-MM-dd"/></c:param>
-				</c:url>
 				<a href="${detailsLink}">Details &amp;rarr;</a>
 			</div>
 		</div>
 
-		<div class="entryContainer" >
+		<div class="entryContainer">
 			<div class="attributesContainer" loaded="false">
 				<div class="spinner"><!----></div>
 			</div>
@@ -100,9 +100,6 @@
 				<a href="${jiraLink}" target='_blank'>Create task</a>
 				<a href='${permaLink}'>Permalink</a>
 
-				<c:url value="/entries/${entry.checksum}" var="detailsLink">
-					<c:param name="date"><fmt:formatDate value="${lf:date(entry.lastTime)}" pattern="yyyy-MM-dd"/></c:param>
-				</c:url>
 				<a href="${detailsLink}">Details</a>
 				<a class='removeEntry asynchronous' href='#'>Remove</a>
 			</div>

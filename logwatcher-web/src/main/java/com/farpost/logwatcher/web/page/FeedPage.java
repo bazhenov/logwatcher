@@ -1,24 +1,76 @@
 package com.farpost.logwatcher.web.page;
 
+import com.farpost.logwatcher.*;
 import com.farpost.logwatcher.storage.LogStorage;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+
+import static java.util.Collections.sort;
 
 public class FeedPage {
 
-	private final HttpServletRequest request;
-	private final LogStorage storage;
-	private final Date date;
-	private final String applicationId;
+	@Autowired
+	private LogStorage storage;
 
-	public FeedPage(HttpServletRequest request, LogStorage storage, Date date, String applicationId) {
+	private HttpServletRequest request;
+	private Date date;
+	private String applicationId;
+	private Severity severity;
+
+	private final HashMap<String, Comparator<AggregatedEntry>> comparators = new HashMap<String, Comparator<AggregatedEntry>>() {{
+		put(null, new ByLastOccurenceDateComparator());
+		put("last-occurence", new ByLastOccurenceDateComparator());
+		put("occurence-count", new ByOccurenceCountComparator());
+	}};
+	private List<AggregatedEntry> entries;
+	private String sortOrder;
+	private int entriesCount;
+
+	public FeedPage init(HttpServletRequest request, Date date, String applicationId, Severity severity) {
 		this.request = request;
-		this.storage = storage;
-		this.date = new Date(date.getTime());
+		this.date = date;
 		this.applicationId = applicationId;
+		this.severity = severity;
+
+		entries = storage.getAggregatedEntries(applicationId, new com.farpost.timepoint.Date(date), severity);
+		entriesCount = sumCount(entries);
+		Comparator<AggregatedEntry> comparator = comparators.containsKey(sortOrder)
+			? comparators.get(sortOrder)
+			: comparators.get(null);
+		sort(entries, comparator);
+
+		return this;
+	}
+
+	public String getSortOrder() {
+		return sortOrder;
+	}
+
+	public int getEntriesCount() {
+		return entriesCount;
+	}
+
+	private static int sumCount(List<AggregatedEntry> entries) {
+		int times = 0;
+		for (AggregatedEntry e : entries) {
+			times += e.getCount();
+		}
+		return times;
+	}
+
+	public Severity getSeverity() {
+		return severity;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public Collection<AggregatedEntry> getEntries() {
+		return entries;
 	}
 
 	/**
@@ -39,6 +91,10 @@ public class FeedPage {
 
 	public String getApplicationId() {
 		return applicationId;
+	}
+
+	public void setSortOrder(String sortOrder) {
+		this.sortOrder = sortOrder;
 	}
 
 	public static class Application {

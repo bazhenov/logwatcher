@@ -7,15 +7,11 @@
 					xmlns:lt="urn:jsptagdir:/WEB-INF/tags" xmlns:s="http://www.springframework.org/tags">
 
 	<jsp:directive.page contentType="text/html"/>
-	<jsp:useBean id="entries" scope="request" type="java.util.List"/>
-	<jsp:useBean id="times" scope="request" type="java.lang.Integer"/>
-	<jsp:useBean id="date" scope="request" type="java.util.Date"/>
-	<jsp:useBean id="severity" scope="request" type="java.lang.String"/>
-	<jsp:useBean id="vm" scope="request" type="com.farpost.logwatcher.web.page.FeedPage"/>
+	<jsp:useBean id="p" scope="request" type="com.farpost.logwatcher.web.page.FeedPage"/>
 
 	<html>
 	<head>
-		<title>LogWatcher: <c:out value="${vm.applicationId}"/> feed</title>
+		<title>LogWatcher: <c:out value="${p.applicationId}"/> feed</title>
 
 		<s:url value='/css/aggregated-feed.css' var="cssUrl"/>
 		<link rel="stylesheet" href="${cssUrl}"/>
@@ -31,8 +27,8 @@
 		</script>
 
 		<s:url value="/rss/{applicationId}" var="rssUrl">
-			<s:param name="applicationId" value="${vm.applicationId}"/>
-			<s:param name="severity" value="${severity}"/>
+			<s:param name="applicationId" value="${p.applicationId}"/>
+			<s:param name="severity" value="${p.severity}"/>
 		</s:url>
 		<link rel="alternate" type="application/rss+xml" title="LogWatcher RSS"
 					href="${rssUrl}"/>
@@ -40,16 +36,16 @@
 
 	<body>
 	<h2>
-		<span id="applicationId"><c:out value="${vm.applicationId}"/></span>
+		<span id="applicationId"><c:out value="${p.applicationId}"/></span>
 		<span class="additionalInfo">
-			on <span id="date"><fmt:formatDate pattern="dd MMMM, yyyy" value="${date}"/></span>
+			on <span id="date"><fmt:formatDate pattern="dd MMMM, yyyy" value="${p.date}"/></span>
 		</span>
 	</h2>
 
-	<lt:severity-selector severity="${severity}"/>
+	<lt:severity-selector severity="${p.severity}"/>
 
 	<lt:popup id="applicationSelector">
-		<c:set value="${vm.applications}" var="applications"/>
+		<c:set value="${p.applications}" var="applications"/>
 		<c:choose>
 			<c:when test="${f:length(applications) gt 0}">
 				<c:forEach items="${applications}" var="application">
@@ -69,9 +65,9 @@
 	</lt:popup>
 
 
-	<c:url value="/feed/${vm.applicationId}" var="baseUrl"/>
-	<fmt:formatDate pattern="yyyy" var="year" value="${date}"/>
-	<fmt:formatDate pattern="M" var="month" value="${date}"/>
+	<c:url value="/feed/${p.applicationId}" var="baseUrl"/>
+	<fmt:formatDate pattern="yyyy" var="year" value="${p.date}"/>
+	<fmt:formatDate pattern="M" var="month" value="${p.date}"/>
 	<script type="text/javascript">
 		var baseUrl = "${baseUrl}";
 		var baseDate = new Date("${year}", ${month}-1, 1);
@@ -96,16 +92,16 @@
 	</lt:popup>
 
 	<c:choose>
-		<c:when test="${f:length(entries) > 0}">
+		<c:when test="${f:length(p.entries) > 0}">
 			<div class="entries">
-				<c:forEach var="entry" items="${entries}">
-					<lt:aggregated-entry entry="${entry}" currentApplicationId="${vm.applicationId}"/>
+				<c:forEach var="entry" items="${p.entries}">
+					<lt:aggregated-entry entry="${entry}" currentApplicationId="${p.applicationId}"/>
 				</c:forEach>
 			</div>
 
 			<div id="footer">
-				${l:pluralize(f:length(entries), "entry entries entries")},
-				${l:pluralize(times, "message messages messages")}
+				${l:pluralize(f:length(p.entries), "entry entries entries")},
+				${l:pluralize(p.entriesCount, "message messages messages")}
 			</div>
 		</c:when>
 		<c:otherwise>

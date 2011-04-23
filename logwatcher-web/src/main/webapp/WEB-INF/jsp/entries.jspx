@@ -7,9 +7,7 @@
 
 	<jsp:directive.page contentType="text/html"/>
 
-	<jsp:useBean id="date" scope="request" type="java.util.Date"/>
-	<jsp:useBean id="applicationId" scope="request" type="java.lang.String"/>
-	<jsp:useBean id="checksum" scope="request" type="java.lang.String"/>
+	<jsp:useBean id="p" scope="request" type="com.farpost.logwatcher.web.page.DetailsPage"/>
 
 	<html>
 	<head>
@@ -19,22 +17,31 @@
 	</head>
 
 	<body>
-	<h2>detailed information — <code>${l:trim(checksum, 8, "...")}</code></h2>
+	<h2>detailed information — <code>${l:trim(p.checksum, 8, "...")}</code></h2>
 
-	<c:url var="backUrl" value="/feed/${applicationId}">
-		<c:param name="date"><fmt:formatDate value="${date}" pattern="yyyy-MM-dd"/></c:param>
+	<c:url var="backUrl" value="/feed/${p.applicationId}">
+		<c:param name="date"><fmt:formatDate value="${p.date}" pattern="yyyy-MM-dd"/></c:param>
 	</c:url>
 
 	<p>
-		<a href="${backUrl}">&amp;larr; Back</a> to <c:out value="${applicationId}"/> &amp;mdash;
-		<fmt:formatDate value="${date}" pattern="MMMM dd, yyyy"/>
+		<a href="${backUrl}">&amp;larr; Back</a> to <c:out value="${p.applicationId}"/> &amp;mdash;
+		<fmt:formatDate value="${p.date}" pattern="MMMM dd, yyyy"/>
 	</p>
 
-	<div class="log">
-		<c:forEach items="${entries}" var="entry">
-			<lt:entry entry="${entry}"/>
-		</c:forEach>
-	</div>
+	<c:choose>
+		<c:when test="${empty p.entries}">
+			<div id="notificationPanel">
+				<span>&amp;empty;</span><br/>No results found
+			</div>
+		</c:when>
+		<c:otherwise>
+			<div class="log">
+				<c:forEach items="${p.entries}" var="entry">
+					<lt:entry entry="${entry}"/>
+				</c:forEach>
+			</div>
+		</c:otherwise>
+	</c:choose>
 	</body>
 	</html>
 </jsp:root>
