@@ -1,4 +1,4 @@
-package com.farpost.logwatcher.web;
+package com.farpost.logwatcher.web.controller;
 
 import com.farpost.logwatcher.AggregateAttributesVisitor;
 import com.farpost.logwatcher.AggregationResult;

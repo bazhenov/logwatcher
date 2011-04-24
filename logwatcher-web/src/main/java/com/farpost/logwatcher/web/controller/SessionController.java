@@ -1,5 +1,6 @@
-package com.farpost.logwatcher.web;
+package com.farpost.logwatcher.web.controller;
 
+import com.farpost.logwatcher.web.BufferView;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;

@@ -1,4 +1,4 @@
-package com.farpost.logwatcher.web;
+package com.farpost.logwatcher.web.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;

@@ -3,6 +3,7 @@ package com.farpost.logwatcher.web;
 import com.farpost.logwatcher.AggregatedEntry;
 import com.farpost.logwatcher.storage.InMemoryLogStorage;
 import com.farpost.logwatcher.storage.LogStorage;
+import com.farpost.logwatcher.web.controller.DashboardController;
 import org.springframework.ui.ModelMap;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

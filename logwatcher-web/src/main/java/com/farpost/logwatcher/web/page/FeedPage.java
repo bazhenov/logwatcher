@@ -5,6 +5,8 @@ import com.farpost.logwatcher.ByLastOccurenceDateComparator;
 import com.farpost.logwatcher.ByOccurenceCountComparator;
 import com.farpost.logwatcher.Severity;
 import com.farpost.logwatcher.storage.LogStorage;
+import com.farpost.logwatcher.web.ViewNameAwarePage;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,8 +15,7 @@ import java.util.*;
 
 import static java.util.Collections.sort;
 
-@Component
-public class FeedPage {
+public class FeedPage implements ViewNameAwarePage, InitializingBean {
 
 	@Autowired
 	private LogStorage storage;
@@ -33,21 +34,27 @@ public class FeedPage {
 	private String sortOrder;
 	private int entriesCount;
 
-	public FeedPage init(HttpServletRequest request, Date date, String applicationId, Severity severity, String sortOrder) {
+	public FeedPage(HttpServletRequest request, Date date, String applicationId, Severity severity, String sortOrder) {
 		this.request = request;
 		this.date = date;
 		this.applicationId = applicationId;
 		this.severity = severity;
 		this.sortOrder = sortOrder;
+	}
 
+	@Override
+	public void afterPropertiesSet() throws Exception {
 		entries = storage.getAggregatedEntries(applicationId, new com.farpost.timepoint.Date(date), severity);
 		entriesCount = sumCount(entries);
 		Comparator<AggregatedEntry> comparator = comparators.containsKey(this.sortOrder)
 			? comparators.get(this.sortOrder)
 			: comparators.get(null);
 		sort(entries, comparator);
+	}
 
-		return this;
+	@Override
+	public String getViewName() {
+		return "feed/aggregated-feed";
 	}
 
 	public String getSortOrder() {

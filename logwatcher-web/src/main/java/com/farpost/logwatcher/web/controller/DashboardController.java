@@ -1,8 +1,9 @@
-package com.farpost.logwatcher.web;
+package com.farpost.logwatcher.web.controller;
 
 import com.farpost.logwatcher.AggregatedEntry;
 import com.farpost.logwatcher.Severity;
 import com.farpost.logwatcher.storage.LogStorage;
+import com.farpost.logwatcher.web.ApplicationInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;

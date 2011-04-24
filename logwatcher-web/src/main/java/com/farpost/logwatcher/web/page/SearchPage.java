@@ -5,6 +5,8 @@ import com.farpost.logwatcher.storage.DateMatcher;
 import com.farpost.logwatcher.storage.LogEntryMatcher;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.SeverityMatcher;
+import com.farpost.logwatcher.web.ViewNameAwarePage;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,11 +16,10 @@ import java.util.Map;
 import static com.farpost.logwatcher.storage.LogEntries.entries;
 import static com.farpost.timepoint.Date.today;
 
-@Component
-public class SearchPage {
+public class SearchPage implements ViewNameAwarePage, InitializingBean {
 
 	@Autowired
-	LogStorage storage;
+	private LogStorage storage;
 
 	@Autowired
 	private QueryTranslator translator;
@@ -27,27 +28,32 @@ public class SearchPage {
 	private List<LogEntry> entries;
 	private String viewName;
 
-	public SearchPage init(String query) {
+	public SearchPage(String query) {
 		this.query = query;
+	}
 
+	public String getViewName() {
+		return viewName;
+	}
+
+	public void afterPropertiesSet() {
 		if (query == null || query.isEmpty()) {
 			viewName = "search-form";
-			return this;
-		}
-		try {
-			List<LogEntryMatcher> matchers = translator.translate(query.trim());
-			if (!contains(matchers, DateMatcher.class)) {
-				matchers.add(new DateMatcher(today()));
+		} else {
+			try {
+				List<LogEntryMatcher> matchers = translator.translate(query.trim());
+				if (!contains(matchers, DateMatcher.class)) {
+					matchers.add(new DateMatcher(today()));
+				}
+				if (!contains(matchers, SeverityMatcher.class)) {
+					matchers.add(new SeverityMatcher(Severity.error));
+				}
+				entries = entries().withCriteria(matchers).find(storage);
+				viewName = "search-page";
+			} catch (InvalidQueryException e) {
+				viewName = "invalid-query";
 			}
-			if (!contains(matchers, SeverityMatcher.class)) {
-				matchers.add(new SeverityMatcher(Severity.error));
-			}
-			entries = entries().withCriteria(matchers).find(storage);
-			viewName = "search-page";
-		} catch (InvalidQueryException e) {
-			viewName = "invalid-query";
 		}
-		return this;
 	}
 
 	private boolean contains(List<LogEntryMatcher> matchers, Class<? extends LogEntryMatcher> type) {
@@ -59,7 +65,6 @@ public class SearchPage {
 		return false;
 	}
 
-
 	public List<LogEntry> getEntries() {
 		return entries;
 	}
@@ -70,9 +75,5 @@ public class SearchPage {
 
 	public String getQuery() {
 		return query;
-	}
-
-	public String getViewName() {
-		return viewName;
 	}
 }

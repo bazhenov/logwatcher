@@ -1,4 +1,4 @@
-package com.farpost.logwatcher.web;
+package com.farpost.logwatcher.web.controller;
 
 import com.farpost.logwatcher.AggregatedEntry;
 import com.farpost.logwatcher.Severity;
@@ -13,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
@@ -29,13 +26,10 @@ import static com.farpost.timepoint.Date.today;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @Controller
-public class FeedController {
+public class FeedController extends AbstractController {
 
 	@Autowired
 	private LogStorage storage;
-
-	@Autowired
-	private BeanFactory beans;
 
 	@RequestMapping("/")
 	public View handleRoot() {
@@ -49,12 +43,6 @@ public class FeedController {
 		return "Ok";
 	}
 
-	@RequestMapping("/search")
-	public ModelAndView handleSearch(@RequestParam(required = false) String q) {
-		SearchPage p = beans.getBean(SearchPage.class).init(q);
-		return new ModelAndView(p.getViewName(), "p", p);
-	}
-
 	@RequestMapping("/feed/{applicationId}")
 	public ModelAndView handleFeed(@PathVariable String applicationId,
 																 @RequestParam(required = false) @DateTimeFormat(iso = DATE) java.util.Date date,
@@ -66,16 +54,15 @@ public class FeedController {
 		Severity severity = getSeverity(request);
 		String sortOrder = getSortOrder(request);
 
-		FeedPage p = beans.getBean(FeedPage.class).init(request, date, applicationId, severity, sortOrder);
-
-		return new ModelAndView("feed/aggregated-feed", "p", p);
+		FeedPage p = new FeedPage(request, date, applicationId, severity, sortOrder);
+		return modelAndView(p);
 	}
 
 	@RequestMapping("/entries/{applicationId}/{checksum}")
 	public ModelAndView handleEntries(@PathVariable String checksum, @PathVariable String applicationId,
 																		@RequestParam @DateTimeFormat(iso = DATE) java.util.Date date) {
-		DetailsPage p = beans.getBean(DetailsPage.class).init(applicationId, checksum, date);
-		return new ModelAndView("entries", "p", p);
+		DetailsPage p = new DetailsPage(applicationId, checksum, date);
+		return modelAndView(p);
 	}
 
 

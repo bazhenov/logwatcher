@@ -84,6 +84,9 @@
 			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>maven-jetty-plugin</artifactId>
+				<configuration>
+					<reload>manual</reload>
+				</configuration>
 				<dependencies>
 					<dependency>
 						<groupId>com.h2database</groupId>
