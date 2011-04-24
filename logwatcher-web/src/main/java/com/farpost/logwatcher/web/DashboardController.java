@@ -3,6 +3,7 @@ package com.farpost.logwatcher.web;
 import com.farpost.logwatcher.AggregatedEntry;
 import com.farpost.logwatcher.Severity;
 import com.farpost.logwatcher.storage.LogStorage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +16,11 @@ import static com.farpost.timepoint.Date.today;
 @Controller
 public class DashboardController {
 
+	@Autowired
 	private LogStorage storage;
+
+	public DashboardController() {
+	}
 
 	public DashboardController(LogStorage storage) {
 		this.storage = storage;

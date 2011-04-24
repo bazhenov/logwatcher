@@ -5,22 +5,11 @@
 
 	<c:annotation-config/>
 
-	<bean class="com.farpost.logwatcher.web.FeedController">
-		<property name="storage" ref="storage"/>
-	</bean>
-
-	<bean class="com.farpost.logwatcher.web.BackController">
-		<property name="storage" ref="storage"/>
-	</bean>
-
+	<bean class="com.farpost.logwatcher.web.FeedController"/>
+	<bean class="com.farpost.logwatcher.web.BackController"/>
 	<bean class="com.farpost.logwatcher.web.LayoutController"/>
-
 	<bean class="com.farpost.logwatcher.web.SessionController"/>
+	<bean class="com.farpost.logwatcher.web.DashboardController" />
 
-	<bean class="com.farpost.logwatcher.web.DashboardController">
-		<constructor-arg ref="storage"/>
-	</bean>
-
-	<bean class="com.farpost.logwatcher.web.page.FeedPage" scope="prototype"/>
-	<bean class="com.farpost.logwatcher.web.page.DetailsPage" scope="prototype"/>
+	<c:component-scan base-package="com.farpost.logwatcher.web.page"/>
 </beans>

@@ -22,8 +22,8 @@
 		<script type="text/javascript" src="/js/calendar.js"></script>
 
 		<script type="text/javascript">
-			var severityLevel = '${severity}';
-			var entrySortOrder = '${sortOrder}';
+			var severityLevel = '${p.severity}';
+			var entrySortOrder = '${p.sortOrder}';
 		</script>
 
 		<s:url value="/rss/{applicationId}" var="rssUrl">

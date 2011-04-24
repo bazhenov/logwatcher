@@ -3,12 +3,14 @@ package com.farpost.logwatcher.web.page;
 import com.farpost.logwatcher.LogEntry;
 import com.farpost.logwatcher.storage.LogStorage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.Date;
 
 import static com.farpost.logwatcher.storage.LogEntries.entries;
 
+@Component
 public class DetailsPage {
 
 	private String applicationId;

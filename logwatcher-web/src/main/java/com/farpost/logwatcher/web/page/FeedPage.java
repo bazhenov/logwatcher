@@ -1,15 +1,19 @@
 package com.farpost.logwatcher.web.page;
 
-import com.farpost.logwatcher.*;
+import com.farpost.logwatcher.AggregatedEntry;
+import com.farpost.logwatcher.ByLastOccurenceDateComparator;
+import com.farpost.logwatcher.ByOccurenceCountComparator;
+import com.farpost.logwatcher.Severity;
 import com.farpost.logwatcher.storage.LogStorage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
-import java.util.Date;
 
 import static java.util.Collections.sort;
 
+@Component
 public class FeedPage {
 
 	@Autowired
@@ -29,16 +33,17 @@ public class FeedPage {
 	private String sortOrder;
 	private int entriesCount;
 
-	public FeedPage init(HttpServletRequest request, Date date, String applicationId, Severity severity) {
+	public FeedPage init(HttpServletRequest request, Date date, String applicationId, Severity severity, String sortOrder) {
 		this.request = request;
 		this.date = date;
 		this.applicationId = applicationId;
 		this.severity = severity;
+		this.sortOrder = sortOrder;
 
 		entries = storage.getAggregatedEntries(applicationId, new com.farpost.timepoint.Date(date), severity);
 		entriesCount = sumCount(entries);
-		Comparator<AggregatedEntry> comparator = comparators.containsKey(sortOrder)
-			? comparators.get(sortOrder)
+		Comparator<AggregatedEntry> comparator = comparators.containsKey(this.sortOrder)
+			? comparators.get(this.sortOrder)
 			: comparators.get(null);
 		sort(entries, comparator);
 
@@ -91,10 +96,6 @@ public class FeedPage {
 
 	public String getApplicationId() {
 		return applicationId;
-	}
-
-	public void setSortOrder(String sortOrder) {
-		this.sortOrder = sortOrder;
 	}
 
 	public static class Application {

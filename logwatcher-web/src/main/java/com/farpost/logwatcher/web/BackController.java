@@ -6,6 +6,7 @@ import com.farpost.logwatcher.storage.InvalidCriteriaException;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
 import com.farpost.timepoint.Date;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ import static com.farpost.logwatcher.storage.LogEntries.entries;
 @Controller
 public class BackController {
 
+	@Autowired
 	private LogStorage storage;
 	private final ThreadLocal<DateFormat> format = new ThreadLocal<DateFormat>() {
 		@Override
@@ -28,7 +30,10 @@ public class BackController {
 		}
 	};
 
-	public void setStorage(LogStorage storage) {
+	public BackController() {
+	}
+
+	public BackController(LogStorage storage) {
 		this.storage = storage;
 	}
 

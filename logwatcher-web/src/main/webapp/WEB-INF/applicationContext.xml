@@ -36,4 +36,10 @@
 	</bean>
 
 	<bean id="marshaller" class="com.farpost.logwatcher.marshalling.Jaxb2Marshaller"/>
+
+	<bean id="queryTranslator" class="com.farpost.logwatcher.AnnotationDrivenQueryTranslator">
+		<constructor-arg>
+			<bean class="com.farpost.logwatcher.TranslationRulesImpl"/>
+		</constructor-arg>
+	</bean>
 </beans>

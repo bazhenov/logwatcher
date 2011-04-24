@@ -1,7 +1,10 @@
 package com.farpost.logwatcher.web;
 
-import com.farpost.logwatcher.*;
-import com.farpost.logwatcher.storage.*;
+import com.farpost.logwatcher.AggregatedEntry;
+import com.farpost.logwatcher.Severity;
+import com.farpost.logwatcher.storage.InvalidCriteriaException;
+import com.farpost.logwatcher.storage.LogStorage;
+import com.farpost.logwatcher.storage.LogStorageException;
 import com.farpost.logwatcher.web.page.DetailsPage;
 import com.farpost.logwatcher.web.page.FeedPage;
 import com.farpost.logwatcher.web.page.SearchPage;
@@ -22,22 +25,17 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-import static com.farpost.logwatcher.storage.LogEntries.entries;
 import static com.farpost.timepoint.Date.today;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @Controller
 public class FeedController {
 
+	@Autowired
 	private LogStorage storage;
-	private final QueryTranslator translator = new AnnotationDrivenQueryTranslator(new TranslationRulesImpl());
 
 	@Autowired
 	private BeanFactory beans;
-
-	public void setStorage(LogStorage storage) {
-		this.storage = storage;
-	}
 
 	@RequestMapping("/")
 	public View handleRoot() {
@@ -52,28 +50,9 @@ public class FeedController {
 	}
 
 	@RequestMapping("/search")
-	public String handleSearch(@RequestParam(required = false) String q, ModelMap map)
-		throws InvalidQueryException, LogStorageException, InvalidCriteriaException {
-
-		if (q == null || q.isEmpty()) {
-			return "search-form";
-		}
-		List<LogEntryMatcher> matchers;
-		try {
-			matchers = translator.translate(q.trim());
-		} catch (InvalidQueryException e) {
-			return "invalid-query";
-		}
-		if (!contains(matchers, DateMatcher.class)) {
-			matchers.add(new DateMatcher(today()));
-		}
-		if (!contains(matchers, SeverityMatcher.class)) {
-			matchers.add(new SeverityMatcher(Severity.error));
-		}
-		List<LogEntry> entries = entries().withCriteria(matchers).find(storage);
-
-		map.put("p", new SearchPage(q, entries));
-		return "search-page";
+	public ModelAndView handleSearch(@RequestParam(required = false) String q) {
+		SearchPage p = beans.getBean(SearchPage.class).init(q);
+		return new ModelAndView(p.getViewName(), "p", p);
 	}
 
 	@RequestMapping("/feed/{applicationId}")
@@ -87,8 +66,7 @@ public class FeedController {
 		Severity severity = getSeverity(request);
 		String sortOrder = getSortOrder(request);
 
-		FeedPage p = beans.getBean(FeedPage.class).init(request, date, applicationId, severity);
-		p.setSortOrder(sortOrder);
+		FeedPage p = beans.getBean(FeedPage.class).init(request, date, applicationId, severity, sortOrder);
 
 		return new ModelAndView("feed/aggregated-feed", "p", p);
 	}
@@ -100,14 +78,6 @@ public class FeedController {
 		return new ModelAndView("entries", "p", p);
 	}
 
-	private boolean contains(List<LogEntryMatcher> matchers, Class<? extends LogEntryMatcher> type) {
-		for (LogEntryMatcher matcher : matchers) {
-			if (matcher.getClass().equals(type)) {
-				return true;
-			}
-		}
-		return false;
-	}
 
 	@RequestMapping("/rss/{applicationId}")
 	public String handleRss(ModelMap map, @RequestParam(value = "severity", required = false) String s,
@@ -126,7 +96,7 @@ public class FeedController {
 		return "feed-rss";
 	}
 
-	private Severity getSeverity(HttpServletRequest request) {
+	private static Severity getSeverity(HttpServletRequest request) {
 		String get = request.getParameter("severity");
 		if (get != null) {
 			return Severity.forName(get);
@@ -143,7 +113,7 @@ public class FeedController {
 		return Severity.error;
 	}
 
-	private String getSortOrder(HttpServletRequest request) {
+	private static String getSortOrder(HttpServletRequest request) {
 		Cookie[] cookies = request.getCookies();
 		if (cookies != null) {
 			for (Cookie cookie : cookies) {
