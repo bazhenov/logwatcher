@@ -68,6 +68,13 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
+				<configuration>
+					<systemPropertyVariables>
+						<jdbc.url>${jdbc.url}</jdbc.url>
+						<jdbc.user>${jdbc.user}</jdbc.user>
+						<jdbc.password>${jdbc.password}</jdbc.password>
+					</systemPropertyVariables>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
