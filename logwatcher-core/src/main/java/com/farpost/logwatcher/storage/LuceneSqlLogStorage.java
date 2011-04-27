@@ -1,7 +1,7 @@
 package com.farpost.logwatcher.storage;
 
 import com.farpost.logwatcher.*;
-import com.farpost.logwatcher.marshalling.BinaryMarshallerV1;
+import com.farpost.logwatcher.marshalling.Jaxb2Marshaller;
 import com.farpost.logwatcher.marshalling.Marshaller;
 import com.farpost.logwatcher.storage.spi.AnnotationDrivenMatcherMapperImpl;
 import com.farpost.logwatcher.storage.spi.MatcherMapper;
@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -35,6 +34,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static java.lang.System.nanoTime;
 import static org.apache.lucene.index.IndexWriter.MaxFieldLength;
 import static org.apache.lucene.search.BooleanClause.Occur;
+import static org.springframework.util.StringUtils.arrayToCommaDelimitedString;
 
 public class LuceneSqlLogStorage implements LogStorage {
 
@@ -60,7 +60,7 @@ public class LuceneSqlLogStorage implements LogStorage {
 		writer = new IndexWriter(directory, new StandardAnalyzer(Version.LUCENE_30), MaxFieldLength.UNLIMITED);
 		searcherRef = reopenSearcher(directory);
 		this.jdbc = new JdbcTemplate(dataSource);
-		this.marshaller = new BinaryMarshallerV1();
+		this.marshaller = new Jaxb2Marshaller();
 		this.aggregateEntryMapper = new CreateAggregatedEntryRowMapper(marshaller);
 		nextId = jdbc.queryForInt("SELECT MAX(id) + 1 FROM entry");
 	}
@@ -146,7 +146,7 @@ public class LuceneSqlLogStorage implements LogStorage {
 	private synchronized void commitChangesIfNeeded() throws IOException {
 		boolean realTimeModeEnabled = commitThreshold <= 0;
 		boolean commitThresholdReached = lastCommitTime < nanoTime() - commitThreshold * 1e+9;
-		
+
 		if (realTimeModeEnabled || commitThresholdReached) {
 			writer.commit();
 			searcherRef = reopenSearcher(directory);
@@ -222,15 +222,14 @@ public class LuceneSqlLogStorage implements LogStorage {
 			Integer[] ids;
 			int recordsRemoved = 0;
 
-			do {
-				ids = findEntriesIds(criterias);
-				jdbc.update("DELETE FROM entry WHERE id IN ( " + StringUtils.arrayToCommaDelimitedString(ids) + ")");
+			while ((ids = findEntriesIds(criterias)).length > 0) {
+				jdbc.update("DELETE FROM entry WHERE id IN (" + arrayToCommaDelimitedString(ids) + ")");
 				for (int id : ids) {
 					writer.deleteDocuments(new Term("id", Integer.toString(id)));
 				}
 				recordsRemoved += ids.length;
 				commitChangesIfNeeded();
-			} while (ids.length > 0);
+			}
 
 			return recordsRemoved;
 
@@ -276,11 +275,13 @@ public class LuceneSqlLogStorage implements LogStorage {
 	public <T> T walk(Collection<LogEntryMatcher> criterias, Visitor<LogEntry, T> visitor)
 		throws LogStorageException, InvalidCriteriaException {
 		Integer[] ids = findEntriesIds(criterias);
-		String idString = StringUtils.arrayToCommaDelimitedString(ids);
+		if (ids.length > 0) {
+			String idString = arrayToCommaDelimitedString(ids);
 
-		List<byte[]> rows = jdbc.queryForList("SELECT value FROM entry WHERE id IN ( " + idString + " )", byte[].class);
-		for (byte[] data : rows) {
-			visitor.visit(marshaller.unmarshall(data));
+			List<byte[]> rows = jdbc.queryForList("SELECT value FROM entry WHERE id IN ( " + idString + " )", byte[].class);
+			for (byte[] data : rows) {
+				visitor.visit(marshaller.unmarshall(data));
+			}
 		}
 		return visitor.getResult();
 	}

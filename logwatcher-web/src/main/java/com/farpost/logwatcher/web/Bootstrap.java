@@ -1,22 +1,20 @@
 package com.farpost.logwatcher.web;
 
-import com.farpost.logwatcher.storage.LogStorage;
-import com.farpost.logwatcher.storage.LogStorageException;
-import com.farpost.timepoint.DateTime;
 import com.farpost.logwatcher.Cause;
 import com.farpost.logwatcher.LogEntryImpl;
 import com.farpost.logwatcher.Severity;
+import com.farpost.logwatcher.storage.LogStorage;
+import com.farpost.timepoint.DateTime;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 
 import java.util.HashMap;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class Bootstrap {
+public class Bootstrap implements InitializingBean {
 
 	private static final Logger log = getLogger(Bootstrap.class);
-
 
 	private LogStorage storage;
 	private boolean loadSampleDump = false;
@@ -29,8 +27,9 @@ public class Bootstrap {
 		this.loadSampleDump = loadSampleDump;
 	}
 
-	public void load() throws LogStorageException {
-		if (loadSampleDump) {
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		if(loadSampleDump) {
 			loadSampleDump();
 		}
 	}

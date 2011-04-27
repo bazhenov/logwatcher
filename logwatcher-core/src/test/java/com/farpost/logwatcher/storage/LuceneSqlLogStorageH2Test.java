@@ -6,7 +6,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.testng.annotations.AfterMethod;
 
-public class LuceneSqlLogStorageTest extends LogStorageTestCase {
+public class LuceneSqlLogStorageH2Test extends LogStorageTestCase {
 
 	private EmbeddedDatabase db;
 

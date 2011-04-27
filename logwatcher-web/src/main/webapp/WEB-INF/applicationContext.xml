@@ -16,18 +16,22 @@
 	<import resource="integration.xml"/>
 	<import resource="scheduler.xml"/>
 
-	<bean class="com.farpost.logwatcher.web.Bootstrap"
-				init-method="load"
-				lazy-init="false"
+	<bean id="bootstrap" class="com.farpost.logwatcher.web.Bootstrap"
 				p:storage-ref="storage"
 				p:loadSampleDump="${loadSampleDump}"/>
 
-	<bean id="storage" class="com.farpost.logwatcher.storage.LuceneSqlLogStorage">
+	<bean id="luceneDirectory" class="org.apache.lucene.store.FSDirectory" factory-method="open">
 		<constructor-arg>
-			<bean class="org.apache.lucene.store.RAMDirectory"/>
+			<bean class="java.io.File" init-method="mkdirs">
+				<constructor-arg value="${index.location}" />
+			</bean>
 		</constructor-arg>
+	</bean>
+
+	<bean id="storage" class="com.farpost.logwatcher.storage.LuceneSqlLogStorage" depends-on="bootstrap"
+		p:commitThreshold="${index.commitThreshold}">
+		<constructor-arg ref="luceneDirectory" />
 		<constructor-arg ref="dataSource"/>
-		<property name="commitThreshold" value="0"/>
 	</bean>
 
 	<bean id="aggregator" class="com.farpost.logwatcher.aggregator.ExecutorServiceAggregator"
