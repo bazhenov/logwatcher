@@ -68,11 +68,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
-				<configuration>
-					<systemPropertyVariables>
-						<mysql.config>${mysql.config}</mysql.config>
-					</systemPropertyVariables>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
