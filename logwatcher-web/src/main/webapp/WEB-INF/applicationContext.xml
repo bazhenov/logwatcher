@@ -18,19 +18,20 @@
 
 	<bean id="bootstrap" class="com.farpost.logwatcher.web.Bootstrap"
 				p:storage-ref="storage"
+				p:indexLocation-ref="indexLocation"
 				p:loadSampleDump="${loadSampleDump}"/>
 
-	<bean id="luceneDirectory" class="org.apache.lucene.store.FSDirectory" factory-method="open">
-		<constructor-arg>
-			<bean class="java.io.File" init-method="mkdirs">
-				<constructor-arg value="${index.location}" />
-			</bean>
-		</constructor-arg>
+	<bean id="indexLocation" class="java.io.File" init-method="mkdirs">
+		<constructor-arg value="${index.location}"/>
+	</bean>
+
+	<bean id="luceneDirectory" class="org.apache.lucene.store.FSDirectory" factory-method="open" depends-on="bootstrap">
+		<constructor-arg ref="indexLocation"/>
 	</bean>
 
 	<bean id="storage" class="com.farpost.logwatcher.storage.LuceneSqlLogStorage" depends-on="bootstrap"
-		p:commitThreshold="${index.commitThreshold}">
-		<constructor-arg ref="luceneDirectory" />
+				p:commitThreshold="${index.commitThreshold}">
+		<constructor-arg ref="luceneDirectory"/>
 		<constructor-arg ref="dataSource"/>
 	</bean>
 

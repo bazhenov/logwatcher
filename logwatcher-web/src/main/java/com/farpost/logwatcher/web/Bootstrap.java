@@ -8,8 +8,10 @@ import com.farpost.timepoint.DateTime;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 
+import java.io.File;
 import java.util.HashMap;
 
+import static com.google.common.io.Files.deleteDirectoryContents;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Bootstrap implements InitializingBean {
@@ -18,9 +20,14 @@ public class Bootstrap implements InitializingBean {
 
 	private LogStorage storage;
 	private boolean loadSampleDump = false;
+	private File indexLocation;
 
 	public void setStorage(LogStorage storage) {
 		this.storage = storage;
+	}
+
+	public void setIndexLocation(File indexLocation) {
+		this.indexLocation = indexLocation;
 	}
 
 	public void setLoadSampleDump(boolean loadSampleDump) {
@@ -30,6 +37,7 @@ public class Bootstrap implements InitializingBean {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		if(loadSampleDump) {
+			deleteDirectoryContents(indexLocation);
 			loadSampleDump();
 		}
 	}
