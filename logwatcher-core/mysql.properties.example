@@ -1,4 +1,0 @@
-driver=com.mysql.jdbc.Driver
-username=user
-password=host
-url=jdbc:mysql://server/database?allowMultiQueries=true

@@ -1,0 +1,3 @@
+jdbc.url=jdbc:mysql://localhost/logwatcher_test?allowMultiQueries=true&characterEncoding=utf8&characterEncoding=utf8
+jdbc.user=
+jdbc.password=
