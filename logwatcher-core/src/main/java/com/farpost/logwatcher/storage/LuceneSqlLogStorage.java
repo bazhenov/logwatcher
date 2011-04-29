@@ -24,6 +24,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
 import javax.sql.DataSource;
+import java.io.Closeable;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.*;
@@ -36,7 +37,7 @@ import static org.apache.lucene.index.IndexWriter.MaxFieldLength;
 import static org.apache.lucene.search.BooleanClause.Occur;
 import static org.springframework.util.StringUtils.arrayToCommaDelimitedString;
 
-public class LuceneSqlLogStorage implements LogStorage {
+public class LuceneSqlLogStorage implements LogStorage, Closeable {
 
 	private final Directory directory;
 	private final MatcherMapper<Query> matcherMapper;
@@ -58,11 +59,17 @@ public class LuceneSqlLogStorage implements LogStorage {
 		this.directory = directory;
 		matcherMapper = new AnnotationDrivenMatcherMapperImpl<Query>(new LuceneMatcherMapperRules());
 		writer = new IndexWriter(directory, new StandardAnalyzer(Version.LUCENE_30), MaxFieldLength.UNLIMITED);
-		searcherRef = reopenSearcher(directory);
+		searcherRef = reopenSearcher();
 		this.jdbc = new JdbcTemplate(dataSource);
 		this.marshaller = new Jaxb2Marshaller();
 		this.aggregateEntryMapper = new CreateAggregatedEntryRowMapper(marshaller);
 		nextId = jdbc.queryForInt("SELECT MAX(id) + 1 FROM entry");
+	}
+
+	@Override
+	public synchronized void close() throws IOException {
+		writer.commit();
+		writer.close();
 	}
 
 	// TODO: объективных причин для сериализации потоков при записи нет
@@ -119,12 +126,11 @@ public class LuceneSqlLogStorage implements LogStorage {
 	 * Переоткрывает {@link IndexSearcher} для заданной директории, а также выполняет предзагрузку
 	 * {@link FieldCache}'а для поля {@code id}.
 	 *
-	 * @param directory директория источник данных
 	 * @return tuple состоящий из {@link IndexSearcher}'а и {@link FieldCache}'а.
 	 * @throws IOException в случае ошибки ввода/вывода открытии {@link IndexReader}'а или {@link IndexSearcher}'а.
 	 */
-	private static SearcherReference reopenSearcher(Directory directory) throws IOException {
-		IndexReader indexReader = IndexReader.open(directory, true);
+	private SearcherReference reopenSearcher() throws IOException {
+		IndexReader indexReader = writer.getReader();
 		IndexSearcher searcher = new IndexSearcher(indexReader);
 		String[] ids = FieldCache.DEFAULT.getStrings(indexReader, "id");
 		return new SearcherReference(indexReader, searcher, ids);
@@ -149,7 +155,7 @@ public class LuceneSqlLogStorage implements LogStorage {
 
 		if (realTimeModeEnabled || commitThresholdReached) {
 			writer.commit();
-			searcherRef = reopenSearcher(directory);
+			searcherRef = reopenSearcher();
 			lastCommitTime = nanoTime();
 		}
 	}
@@ -158,6 +164,7 @@ public class LuceneSqlLogStorage implements LogStorage {
 		Document document = new Document();
 		document.add(term("applicationId", normalize(entry.getApplicationId())));
 		document.add(term("date", normilizeDate(entry.getDate())));
+		document.add(term("datetime", normilizeDateTime(entry.getDate())));
 		document.add(term("message", normalize(entry.getMessage())));
 		document.add(term("severity", entry.getSeverity().name()));
 		document.add(term("checksum", normalize(entry.getChecksum())));
@@ -186,7 +193,7 @@ public class LuceneSqlLogStorage implements LogStorage {
 			Searcher searcher = ref.getSearcher();
 			String[] ids = ref.getIdFieldCache();
 
-			TopDocs topDocs = searcher.search(query, null, 100, new Sort(new SortField("id", SortField.INT, true)));
+			TopDocs topDocs = searcher.search(query, null, 100, new Sort(new SortField("datetime", SortField.STRING, true)));
 
 			Integer result[] = new Integer[topDocs.scoreDocs.length];
 			for (int i = 0; i < topDocs.scoreDocs.length; i++) {

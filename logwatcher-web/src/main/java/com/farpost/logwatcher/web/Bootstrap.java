@@ -57,26 +57,27 @@ public class Bootstrap implements InitializingBean {
 			"  3 : advertUnpopularDeactivationService.class.php:34 AdvertRemoteAdvertisement->getLinks(true)\n" +
 			"  2 : advertUnpopularDeactivationService.class.php:23 advertUnpopularDeactivationService->deactivateByMaxViews([849])\n" +
 			"  1 : service_runner.php:38 advertUnpopularDeactivationService->run()");
+		storage.writeEntry(new LogEntryImpl(DateTime.now().minusHour(5), "group", "OverflowFundsException", Severity.warning, "sum2",
+			"billing", new HashMap<String, String>() {{
+				put("url", "/some/foo/bar?uri=3");
+				put("machine", "aux5.srv.loc");
+			}}, cause));
 		storage.writeEntry(new LogEntryImpl(DateTime.now().minusHour(2), "group", "OverflowFundsException", Severity.warning, "sum2",
 			"billing", new HashMap<String, String>() {{
 				put("url", "/some/foo/very/long/url/to/fit/in/screen");
 				put("machine", "aux1.srv.loc");
 			}}, cause));
-		storage.writeEntry(new LogEntryImpl(DateTime.now().minusHour(2), "group", "OverflowFundsException", Severity.warning, "sum2",
+		storage.writeEntry(new LogEntryImpl(DateTime.now().minusHour(3), "group", "OverflowFundsException", Severity.warning, "sum2",
 			"billing", new HashMap<String, String>() {{
 				put("url", "/some/foo/bar?uri=1");
 				put("machine", "aux1.srv.loc");
 			}}, cause));
-		storage.writeEntry(new LogEntryImpl(DateTime.now().minusHour(2), "group", "OverflowFundsException", Severity.warning, "sum2",
+		storage.writeEntry(new LogEntryImpl(DateTime.now().minusHour(4), "group", "OverflowFundsException", Severity.warning, "sum2",
 			"billing", new HashMap<String, String>() {{
 				put("url", "/some/foo/bar?uri=2");
 				put("machine", "aux4.srv.loc");
 			}}, cause));
-		storage.writeEntry(new LogEntryImpl(DateTime.now().minusHour(2), "group", "OverflowFundsException", Severity.warning, "sum2",
-			"billing", new HashMap<String, String>() {{
-				put("url", "/some/foo/bar?uri=3");
-				put("machine", "aux5.srv.loc");
-			}}, cause));
+
 		storage.writeEntry(new LogEntryImpl(DateTime.now().minusMinute(18), "group", "java.lang.OutOfMemoryException", Severity.info, "sum3", "search", null));
 
 		storage.writeEntry(new LogEntryImpl(DateTime.now().minusHour(1), "group", "Ooops", Severity.info, "sum4",

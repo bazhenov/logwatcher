@@ -258,6 +258,17 @@ abstract public class LogStorageTestCase {
 	}
 
 	@Test
+	public void storageMustSortEntriesByOccurrenceDate() {
+		LogEntry secondEntry = entry().occurred(today().at("12:23")).saveIn(storage);
+		LogEntry firstEntry = entry().occurred(today().at("10:23")).saveIn(storage);
+
+		List<LogEntry> entries = entries().date(today()).find(storage);
+
+		assertThat(entries.get(0), equalTo(firstEntry));
+		assertThat(entries.get(1), equalTo(secondEntry));
+	}
+
+	@Test
 	public void storageCanCountEntriesBySeverity()
 		throws LogStorageException, InvalidCriteriaException {
 		entry().

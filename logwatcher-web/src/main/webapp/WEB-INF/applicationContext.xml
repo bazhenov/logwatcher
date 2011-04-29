@@ -25,12 +25,12 @@
 		<constructor-arg value="${index.location}"/>
 	</bean>
 
-	<bean id="luceneDirectory" class="org.apache.lucene.store.FSDirectory" factory-method="open" depends-on="bootstrap">
+	<bean id="luceneDirectory" class="org.apache.lucene.store.FSDirectory" factory-method="open">
 		<constructor-arg ref="indexLocation"/>
 	</bean>
 
-	<bean id="storage" class="com.farpost.logwatcher.storage.LuceneSqlLogStorage" depends-on="bootstrap"
-				p:commitThreshold="${index.commitThreshold}">
+	<bean id="storage" class="com.farpost.logwatcher.storage.LuceneSqlLogStorage"
+				p:commitThreshold="${index.commitThreshold}" destroy-method="close">
 		<constructor-arg ref="luceneDirectory"/>
 		<constructor-arg ref="dataSource"/>
 	</bean>
