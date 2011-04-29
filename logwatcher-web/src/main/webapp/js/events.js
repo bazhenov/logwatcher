@@ -11,22 +11,6 @@ function changeSeverity(url) {
 }
 
 $(document).ready(function() {
-
-
-	$('.entryContent').each(function() {
-		var text = $(this).html().replace(/[0-9a-z_A-Z\-\.\/]+:\d+/g, '<a class="openinide-link" href="#$&">$&</a>');
-		$(this).html(text);
-	});
-
-	$('a.openinide-link').click(function(e) {
-		e.preventDefault();
-		var message = $(this).attr("href").substr(1);
-		$.getJSON('http://localhost:8091/?message=' + message + '&callback=?', function(json) {
-			//do nothing
-		});
-
-	});
-
 	function toggleEntry(entry) {
 		entry.toggleClass('selectedEntry');
 		var checksum = entry.attr("checksum");
@@ -124,5 +108,24 @@ $(document).ready(function() {
 			popup.fadeOut(300);
 		}
 	}
+
+	/* Open In IDE */
+	$('.entryContent pre').each(function() {
+		var text = $(this).html().replace(/[0-9a-z_A-Z\-\.\/]+:\d+/g, '<a class="openinide-link" href="#$&">$&</a>');
+		$(this).html(text);
+	});
+
+	$('.logEntry pre').each(function() {
+		var text = $(this).html().replace(/[0-9a-z_A-Z\-\.\/]+:\d+/g, '<a class="openinide-link" href="#$&">$&</a>');
+		$(this).html(text);
+	});
+
+	$('a.openinide-link').click(function(e) {
+		e.preventDefault();
+		var message = $(this).attr("href").substr(1);
+		$.getJSON('http://localhost:8091/?message=' + message + '&callback=?', function(json) {
+			//do nothing
+		});
+	});
 
 });
