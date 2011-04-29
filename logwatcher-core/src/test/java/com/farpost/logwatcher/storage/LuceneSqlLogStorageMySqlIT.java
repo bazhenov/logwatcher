@@ -6,13 +6,10 @@ import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 
-import javax.sql.DataSource;
-
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
-
-import static java.lang.System.getProperty;
 
 public class LuceneSqlLogStorageMySqlIT extends LogStorageTestCase {
 
@@ -20,9 +17,10 @@ public class LuceneSqlLogStorageMySqlIT extends LogStorageTestCase {
 
 	@BeforeClass
 	protected void setUpDataSource() throws Exception {
-		String url = getProperty("jdbc.url");
-		String user = getProperty("jdbc.user");
-		String password = getProperty("jdbc.password");
+		Properties properties = getProperties();
+		String url = properties.getProperty("jdbc.url");
+		String user = properties.getProperty("jdbc.user");
+		String password = properties.getProperty("jdbc.password");
 		ds = new SingleConnectionDataSource(url, user, password, true);
 
 		execSql(
@@ -50,5 +48,31 @@ public class LuceneSqlLogStorageMySqlIT extends LogStorageTestCase {
 		initializer.setDataSource(ds);
 
 		initializer.afterPropertiesSet();
+	}
+
+	/**
+	 * Возвращает список свойств, необходимых для подключения к MySql-бд.
+	 * <p/>
+	 * Если в classpath присутсвует файл mysql.properties, то значения достаются из него,
+	 * в ином случае используются System-properties
+	 *
+	 * @return свойства (@link Properties}, необходимые для подключения к бд
+	 * @throws IOException Ошибка заполнение свойств из найденного(!) файла mysql.properties
+	 */
+	private Properties getProperties() throws IOException {
+		Properties properties;
+		InputStream propertiesInputStream = getClass().getClassLoader().getResourceAsStream("mysql.properties");
+		if (propertiesInputStream != null) {
+			properties = new Properties();
+			properties.load(propertiesInputStream);
+		} else {
+			properties = System.getProperties();
+		}
+
+		if (properties.getProperty("jdbc.url") == null) {
+			throw new AssertionError("You should set 'jdbc.url' property in mysql.properties file (if it exists) or in the system properties");
+		}
+
+		return properties;
 	}
 }
