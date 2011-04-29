@@ -10,24 +10,7 @@ function changeSeverity(url) {
 	});
 }
 
-function highlight(element) {
-	var text = element.html();
-	var highlighted = text.replace(/[0-9a-z_A-Z\-\.\/]+:\d+/g, '<a class="ajax-link" href="/?message=$&">$&</a>');
-	element.html(highlighted);
-
-	$('a.ajax-link').click(function(e) {
-		e.preventDefault();
-		var url = $(this).attr("href");
-		$.getJSON('http://localhost:8091' + url + '&callback=?', function(json) {
-			//do nothing
-		});
-
-	});
-}
-
-
 $(document).ready(function() {
-
 	function toggleEntry(entry) {
 		entry.toggleClass('selectedEntry');
 		var checksum = entry.attr("checksum");
@@ -37,9 +20,7 @@ $(document).ready(function() {
 			content.attr("loaded", "true");
 			entry.addClass("loadingContent");
 			content.load("/service/content", {'checksum': checksum, 'date': lastOccurredDate}, function(response, code) {
-				if (code == "success") {
-					highlight(content);
-				} else {
+				if (code != "success") {
 					content.html("");
 				}
 				entry.removeClass("loadingContent");
@@ -127,5 +108,24 @@ $(document).ready(function() {
 			popup.fadeOut(300);
 		}
 	}
+
+	/* Open In IDE */
+	$('.entryContent pre').each(function() {
+		var text = $(this).html().replace(/[0-9a-z_A-Z\-\.\/]+:\d+/g, '<a class="openinide-link" href="#$&">$&</a>');
+		$(this).html(text);
+	});
+
+	$('.logEntry pre').each(function() {
+		var text = $(this).html().replace(/[0-9a-z_A-Z\-\.\/]+:\d+/g, '<a class="openinide-link" href="#$&">$&</a>');
+		$(this).html(text);
+	});
+
+	$('a.openinide-link').click(function(e) {
+		e.preventDefault();
+		var message = $(this).attr("href").substr(1);
+		$.getJSON('http://localhost:8091/?message=' + message + '&callback=?', function(json) {
+			//do nothing
+		});
+	});
 
 });
