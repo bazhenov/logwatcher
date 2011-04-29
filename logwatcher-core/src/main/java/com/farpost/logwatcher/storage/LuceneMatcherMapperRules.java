@@ -3,11 +3,7 @@ package com.farpost.logwatcher.storage;
 import com.farpost.logwatcher.Severity;
 import com.farpost.logwatcher.storage.spi.Matcher;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.TermQuery;
-import org.apache.lucene.search.TermRangeQuery;
-import org.apache.lucene.search.WildcardQuery;
+import org.apache.lucene.search.*;
 
 import static com.farpost.logwatcher.storage.LuceneUtils.normalize;
 import static org.apache.lucene.search.BooleanClause.Occur;
@@ -48,7 +44,7 @@ final public class LuceneMatcherMapperRules {
 
 	@Matcher
 	public Query attribute(AttributeValueMatcher matcher) {
-		return new TermQuery(new Term("@" + matcher.getName(), matcher.getExpectedValue()));
+		return new TermQuery(new Term("@" + matcher.getName(), normalize(matcher.getExpectedValue())));
 	}
 
 	@Matcher

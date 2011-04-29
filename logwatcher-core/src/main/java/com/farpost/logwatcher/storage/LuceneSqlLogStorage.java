@@ -186,7 +186,7 @@ public class LuceneSqlLogStorage implements LogStorage {
 			Searcher searcher = ref.getSearcher();
 			String[] ids = ref.getIdFieldCache();
 
-			TopDocs topDocs = searcher.search(query, 100);
+			TopDocs topDocs = searcher.search(query, null, 100, new Sort(new SortField("id", SortField.INT, true)));
 
 			Integer result[] = new Integer[topDocs.scoreDocs.length];
 			for (int i = 0; i < topDocs.scoreDocs.length; i++) {
