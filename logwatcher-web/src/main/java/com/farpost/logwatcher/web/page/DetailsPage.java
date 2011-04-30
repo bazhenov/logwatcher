@@ -1,11 +1,12 @@
 package com.farpost.logwatcher.web.page;
 
+import com.farpost.logwatcher.ByOccurenceDateComparator;
 import com.farpost.logwatcher.LogEntry;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.web.ViewNameAwarePage;
+import com.google.common.collect.Ordering;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.Date;
@@ -40,6 +41,7 @@ public class DetailsPage implements ViewNameAwarePage, InitializingBean {
 			checksum(checksum).
 			date(new com.farpost.timepoint.Date(date)).
 			find(storage);
+		entries = Ordering.from(new ByOccurenceDateComparator()).sortedCopy(entries);
 	}
 
 	public Date getDate() {

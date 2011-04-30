@@ -39,7 +39,6 @@ import static org.springframework.util.StringUtils.arrayToCommaDelimitedString;
 
 public class LuceneSqlLogStorage implements LogStorage, Closeable {
 
-	private final Directory directory;
 	private final MatcherMapper<Query> matcherMapper;
 	private int nextId;
 
@@ -56,7 +55,6 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 	private final RowMapper<AggregatedEntry> aggregateEntryMapper;
 
 	public LuceneSqlLogStorage(Directory directory, DataSource dataSource) throws IOException {
-		this.directory = directory;
 		matcherMapper = new AnnotationDrivenMatcherMapperImpl<Query>(new LuceneMatcherMapperRules());
 		writer = new IndexWriter(directory, new StandardAnalyzer(Version.LUCENE_30), MaxFieldLength.UNLIMITED);
 		searcherRef = reopenSearcher();
@@ -140,7 +138,7 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 		this.commitThreshold = commitThreshold;
 	}
 
-	private int getNextId() {
+	private synchronized int getNextId() {
 		return nextId++;
 	}
 
