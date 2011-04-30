@@ -9,7 +9,7 @@ public class AggregateAttributesVisitor implements Visitor<LogEntry, Aggregation
 	private LogEntry lastEntry;
 
 	@Override
-	public synchronized void visit(LogEntry entry) {
+	public void visit(LogEntry entry) {
 		for (Map.Entry<String, String> row : entry.getAttributes().entrySet()) {
 			AggregatedAttribute aggregate = attributeMap.get(row.getKey());
 			if (aggregate == null) {

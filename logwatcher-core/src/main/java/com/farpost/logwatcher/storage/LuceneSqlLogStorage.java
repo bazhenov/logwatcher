@@ -299,8 +299,8 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 	@Override
 	public Set<String> getUniquieApplicationIds(Date date) {
 		checkNotNull(date);
-		List<String> ids = jdbc.queryForList("SELECT application_id FROM aggregated_entry WHERE date = ?", String.class,
-			date(date));
+		List<String> ids = jdbc.queryForList("SELECT application_id FROM aggregated_entry WHERE date = ? GROUP BY application_id",
+			String.class, date(date));
 		return new HashSet<String>(ids);
 	}
 
