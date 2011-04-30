@@ -19,7 +19,7 @@
 		<s:url value='/css/popup.css' var="cssUrl"/>
 		<link rel="stylesheet" href="${cssUrl}"/>
 
-		<script type="text/javascript" src="/js/calendar.js"></script>
+		<script type="text/javascript" src="/js/calendar.js">/**/</script>
 
 		<script type="text/javascript">
 			var severityLevel = '${p.severity}';
