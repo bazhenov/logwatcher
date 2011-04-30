@@ -21,4 +21,8 @@ public class CauseTypeMatcher implements LogEntryMatcher {
 		}
 		return false;
 	}
+
+	public String getExpectedType() {
+		return expectedType;
+	}
 }

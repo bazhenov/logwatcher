@@ -48,6 +48,11 @@ final public class LuceneMatcherMapperRules {
 	}
 
 	@Matcher
+	public Query causeType(CauseTypeMatcher matcher) {
+		return new TermQuery(new Term("caused-by", normalize(matcher.getExpectedType())));
+	}
+
+	@Matcher
 	public Query contains(ContainsMatcher matcher) {
 		return new WildcardQuery(new Term("message", "*" + normalize(matcher.getNeedle()) + "*"));
 	}

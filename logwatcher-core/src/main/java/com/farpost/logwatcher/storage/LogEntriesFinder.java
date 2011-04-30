@@ -56,6 +56,10 @@ public class LogEntriesFinder {
 		return withCriteria(new ContainsMatcher(part));
 	}
 
+	public LogEntriesFinder causedBy(String type) {
+		return withCriteria(new CauseTypeMatcher(type));
+	}
+
 	public LogEntriesFinder attribute(String name, String expectedValue) {
 		return withCriteria(new AttributeValueMatcher(name, expectedValue));
 	}

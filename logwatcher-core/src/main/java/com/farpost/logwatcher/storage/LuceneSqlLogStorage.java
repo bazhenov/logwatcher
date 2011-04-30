@@ -166,6 +166,11 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 		document.add(term("message", normalize(entry.getMessage())));
 		document.add(term("severity", entry.getSeverity().name()));
 		document.add(term("checksum", normalize(entry.getChecksum())));
+		Cause cause = entry.getCause();
+		while (cause != null) {
+			document.add(term("caused-by", normalize(cause.getType())));
+			cause = cause.getCause();
+		}
 		document.add(storedTerm("id", Integer.toString(entryId)));
 		for (Map.Entry<String, String> row : entry.getAttributes().entrySet()) {
 			document.add(term("@" + row.getKey(), normalize(row.getValue())));

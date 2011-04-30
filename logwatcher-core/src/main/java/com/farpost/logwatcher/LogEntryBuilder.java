@@ -4,6 +4,8 @@ import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
 import com.farpost.timepoint.DateTime;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,6 +34,7 @@ public class LogEntryBuilder {
 	private String checksum = "2fde43";
 	private String applicationId = "some-application";
 	private Map<String, String> attributes = new HashMap<String, String>();
+	private Throwable cause;
 
 	/**
 	 * Создает новый экземпляр {@link LogEntryBuilder}, позволяющий создать и записать новую
@@ -44,7 +47,18 @@ public class LogEntryBuilder {
 	}
 
 	public LogEntry create() {
-		return new LogEntryImpl(time, group, message, severity, checksum, applicationId, attributes, null);
+		return new LogEntryImpl(time, group, message, severity, checksum, applicationId, attributes, createCause(cause));
+	}
+
+	private Cause createCause(Throwable cause) {
+		if (cause != null) {
+			StringWriter writer = new StringWriter();
+			cause.printStackTrace(new PrintWriter(writer));
+			return new Cause(cause.getClass().getSimpleName(), cause.getMessage(), writer.toString(),
+				createCause(cause.getCause()));
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -116,6 +130,11 @@ public class LogEntryBuilder {
 
 	public LogEntryBuilder message(String message) {
 		this.message = message;
+		return this;
+	}
+
+	public LogEntryBuilder causedBy(Throwable cause) {
+		this.cause = cause;
 		return this;
 	}
 }
