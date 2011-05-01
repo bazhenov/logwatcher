@@ -54,7 +54,10 @@ final public class LuceneMatcherMapperRules {
 
 	@Matcher
 	public Query contains(ContainsMatcher matcher) {
-		return new WildcardQuery(new Term("message", "*" + normalize(matcher.getNeedle()) + "*"));
+		BooleanQuery query = new BooleanQuery();
+		query.add(new WildcardQuery(new Term("message", "*" + normalize(matcher.getNeedle()) + "*")), Occur.SHOULD);
+		query.add(new WildcardQuery(new Term("stacktrace", "*" + normalize(matcher.getNeedle()) + "*")), Occur.SHOULD);
+		return query;
 	}
 
 	@Matcher

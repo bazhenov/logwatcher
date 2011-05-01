@@ -11,7 +11,8 @@ public class ContainsMatcher implements LogEntryMatcher {
 	}
 
 	public boolean isMatch(LogEntry entry) {
-		return entry.getMessage().contains(needle);
+		return entry.getMessage().contains(needle) ||
+			entry.getCause() != null && entry.getCause().getStackTrace().contains(needle);
 	}
 
 	public String getNeedle() {
