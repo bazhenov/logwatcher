@@ -2,7 +2,6 @@ package com.farpost.logwatcher;
 
 import com.farpost.logwatcher.storage.*;
 import com.farpost.timepoint.Date;
-import com.farpost.logwatcher.Severity;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -32,6 +31,11 @@ public class TranslationRulesImpl {
 	@Criteria("caused-by")
 	public LogEntryMatcher causeType(String expectedCauseType) {
 		return new CauseTypeMatcher(expectedCauseType);
+	}
+
+	@Criteria("contains")
+	public LogEntryMatcher contains(String needle) {
+		return new ContainsMatcher(needle);
 	}
 
 	@Criteria("occurred")
