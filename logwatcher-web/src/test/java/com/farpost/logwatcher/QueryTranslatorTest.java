@@ -56,6 +56,14 @@ public class QueryTranslatorTest {
 		assertThat(translate("@machine: aux2"), equalTo(expectedMatcher));
 	}
 
+	@Test
+	public void containsCriteria() throws InvalidQueryException {
+		String needle = "needle";
+		LogEntryMatcher expectedMatcher = new ContainsMatcher(needle);
+
+		assertThat(translate("contains: " + needle), equalTo(expectedMatcher));
+	}
+
 	private LogEntryMatcher translate(String query) throws InvalidQueryException {
 		LogEntryMatcher matcher = translator.translate(query).get(0);
 		if ( matcher == null ) {
