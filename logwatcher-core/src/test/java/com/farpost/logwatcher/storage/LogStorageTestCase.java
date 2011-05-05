@@ -77,7 +77,7 @@ abstract public class LogStorageTestCase {
 		entry().causedBy(new RuntimeException("another first exception")).saveIn(storage);
 		entry().causedBy(new RuntimeException("second exception")).saveIn(storage);
 
-		List<LogEntry> entries = entries().date(today()).contains("first another").find(storage);
+		List<LogEntry> entries = entries().date(today()).contains("first").find(storage);
 
 		assertThat(entries.size(), equalTo(2));
 	}
