@@ -20,7 +20,7 @@ Then(~/я должен оказаться на странице результа
 	assert browser.at(SearchResultsPage)
 }
 
-Then(~/И результат номер "([^\"]+)" содержит текст "([^\"]+)"/) { int index, String needle ->
+Then(~/результат номер "([^\"]+)" содержит текст "([^\"]+)"/) { int index, String needle ->
 	assert browser.result[index].contains(needle)
 }
 
