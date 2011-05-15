@@ -1,8 +1,10 @@
+import org.openqa.selenium.WebDriver
 import geb.Browser
 
 this.metaClass.mixin(cuke4duke.GroovyDsl)
 
 Browser browser
+WebDriver driver
 
 Before() {
 	//driver = new org.openqa.selenium.firefox.FirefoxDriver();
