@@ -72,10 +72,21 @@ abstract public class LogStorageTestCase {
 	}
 
 	@Test
+	public void storageCanSearchByStackTrace() {
+		entry().causedBy(new RuntimeException("first exception")).saveIn(storage);
+		entry().causedBy(new RuntimeException("another first exception")).saveIn(storage);
+		entry().causedBy(new RuntimeException("second exception")).saveIn(storage);
+
+		List<LogEntry> entries = entries().date(today()).contains("first").find(storage);
+
+		assertThat(entries.size(), equalTo(2));
+	}
+
+	@Test
 	public void storageCanWalkByEntries() throws LogStorageException, InvalidCriteriaException {
-		entry().message("foo").saveIn(storage);
-		entry().message("foo").saveIn(storage);
-		entry().message("bar").saveIn(storage);
+		entry().message("bar foo bar").saveIn(storage);
+		entry().message("bar foo bar").saveIn(storage);
+		entry().message("bar bar bar").saveIn(storage);
 
 		CountVisitor<LogEntry> visitor = new CountVisitor<LogEntry>();
 		int count = entries().
