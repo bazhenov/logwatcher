@@ -1,8 +1,5 @@
 package com.farpost.logwatcher;
 
-import com.farpost.logwatcher.Cause;
-import com.farpost.logwatcher.LogEntry;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -28,8 +25,10 @@ public class SimpleChecksumCalculator implements ChecksumCalculator {
 		Cause cause = entry.getCause();
 		if ( cause != null ) {
 			checksum += ":" + cause.getRootCause().getType();
-		} else {
+		} else if ( entry.getChecksum().equals("") ) {
 			checksum += ":" + entry.getMessage();
+		} else {
+			checksum += ":" + entry.getChecksum();
 		}
 		digest.reset();
 		return getHex(digest.digest(checksum.getBytes()));

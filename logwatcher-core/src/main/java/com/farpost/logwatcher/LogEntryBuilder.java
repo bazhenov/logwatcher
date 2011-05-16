@@ -31,7 +31,7 @@ public class LogEntryBuilder {
 	private String group = "group";
 	private String message = "message";
 	private Severity severity = Severity.error;
-	private String checksum = "2fde43";
+	private String checksum = "";
 	private String applicationId = "some-application";
 	private Map<String, String> attributes = new HashMap<String, String>();
 	private Throwable cause;
