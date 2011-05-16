@@ -19,6 +19,7 @@ import java.net.*;
 import java.util.HashMap;
 
 import static java.lang.Integer.parseInt;
+import static java.lang.Math.min;
 
 public class LogWatcherAppender extends UnsynchronizedAppenderBase<ILoggingEvent> {
 
@@ -44,8 +45,9 @@ public class LogWatcherAppender extends UnsynchronizedAppenderBase<ILoggingEvent
 				? constructCause(throwableProxy.getThrowable())
 				: null;
 
-			LogEntry entry = new LogEntryImpl(time, event.getLoggerName(), event.getFormattedMessage(), severity, "", applicationId,
-				new HashMap<String, String>(), cause);
+			LogEntry entry = new LogEntryImpl(time, event.getLoggerName(), event.getFormattedMessage(), severity,
+				calculateChecksum(event.getMessage()),
+				applicationId, new HashMap<String, String>(), cause);
 
 			byte[] data = marshaller.marshall(entry);
 			DatagramPacket packet = new DatagramPacket(data, data.length);
@@ -59,6 +61,11 @@ public class LogWatcherAppender extends UnsynchronizedAppenderBase<ILoggingEvent
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	private String calculateChecksum(String message) {
+		String checksum = message.replaceAll("[ |{|}]", "");
+		return checksum.substring(0, min(32, checksum.length()));
 	}
 
 	private Cause constructCause(Throwable t) {

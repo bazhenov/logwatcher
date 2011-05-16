@@ -21,6 +21,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -78,6 +79,23 @@ public class LogWatcherAppenderTest {
 
 		LogEntry entry = getLastMessage();
 		assertThat(entry.getMessage(), equalTo("Hi there, to you"));
+	}
+
+	@Test
+	public void appenderShouldCreateChecksumFromUnformattedMessageOnly() throws InterruptedException {
+		root.debug("I decided to write you {}", "foo");
+		String firstCheckSum = getLastMessage().getChecksum();
+
+		root.debug("I decided to write you {}", "bar");
+		String secondCheckSum = getLastMessage().getChecksum();
+
+		assertThat("Checksum should be same for identical unformatted messages",
+			firstCheckSum, equalTo(secondCheckSum));
+
+		root.debug("Another log");
+		String thirdCheckSum = getLastMessage().getChecksum();
+		assertThat("Checksum should be different for different unformated messages",
+			thirdCheckSum, not(equalTo(secondCheckSum)));
 	}
 
 	@Test

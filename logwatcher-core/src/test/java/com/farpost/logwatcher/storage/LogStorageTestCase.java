@@ -183,11 +183,11 @@ abstract public class LogStorageTestCase {
 	public void storageShouldNotAggregateEntriesWithNonEqualsChecksum() throws Exception {
 		entry().
 			applicationId("appl").
-			message("foo").
+			checksum("foo").
 			saveIn(storage);
 		entry().
 			applicationId("appl").
-			message("bar").
+			checksum("bar").
 			saveIn(storage);
 
 		List<AggregatedEntry> list = storage.getAggregatedEntries("appl", today(), Severity.debug);
@@ -318,18 +318,18 @@ abstract public class LogStorageTestCase {
 		entry().
 			applicationId("application").
 			occurred(today.at("12:35")).
-			message("foo").
+			checksum("foo").
 			saveIn(storage);
 
 		entry().
 			applicationId("application").
 			occurred(today.at("12:35")).
-			message("bar").
+			checksum("bar").
 			saveIn(storage);
 
 		LogEntry entry = entry().
 			applicationId("application").
-			message("foo").
+			checksum("foo").
 			occurred(yesterday.at("11:36")).
 			saveIn(storage);
 
