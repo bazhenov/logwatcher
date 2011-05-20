@@ -25,7 +25,7 @@ public class SimpleChecksumCalculator implements ChecksumCalculator {
 		Cause cause = entry.getCause();
 		if ( cause != null ) {
 			checksum += ":" + cause.getRootCause().getType();
-		} else if ( entry.getChecksum().equals("") ) {
+		} else if ( entry.getChecksum() == null || entry.getChecksum().isEmpty() ) {
 			checksum += ":" + entry.getMessage();
 		} else {
 			checksum += ":" + entry.getChecksum();
