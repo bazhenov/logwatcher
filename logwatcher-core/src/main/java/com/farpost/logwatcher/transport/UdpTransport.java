@@ -10,6 +10,7 @@ import java.net.SocketException;
 import java.util.Arrays;
 
 import static java.lang.System.arraycopy;
+import static java.lang.Thread.currentThread;
 
 public class UdpTransport implements Transport {
 
@@ -52,7 +53,7 @@ public class UdpTransport implements Transport {
 		}
 
 		public void run() {
-			while (true) {
+			while (!currentThread().isInterrupted()) {
 				byte[] message;
 				try {
 					socket.receive(packet);
@@ -77,6 +78,7 @@ public class UdpTransport implements Transport {
 					log.error("Listener failed at message: " + Arrays.toString(message), e);
 				}
 			}
+			log.info("UDP thread stopped");
 		}
 
 		public synchronized void stop() {

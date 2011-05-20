@@ -65,7 +65,6 @@ public class LogEntryImpl implements LogEntry {
 		checkNotNull(group);
 		checkNotNull(message);
 		checkNotNull(severity);
-		checkNotNull(checksum);
 		checkNotNull(applicationId);
 
 		this.date = date;
