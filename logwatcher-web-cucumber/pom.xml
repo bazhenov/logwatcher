@@ -58,6 +58,9 @@
 				<groupId>org.codehaus.groovy.maven</groupId>
 				<artifactId>gmaven-plugin</artifactId>
 				<version>1.0</version>
+				<configuration>
+					<sourceEncoding>UTF-8</sourceEncoding>
+				</configuration>
 				<executions>
 					<execution>
 						<goals>
@@ -86,6 +89,7 @@
 						<jvmArg>${cucumber.debug}</jvmArg>
 						<jvmArg>-Dbrowser=${browser}</jvmArg>
 						<jvmArg>-DpreventClose=${preventClose}</jvmArg>
+						<jvmArg>-Dgroovy.source.encoding=UTF-8</jvmArg>
 					</jvmArgs>
 				</configuration>
 				<executions>
