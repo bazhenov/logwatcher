@@ -15,83 +15,59 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<cuke4duke.version>0.4.4</cuke4duke.version>
-
-		<it.port>8181</it.port>
-		<it.location>http://localhost:${it.port}</it.location>
-
-		<sut.artifactId>logwatcher-web</sut.artifactId>
-		<sut.version>1.3</sut.version>
-		<sut.location>${basedir}/../${sut.artifactId}/target/${sut.artifactId}-${sut.version}.war</sut.location>
-
-		<deploy.hostname>artifacts</deploy.hostname>
-		<deploy.location>/home/tech/image-storage</deploy.location>
+		<selenium.version>2.0b3</selenium.version>
 	</properties>
 
 	<dependencies>
-
 		<dependency>
 			<groupId>org.codehaus.groovy</groupId>
 			<artifactId>groovy-all</artifactId>
-			<version>1.8.0</version>
+			<version>1.7.6</version>
 		</dependency>
 		<dependency>
 			<groupId>cuke4duke</groupId>
 			<artifactId>cuke4duke</artifactId>
 			<version>${cuke4duke.version}</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.8.1</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.geb</groupId>
 			<artifactId>geb-core</artifactId>
 			<version>0.5.1</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
-      <groupId>org.picocontainer</groupId>
-      <artifactId>picocontainer</artifactId>
-      <version>2.8.3</version>
-      <scope>test</scope>
-    </dependency>
-		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-common</artifactId>
+			<version>2.0a5</version>
+		</dependency>
+		<dependency>
 			<artifactId>selenium-htmlunit-driver</artifactId>
-			<version>RELEASE</version>
-			<scope>test</scope>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<version>${selenium.version}</version>
 		</dependency>
 		<dependency>
 			<artifactId>selenium-firefox-driver</artifactId>
 			<groupId>org.seleniumhq.selenium</groupId>
-			<version>RELEASE</version>
-			<scope>test</scope>
+			<version>${selenium.version}</version>
 		</dependency>
-
 	</dependencies>
 
 	<build>
-		<pluginManagement>
-			<plugins>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>2.0.2</version>
-					<configuration>
-						<source>1.7</source>
-						<target>1.7</target>
-					</configuration>
-				</plugin>
-
-			</plugins>
-		</pluginManagement>
 
 		<plugins>
+			<plugin>
+				<groupId>org.codehaus.groovy.maven</groupId>
+				<artifactId>gmaven-plugin</artifactId>
+				<version>1.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compile</goal>
+							<goal>testCompile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 			<plugin>
 				<groupId>cuke4duke</groupId>
 				<artifactId>cuke4duke-maven-plugin</artifactId>
@@ -107,8 +83,9 @@
 						<gem>install cuke4duke --version ${cuke4duke.version}</gem>
 					</gems>
 					<jvmArgs>
-      			<jvmArg>${cucumber.debug}</jvmArg>
-						<jvmArg>-Dcuke4duke.objectFactory=cuke4duke.internal.jvmclass.PicoFactory</jvmArg>
+						<jvmArg>${cucumber.debug}</jvmArg>
+						<jvmArg>-Dbrowser=${browser}</jvmArg>
+						<jvmArg>-DpreventClose=${preventClose}</jvmArg>
 					</jvmArgs>
 				</configuration>
 				<executions>
@@ -122,88 +99,8 @@
 				</executions>
 			</plugin>
 
-			<plugin>
-				<groupId>org.codehaus.groovy.maven</groupId>
-				<artifactId>gmaven-plugin</artifactId>
-				<version>1.0</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>testCompile</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 
-			<plugin>
-				<groupId>org.mortbay.jetty</groupId>
-				<artifactId>maven-jetty-plugin</artifactId>
-				<configuration>
-					<contextPath>/</contextPath>
-					<connectors>
-						<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
-							<port>${it.port}</port>
-						</connector>
-					</connectors>
-					<daemon>true</daemon>
-					<webApp>${sut.location}</webApp>
-					<!--
-						stopPort определяется как производная от ${it.port} специально. Этот паттерн должен
-						применятся во всех процедурах билда для того чтобы уникальность портов на которых запускаются
-						web-сервера гарантировала уникальность stopPort'ов.
-					-->
-					<stopPort>1${it.port}</stopPort>
-					<!--
-						В качестве stopKey берем groupId+artifactId, чтобы случайно не остановить чужой build.
-					-->
-					<stopKey>com.farpost.logwatcher:logwatcher-web-ft</stopKey>
-				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>commons-dbcp</groupId>
-						<artifactId>commons-dbcp</artifactId>
-						<version>1.4</version>
-					</dependency>
-					<dependency>
-						<groupId>com.h2database</groupId>
-						<artifactId>h2</artifactId>
-						<version>1.2.138</version>
-					</dependency>
-					<dependency>
-						<groupId>org.slf4j</groupId>
-						<artifactId>slf4j-api</artifactId>
-						<version>1.6.1</version>
-					</dependency>
-					<dependency>
-						<groupId>ch.qos.logback</groupId>
-						<artifactId>logback-classic</artifactId>
-						<version>0.9.25</version>
-					</dependency>
-					<dependency>
-						<groupId>org.slf4j</groupId>
-						<artifactId>jcl-over-slf4j</artifactId>
-						<version>1.6.1</version>
-					</dependency>
-				</dependencies>
-				<executions>
-					<execution>
-						<id>start-jetty</id>
-						<phase>pre-integration-test</phase>
-						<goals>
-							<goal>run-war</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>stop-jetty</id>
-						<phase>post-integration-test</phase>
-						<goals>
-							<goal>stop</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
-
 	</build>
 
 	<profiles>

@@ -1,3 +1,6 @@
+import com.farpost.logwatcher.cucumber.SearchPage
+import com.farpost.logwatcher.cucumber.SearchResultsPage
+
 this.metaClass.mixin(cuke4duke.GroovyDsl)
 
 Given(~/я открыл страницу поиска/) {

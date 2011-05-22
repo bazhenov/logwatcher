@@ -1,3 +1,5 @@
+package com.farpost.logwatcher.cucumber
+
 import geb.Page
 
 class SearchResultsPage extends Page {
