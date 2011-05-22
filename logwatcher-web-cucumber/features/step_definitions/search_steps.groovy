@@ -8,22 +8,18 @@ Given(~/я открыл страницу поиска/) {
 }
 
 When(~/я ввел в строку поиска "([^\"]+)"/) { String value ->
-	browser.searchField = value
+	browser.searchField.value(value)
 }
 
 When(~/я нажал на Enter/) { String selector ->
-	browser.searchButton.click()
-}
-
-When(~/я нажал на кнопку "([^\"]+)"/) { String selector ->
-	browser.$(selector, 0).click()
+	browser.search()
 }
 
 Then(~/я должен оказаться на странице результатов поиска/) {
-	assert browser.at(SearchResultsPage)
+	browser.waitFor { browser.at(SearchResultsPage) }
 }
 
 Then(~/результат номер "([^\"]+)" содержит текст "([^\"]+)"/) { int index, String needle ->
-	assert browser.result[index].contains(needle)
+	assert browser.result(index).contains(needle)
 }
 

@@ -1,6 +1,7 @@
 package com.farpost.logwatcher.cucumber
 
 import geb.Page
+import org.openqa.selenium.Keys
 
 class SearchPage extends Page {
 
@@ -8,8 +9,11 @@ class SearchPage extends Page {
 	static at = { title == 'LogWatcher Search' }
 
 	static content = {
-		searchField { $("input", name: "q") }
-		searchButton(to: SearchResultsPage) { $("input[value=submit]") }
+		searchField { $("form", name: "searchForm").q() }
+		search (to: SearchResultsPage) {
+			searchField.firstElement().sendKeys(Keys.ENTER)
+			true
+		}
 	}
 
 }
