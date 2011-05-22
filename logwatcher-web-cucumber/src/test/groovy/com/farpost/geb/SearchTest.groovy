@@ -24,4 +24,19 @@ public class SearchTest extends GebFunctionalTestSuite {
 		}
 	}
 
+	@Test
+	public void searchByCausedTest() {
+		getLogger("Foo").error("message", new IllegalArgumentException());
+		getLogger("Foo").error("message", new AssertionError());
+
+		Browser.drive(driver, applicationUri) {
+			to SearchPage
+			searchField.value("caused-by: IllegalArgumentException")
+			search()
+			waitFor { at(SearchResultsPage) }
+			assertTrue result(0).contains("IllegalArgumentException")
+			assertFalse result(0).contains("AssertionError")
+		}
+	}
+
 }
