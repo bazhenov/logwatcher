@@ -2,8 +2,15 @@ package com.farpost.logwatcher.storage;
 
 import com.farpost.logwatcher.Severity;
 import com.farpost.logwatcher.storage.spi.Matcher;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.search.*;
+import org.apache.lucene.queryParser.MultiFieldQueryParser;
+import org.apache.lucene.queryParser.ParseException;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TermRangeQuery;
+import org.apache.lucene.util.Version;
 
 import static com.farpost.logwatcher.storage.LuceneUtils.normalize;
 import static org.apache.lucene.search.BooleanClause.Occur;
@@ -53,8 +60,9 @@ final public class LuceneMatcherMapperRules {
 	}
 
 	@Matcher
-	public Query contains(ContainsMatcher matcher) {
-		return new WildcardQuery(new Term("message", "*" + normalize(matcher.getNeedle()) + "*"));
+	public Query contains(ContainsMatcher matcher) throws ParseException {
+		return new MultiFieldQueryParser(Version.LUCENE_30, new String[] {"message", "stacktrace"},
+			new StandardAnalyzer(Version.LUCENE_30)).parse(matcher.getNeedle());
 	}
 
 	@Matcher

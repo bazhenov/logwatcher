@@ -12,6 +12,10 @@ class LuceneUtils {
 		return new Field(name, value, Field.Store.NO, Field.Index.NOT_ANALYZED_NO_NORMS);
 	}
 
+	static Field text(String name, String value) {
+		return new Field(name, value, Field.Store.NO, Field.Index.ANALYZED_NO_NORMS);
+	}
+
 	static Field storedTerm(String name, String value) {
 		return new Field(name, value, Field.Store.YES, Field.Index.NOT_ANALYZED_NO_NORMS);
 	}

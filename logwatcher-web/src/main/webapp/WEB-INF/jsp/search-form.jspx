@@ -27,6 +27,10 @@
     <tr>
       <td align="center">
         <table class="samplesTable">
+					<tr>
+            <td class="sampleDescription">log message</td>
+            <td><span>contains: {keywords with AND/OR/NOT/-/+ operators}</span></td>
+          </tr>
           <tr>
             <td class="sampleDescription">application id</td>
             <td><span>at: {application id}</span></td>
@@ -36,11 +40,11 @@
             <td><span>occurred: last N (days|week|month)</span></td>
           </tr>
           <tr>
-            <td class="sampleDescription">absoulte date</td>
+            <td class="sampleDescription">absolute date</td>
             <td><span>occurred: YYYY-MM-DD</span></td>
           </tr>
           <tr>
-            <td class="sampleDescription">absoulte date range</td>
+            <td class="sampleDescription">absolute date range</td>
             <td><span>occurred: YYYY-MM-DD/YYY-MM-DD</span></td>
           </tr>
           <tr>

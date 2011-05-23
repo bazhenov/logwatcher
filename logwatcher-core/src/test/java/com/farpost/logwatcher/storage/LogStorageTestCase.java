@@ -72,10 +72,21 @@ abstract public class LogStorageTestCase {
 	}
 
 	@Test
+	public void storageCanSearchByStackTrace() {
+		entry().causedBy(new RuntimeException("first exception")).saveIn(storage);
+		entry().causedBy(new RuntimeException("another first exception")).saveIn(storage);
+		entry().causedBy(new RuntimeException("second exception")).saveIn(storage);
+
+		List<LogEntry> entries = entries().date(today()).contains("first").find(storage);
+
+		assertThat(entries.size(), equalTo(2));
+	}
+
+	@Test
 	public void storageCanWalkByEntries() throws LogStorageException, InvalidCriteriaException {
-		entry().message("foo").saveIn(storage);
-		entry().message("foo").saveIn(storage);
-		entry().message("bar").saveIn(storage);
+		entry().message("bar foo bar").saveIn(storage);
+		entry().message("bar foo bar").saveIn(storage);
+		entry().message("bar bar bar").saveIn(storage);
 
 		CountVisitor<LogEntry> visitor = new CountVisitor<LogEntry>();
 		int count = entries().
@@ -172,11 +183,11 @@ abstract public class LogStorageTestCase {
 	public void storageShouldNotAggregateEntriesWithNonEqualsChecksum() throws Exception {
 		entry().
 			applicationId("appl").
-			message("foo").
+			checksum("foo").
 			saveIn(storage);
 		entry().
 			applicationId("appl").
-			message("bar").
+			checksum("bar").
 			saveIn(storage);
 
 		List<AggregatedEntry> list = storage.getAggregatedEntries("appl", today(), Severity.debug);
@@ -307,18 +318,18 @@ abstract public class LogStorageTestCase {
 		entry().
 			applicationId("application").
 			occurred(today.at("12:35")).
-			message("foo").
+			checksum("foo").
 			saveIn(storage);
 
 		entry().
 			applicationId("application").
 			occurred(today.at("12:35")).
-			message("bar").
+			checksum("bar").
 			saveIn(storage);
 
 		LogEntry entry = entry().
 			applicationId("application").
-			message("foo").
+			checksum("foo").
 			occurred(yesterday.at("11:36")).
 			saveIn(storage);
 
