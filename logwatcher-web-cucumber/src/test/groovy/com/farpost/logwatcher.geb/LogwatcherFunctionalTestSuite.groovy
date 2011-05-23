@@ -12,14 +12,14 @@ import org.testng.annotations.AfterSuite
 
 abstract class LogwatcherFunctionalTestSuite extends GebReportingTest {
 
-	private static final String APPLICATION_URL = "http://localhost:8080"
-	private static final String REPORT_DIRECTORY = System.getProperty("reportDirectory");
+	private static final String APPLICATION_URL = System.getProperty("it.location")
+	private static final String REPORT_DIRECTORY = System.getProperty("reportDirectory")
 	private static final int port = 6578
 	private HashMap<String, Appender<ILoggingEvent>> appenders = new HashMap<String, Appender<ILoggingEvent>>()
 
 	@Override
 	WebDriver createDriver() {
-		System.getProperty("browser").equals("firefox") ? new FirefoxDriver() : new HtmlUnitDriver();
+		System.getProperty("browser").equals("firefox") ? new FirefoxDriver() : new HtmlUnitDriver()
 	}
 
 	@Override

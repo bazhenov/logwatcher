@@ -4,7 +4,7 @@ import org.testng.annotations.Test
 import static org.testng.Assert.assertFalse
 import static org.testng.Assert.assertTrue
 
-public class SearchTest extends LogwatcherFunctionalTestSuite {
+public class SearchIT extends LogwatcherFunctionalTestSuite {
 
 	@Test
 	public void searchByApplicationTest() {

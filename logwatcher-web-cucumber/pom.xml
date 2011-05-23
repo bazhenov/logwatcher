@@ -73,22 +73,6 @@
 	<build>
 
 		<plugins>
-			<plugin>
-				<groupId>org.codehaus.groovy.maven</groupId>
-				<artifactId>gmaven-plugin</artifactId>
-				<version>1.0</version>
-				<configuration>
-					<sourceEncoding>UTF-8</sourceEncoding>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>compile</goal>
-							<goal>testCompile</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 
 			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
@@ -159,6 +143,24 @@
 			</plugin>
 
 			<plugin>
+				<groupId>org.codehaus.groovy.maven</groupId>
+				<artifactId>gmaven-plugin</artifactId>
+				<version>1.0</version>
+				<configuration>
+					<sourceEncoding>UTF-8</sourceEncoding>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>testCompile</goal>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<configuration>
@@ -168,13 +170,6 @@
 					</systemPropertyVariables>
 					<failIfNoTests>true</failIfNoTests>
 				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>verify</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 
 			<!--<plugin>-->
@@ -208,7 +203,6 @@
 			<!--</execution>-->
 			<!--</executions>-->
 			<!--</plugin>-->
-
 
 		</plugins>
 	</build>
