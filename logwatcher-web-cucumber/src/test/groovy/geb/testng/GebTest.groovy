@@ -2,7 +2,7 @@ package geb.testng
 
 import org.openqa.selenium.WebDriver
 import geb.Browser
-import org.testng.annotations.AfterTest
+import org.testng.annotations.AfterMethod
 
 class GebTest {
 
@@ -46,7 +46,7 @@ class GebTest {
 		null
 	}
 
-	@AfterTest
+	@AfterMethod
 	void clearBrowserCookies() {
 		browser.clearCookiesQuietly()
 	}
