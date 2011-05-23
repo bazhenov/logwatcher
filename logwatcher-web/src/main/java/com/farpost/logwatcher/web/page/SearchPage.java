@@ -6,9 +6,9 @@ import com.farpost.logwatcher.storage.LogEntryMatcher;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.SeverityMatcher;
 import com.farpost.logwatcher.web.ViewNameAwarePage;
+import com.google.common.collect.Ordering;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -49,6 +49,7 @@ public class SearchPage implements ViewNameAwarePage, InitializingBean {
 					matchers.add(new SeverityMatcher(Severity.error));
 				}
 				entries = entries().withCriteria(matchers).find(storage);
+				entries = Ordering.from(new ByOccurenceDateComparator()).sortedCopy(entries);
 				viewName = "search-page";
 			} catch (InvalidQueryException e) {
 				viewName = "invalid-query";
