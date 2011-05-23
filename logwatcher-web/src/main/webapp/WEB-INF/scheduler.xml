@@ -9,7 +9,7 @@
 	<task:scheduler id="scheduler" pool-size="1"/>
 
 	<task:scheduled-tasks scheduler="scheduler">
-		<task:scheduled ref="cleanupTask" method="run" fixed-rate="60000"/>
+		<task:scheduled ref="cleanupTask" method="run" cron="0 0 * * * *"/>
 	</task:scheduled-tasks>
 
 	<bean id='cleanupTask' class="com.farpost.logwatcher.storage.CleanupStorageTask"
