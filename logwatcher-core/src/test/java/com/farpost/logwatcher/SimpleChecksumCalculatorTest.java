@@ -51,7 +51,7 @@ public class SimpleChecksumCalculatorTest {
 			"", "application", null);
 
 		LogEntry secondEntry = new LogEntryImpl(DateTime.now(), "", "message_same", Severity.debug,
-			"", "application", null);
+			null, "application", null);
 
 		assertThat(checksumCalculator.calculateChecksum(firstEntry), equalTo(checksumCalculator.calculateChecksum(secondEntry)));
 	}

@@ -21,6 +21,7 @@ public class UdpTransportIT {
 		t.start();
 
 		sendMessage(30054, "msg");
+		//noinspection SynchronizationOnLocalVariableOrMethodParameter
 		synchronized (listener) {
 			listener.wait(1000);
 			assertThat(listener.getData(), equalTo("msg".getBytes("utf8")));
