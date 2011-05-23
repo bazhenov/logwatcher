@@ -1,12 +1,12 @@
 package geb.testng
 
-import org.openqa.selenium.WebDriver
 import geb.Browser
+import org.openqa.selenium.WebDriver
 import org.testng.annotations.AfterMethod
 
 class GebTest {
 
-	private _browser
+	private static _browser
 
 	Browser getBrowser() {
 		if (_browser == null) {
