@@ -1,7 +1,6 @@
 package com.farpost.logwatcher.transport;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -11,23 +10,32 @@ import java.util.Arrays;
 
 import static java.lang.System.arraycopy;
 import static java.lang.Thread.currentThread;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class UdpTransport implements Transport {
 
-	private final SocketThread thread;
+	private final SocketRunnable runnable;
 	private volatile int bufferSize = 100 * 1024;
+	private final Logger log = getLogger(UdpTransport.class);
 
 	public UdpTransport(int port, TransportListener listener) throws SocketException {
 		DatagramSocket socket = new DatagramSocket(port);
-		thread = new SocketThread(socket, listener);
+		runnable = new SocketRunnable(socket, listener);
 	}
 
 	public void start() throws TransportException {
-		new Thread(thread, "UDP Transport thread").start();
+		Thread thread = new Thread(runnable, "UDP Transport thread");
+		thread.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+			@Override
+			public void uncaughtException(Thread t, Throwable e) {
+				log.error("Abnormal thread shutdown", e);
+			}
+		});
+		thread.start();
 	}
 
 	public void stop() throws TransportException {
-		thread.stop();
+		runnable.stop();
 	}
 
 	public void setBufferSize(int bufferSize) {
@@ -37,15 +45,14 @@ public class UdpTransport implements Transport {
 		this.bufferSize = bufferSize;
 	}
 
-	private class SocketThread implements Runnable {
+	private class SocketRunnable implements Runnable {
 
 		private DatagramSocket socket;
 		private TransportListener listener;
-		private final Logger log = LoggerFactory.getLogger(UdpTransport.class);
 		private byte[] buffer;
 		private DatagramPacket packet;
 
-		public SocketThread(DatagramSocket socket, TransportListener listener) {
+		public SocketRunnable(DatagramSocket socket, TransportListener listener) {
 			this.socket = socket;
 			this.listener = listener;
 			buffer = new byte[bufferSize];
