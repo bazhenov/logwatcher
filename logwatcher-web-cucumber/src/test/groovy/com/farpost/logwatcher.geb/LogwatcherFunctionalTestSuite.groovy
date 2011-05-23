@@ -1,32 +1,46 @@
-package com.farpost.geb
+package com.farpost.logwatcher.geb
 
 import ch.qos.logback.classic.Logger
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.Appender
 import com.farpost.logwatcher.logback.LogWatcherAppender
+import geb.testng.GebReportingTest
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.htmlunit.HtmlUnitDriver
 import org.testng.annotations.AfterSuite
-import org.testng.annotations.BeforeSuite
 
-abstract class GebFunctionalTestSuite {
+abstract class LogwatcherFunctionalTestSuite extends GebReportingTest {
 
-	protected WebDriver driver
-	protected final String applicationUri = "http://localhost:8080"
-	private int port = 6578
-	private String applicationId = "foobar"
+	private static final String APPLICATION_URL = "http://localhost:8080"
+	private static final String REPORT_DIRECTORY = System.getProperty("reportDirectory");
+	private static final int port = 6578
 	private HashMap<String, Appender<ILoggingEvent>> appenders = new HashMap<String, Appender<ILoggingEvent>>()
 
-	@BeforeSuite
-	public void setUp() {
-		driver = System.getProperty("browser").equals("firefox") ? new FirefoxDriver() : new HtmlUnitDriver()
+	@Override
+	WebDriver createDriver() {
+		System.getProperty("browser").equals("firefox") ? new FirefoxDriver() : new HtmlUnitDriver();
+	}
+
+	@Override
+	String getBaseUrl() {
+		return APPLICATION_URL;
 	}
 
 	@AfterSuite
 	public void tearDown() {
 		if (!Boolean.getBoolean("preventClose")) {
 			driver.close()
+		}
+	}
+
+	@Override
+	File getReportDir() {
+		File file = new File(REPORT_DIRECTORY)
+		if(file.exists() || file.mkdirs()) {
+			return file
+		} else {
+			return null;
 		}
 	}
 
@@ -41,7 +55,6 @@ abstract class GebFunctionalTestSuite {
 			appenders.put(applicationId, appender)
 			return appender
 		}
-
 	}
 
 	protected Logger getLogger(String applicationId) {

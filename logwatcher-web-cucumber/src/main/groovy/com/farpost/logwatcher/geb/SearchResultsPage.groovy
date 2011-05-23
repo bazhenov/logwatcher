@@ -1,4 +1,4 @@
-package com.farpost.logwatcher.cucumber
+package com.farpost.logwatcher.geb
 
 import geb.Page
 

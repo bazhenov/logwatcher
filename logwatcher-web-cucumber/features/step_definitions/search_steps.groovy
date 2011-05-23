@@ -1,5 +1,5 @@
-import com.farpost.logwatcher.cucumber.SearchPage
-import com.farpost.logwatcher.cucumber.SearchResultsPage
+import com.farpost.logwatcher.geb.SearchPage
+import com.farpost.logwatcher.geb.SearchResultsPage
 
 this.metaClass.mixin(cuke4duke.GroovyDsl)
 

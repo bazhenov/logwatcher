@@ -16,6 +16,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<cuke4duke.version>0.4.4</cuke4duke.version>
 		<selenium.version>2.0b3</selenium.version>
+		<reportDirectory>/tmp/logwatcher/reports</reportDirectory>
 	</properties>
 
 	<dependencies>
@@ -75,6 +76,23 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<properties>
+						<property>
+							<name>listener</name>
+							<value>geb.testng.GebTestListener</value>
+						</property>
+					</properties>
+					<systemPropertyVariables>
+						<reportDirectory>${reportDirectory}</reportDirectory>
+					</systemPropertyVariables>
+					<failIfNoTests>true</failIfNoTests>
+				</configuration>
 			</plugin>
 
 			<plugin>
