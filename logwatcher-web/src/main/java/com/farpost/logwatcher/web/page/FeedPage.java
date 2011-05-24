@@ -15,6 +15,7 @@ import java.util.*;
 
 import static java.util.Collections.sort;
 
+@Component
 public class FeedPage implements ViewNameAwarePage, InitializingBean {
 
 	@Autowired

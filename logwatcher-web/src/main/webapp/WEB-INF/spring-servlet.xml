@@ -8,6 +8,10 @@
 
 	<mvc:annotation-driven/>
 
+	<mvc:interceptors>
+		<bean class="com.farpost.logwatcher.web.AutowireModeAttributesHandlerInterceptor"/>
+	</mvc:interceptors>
+
 	<import resource="controllers.xml"/>
 
 	<bean class="org.springframework.web.servlet.view.UrlBasedViewResolver"
