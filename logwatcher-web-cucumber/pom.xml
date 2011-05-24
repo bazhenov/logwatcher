@@ -168,12 +168,6 @@
 						<it.location>${it.location}</it.location>
 						<reportDirectory>${reportDirectory}</reportDirectory>
 					</systemPropertyVariables>
-					<properties>
-						<property>
-							<name>listener</name>
-							<value>geb.testng.GebTestListener</value>
-						</property>
-					</properties>
 					<failIfNoTests>true</failIfNoTests>
 				</configuration>
 			</plugin>
