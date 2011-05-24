@@ -16,10 +16,17 @@ abstract class LogwatcherFunctionalTestSuite extends GebReportingTest {
 	private static final String REPORT_DIRECTORY = System.getProperty("reportDirectory")
 	private static final int port = 6578
 	private HashMap<String, Appender<ILoggingEvent>> appenders = new HashMap<String, Appender<ILoggingEvent>>()
+	Logger logger = (Logger) org.slf4j.LoggerFactory.getLogger(LogwatcherFunctionalTestSuite.class)
 
 	@Override
 	WebDriver createDriver() {
-		System.getProperty("browser").equals("firefox") ? new FirefoxDriver() : new HtmlUnitDriver()
+		if (System.getProperty("browser").equals("firefox")) {
+			logger.info("Firefox driver selected")
+			return new FirefoxDriver()
+		} else {
+			logger.info("HtmlUnit driver selected")
+			return new HtmlUnitDriver()
+		}
 	}
 
 	@Override
@@ -37,9 +44,10 @@ abstract class LogwatcherFunctionalTestSuite extends GebReportingTest {
 	@Override
 	File getReportDir() {
 		File file = new File(REPORT_DIRECTORY)
-		if(file.exists() || file.mkdirs()) {
+		if (file.exists() || file.mkdirs()) {
 			return file
 		} else {
+			logger.warn("Can't create " + REPORT_DIRECTORY + " directory for test reports")
 			return null;
 		}
 	}

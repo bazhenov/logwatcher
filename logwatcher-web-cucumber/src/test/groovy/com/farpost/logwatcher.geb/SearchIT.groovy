@@ -9,40 +9,43 @@ public class SearchIT extends LogwatcherFunctionalTestSuite {
 
 	@Test
 	public void searchByApplicationTest() {
+		sleep(1000)
 		getLogger("Foo").error("foo error")
 		getLogger("Bar").error("bar error")
 
 		to SearchPage
 		searchField.value("at: Foo")
 		search()
-		waitFor { at(SearchResultsPage) }
+		waitFor { at SearchResultsPage }
 		assertThat result(0), containsString("foo error")
 		assertThat result(0), not(containsString("bar error"))
 	}
 
 	@Test
 	public void searchByCausedTest() {
+		sleep(1000)
 		getLogger("Foo").error("message", new IllegalArgumentException());
 		getLogger("Foo").error("message", new AssertionError());
 
 		to SearchPage
 		searchField.value("caused-by: IllegalArgumentException")
 		search()
-		waitFor { at(SearchResultsPage) }
+		waitFor { at SearchResultsPage }
 		assertThat result(0), containsString("IllegalArgumentException")
 		assertThat result(0), not(containsString("AssertionError"))
 	}
 
 	@Test
 	public void searchPageSortingTest() {
+		sleep(1000)
 		getLogger("Bar").error("First error")
-		sleep(2000)
+		sleep(1000)
 		getLogger("Bar").error("Second error")
 
 		to SearchPage
 		searchField.value("at: Bar")
 		search()
-		waitFor { at(SearchResultsPage) }
+		waitFor { at SearchResultsPage }
 		assertThat result(0), containsString("Second error")
 		assertThat result(1), containsString("First error")
 	}
