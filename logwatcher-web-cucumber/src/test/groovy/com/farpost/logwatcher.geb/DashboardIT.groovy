@@ -12,10 +12,10 @@ class DashboardIT extends LogwatcherFunctionalTestSuite {
 		def newAppName = "NewApp"
 
 		to DashboardPage
-		assertThat(applications, not(hasItem(newAppName)))
+		assertThat applications, not(hasItem(newAppName))
 
 		getLogger(newAppName).error("New log entry")
 		to DashboardPage
-		assertThat(applications, hasItem(newAppName))
+		assertThat applications, hasItem(newAppName)
 	}
 }

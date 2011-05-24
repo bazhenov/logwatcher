@@ -1,5 +1,6 @@
 package com.farpost.logwatcher.geb
 
+import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.Appender
@@ -25,7 +26,9 @@ abstract class LogwatcherFunctionalTestSuite extends GebReportingTest {
 			return new FirefoxDriver()
 		} else {
 			logger.info("HtmlUnit driver selected")
-			return new HtmlUnitDriver()
+			def driver = new HtmlUnitDriver()
+			driver.javascriptEnabled = true
+			return driver
 		}
 	}
 
@@ -67,6 +70,7 @@ abstract class LogwatcherFunctionalTestSuite extends GebReportingTest {
 
 	protected Logger getLogger(String applicationId) {
 		Logger logger = (Logger) org.slf4j.LoggerFactory.getLogger(applicationId)
+		logger.setLevel(Level.DEBUG)
 		if (logger.getAppender(applicationId) == null) {
 			logger.addAppender(getAppender(applicationId))
 		}
