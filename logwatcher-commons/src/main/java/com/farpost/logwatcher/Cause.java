@@ -44,6 +44,15 @@ public class Cause {
 		this.cause = cause;
 	}
 
+	public Cause(Throwable throwable) {
+		type = throwable.getClass().getSimpleName();
+		message = throwable.getMessage();
+		stackTrace = StackTraceFormatter.extractStackTrace(throwable);
+		cause = throwable.getCause() == null
+			? null
+			: new Cause(throwable.getCause());
+	}
+
 	public String getType() {
 		return type;
 	}

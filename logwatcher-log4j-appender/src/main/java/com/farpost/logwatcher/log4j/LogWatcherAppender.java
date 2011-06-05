@@ -12,8 +12,6 @@ import org.apache.log4j.Level;
 import org.apache.log4j.spi.LoggingEvent;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.*;
 
 import static java.lang.Math.min;
@@ -84,15 +82,6 @@ public class LogWatcherAppender extends AppenderSkeleton {
 		return Severity.trace;
 	}
 
-	private Cause constructCause(Throwable t) {
-		StringWriter buffer = new StringWriter();
-		t.printStackTrace(new PrintWriter(buffer));
-		Cause cause = t.getCause() == null
-			? null
-			: constructCause(t.getCause());
-		return new Cause(t.getClass().getSimpleName(), t.getMessage(), buffer.toString(), cause);
-	}
-
 	private String calculateChecksum(String message, String location) {
 		String checksum = (message.replaceAll(" ", "") + location).replaceAll("\\.", "");
 		return checksum.substring(0, min(32, checksum.length()));
@@ -117,7 +106,7 @@ public class LogWatcherAppender extends AppenderSkeleton {
 		LogEntry entry;
 		if (event.getThrowableInformation() != null) {
 			Throwable t = event.getThrowableInformation().getThrowable();
-			entry = new LogEntryImpl(now, location, message, severity, checksum, applicationId, null, constructCause(t));
+			entry = new LogEntryImpl(now, location, message, severity, checksum, applicationId, null, new Cause(t));
 		} else {
 			entry = new LogEntryImpl(now, location, message, severity, checksum, applicationId, null);
 		}

@@ -13,8 +13,6 @@ import com.farpost.logwatcher.marshalling.Marshaller;
 import com.farpost.timepoint.DateTime;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.*;
 import java.util.HashMap;
 
@@ -42,7 +40,7 @@ public class LogWatcherAppender extends UnsynchronizedAppenderBase<ILoggingEvent
 			Severity severity = severity(event.getLevel());
 			ThrowableProxy throwableProxy = (ThrowableProxy) event.getThrowableProxy();
 			Cause cause = throwableProxy != null
-				? constructCause(throwableProxy.getThrowable())
+				? new Cause(throwableProxy.getThrowable())
 				: null;
 
 			LogEntry entry = new LogEntryImpl(time, event.getLoggerName(), event.getFormattedMessage(), severity,
@@ -66,15 +64,6 @@ public class LogWatcherAppender extends UnsynchronizedAppenderBase<ILoggingEvent
 	private String calculateChecksum(String message) {
 		String checksum = message.replaceAll("[ |{|}]", "");
 		return checksum.substring(0, min(32, checksum.length()));
-	}
-
-	private Cause constructCause(Throwable t) {
-		StringWriter buffer = new StringWriter();
-		t.printStackTrace(new PrintWriter(buffer));
-		Cause cause = t.getCause() == null
-			? null
-			: constructCause(t.getCause());
-		return new Cause(t.getClass().getSimpleName(), t.getMessage(), buffer.toString(), cause);
 	}
 
 	private Severity severity(Level level) {
