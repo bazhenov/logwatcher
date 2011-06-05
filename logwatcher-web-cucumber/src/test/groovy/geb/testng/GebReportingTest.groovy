@@ -12,8 +12,8 @@ class GebReportingTest extends GebTest {
 	static private GEB_REPORTING_TEST_COUNTERS = [:]
 	static private GEB_REPORTING_TEST_REPORTERS = [:]
 
-	void report(String label, String methodName = "") {
-		getTestReporter(this)?.writeReport("${getNextTestCounterValue(label)}-$label-${methodName}", getBrowser())
+	void report(String methodName = "") {
+		getTestReporter(this)?.writeReport("${getNextTestCounterValue(this)}-${methodName}", getBrowser())
 	}
 
 	/**
