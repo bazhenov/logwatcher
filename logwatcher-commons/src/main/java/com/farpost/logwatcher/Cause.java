@@ -77,33 +77,33 @@ public class Cause {
 	}
 
 	public boolean equals(Object o) {
-		if ( this == o ) {
+		if (this == o) {
 			return true;
 		}
-		if ( o == null || getClass() != o.getClass() ) {
+		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
 
 		Cause cause1 = (Cause) o;
 
-		if ( cause != null
+		if (cause != null
 			? !cause.equals(cause1.cause)
-			: cause1.cause != null ) {
+			: cause1.cause != null) {
 			return false;
 		}
-		if ( message != null
+		if (message != null
 			? !message.equals(cause1.message)
-			: cause1.message != null ) {
+			: cause1.message != null) {
 			return false;
 		}
-		if ( stackTrace != null
+		if (stackTrace != null
 			? !stackTrace.equals(cause1.stackTrace)
-			: cause1.stackTrace != null ) {
+			: cause1.stackTrace != null) {
 			return false;
 		}
-		if ( type != null
+		if (type != null
 			? !type.equals(cause1.type)
-			: cause1.type != null ) {
+			: cause1.type != null) {
 			return false;
 		}
 

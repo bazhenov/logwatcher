@@ -12,7 +12,7 @@ public class AggregatedAttribute {
 
 	public AggregatedAttribute(String name, Map<String, Integer> counts) {
 		this.name = name;
-		for ( Map.Entry<String, Integer> row : counts.entrySet() ) {
+		for (Map.Entry<String, Integer> row : counts.entrySet()) {
 			add(new AttributeValue(row.getKey(), row.getValue()));
 		}
 	}
@@ -40,24 +40,24 @@ public class AggregatedAttribute {
 
 	public void incrementCountFor(String value) {
 		AttributeValue v = values.get(value);
-		if ( v == null ) {
+		if (v == null) {
 			values.put(value, new AttributeValue(value, 1));
-		}else{
+		} else {
 			v.increment();
 		}
 	}
 
 	public void add(AttributeValue value) {
 		AttributeValue savedValue = values.get(value.getValue());
-		if ( savedValue == null ) {
+		if (savedValue == null) {
 			values.put(value.getValue(), value);
-		}else{
+		} else {
 			savedValue.add(value);
 		}
 	}
 
 	public void merge(AggregatedAttribute attribute) {
-		for ( AttributeValue value : attribute.values.values() ) {
+		for (AttributeValue value : attribute.values.values()) {
 			add(value);
 		}
 	}
@@ -66,7 +66,7 @@ public class AggregatedAttribute {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append('{');
-		for ( AttributeValue value : values.values() ) {
+		for (AttributeValue value : values.values()) {
 			builder.append(value);
 		}
 		builder.append('}');

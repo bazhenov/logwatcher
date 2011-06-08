@@ -1,6 +1,5 @@
 package com.farpost.logwatcher;
 
-import com.farpost.logwatcher.Severity;
 import org.testng.annotations.Test;
 
 import static com.farpost.logwatcher.Severity.trace;

@@ -1,9 +1,5 @@
 package com.farpost.logwatcher;
 
-import com.farpost.logwatcher.LogEntry;
-import com.farpost.logwatcher.LogEntryImpl;
-import com.farpost.logwatcher.Severity;
-
 import static com.farpost.timepoint.DateTime.now;
 
 public class LoggingDatabase {
