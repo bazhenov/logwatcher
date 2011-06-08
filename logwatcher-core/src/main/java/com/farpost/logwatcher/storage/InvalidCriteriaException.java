@@ -22,8 +22,8 @@ public class InvalidCriteriaException extends RuntimeException {
 
 	private static String buildMatcersList(Collection<LogEntryMatcher> badMatchers) {
 		StringBuilder builder = new StringBuilder();
-		for ( LogEntryMatcher matcher : badMatchers ) {
-			if ( builder.length() > 0 ) {
+		for (LogEntryMatcher matcher : badMatchers) {
+			if (builder.length() > 0) {
 				builder.append(", ");
 			}
 			builder.append(matcher.getClass().getSimpleName());

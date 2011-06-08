@@ -61,7 +61,7 @@ final public class LuceneMatcherMapperRules {
 
 	@Matcher
 	public Query contains(ContainsMatcher matcher) throws ParseException {
-		return new MultiFieldQueryParser(Version.LUCENE_30, new String[] {"message", "stacktrace"},
+		return new MultiFieldQueryParser(Version.LUCENE_30, new String[]{"message", "stacktrace"},
 			new StandardAnalyzer(Version.LUCENE_30)).parse(matcher.getNeedle());
 	}
 

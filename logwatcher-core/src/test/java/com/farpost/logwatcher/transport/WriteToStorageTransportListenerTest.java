@@ -1,5 +1,9 @@
 package com.farpost.logwatcher.transport;
 
+import com.farpost.logwatcher.Cause;
+import com.farpost.logwatcher.LogEntry;
+import com.farpost.logwatcher.LogEntryImpl;
+import com.farpost.logwatcher.Severity;
 import com.farpost.logwatcher.marshalling.Jaxb2Marshaller;
 import com.farpost.logwatcher.marshalling.Marshaller;
 import com.farpost.logwatcher.storage.InMemoryLogStorage;
@@ -7,10 +11,6 @@ import com.farpost.logwatcher.storage.InvalidCriteriaException;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
 import com.farpost.timepoint.DateTime;
-import com.farpost.logwatcher.Cause;
-import com.farpost.logwatcher.LogEntry;
-import com.farpost.logwatcher.LogEntryImpl;
-import com.farpost.logwatcher.Severity;
 import org.testng.annotations.Test;
 
 import static com.farpost.logwatcher.storage.LogEntries.entries;

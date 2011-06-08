@@ -9,26 +9,29 @@ import java.security.NoSuchAlgorithmException;
  */
 public class SimpleChecksumCalculator implements ChecksumCalculator {
 
+	private MessageDigest digest;
 	private static final String HEXES = "0123456789abcdef";
 
-	public String calculateChecksum(LogEntry entry) {
-		String messageInfo = entry.getApplicationId() + ":" + entry.getSeverity();
-		Cause cause = entry.getCause();
-		if (cause != null) {
-			messageInfo += ":" + cause.getRootCause().getType();
-		} else {
-			String messageChecksum = entry.getChecksum();
-			if (messageChecksum != null && !messageChecksum.isEmpty()) {
-				messageInfo += ":" + messageChecksum;
-			} else {
-				messageInfo += ":" + entry.getMessage();
-			}
-		}
+	public SimpleChecksumCalculator() {
 		try {
-			return getHex(MessageDigest.getInstance("MD5").digest(messageInfo.getBytes()));
+			digest = MessageDigest.getInstance("MD5");
 		} catch (NoSuchAlgorithmException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public String calculateChecksum(LogEntry entry) {
+		String checksum = entry.getApplicationId() + ":" + entry.getSeverity();
+		Cause cause = entry.getCause();
+		if (cause != null) {
+			checksum += ":" + cause.getRootCause().getType();
+		} else if (entry.getChecksum() == null || entry.getChecksum().isEmpty()) {
+			checksum += ":" + entry.getMessage();
+		} else {
+			checksum += ":" + entry.getChecksum();
+		}
+		digest.reset();
+		return getHex(digest.digest(checksum.getBytes()));
 	}
 
 	public static String getHex(byte[] raw) {
