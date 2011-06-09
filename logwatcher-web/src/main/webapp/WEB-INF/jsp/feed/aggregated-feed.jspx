@@ -20,6 +20,9 @@
 		<link rel="stylesheet" href="${cssUrl}"/>
 
 		<script type="text/javascript" src="/js/calendar.js">/**/</script>
+		<script type="text/javascript" src="/js/jquery.flot.min.js">/**/</script>
+		<script type="text/javascript" src="/js/jquery.flot.pie.min.js">/**/</script>
+		<script type="text/javascript" src="/js/graph.js">/**/</script>
 
 		<script type="text/javascript">
 			var severityLevel = '${p.severity}';
@@ -41,7 +44,7 @@
 			on <span id="date"><fmt:formatDate pattern="dd MMMM, yyyy" value="${p.date}"/></span>
 		</span>
 	</h2>
-
+	<lt:pie-chart data="${p.dataForPieChart}"/>
 	<lt:severity-selector severity="${p.severity}"/>
 
 	<lt:popup id="applicationSelector">
