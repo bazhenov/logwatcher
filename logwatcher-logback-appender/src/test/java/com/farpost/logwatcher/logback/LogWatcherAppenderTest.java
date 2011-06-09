@@ -20,6 +20,8 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import static java.lang.Integer.parseInt;
+import static java.lang.System.getProperty;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -29,7 +31,6 @@ public class LogWatcherAppenderTest {
 
 	private BlockingQueue<byte[]> messages;
 	private Marshaller marshaller = new Jaxb2Marshaller();
-	private int port = 6590;
 	private UdpTransport transport;
 	private String applicationId = "foobar";
 	private Appender<ILoggingEvent> appender;
@@ -38,6 +39,7 @@ public class LogWatcherAppenderTest {
 
 	@BeforeMethod
 	public void setUp() throws SocketException, TransportException {
+		int port = parseInt(getProperty("it.udp-appender.port", "6590"));
 		messages = new LinkedBlockingQueue<byte[]>();
 		transport = new UdpTransport(port, new QueueAppendListener(messages));
 		transport.start();
