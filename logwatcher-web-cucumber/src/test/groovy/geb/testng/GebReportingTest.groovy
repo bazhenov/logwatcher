@@ -60,7 +60,7 @@ class GebTestListener extends TestListenerAdapter {
 	}
 
 	private void createReport(ITestResult tr) {
-		tr.testClass.getInstances(true).first().report(tr.testClass.name, tr.method.methodName)
+		tr.testClass.getInstances(true).first().report(tr.method.methodName)
 	}
 
 }
