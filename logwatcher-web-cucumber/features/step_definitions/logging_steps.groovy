@@ -12,6 +12,11 @@ Given(~/приложение "([^\"]+)" залогировало ошибку "(
 	getLogger(applicationName).error(errorMessage)
 }
 
+Given(~/приложение "([^\"]+)" залогировало warning "([^\"]+)"/) { String applicationName, String warningMessage ->
+	sleep(1000)
+	getLogger(applicationName).warn(warningMessage)
+}
+
 Given(~/приложение "([^\"]+)" залогировало исключение "([^\"]+)"/) { String applicationName,
 																																		 String exceptionName ->
 	sleep(1000)
