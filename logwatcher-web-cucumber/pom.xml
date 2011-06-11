@@ -28,6 +28,9 @@
 		<sut.version>1.3</sut.version>
 		<sut.location>${basedir}/../${sut.artifactId}/target/${sut.artifactId}-${sut.version}.war</sut.location>
 
+		<deploy.hostname>artifacts</deploy.hostname>
+		<deploy.location>/home/tech/logwatcher</deploy.location>
+
 		<reportDirectory>/tmp/logwatcher/reports</reportDirectory>
 	</properties>
 
@@ -70,7 +73,22 @@
 		</dependency>
 	</dependencies>
 
+	<!--
+		Основной момент, который следует помнить внося изменения в конфигурацию функциональных тестов
+		заключается в том что процесс билда должен быть толернатен к другим билдам выполняющимся
+		параллельно. А это значит никаких "прошитых" номеров портов и переменных окружения.
+
+		CI-сервер должен иметь возможность изменить параметры окружения используемые билдом.
+	-->
 	<build>
+
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh-external</artifactId>
+				<version>1.0-beta-6</version>
+			</extension>
+		</extensions>
 
 		<plugins>
 
@@ -170,6 +188,29 @@
 					<failIfNoTests>true</failIfNoTests>
 				</configuration>
 			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>wagon-maven-plugin</artifactId>
+				<version>1.0-beta-3</version>
+				<executions>
+					<execution>
+						<id>upload-artifact</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>upload-single</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<serverId>vhost-gateway</serverId>
+					<url>scpexe://${deploy.hostname}</url>
+					<fromFile>${sut.location}</fromFile>
+					<!--suppress MavenModelInspection -->
+					<toFile>${deploy.location}/${sut.artifactId}-${sut.version}.${buildNumber}.war</toFile>
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</build>
 
@@ -231,6 +272,26 @@
 			<properties>
 				<cucumber.debug>-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=4000 -Xdebug</cucumber.debug>
 			</properties>
+		</profile>
+
+		<profile>
+			<id>development</id>
+
+			<properties>
+				<maven.test.skip>true</maven.test.skip>
+			</properties>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.mortbay.jetty</groupId>
+						<artifactId>maven-jetty-plugin</artifactId>
+						<configuration>
+							<daemon>false</daemon>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
 		</profile>
 	</profiles>
 </project>
