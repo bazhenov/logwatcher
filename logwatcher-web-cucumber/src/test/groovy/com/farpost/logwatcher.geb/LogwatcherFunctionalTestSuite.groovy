@@ -5,6 +5,7 @@ import ch.qos.logback.classic.Logger
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.Appender
 import com.farpost.logwatcher.logback.LogWatcherAppender
+import com.gargoylesoftware.htmlunit.BrowserVersion
 import geb.testng.GebReportingTest
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.firefox.FirefoxDriver
@@ -26,7 +27,7 @@ abstract class LogwatcherFunctionalTestSuite extends GebReportingTest {
 			return new FirefoxDriver()
 		} else {
 			logger.info("HtmlUnit driver selected")
-			def driver = new HtmlUnitDriver()
+			def driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_3)
 			driver.javascriptEnabled = true
 			return driver
 		}
