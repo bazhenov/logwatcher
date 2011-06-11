@@ -13,7 +13,6 @@
 		<module>logwatcher-web</module>
 		<module>logwatcher-log4j-appender</module>
 		<module>logwatcher-commons</module>
-		<module>logwatcher-web-ft</module>
 		<module>logwatcher-logback-appender</module>
 		<module>logwatcher-web-cucumber</module>
 	</modules>
