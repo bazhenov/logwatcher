@@ -15,7 +15,7 @@ public class SimpleChecksumCalculator implements ChecksumCalculator {
 	public SimpleChecksumCalculator() {
 		try {
 			digest = MessageDigest.getInstance("MD5");
-		} catch ( NoSuchAlgorithmException e ) {
+		} catch (NoSuchAlgorithmException e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -23,9 +23,9 @@ public class SimpleChecksumCalculator implements ChecksumCalculator {
 	public String calculateChecksum(LogEntry entry) {
 		String checksum = entry.getApplicationId() + ":" + entry.getSeverity();
 		Cause cause = entry.getCause();
-		if ( cause != null ) {
+		if (cause != null) {
 			checksum += ":" + cause.getRootCause().getType();
-		} else if ( entry.getChecksum() == null || entry.getChecksum().isEmpty() ) {
+		} else if (entry.getChecksum() == null || entry.getChecksum().isEmpty()) {
 			checksum += ":" + entry.getMessage();
 		} else {
 			checksum += ":" + entry.getChecksum();
@@ -35,11 +35,11 @@ public class SimpleChecksumCalculator implements ChecksumCalculator {
 	}
 
 	public static String getHex(byte[] raw) {
-		if ( raw == null ) {
+		if (raw == null) {
 			return null;
 		}
 		final StringBuilder hex = new StringBuilder(2 * raw.length);
-		for ( byte b : raw ) {
+		for (byte b : raw) {
 			hex.
 				append(HEXES.charAt((b & 0xF0) >> 4)).
 				append(HEXES.charAt((b & 0x0F)));

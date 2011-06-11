@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * JAXB Адаптер сериализующий тип Map<String, String> в XML дерево аттрибутов 
+ * JAXB Адаптер сериализующий тип Map<String, String> в XML дерево аттрибутов
  */
 public class JaxbAttributesMapAdapter extends XmlAdapter<AttributeList, Map<String, String>> {
 

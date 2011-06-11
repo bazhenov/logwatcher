@@ -1,7 +1,5 @@
 package com.farpost.logwatcher;
 
-import com.farpost.logwatcher.AggregatedAttribute;
-import com.farpost.logwatcher.AttributeValue;
 import org.testng.annotations.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;

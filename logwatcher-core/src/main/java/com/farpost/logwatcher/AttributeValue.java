@@ -12,7 +12,7 @@ public class AttributeValue {
 	private final AtomicInteger count;
 
 	public AttributeValue(String value, int count) {
-		if ( value == null ) {
+		if (value == null) {
 			throw new NullPointerException("Attribute value can not be null");
 		}
 		this.value = value;
@@ -37,11 +37,12 @@ public class AttributeValue {
 	 * <code>
 	 * AttributeValue v1 = new AttributeValue("foo", 12);
 	 * AttributeValue v2 = new AttributeValue("foo", 15);
-	 *
+	 * <p/>
 	 * v1.add(v2);
 	 * v1.getCount(); // 27
 	 * </code>
 	 * Данный метод меняет исходный AttributeValue, но тем не менее этот метод thread safe.
+	 *
 	 * @param value добавляемое AttributeValue
 	 */
 	public void add(AttributeValue value) {
@@ -50,10 +51,10 @@ public class AttributeValue {
 
 	@Override
 	public boolean equals(Object o) {
-		if ( this == o ) {
+		if (this == o) {
 			return true;
 		}
-		if ( o == null || getClass() != o.getClass() ) {
+		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
 

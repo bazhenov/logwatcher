@@ -16,6 +16,7 @@ import java.util.Map;
 import static com.farpost.logwatcher.storage.LogEntries.entries;
 import static com.farpost.timepoint.Date.today;
 
+@Component
 public class SearchPage implements ViewNameAwarePage, InitializingBean {
 
 	@Autowired

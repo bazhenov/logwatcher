@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.util.Date;
 
 /**
- * JAXB Адаптер сериализующий тип Map<String, String> в XML дерево аттрибутов 
+ * JAXB Адаптер сериализующий тип Map<String, String> в XML дерево аттрибутов
  */
 public class JaxbDateAdapter extends XmlAdapter<Date, DateTime> {
 

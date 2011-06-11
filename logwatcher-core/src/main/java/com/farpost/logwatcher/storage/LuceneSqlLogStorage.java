@@ -130,7 +130,7 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 	private SearcherReference reopenSearcher() throws IOException {
 		IndexReader indexReader = writer.getReader();
 		IndexSearcher searcher = new IndexSearcher(indexReader);
-		String[] ids = FieldCache.DEFAULT.getStrings(indexReader, "id");
+		int[] ids = FieldCache.DEFAULT.getInts(indexReader, "id");
 		return new SearcherReference(indexReader, searcher, ids);
 	}
 
@@ -195,13 +195,13 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 			 */
 			SearcherReference ref = searcherRef;
 			Searcher searcher = ref.getSearcher();
-			String[] ids = ref.getIdFieldCache();
+			int[] ids = ref.getIdFieldCache();
 
 			TopDocs topDocs = searcher.search(query, null, 100, new Sort(new SortField("datetime", SortField.STRING, true)));
 
 			Integer result[] = new Integer[topDocs.scoreDocs.length];
 			for (int i = 0; i < topDocs.scoreDocs.length; i++) {
-				result[i] = Integer.parseInt(ids[topDocs.scoreDocs[i].doc]);
+				result[i] = ids[topDocs.scoreDocs[i].doc];
 			}
 			return result;
 
