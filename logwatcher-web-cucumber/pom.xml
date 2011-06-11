@@ -159,7 +159,6 @@
 				</executions>
 			</plugin>
 
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
@@ -171,45 +170,58 @@
 					<failIfNoTests>true</failIfNoTests>
 				</configuration>
 			</plugin>
-
-			<!--<plugin>-->
-			<!--<groupId>cuke4duke</groupId>-->
-			<!--<artifactId>cuke4duke-maven-plugin</artifactId>-->
-			<!--<version>${cuke4duke.version}</version>-->
-			<!--<configuration>-->
-			<!--<cucumberArgs>-->
-			<!--<cucumberArg>-color</cucumberArg>-->
-			<!--<cucumberArg>-strict</cucumberArg>-->
-			<!--<cucumberArg>-guess</cucumberArg>-->
-			<!--<cucumberArg>-backtrace</cucumberArg>-->
-			<!--</cucumberArgs>-->
-			<!--<gems>-->
-			<!--<gem>install cuke4duke -version ${cuke4duke.version}</gem>-->
-			<!--</gems>-->
-			<!--<jvmArgs>-->
-			<!--<jvmArg>${cucumber.debug}</jvmArg>-->
-			<!--<jvmArg>-Dbrowser=${browser}</jvmArg>-->
-			<!--<jvmArg>-DpreventClose=${preventClose}</jvmArg>-->
-			<!--<jvmArg>-Dgroovy.source.encoding=UTF-8</jvmArg>-->
-			<!--</jvmArgs>-->
-			<!--</configuration>-->
-			<!--<executions>-->
-			<!--<execution>-->
-			<!--<id>run-features</id>-->
-			<!--<phase>verify</phase>-->
-			<!--<goals>-->
-			<!--<goal>cucumber</goal>-->
-			<!--</goals>-->
-			<!--</execution>-->
-			<!--</executions>-->
-			<!--</plugin>-->
-
 		</plugins>
 	</build>
 
 	<profiles>
 		<profile>
-			<id>debug</id>
+			<id>cucumber</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-failsafe-plugin</artifactId>
+						<inherited>false</inherited>
+						<configuration>
+							<skip>true</skip>
+						</configuration>
+					</plugin>
+
+					<plugin>
+						<groupId>cuke4duke</groupId>
+						<artifactId>cuke4duke-maven-plugin</artifactId>
+						<version>${cuke4duke.version}</version>
+						<configuration>
+							<cucumberArgs>
+								<cucumberArg>--color</cucumberArg>
+								<cucumberArg>--strict</cucumberArg>
+								<cucumberArg>--guess</cucumberArg>
+								<cucumberArg>--backtrace</cucumberArg>
+							</cucumberArgs>
+							<gems>
+								<gem>install cuke4duke -version ${cuke4duke.version}</gem>
+							</gems>
+							<jvmArgs>
+								<!-- раскомментируй, если хочешь дебажить -->
+								<!--<jvmArg>${cucumber.debug}</jvmArg>-->
+								<jvmArg>-Dit.location=${it.location}</jvmArg>
+								<jvmArg>-Dbrowser=${browser}</jvmArg>
+								<jvmArg>-DpreventClose=${preventClose}</jvmArg>
+								<jvmArg>-Dgroovy.source.encoding=UTF-8</jvmArg>
+							</jvmArgs>
+						</configuration>
+						<executions>
+							<execution>
+								<id>run-features</id>
+								<phase>integration-test</phase>
+								<goals>
+									<goal>cucumber</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
 			<activation>
 				<property>
 					<name>env</name>
@@ -221,6 +233,4 @@
 			</properties>
 		</profile>
 	</profiles>
-
-
 </project>
