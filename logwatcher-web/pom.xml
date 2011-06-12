@@ -18,6 +18,11 @@
 			<groupId>com.farpost.logwatcher</groupId>
 			<artifactId>logwatcher-core</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20080701</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.sitemesh</groupId>

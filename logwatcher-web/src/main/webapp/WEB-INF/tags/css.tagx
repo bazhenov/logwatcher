@@ -1,0 +1,6 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.1" xmlns:s="http://www.springframework.org/tags">
+	<jsp:directive.attribute name="src" type="java.lang.String" required="true"/>
+
+	<s:url value="${src}" var="url"/>
+	<link rel="stylesheet" href="${url}"/>
+</jsp:root>

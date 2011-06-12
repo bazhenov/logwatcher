@@ -1,8 +1,8 @@
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.1"
-					xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:f="http://java.sun.com/jsp/jstl/functions"
+					xmlns:c="http://java.sun.com/jsp/jstl/core"
 					xmlns:l="urn:jsptagdir:/WEB-INF/tags">
 
-	<jsp:directive.attribute name="severity" type="java.lang.String" required="true"/>
+	<jsp:directive.attribute name="severity" type="com.farpost.logwatcher.Severity" required="true"/>
 
 	<div id="severityContainer">
 		<table>

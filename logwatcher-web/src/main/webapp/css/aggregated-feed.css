@@ -83,7 +83,10 @@
 #severityContainer:hover #severityMenu	{ display: block; }
 
 h2 span#applicationId,
+h2 span#pieChartLink,
 h2 span#date										{ cursor: pointer }
+
+h2 span#pieChartLink						{ margin-left: 5px; }
 
 #applicationSelector										{ width: 250px }
 
@@ -105,3 +108,6 @@ h2 span#date										{ cursor: pointer }
 #dateSelector TH								{ color: #ddd; }
 #dateSelector span.today A			{ color: #ee3; }
 #dateSelector span.inactive			{ color: #999; }
+
+#pieChartPlaceHolder						{ width: 150px; height: 150px; margin: 5px;}
+#pieChartData										{ display:none }
