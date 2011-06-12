@@ -109,4 +109,5 @@ h2 span#pieChartLink						{ margin-left: 5px; }
 #dateSelector span.today A			{ color: #ee3; }
 #dateSelector span.inactive			{ color: #999; }
 
-#pieChartPlaceHolder						{ width: 350px; height: 350px;}
+#pieChartPlaceHolder						{ width: 150px; height: 150px; margin: 5px;}
+#pieChartData										{ display:none }

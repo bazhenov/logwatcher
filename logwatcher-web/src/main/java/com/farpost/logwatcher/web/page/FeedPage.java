@@ -55,6 +55,19 @@ public class FeedPage implements ViewNameAwarePage, InitializingBean {
 			? comparators.get(this.sortOrder)
 			: comparators.get(null);
 		sort(entries, comparator);
+
+		pieChartData = new JSONArray();
+		for (AggregatedEntry entry : entries) {
+			try {
+				String label = entry.getMessage();
+
+				pieChartData.put(new JSONObject()
+					.put("label", label)
+					.put("data", entry.getCount()));
+			} catch (JSONException e) {
+				//miss corrupted entry
+			}
+		}
 	}
 
 	@Override
@@ -87,21 +100,6 @@ public class FeedPage implements ViewNameAwarePage, InitializingBean {
 	}
 
 	public JSONArray getDataForPieChart() {
-		if (pieChartData == null) {
-			pieChartData = new JSONArray();
-			for (AggregatedEntry entry : entries) {
-				try {
-					String label = entry.getMessage();
-
-					pieChartData.put(new JSONObject()
-						.put("label", label)
-						.put("data", entry.getCount()));
-				} catch (JSONException e) {
-					//miss corrupted entry
-				}
-			}
-		}
-
 		return pieChartData;
 	}
 
