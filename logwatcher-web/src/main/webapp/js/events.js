@@ -80,6 +80,12 @@ $(document).ready(function() {
 		return false;
 	});
 
+	$('#pieChartLink').click(function() {
+		showPopup($(this), $('#pieChart'));
+		return false;
+	});
+
+
 	$('#date').click(function() {
 		showPopup($(this), $('#dateSelector'));
 		return false;

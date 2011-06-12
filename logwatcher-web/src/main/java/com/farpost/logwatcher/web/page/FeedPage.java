@@ -6,6 +6,9 @@ import com.farpost.logwatcher.ByOccurenceCountComparator;
 import com.farpost.logwatcher.Severity;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.web.ViewNameAwarePage;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,6 +28,7 @@ public class FeedPage implements ViewNameAwarePage, InitializingBean {
 	private Date date;
 	private String applicationId;
 	private Severity severity;
+	private JSONArray pieChartData;
 
 	private final HashMap<String, Comparator<AggregatedEntry>> comparators = new HashMap<String, Comparator<AggregatedEntry>>() {{
 		put(null, new ByLastOccurenceDateComparator());
@@ -80,6 +84,25 @@ public class FeedPage implements ViewNameAwarePage, InitializingBean {
 
 	public Date getDate() {
 		return date;
+	}
+
+	public JSONArray getDataForPieChart() {
+		if (pieChartData == null) {
+			pieChartData = new JSONArray();
+			for (AggregatedEntry entry : entries) {
+				try {
+					String label = entry.getMessage();
+
+					pieChartData.put(new JSONObject()
+						.put("label", label)
+						.put("data", entry.getCount()));
+				} catch (JSONException e) {
+					//miss corrupted entry
+				}
+			}
+		}
+
+		return pieChartData;
 	}
 
 	public Collection<AggregatedEntry> getEntries() {
