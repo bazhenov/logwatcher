@@ -12,6 +12,7 @@ $(document).ready(function() {
 				show: true,
 				radius: 1,
 				label: {
+					threshold: 0.1,
 					show: true,
 					radius: 3 / 4,
 					formatter: function(label, series) {
@@ -41,18 +42,14 @@ function showTooltip(x, y, contents) {
 		display: 'none',
 		top: y + 5,
 		left: x + 5,
-		border: '1px solid #fdd',
-		padding: '2px',
-		'background-color': '#fee',
-		zIndex: 1,
-		opacity: 0.80
+		zIndex: 1
 	}).appendTo("body").show();
 }
 
 function pieHover(event, pos, item) {
 	if (item) {
 		$("#chartTooltip").remove();
-		showTooltip(pos.pageX, pos.pageY, "<span style='font-weight:bold;'>" + Math.round(item.series.percent) + "%</span><br/>" + item.series.label);
+		showTooltip(pos.pageX, pos.pageY, "<span style='font-weight:bold;'>" + Math.round(item.series.percent) + "%</span><br/>" + $("<span>" + item.series.label + "</span>").text());
 	} else {
 		$("#chartTooltip").remove();
 	}
