@@ -19,7 +19,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<cuke4duke.version>0.4.4</cuke4duke.version>
-		<selenium.version>2.0b3</selenium.version>
+		<selenium.version>2.0rc3</selenium.version>
 
 		<it.port>8181</it.port>
 		<it.location>http://localhost:${it.port}</it.location>
@@ -31,7 +31,7 @@
 		<deploy.hostname>artifacts</deploy.hostname>
 		<deploy.location>/home/tech/logwatcher</deploy.location>
 
-		<reportDirectory>/tmp/logwatcher/reports</reportDirectory>
+		<reportsDir>/tmp/logwatcher/reports</reportsDir>
 	</properties>
 
 	<dependencies>
@@ -54,7 +54,12 @@
 		<dependency>
 			<groupId>org.codehaus.geb</groupId>
 			<artifactId>geb-core</artifactId>
-			<version>0.5.1</version>
+			<version>0.6.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.geb</groupId>
+			<artifactId>geb-testng</artifactId>
+			<version>0.6.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
@@ -183,7 +188,7 @@
 				<configuration>
 					<systemPropertyVariables>
 						<it.location>${it.location}</it.location>
-						<reportDirectory>${reportDirectory}</reportDirectory>
+						<reportsDir>${reportsDir}</reportsDir>
 					</systemPropertyVariables>
 					<failIfNoTests>true</failIfNoTests>
 				</configuration>

@@ -11,7 +11,7 @@ class SearchPage extends Page {
 	static content = {
 		searchField { $("form", name: "searchForm").q() }
 		search (to: SearchResultsPage) {
-			searchField.firstElement().sendKeys(Keys.ENTER)
+			searchField << Keys.ENTER
 			true
 		}
 	}

@@ -1,7 +1,6 @@
 package com.farpost.logwatcher.geb
 
 import geb.Page
-import org.openqa.selenium.StaleElementReferenceException
 
 class ApplicationFeedPage extends Page {
 
@@ -18,20 +17,10 @@ class ApplicationFeedPage extends Page {
 	def changeSeverity(severity) {
 		$("#severityMenu").jquery.addClass("hover")
 		$("a", text: severity).click()
-		/** Ебучий HtmlUnit слишком быстр, чтобы перегрузить страницу,
-		 * И слишком туп, чтобы пытаться вытаскивать элемент из новой страницы.
-		 * по его мнению гораздо круче достать элемент из старой и обнаружить,
-		 * что DOM уже давным давно перестроен
-		 *
-		 * После обновления до geb-0.6 от обработки исключения можно избавиться
-		 */
 		waitFor {
-			try {
-				selectedSeverity.present && selectedSeverity.text() == severity
-			} catch (StaleElementReferenceException exception) {
-				false
-			}
+			selectedSeverity.present && selectedSeverity.text() == severity
 		}
+
 	}
 
 	def convertToPath(String applicationName) {

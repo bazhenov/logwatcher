@@ -15,10 +15,12 @@ class ApplicationFeedIT extends LogwatcherFunctionalTestSuite {
 
 		to ApplicationFeedPage, applicationName
 		changeSeverity "warning"
+		waitFor { entriesMessages.size == 2 }
 		assertThat entriesMessages, hasItem("error log")
 		assertThat entriesMessages, hasItem("warning log")
 
 		changeSeverity "error"
+		waitFor { entriesMessages.size == 1 }
 		assertThat entriesMessages, hasItem("error log")
 		assertThat entriesMessages, not(hasItem("warning log"))
 	}

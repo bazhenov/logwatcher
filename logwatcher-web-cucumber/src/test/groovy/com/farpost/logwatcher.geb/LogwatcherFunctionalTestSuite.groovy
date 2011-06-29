@@ -6,6 +6,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.Appender
 import com.farpost.logwatcher.logback.LogWatcherAppender
 import com.gargoylesoftware.htmlunit.BrowserVersion
+import geb.Configuration
 import geb.testng.GebReportingTest
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.firefox.FirefoxDriver
@@ -15,27 +16,34 @@ import org.testng.annotations.AfterSuite
 abstract class LogwatcherFunctionalTestSuite extends GebReportingTest {
 
 	private static final String APPLICATION_URL = System.getProperty("it.location")
-	private static final String REPORT_DIRECTORY = System.getProperty("reportDirectory")
+	private static final String REPORT_DIRECTORY = System.getProperty("reportsDir")
 	private static final int port = 6578
+	private static final WebDriver driver;
 	private HashMap<String, Appender<ILoggingEvent>> appenders = new HashMap<String, Appender<ILoggingEvent>>()
 	Logger logger = (Logger) org.slf4j.LoggerFactory.getLogger(LogwatcherFunctionalTestSuite.class)
 
 	@Override
-	WebDriver createDriver() {
-		if (System.getProperty("browser").equals("firefox")) {
-			logger.info("Firefox driver selected")
-			return new FirefoxDriver()
-		} else {
-			logger.info("HtmlUnit driver selected")
-			def driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_3)
-			driver.javascriptEnabled = true
-			return driver
-		}
+	Configuration createConf() {
+		def config = new Configuration()
+		config.driver = createDriver()
+		config.baseUrl = System.getProperty("it.location")
+		config.reportsDir = getReportDir()
+		return config
 	}
 
-	@Override
-	String getBaseUrl() {
-		return APPLICATION_URL;
+	private WebDriver createDriver() {
+		if(driver == null) {
+			if (System.getProperty("browser").equals("firefox")) {
+				logger.info("Firefox driver selected")
+				driver = new FirefoxDriver()
+			} else {
+				logger.info("HtmlUnit driver selected")
+				driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_3)
+				driver.javascriptEnabled = true
+			}
+		}
+
+		return driver
 	}
 
 	@AfterSuite
@@ -45,7 +53,7 @@ abstract class LogwatcherFunctionalTestSuite extends GebReportingTest {
 		}
 	}
 
-	@Override
+
 	File getReportDir() {
 		File file = new File(REPORT_DIRECTORY)
 		if (file.exists() || file.mkdirs()) {
