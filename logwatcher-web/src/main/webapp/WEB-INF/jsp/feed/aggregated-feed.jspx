@@ -13,13 +13,13 @@
 	<head>
 		<title>LogWatcher: <c:out value="${p.applicationId}"/> feed</title>
 
-		<lt:css src="/css/popup.css" />
-		<lt:css src="/css/aggregated-feed.css" />
+		<lt:css src="/css/popup.css"/>
+		<lt:css src="/css/aggregated-feed.css"/>
 
-		<lt:javascript src="/js/calendar.js" />
-		<lt:javascript src="/js/jquery.flot.min.js" />
-		<lt:javascript src="/js/jquery.flot.pie.min.js" />
-		<lt:javascript src="/js/pie-chart.js" />
+		<lt:javascript src="/js/calendar.js"/>
+		<lt:javascript src="/js/jquery.flot.min.js"/>
+		<lt:javascript src="/js/jquery.flot.pie.min.js"/>
+		<lt:javascript src="/js/pie-chart.js"/>
 
 		<script type="text/javascript">
 			var severityLevel = '${p.severity}';
@@ -44,6 +44,7 @@
 
 	<lt:popup id="pieChart">
 		<span id="pieChartData"><c:out value="${p.dataForPieChart}"/></span>
+
 		<div id="pieChartPlaceHolder">graph placeholder</div>
 	</lt:popup>
 
@@ -100,7 +101,7 @@
 		<c:when test="${f:length(p.entries) > 0}">
 			<div class="entries">
 				<c:forEach var="entry" items="${p.entries}">
-					<lt:aggregated-entry entry="${entry}" currentApplicationId="${p.applicationId}"/>
+					<lt:aggregated-entry entry="${entry}" currentApplicationId="${p.applicationId}" jiraInfo="${p.jiraInfo}"/>
 				</c:forEach>
 			</div>
 

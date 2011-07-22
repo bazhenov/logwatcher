@@ -5,10 +5,12 @@ import com.farpost.logwatcher.ByLastOccurenceDateComparator;
 import com.farpost.logwatcher.ByOccurenceCountComparator;
 import com.farpost.logwatcher.Severity;
 import com.farpost.logwatcher.storage.LogStorage;
+import com.farpost.logwatcher.web.JiraInfo;
 import com.farpost.logwatcher.web.ViewNameAwarePage;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,18 +19,22 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 import static java.util.Collections.sort;
+import static org.slf4j.LoggerFactory.getLogger;
 
 @Component
 public class FeedPage implements ViewNameAwarePage, InitializingBean {
 
-	@Autowired
 	private LogStorage storage;
+
+	private JiraInfo jiraInfo;
 
 	private HttpServletRequest request;
 	private Date date;
 	private String applicationId;
 	private Severity severity;
 	private JSONArray pieChartData;
+
+	private static final Logger log = getLogger(FeedPage.class);
 
 	private final HashMap<String, Comparator<AggregatedEntry>> comparators = new HashMap<String, Comparator<AggregatedEntry>>() {{
 		put(null, new ByLastOccurenceDateComparator());
@@ -65,9 +71,23 @@ public class FeedPage implements ViewNameAwarePage, InitializingBean {
 					.put("label", label)
 					.put("data", entry.getCount()));
 			} catch (JSONException e) {
-				//miss corrupted entry
+				log.warn("Unable to serialize data to JSON", e);
 			}
 		}
+	}
+
+	@Autowired
+	public void setStorage(LogStorage storage) {
+		this.storage = storage;
+	}
+
+	@Autowired
+	public void setJiraInfo(JiraInfo jiraInfo) {
+		this.jiraInfo = jiraInfo;
+	}
+
+	public JiraInfo getJiraInfo() {
+		return jiraInfo;
 	}
 
 	@Override

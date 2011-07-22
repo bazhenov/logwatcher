@@ -4,6 +4,7 @@
 					xmlns:s="http://www.springframework.org/tags">
 
 	<jsp:directive.attribute name="entry" type="com.farpost.logwatcher.AggregatedEntry" required="true"/>
+	<jsp:directive.attribute name="jiraInfo" type="com.farpost.logwatcher.web.JiraInfo" required="true"/>
 	<jsp:directive.attribute name="currentApplicationId" type="java.lang.String" required="false"/>
 
 	<a name='${entry.checksum}'><!----></a>
@@ -89,12 +90,12 @@
 				http://${pageContext.request.serverName}:${pageContext.request.serverPort}${permaLink}</c:set>
 
 			<div class="entryFooter">
-				<c:url value="http://jira.dev.loc:8080/secure/CreateIssueDetails.jspa" var="jiraLink">
-					<c:param name="pid">10000</c:param>
-					<c:param name="issuetype">1</c:param>
+				<c:url value="${jiraInfo.location}/secure/CreateIssueDetails.jspa" var="jiraLink">
+					<c:param name="pid" value="${jiraInfo.projectPid}"/>
+					<c:param name="issuetype" value="${jiraInfo.issueType}"/>
 					<c:param name="summary" value="${lf:trim(entry.message, 100, '...')}"/>
 					<c:param name="description" value="${issueDescription}"/>
-					<c:param name="priority">3</c:param>
+					<c:param name="priority" value="${jiraInfo.priority}"/>
 				</c:url>
 				<c:set var="jiraLink"><c:out value="${jiraLink}"/></c:set>
 				<a href="${jiraLink}" target='_blank'>Create task</a>

@@ -21,7 +21,7 @@
 				init-method="start"
 				destroy-method="stop"
 				p:bufferSize="${udp.bufferSize}">
-		
+
 		<constructor-arg value="${udp.port}"/>
 		<constructor-arg>
 			<bean class="com.farpost.logwatcher.transport.WriteToStorageTransportListener">
@@ -29,5 +29,12 @@
 				<constructor-arg ref="marshaller"/>
 			</bean>
 		</constructor-arg>
+	</bean>
+
+	<bean id="jiraInfo" class="com.farpost.logwatcher.web.JiraInfo">
+		<constructor-arg value="${jira.location}"/>
+		<constructor-arg value="${jira.projectPid}"/>
+		<constructor-arg value="${jira.issueType}"/>
+		<constructor-arg value="${jira.priority}"/>
 	</bean>
 </beans>
