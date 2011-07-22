@@ -15,6 +15,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.net.BindException;
 import java.net.SocketException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -40,9 +41,13 @@ public class LogWatcherAppenderTest {
 	@BeforeMethod
 	public void setUp() throws SocketException, TransportException {
 		int port = parseInt(getProperty("it.udp-appender.port", "6590"));
-		messages = new LinkedBlockingQueue<byte[]>();
-		transport = new UdpTransport(port, new QueueAppendListener(messages));
-		transport.start();
+		try {
+			messages = new LinkedBlockingQueue<byte[]>();
+			transport = new UdpTransport(port, new QueueAppendListener(messages));
+			transport.start();
+		} catch (BindException e) {
+			throw new RuntimeException("Unable bind UdpTransport to port " + port);
+		}
 
 		appender = createAppender("0.0.0.0:" + port, applicationId);
 		appender.start();
