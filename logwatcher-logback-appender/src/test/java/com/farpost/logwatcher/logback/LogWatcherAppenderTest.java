@@ -11,6 +11,7 @@ import com.farpost.logwatcher.marshalling.Jaxb2Marshaller;
 import com.farpost.logwatcher.marshalling.Marshaller;
 import com.farpost.logwatcher.transport.TransportException;
 import com.farpost.logwatcher.transport.UdpTransport;
+import org.slf4j.MDC;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -26,6 +27,7 @@ import static java.lang.System.getProperty;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasEntry;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class LogWatcherAppenderTest {
@@ -113,6 +115,16 @@ public class LogWatcherAppenderTest {
 		LogEntry entry = getLastMessage();
 
 		assertThat(entry.getMessage(), equalTo(message));
+	}
+
+	@Test
+	public void appenderShouldSendMdcValuesAsWell() throws InterruptedException {
+		MDC.put("url", "/foo?a=1");
+		root.error("Request processing failed");
+
+		LogEntry entry = getLastMessage();
+
+		assertThat(entry.getAttributes(), hasEntry("url", "/foo?a=1"));
 	}
 
 	/**
