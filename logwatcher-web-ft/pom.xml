@@ -20,9 +20,6 @@
 		<sut.artifactId>logwatcher-web</sut.artifactId>
 		<sut.version>1.3</sut.version>
 		<sut.location>${basedir}/../${sut.artifactId}/target/${sut.artifactId}-${sut.version}.war</sut.location>
-
-		<deploy.hostname>artifacts</deploy.hostname>
-		<deploy.location>/home/tech/logwatcher</deploy.location>
 	</properties>
 
 	<dependencies>
@@ -46,15 +43,6 @@
 		CI-сервер должен иметь возможность изменить параметры окружения используемые билдом.
 	-->
 	<build>
-
-		<extensions>
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-ssh-external</artifactId>
-				<version>1.0-beta-6</version>
-			</extension>
-		</extensions>
-
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -86,7 +74,7 @@
 					-->
 					<stopPort>1${it.port}</stopPort>
 					<!--
-						В качестве stopKey берем groupId+artifactId, чтобы случайно не остановить чужой build. 
+						В качестве stopKey берем groupId+artifactId, чтобы случайно не остановить чужой build.
 					-->
 					<stopKey>com.farpost.logwatcher:logwatcher-web-ft</stopKey>
 				</configuration>
@@ -133,28 +121,6 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>wagon-maven-plugin</artifactId>
-				<version>1.0-beta-3</version>
-				<executions>
-					<execution>
-						<id>upload-artifact</id>
-						<phase>deploy</phase>
-						<goals>
-							<goal>upload-single</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<serverId>vhost-gateway</serverId>
-					<url>scpexe://${deploy.hostname}</url>
-					<fromFile>${sut.location}</fromFile>
-					<!--suppress MavenModelInspection -->
-					<toFile>${deploy.location}/${sut.artifactId}-${sut.version}.${buildNumber}.war</toFile>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
