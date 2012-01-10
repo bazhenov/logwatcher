@@ -52,10 +52,7 @@ public class LogEntryBuilder {
 
 	private Cause createCause(Throwable cause) {
 		if (cause != null) {
-			StringWriter writer = new StringWriter();
-			cause.printStackTrace(new PrintWriter(writer));
-			return new Cause(cause.getClass().getSimpleName(), cause.getMessage(), writer.toString(),
-				createCause(cause.getCause()));
+			return new Cause(cause);
 		} else {
 			return null;
 		}
@@ -65,6 +62,7 @@ public class LogEntryBuilder {
 	 * Устанавливает время когда произошло событие
 	 *
 	 * @param time время возникновения события
+	 * @return новый экземпляр {@link LogEntryBuilder}
 	 */
 	public LogEntryBuilder occurred(DateTime time) {
 		this.time = time;
