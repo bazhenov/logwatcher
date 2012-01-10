@@ -92,11 +92,11 @@ public class LogEntryBuilder {
 	 *                                  записей производимых в хранилище.
 	 */
 	public LogEntry saveMultipleTimesIn(LogStorage storage, int times) {
-		if(times <= 0) {
+		if (times <= 0) {
 			throw new IllegalArgumentException("Times argument should be positive integer");
 		}
 		LogEntry entry = create();
-		for(int i = 0; i < times; i++) {
+		for (int i = 0; i < times; i++) {
 			storage.writeEntry(entry);
 		}
 		return entry;
