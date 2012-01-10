@@ -4,8 +4,6 @@ import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
 import com.farpost.timepoint.DateTime;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,11 +49,9 @@ public class LogEntryBuilder {
 	}
 
 	private Cause createCause(Throwable cause) {
-		if (cause != null) {
-			return new Cause(cause);
-		} else {
-			return null;
-		}
+		return cause != null
+			? new Cause(cause)
+			: null;
 	}
 
 	/**
@@ -96,11 +92,11 @@ public class LogEntryBuilder {
 	 *                                  записей производимых в хранилище.
 	 */
 	public LogEntry saveMultipleTimesIn(LogStorage storage, int times) {
-		if (times <= 0) {
+		if(times <= 0) {
 			throw new IllegalArgumentException("Times argument should be positive integer");
 		}
 		LogEntry entry = create();
-		for (int i = 0; i < times; i++) {
+		for(int i = 0; i < times; i++) {
 			storage.writeEntry(entry);
 		}
 		return entry;
