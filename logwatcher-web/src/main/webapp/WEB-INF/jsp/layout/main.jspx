@@ -4,7 +4,8 @@
 					xmlns:l="http://bazhenov.org/logging"
 					xmlns:f="http://java.sun.com/jsp/jstl/functions"
 					xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
-					xmlns:lt="urn:jsptagdir:/WEB-INF/tags" xmlns:sitemesh="http://sitemesh.org/">
+					xmlns:lt="urn:jsptagdir:/WEB-INF/tags" xmlns:sitemesh="http://sitemesh.org/"
+					xmlns:s="http://www.springframework.org/tags">
 
 	<jsp:directive.page contentType="text/html"/>
 
@@ -14,7 +15,7 @@
 		<title>
 			<sitemesh:write property="title">LogWatcher</sitemesh:write>
 		</title>
-		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Pragma" content="no-cache"/>
 
 		<fmt:formatDate value="${date}" pattern="yyyy-MM-dd" var="dateAsString"/>
 
@@ -38,8 +39,9 @@
 		<tr>
 			<td align="center">
 				<div id="header">
-					<c:url value="/images/logwatcher-logo.png" var="logoSrc"/>
-					<a href="/dashboard"><img class="logo" src="${logoSrc}" alt="LogWatcher"/></a>
+					<s:url value="/images/logwatcher-logo.png" var="logoSrc"/>
+					<s:url value="/dashboard" var="dashboardUrl"/>
+					<a href="${dashboardUrl}"><img class="logo" src="${logoSrc}" alt="LogWatcher"/></a>
 
 					<div id="searchPanel">
 						<form action="/search">
@@ -48,8 +50,7 @@
 					</div>
 
 					<div id="menuBar">
-						<c:url value="/dashboard" var="url"/>
-						<a href="${url}">Dashboard</a>
+						<a href="${dashboardUrl}">Dashboard</a>
 						<span class="devider">&amp;nbsp;</span>
 
 						<c:url value="/search" var="url"/>

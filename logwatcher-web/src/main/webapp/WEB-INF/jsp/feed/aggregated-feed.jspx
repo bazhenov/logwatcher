@@ -13,13 +13,13 @@
 	<head>
 		<title>LogWatcher: <c:out value="${p.applicationId}"/> feed</title>
 
-		<s:url value='/css/aggregated-feed.css' var="cssUrl"/>
-		<link rel="stylesheet" href="${cssUrl}"/>
+		<lt:css src="/css/popup.css"/>
+		<lt:css src="/css/aggregated-feed.css"/>
 
-		<s:url value='/css/popup.css' var="cssUrl"/>
-		<link rel="stylesheet" href="${cssUrl}"/>
-
-		<script type="text/javascript" src="/js/calendar.js">/**/</script>
+		<lt:javascript src="/js/calendar.js"/>
+		<lt:javascript src="/js/jquery.flot.min.js"/>
+		<lt:javascript src="/js/jquery.flot.pie.min.js"/>
+		<lt:javascript src="/js/pie-chart.js"/>
 
 		<script type="text/javascript">
 			var severityLevel = '${p.severity}';
@@ -30,8 +30,7 @@
 			<s:param name="applicationId" value="${p.applicationId}"/>
 			<s:param name="severity" value="${p.severity}"/>
 		</s:url>
-		<link rel="alternate" type="application/rss+xml" title="LogWatcher RSS"
-					href="${rssUrl}"/>
+		<link rel="alternate" type="application/rss+xml" title="LogWatcher RSS" href="${rssUrl}"/>
 	</head>
 
 	<body>
@@ -40,7 +39,14 @@
 		<span class="additionalInfo">
 			on <span id="date"><fmt:formatDate pattern="dd MMMM, yyyy" value="${p.date}"/></span>
 		</span>
+		<span id="pieChartLink"><img src="/images/piechart.png" alt="Pie Chart"/></span>
 	</h2>
+
+	<lt:popup id="pieChart">
+		<span id="pieChartData"><c:out value="${p.dataForPieChart}"/></span>
+
+		<div id="pieChartPlaceHolder">graph placeholder</div>
+	</lt:popup>
 
 	<lt:severity-selector severity="${p.severity}"/>
 
@@ -95,7 +101,7 @@
 		<c:when test="${f:length(p.entries) > 0}">
 			<div class="entries">
 				<c:forEach var="entry" items="${p.entries}">
-					<lt:aggregated-entry entry="${entry}" currentApplicationId="${p.applicationId}"/>
+					<lt:aggregated-entry entry="${entry}" currentApplicationId="${p.applicationId}" jiraInfo="${p.jiraInfo}"/>
 				</c:forEach>
 			</div>
 

@@ -1,0 +1,21 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.1"
+					xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:f="http://java.sun.com/jsp/jstl/functions"
+					xmlns:l="urn:jsptagdir:/WEB-INF/tags">
+
+	<jsp:directive.attribute name="data" type="java.lang.String" required="true"/>
+
+	<div id="pieChart">
+		<a href="#" id="pieChartLink">Chart</a>
+
+		<div id="pieChartWindow" class="modalWindow">
+			<span id="pieChartData" style="display:none;"><c:out value="${data}"/></span>
+			<div id="pieHover"><c:out value=" "/></div>
+			<div id="pieChartPlaceHolder"> </div>
+
+		</div>
+	</div>
+
+
+</jsp:root>
+
+

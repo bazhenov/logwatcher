@@ -14,7 +14,7 @@ import com.farpost.timepoint.DateTime;
 
 import java.io.IOException;
 import java.net.*;
-import java.util.HashMap;
+import java.util.Map;
 
 import static java.lang.Integer.parseInt;
 import static java.lang.Math.min;
@@ -43,9 +43,10 @@ public class LogWatcherAppender extends UnsynchronizedAppenderBase<ILoggingEvent
 				? new Cause(throwableProxy.getThrowable())
 				: null;
 
+			Map<String, String> attributes = event.getMDCPropertyMap();
 			LogEntry entry = new LogEntryImpl(time, event.getLoggerName(), event.getFormattedMessage(), severity,
 				calculateChecksum(event.getMessage()),
-				applicationId, new HashMap<String, String>(), cause);
+				applicationId, attributes, cause);
 
 			byte[] data = marshaller.marshall(entry);
 			DatagramPacket packet = new DatagramPacket(data, data.length);
