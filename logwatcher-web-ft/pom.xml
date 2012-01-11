@@ -81,15 +81,6 @@
 		CI-сервер должен иметь возможность изменить параметры окружения используемые билдом.
 	-->
 	<build>
-
-		<extensions>
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-ssh-external</artifactId>
-				<version>1.0-beta-6</version>
-			</extension>
-		</extensions>
-
 		<plugins>
 
 			<plugin>
@@ -187,28 +178,6 @@
 						<reportsDir>${reportsDir}</reportsDir>
 					</systemPropertyVariables>
 					<failIfNoTests>true</failIfNoTests>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>wagon-maven-plugin</artifactId>
-				<version>1.0-beta-3</version>
-				<executions>
-					<execution>
-						<id>upload-artifact</id>
-						<phase>deploy</phase>
-						<goals>
-							<goal>upload-single</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<serverId>vhost-gateway</serverId>
-					<url>scpexe://${deploy.hostname}</url>
-					<fromFile>${sut.location}</fromFile>
-					<!--suppress MavenModelInspection -->
-					<toFile>${deploy.location}/${sut.artifactId}-${sut.version}.${buildNumber}.war</toFile>
 				</configuration>
 			</plugin>
 
