@@ -12,10 +12,9 @@
 		<module>logwatcher-commons</module>
 		<module>logwatcher-core</module>
 		<module>logwatcher-web</module>
-		<module>logwatcher-web-ft</module>
 		<module>logwatcher-log4j-appender</module>
 		<module>logwatcher-logback-appender</module>
-		<module>logwatcher-web-cucumber</module>
+		<module>logwatcher-web-ft</module>
 	</modules>
 
 	<parent>
