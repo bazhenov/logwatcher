@@ -4,12 +4,12 @@ import org.testng.annotations.Test
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.containsString
 import static org.hamcrest.Matchers.not
+import static org.hamcrest.Matchers.hasItem
 
 public class SearchIT extends LogwatcherFunctionalTestSuite {
 
 	@Test
 	public void searchByApplicationTest() {
-		sleep(1000)
 		getLogger("Foo").error("foo error")
 		getLogger("Bar").error("bar error")
 
@@ -17,13 +17,12 @@ public class SearchIT extends LogwatcherFunctionalTestSuite {
 		searchField.value("at: Foo")
 		search()
 		waitFor { at SearchResultsPage }
-		assertThat result(0), containsString("foo error")
-		assertThat result(0), not(containsString("bar error"))
+		assertThat results, hasItem(containsString("foo error"))
+		assertThat results, not(hasItem(containsString("bar error")))
 	}
 
 	@Test
 	public void searchByCausedTest() {
-		sleep(1000)
 		getLogger("Foo").error("message", new IllegalArgumentException());
 		getLogger("Foo").error("message", new AssertionError());
 
@@ -31,13 +30,12 @@ public class SearchIT extends LogwatcherFunctionalTestSuite {
 		searchField.value("caused-by: IllegalArgumentException")
 		search()
 		waitFor { at SearchResultsPage }
-		assertThat result(0), containsString("IllegalArgumentException")
-		assertThat result(0), not(containsString("AssertionError"))
+		assertThat results, hasItem(containsString("IllegalArgumentException"))
+		assertThat results, not(hasItem(containsString("AssertionError")))
 	}
 
 	@Test
 	public void searchPageSortingTest() {
-		sleep(1000)
 		getLogger("Bar").error("First error")
 		sleep(1000)
 		getLogger("Bar").error("Second error")
