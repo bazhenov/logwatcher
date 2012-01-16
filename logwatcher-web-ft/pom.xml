@@ -15,10 +15,6 @@
 	<name>LogWatcher Functional Test Suite Using Geb</name>
 
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-		<cuke4duke.version>0.4.4</cuke4duke.version>
 		<selenium.version>2.16.1</selenium.version>
 
 		<it.port>8181</it.port>
@@ -27,9 +23,6 @@
 		<sut.artifactId>logwatcher-web</sut.artifactId>
 		<sut.version>1.3</sut.version>
 		<sut.location>${basedir}/../${sut.artifactId}/target/${sut.artifactId}-${sut.version}.war</sut.location>
-
-		<deploy.hostname>artifacts</deploy.hostname>
-		<deploy.location>/home/tech/logwatcher</deploy.location>
 
 		<reportsDir>/tmp/logwatcher/reports</reportsDir>
 	</properties>
@@ -104,7 +97,7 @@
 					<!--
 						В качестве stopKey берем groupId+artifactId, чтобы случайно не остановить чужой build.
 					-->
-					<stopKey>com.farpost.logwatcher:logwatcher-web-cucumber</stopKey>
+					<stopKey>${groupId}:${artifactId}</stopKey>
 				</configuration>
 				<dependencies>
 					<dependency>
@@ -138,6 +131,7 @@
 						<id>start-jetty</id>
 						<phase>pre-integration-test</phase>
 						<goals>
+							<!--suppress MavenModelInspection -->
 							<goal>run-war</goal>
 						</goals>
 					</execution>
@@ -145,6 +139,7 @@
 						<id>stop-jetty</id>
 						<phase>post-integration-test</phase>
 						<goals>
+							<!--suppress MavenModelInspection -->
 							<goal>stop</goal>
 						</goals>
 					</execution>
