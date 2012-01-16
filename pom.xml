@@ -12,15 +12,15 @@
 		<module>logwatcher-commons</module>
 		<module>logwatcher-core</module>
 		<module>logwatcher-web</module>
-		<module>logwatcher-web-ft</module>
 		<module>logwatcher-log4j-appender</module>
 		<module>logwatcher-logback-appender</module>
+		<module>logwatcher-web-ft</module>
 	</modules>
 
 	<parent>
 		<groupId>com.farpost.maven</groupId>
 		<artifactId>maven-project</artifactId>
-		<version>1.0.7</version>
+		<version>1.0.8</version>
 	</parent>
 
 	<dependencies>
@@ -70,17 +70,17 @@
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-jdbc</artifactId>
-				<version>3.0.5.RELEASE</version>
+				<version>${spring.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-core</artifactId>
-				<version>3.0.5.RELEASE</version>
+				<version>${spring.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-context</artifactId>
-				<version>3.0.5.RELEASE</version>
+				<version>${spring.version}</version>
 				<exclusions>
 					<exclusion>
 						<groupId>commons-logging</groupId>
@@ -91,18 +91,19 @@
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-webmvc</artifactId>
-				<version>3.0.5.RELEASE</version>
+				<version>${spring.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-test</artifactId>
-				<version>3.0.5.RELEASE</version>
+				<version>${spring.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
 	<properties>
-		<logback.configurationFile>file:${project.parent.basedir}/logback.xml</logback.configurationFile>
+		<logback.configurationFile>file:${basedir}/../logback.xml</logback.configurationFile>
+		<spring.version>3.0.5.RELEASE</spring.version>
 	</properties>
 
 </project>

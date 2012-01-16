@@ -5,7 +5,7 @@ function changeSeverity(url) {
 		type: 'GET',
 		url: url,
 		success: function() {
-			window.location.reload();
+			window.location="";
 		}
 	});
 }
