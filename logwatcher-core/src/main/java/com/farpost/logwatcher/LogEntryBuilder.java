@@ -48,7 +48,7 @@ public class LogEntryBuilder {
 		return new LogEntryImpl(time, group, message, severity, checksum, applicationId, attributes, createCause(cause));
 	}
 
-	private Cause createCause(Throwable cause) {
+	private static Cause createCause(Throwable cause) {
 		return cause != null
 			? new Cause(cause)
 			: null;
