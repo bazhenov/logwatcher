@@ -4,8 +4,6 @@ import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
 import com.farpost.timepoint.DateTime;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,21 +48,17 @@ public class LogEntryBuilder {
 		return new LogEntryImpl(time, group, message, severity, checksum, applicationId, attributes, createCause(cause));
 	}
 
-	private Cause createCause(Throwable cause) {
-		if (cause != null) {
-			StringWriter writer = new StringWriter();
-			cause.printStackTrace(new PrintWriter(writer));
-			return new Cause(cause.getClass().getSimpleName(), cause.getMessage(), writer.toString(),
-				createCause(cause.getCause()));
-		} else {
-			return null;
-		}
+	private static Cause createCause(Throwable cause) {
+		return cause != null
+			? new Cause(cause)
+			: null;
 	}
 
 	/**
 	 * Устанавливает время когда произошло событие
 	 *
 	 * @param time время возникновения события
+	 * @return новый экземпляр {@link LogEntryBuilder}
 	 */
 	public LogEntryBuilder occurred(DateTime time) {
 		this.time = time;
