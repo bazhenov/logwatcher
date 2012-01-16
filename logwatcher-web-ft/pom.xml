@@ -1,37 +1,75 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-				 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+				 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-
 	<parent>
-		<groupId>com.farpost.logwatcher</groupId>
 		<artifactId>logwatcher-parent</artifactId>
+		<groupId>com.farpost.logwatcher</groupId>
 		<version>1.3</version>
 	</parent>
 
 	<artifactId>logwatcher-web-ft</artifactId>
 	<packaging>jar</packaging>
-	<name>LogWatcher Functional Test Suite</name>
+	<name>LogWatcher Functional Test Suite Using Geb</name>
 
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+		<cuke4duke.version>0.4.4</cuke4duke.version>
+		<selenium.version>2.16.1</selenium.version>
+
 		<it.port>8181</it.port>
 		<it.location>http://localhost:${it.port}</it.location>
 
 		<sut.artifactId>logwatcher-web</sut.artifactId>
 		<sut.version>1.3</sut.version>
 		<sut.location>${basedir}/../${sut.artifactId}/target/${sut.artifactId}-${sut.version}.war</sut.location>
+
+		<deploy.hostname>artifacts</deploy.hostname>
+		<deploy.location>/home/tech/logwatcher</deploy.location>
+
+		<reportsDir>/tmp/logwatcher/reports</reportsDir>
 	</properties>
 
 	<dependencies>
 		<dependency>
-			<groupId>org.hamcrest</groupId>
-			<artifactId>hamcrest-all</artifactId>
-			<version>1.1</version>
+			<artifactId>logwatcher-logback-appender</artifactId>
+			<groupId>com.farpost.logwatcher</groupId>
+			<version>1.3.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-all</artifactId>
+			<version>1.7.6</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sourceforge.htmlunit</groupId>
-			<artifactId>htmlunit</artifactId>
-			<version>2.7</version>
+			<groupId>org.codehaus.geb</groupId>
+			<artifactId>geb-core</artifactId>
+			<version>0.6.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.geb</groupId>
+			<artifactId>geb-testng</artifactId>
+			<version>0.6.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-common</artifactId>
+			<version>2.0b1</version>
+		</dependency>
+		<dependency>
+			<artifactId>selenium-htmlunit-driver</artifactId>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<version>${selenium.version}</version>
+		</dependency>
+		<dependency>
+			<artifactId>selenium-firefox-driver</artifactId>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<version>${selenium.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -44,16 +82,6 @@
 	-->
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-failsafe-plugin</artifactId>
-				<configuration>
-					<systemPropertyVariables>
-						<it.location>${it.location}</it.location>
-					</systemPropertyVariables>
-					<failIfNoTests>true</failIfNoTests>
-				</configuration>
-			</plugin>
 
 			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
@@ -76,7 +104,7 @@
 					<!--
 						В качестве stopKey берем groupId+artifactId, чтобы случайно не остановить чужой build.
 					-->
-					<stopKey>com.farpost.logwatcher:logwatcher-web-ft</stopKey>
+					<stopKey>com.farpost.logwatcher:logwatcher-web-cucumber</stopKey>
 				</configuration>
 				<dependencies>
 					<dependency>
@@ -122,6 +150,37 @@
 					</execution>
 				</executions>
 			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.groovy.maven</groupId>
+				<artifactId>gmaven-plugin</artifactId>
+				<version>1.0</version>
+				<configuration>
+					<source/>
+					<sourceEncoding>UTF-8</sourceEncoding>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>testCompile</goal>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<configuration>
+					<systemPropertyVariables>
+						<it.location>${it.location}</it.location>
+						<reportsDir>${reportsDir}</reportsDir>
+					</systemPropertyVariables>
+					<failIfNoTests>true</failIfNoTests>
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</build>
 

@@ -12,15 +12,15 @@
 		<module>logwatcher-commons</module>
 		<module>logwatcher-core</module>
 		<module>logwatcher-web</module>
-		<module>logwatcher-web-ft</module>
 		<module>logwatcher-log4j-appender</module>
 		<module>logwatcher-logback-appender</module>
+		<module>logwatcher-web-ft</module>
 	</modules>
 
 	<parent>
 		<groupId>com.farpost.maven</groupId>
 		<artifactId>maven-project</artifactId>
-		<version>1.0.7</version>
+		<version>1.0.8</version>
 	</parent>
 
 	<dependencies>
@@ -36,6 +36,12 @@
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>0.9.25</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>6.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
