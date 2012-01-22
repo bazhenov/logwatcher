@@ -1,6 +1,6 @@
 package com.farpost.logwatcher;
 
-import static com.farpost.timepoint.DateTime.now;
+import static org.joda.time.DateTime.now;
 
 public class LoggingDatabase {
 

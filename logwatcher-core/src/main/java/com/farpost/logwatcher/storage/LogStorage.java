@@ -4,7 +4,8 @@ import com.farpost.logwatcher.AggregatedEntry;
 import com.farpost.logwatcher.LogEntry;
 import com.farpost.logwatcher.Severity;
 import com.farpost.logwatcher.Visitor;
-import com.farpost.timepoint.Date;
+import org.joda.time.DateMidnight;
+import org.joda.time.DateTime;
 
 import java.util.Collection;
 import java.util.List;
@@ -37,7 +38,7 @@ public interface LogStorage {
 	 * @return возвращает количество удаленных записей
 	 * @throws LogStorageException в случае возникновения внутренних ошибок хранилища
 	 */
-	int removeOldEntries(Date date) throws LogStorageException;
+	int removeOldEntries(DateMidnight date) throws LogStorageException;
 
 	/**
 	 * Подсчитывает колличество записей в хранилище с заданными условиями.
@@ -91,7 +92,7 @@ public interface LogStorage {
 	 * @param date дата выборки
 	 * @return множество идентификаторов приложений
 	 */
-	Set<String> getUniquieApplicationIds(Date date);
+	Set<String> getUniquieApplicationIds(DateTime date);
 
 	/**
 	 * Возвращает список аггрегированных записей за указанную дату с указанным severity произошедших
@@ -104,6 +105,6 @@ public interface LogStorage {
 	 * @throws LogStorageException			в случае возникновения внутренних ошибок хранилища
 	 * @throws InvalidCriteriaException в случае задания клиентом некорректных критериев отбора
 	 */
-	List<AggregatedEntry> getAggregatedEntries(String applicationId, Date date, Severity severity)
+	List<AggregatedEntry> getAggregatedEntries(String applicationId, DateTime date, Severity severity)
 		throws LogStorageException, InvalidCriteriaException;
 }

@@ -1,6 +1,6 @@
 package com.farpost.logwatcher;
 
-import com.farpost.timepoint.DateTime;
+import org.joda.time.DateTime;
 
 import java.util.Map;
 

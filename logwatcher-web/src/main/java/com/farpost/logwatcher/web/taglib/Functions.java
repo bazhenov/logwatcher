@@ -2,7 +2,6 @@ package com.farpost.logwatcher.web.taglib;
 
 import com.farpost.logwatcher.AggregatedEntry;
 import com.farpost.logwatcher.Cause;
-import com.farpost.timepoint.Date;
 
 import java.text.DateFormat;
 
@@ -92,7 +91,7 @@ public class Functions {
 		return (int) Math.log10(number);
 	}
 
-	public static java.util.Date date(Date date) {
-		return date.asDate();
+	public static java.util.Date date(org.joda.time.DateTime date) {
+		return date.toDate();
 	}
 }

@@ -3,7 +3,7 @@ package com.farpost.logwatcher.storage;
 import com.farpost.logwatcher.LogEntry;
 import com.farpost.logwatcher.Severity;
 import com.farpost.logwatcher.Visitor;
-import com.farpost.timepoint.Date;
+import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,7 +14,7 @@ public class LogEntriesFinder {
 
 	private final List<LogEntryMatcher> criterias = new LinkedList<LogEntryMatcher>();
 
-	public LogEntriesFinder date(Date date) {
+	public LogEntriesFinder date(DateTime date) {
 		criterias.add(new DateMatcher(date));
 		return this;
 	}
@@ -25,7 +25,7 @@ public class LogEntriesFinder {
 	 * @param from начало диапазона (исключая саму дату)
 	 * @param to	 конец диапазона (включительно)
 	 */
-	public LogEntriesFinder date(Date from, Date to) {
+	public LogEntriesFinder date(DateTime from, DateTime to) {
 		criterias.add(new DateMatcher(from, to));
 		return this;
 	}

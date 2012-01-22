@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.farpost.logwatcher.storage.LogEntries.entries;
-import static com.farpost.timepoint.Date.today;
+import static org.joda.time.DateTime.now;
 
 @Component
 public class SearchPage implements ViewNameAwarePage, InitializingBean {
@@ -45,7 +45,7 @@ public class SearchPage implements ViewNameAwarePage, InitializingBean {
 			try {
 				List<LogEntryMatcher> matchers = translator.translate(query.trim());
 				if (!contains(matchers, DateMatcher.class)) {
-					matchers.add(new DateMatcher(today()));
+					matchers.add(new DateMatcher(now().withTimeAtStartOfDay()));
 				}
 				if (!contains(matchers, SeverityMatcher.class)) {
 					matchers.add(new SeverityMatcher(Severity.error));

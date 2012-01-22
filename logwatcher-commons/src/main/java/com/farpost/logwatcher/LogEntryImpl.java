@@ -2,7 +2,7 @@ package com.farpost.logwatcher;
 
 import com.farpost.logwatcher.marshalling.JaxbAttributesMapAdapter;
 import com.farpost.logwatcher.marshalling.JaxbDateAdapter;
-import com.farpost.timepoint.DateTime;
+import org.joda.time.DateTime;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;

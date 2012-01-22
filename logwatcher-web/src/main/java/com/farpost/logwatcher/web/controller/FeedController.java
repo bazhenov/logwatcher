@@ -19,7 +19,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-import static com.farpost.timepoint.Date.today;
+import static org.joda.time.DateTime.now;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @Controller
@@ -69,7 +69,7 @@ public class FeedController {
 		Severity severity = (s == null)
 			? Severity.error
 			: Severity.forName(s);
-		List<AggregatedEntry> entries = storage.getAggregatedEntries(applicationId, today(), severity);
+		List<AggregatedEntry> entries = storage.getAggregatedEntries(applicationId, now().withTimeAtStartOfDay(), severity);
 
 		//Comparator<AggregatedEntry> comparator = comparators.get("last-occurence");
 		//sort(entries, comparator);

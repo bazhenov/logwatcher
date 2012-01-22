@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-import static com.farpost.timepoint.Date.today;
+import static org.joda.time.DateTime.now;
 
 @Controller
 public class DashboardController {
@@ -29,13 +29,13 @@ public class DashboardController {
 
 	@RequestMapping("/dashboard")
 	public String doDashboard(ModelMap map) {
-		map.put("applicationIds", storage.getUniquieApplicationIds(today()));
+		map.put("applicationIds", storage.getUniquieApplicationIds(now().withTimeAtStartOfDay()));
 		return "dashboard";
 	}
 
 	@RequestMapping("/widget/dashboard-widget")
 	public String doDashboardWidget(@RequestParam String applicationId, ModelMap map) {
-		List<AggregatedEntry> entries = storage.getAggregatedEntries(applicationId, today(), Severity.error);
+		List<AggregatedEntry> entries = storage.getAggregatedEntries(applicationId, now().withTimeAtStartOfDay(), Severity.error);
 		map.put("info", new ApplicationInfo(applicationId, entries));
 		return "widget/dashboard-widget";
 	}

@@ -1,8 +1,7 @@
 package com.farpost.logwatcher.storage;
 
-import com.farpost.timepoint.Date;
-import com.farpost.timepoint.DateTime;
 import org.apache.lucene.document.Field;
+import org.joda.time.DateTime;
 
 import static java.lang.String.format;
 
@@ -30,8 +29,8 @@ class LuceneUtils {
 	 * @param date дата
 	 * @return строковое представление даты в формате без разделителей
 	 */
-	static String normilizeDate(Date date) {
-		return format("%d%02d%02d", date.getYear(), date.getMonth(), date.getDay());
+	static String normilizeDate(DateTime date) {
+		return format("%d%02d%02d", date.getYear(), date.getMonthOfYear(), date.getDayOfMonth());
 	}
 
 	/**
@@ -41,7 +40,7 @@ class LuceneUtils {
 	 * @return строковое представление даты и времени в формате без разделителей
 	 */
 	static String normilizeDateTime(DateTime date) {
-		return format("%d%02d%02d%02d%02d%02d", date.getYear(), date.getMonth(), date.getDay(), date.getHours(),
-			date.getMinutes(), date.getSeconds());
+		return format("%d%02d%02d%02d%02d%02d", date.getYear(), date.getMonthOfYear(), date.getDayOfMonth(), date.getHourOfDay(),
+			date.getMinuteOfHour(), date.getSecondOfMinute());
 	}
 }

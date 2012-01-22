@@ -1,13 +1,11 @@
 package com.farpost.logwatcher;
 
 import com.farpost.logwatcher.storage.*;
-import com.farpost.timepoint.Date;
+import org.joda.time.DateTime;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
-import static com.farpost.timepoint.Date.today;
 
 public class TranslationRulesImpl {
 
@@ -52,14 +50,14 @@ public class TranslationRulesImpl {
 				period = 1;
 				quantificatorStr = parts[1];
 			}
-			Date from;
-			Date to = today();
+			DateTime from;
+			DateTime to = DateTime.now().withTimeAtStartOfDay();
 			if ( "days".equals(quantificatorStr) ) {
-				from = to.minusDay(period);
+				from = to.minusDays(period);
 			} else if ( "weeks".equals(quantificatorStr) ) {
-				from = to.minusDay(period*7);
+				from = to.minusWeeks(period);
 			} else if ( "month".equals(quantificatorStr) ) {
-				from = to.minusMonth(period);
+				from = to.minusMonths(period);
 			} else {
 				throw new IllegalArgumentException("Invalid quantificator: " + quantificatorStr);
 			}
@@ -68,13 +66,13 @@ public class TranslationRulesImpl {
 		} else if ( dateString.contains("/") ) {
 			// Парсим строчку вида occurred: 2009-12-19/2009-12-21
 			String[] parts = dateString.split("/", 2);
-			Date from = new Date(dateFormat.get().parse(parts[0]));
-			Date to = new Date(dateFormat.get().parse(parts[1]));
+			DateTime from = new DateTime(dateFormat.get().parse(parts[0]));
+			DateTime to = new DateTime(dateFormat.get().parse(parts[1]));
 			return new DateMatcher(from, to);
 
 		} else {
 			// Парсим строчку вида occurred: 2009-12-19
-			Date date = new Date(dateFormat.get().parse(dateString));
+			DateTime date = new DateTime(dateFormat.get().parse(dateString));
 			return new DateMatcher(date);
 		}
 	}

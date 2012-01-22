@@ -1,6 +1,6 @@
 package com.farpost.logwatcher;
 
-import com.farpost.timepoint.DateTime;
+import org.joda.time.DateTime;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -59,7 +59,7 @@ public class AggregatedEntryImpl implements AggregatedEntry {
 	}
 
 	public void happensAgain(int times, DateTime lastTime) {
-		if (lastTime.greaterThan(this.lastTime)) {
+		if (lastTime.isAfter(this.lastTime)) {
 			this.lastTime = lastTime;
 		}
 		count.addAndGet(times);

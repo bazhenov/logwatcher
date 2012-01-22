@@ -1,21 +1,20 @@
 package com.farpost.logwatcher;
 
-import com.farpost.timepoint.DateTime;
+import org.joda.time.DateTime;
 import org.testng.annotations.Test;
 
 import static com.farpost.logwatcher.Severity.info;
 import static com.farpost.logwatcher.Severity.warning;
-import static com.farpost.timepoint.Date.november;
-import static com.farpost.timepoint.DateTime.now;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.joda.time.DateTime.now;
 
 public class LogEntryTest {
 
 	@Test
 	public void entryParameters() {
 		String logMessage = "ExceptionMessage";
-		DateTime date = november(12, 2008).at("15:23");
+		DateTime date = new DateTime(2008, 11, 12, 15, 23);
 		String group = "group";
 		String checksum = "3d4f";
 		LogEntry logEntry = new LogEntryImpl(date, group, logMessage, info, checksum, "default", null);

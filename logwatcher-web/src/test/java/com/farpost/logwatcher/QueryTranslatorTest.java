@@ -1,10 +1,8 @@
 package com.farpost.logwatcher;
 
 import com.farpost.logwatcher.storage.*;
-import com.farpost.timepoint.Date;
 import org.testng.annotations.Test;
 
-import static com.farpost.timepoint.Date.today;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 

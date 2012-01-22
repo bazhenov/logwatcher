@@ -1,7 +1,7 @@
 package com.farpost.logwatcher.storage;
 
 import com.farpost.logwatcher.LogEntry;
-import com.farpost.timepoint.Date;
+import org.joda.time.DateTime;
 
 /**
  * Matcher по дате возникновения ошибки.
@@ -11,10 +11,10 @@ import com.farpost.timepoint.Date;
  */
 public class DateMatcher implements LogEntryMatcher {
 
-	private final Date from;
-	private final Date to;
+	private final DateTime from;
+	private final DateTime to;
 
-	public DateMatcher(Date date) {
+	public DateMatcher(DateTime date) {
 		if (date == null) {
 			throw new NullPointerException("Date must not be null");
 		}
@@ -25,16 +25,16 @@ public class DateMatcher implements LogEntryMatcher {
 	 * Создает matcher для фильтрации по диапазону дат. Если дата выражаемая первым аргументом
 	 * больше чем дата выражаемая вторым, то даты будут поменяны местами. Если переданные даты
 	 * одинаковы - это семантически эквивалентно использованию конструктора
-	 * {@link DateMatcher#DateMatcher(Date)}.
+	 * {@link DateMatcher#DateMatcher(DateTime)}.
 	 *
 	 * @param from начало диапазона дат (исключается из диапазона поиска)
 	 * @param to	 конец диапазона дат
 	 */
-	public DateMatcher(Date from, Date to) {
+	public DateMatcher(DateTime from, DateTime to) {
 		if (from == null || to == null) {
 			throw new NullPointerException("Dates must not be null");
 		}
-		if (from.greaterThan(to)) {
+		if (from.isAfter(to)) {
 			this.to = from;
 			this.from = to;
 		} else {
@@ -43,26 +43,26 @@ public class DateMatcher implements LogEntryMatcher {
 		}
 	}
 
-	public Date getDateFrom() {
+	public DateTime getDateFrom() {
 		return from;
 	}
 
-	public Date getDateTo() {
+	public DateTime getDateTo() {
 		return to;
 	}
 
 	public boolean isMatch(LogEntry entry) {
-		Date date = entry.getDate().getDate();
+		DateTime date = entry.getDate();
 		if (from.equals(to)) {
 			return date.equals(from);
 		} else {
-			return date.greaterThan(from) && date.lessOrEqualThan(to);
+			return date.isAfter(from) && date.isBefore(to);
 		}
 	}
 
 	@Override
 	public String toString() {
-		if (from.lessThan(to)) {
+		if (from.isBefore(to)) {
 			return "occurred:" + from + "/" + to;
 		} else {
 			return "occurred:" + from;

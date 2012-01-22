@@ -7,6 +7,7 @@ import com.farpost.logwatcher.Severity;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.web.JiraInfo;
 import com.farpost.logwatcher.web.ViewNameAwarePage;
+import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,7 +56,7 @@ public class FeedPage implements ViewNameAwarePage, InitializingBean {
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		entries = storage.getAggregatedEntries(applicationId, new com.farpost.timepoint.Date(date), severity);
+		entries = storage.getAggregatedEntries(applicationId, new DateTime(date), severity);
 		entriesCount = sumCount(entries);
 		Comparator<AggregatedEntry> comparator = comparators.containsKey(this.sortOrder)
 			? comparators.get(this.sortOrder)
@@ -133,10 +134,10 @@ public class FeedPage implements ViewNameAwarePage, InitializingBean {
 	 * @return множество всех уникальных идентификаторов приложений
 	 */
 	public Set<Application> getApplications() {
-		Set<String> applicationIds = storage.getUniquieApplicationIds(new com.farpost.timepoint.Date(date));
+		Set<String> applicationIds = storage.getUniquieApplicationIds(new DateTime(date));
 		Set<Application> set = new HashSet<Application>();
 		for (String applicationId : applicationIds) {
-			String dateAsString = new com.farpost.timepoint.Date(date).toString();
+			String dateAsString = new DateTime(date).toString();
 			String url = request.getContextPath() + "/feed/" + applicationId + "?date=" + dateAsString;
 			set.add(new Application(applicationId, url));
 		}

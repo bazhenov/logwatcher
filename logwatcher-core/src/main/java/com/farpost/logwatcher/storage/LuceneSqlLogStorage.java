@@ -6,8 +6,6 @@ import com.farpost.logwatcher.marshalling.Marshaller;
 import com.farpost.logwatcher.storage.spi.AnnotationDrivenMatcherMapperImpl;
 import com.farpost.logwatcher.storage.spi.MatcherMapper;
 import com.farpost.logwatcher.storage.spi.MatcherMapperException;
-import com.farpost.timepoint.Date;
-import com.farpost.timepoint.DateTime;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
@@ -17,6 +15,8 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.util.Version;
+import org.joda.time.DateMidnight;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -30,16 +30,17 @@ import java.sql.Timestamp;
 import java.util.*;
 
 import static com.farpost.logwatcher.storage.LuceneUtils.*;
-import static com.farpost.timepoint.Date.january;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.lang.System.nanoTime;
 import static org.apache.lucene.index.IndexWriter.MaxFieldLength;
 import static org.apache.lucene.search.BooleanClause.Occur;
+import static org.joda.time.DateTime.now;
 import static org.springframework.util.StringUtils.arrayToCommaDelimitedString;
 
 public class LuceneSqlLogStorage implements LogStorage, Closeable {
 
-	private final MatcherMapper<Query> matcherMapper;
+    private static final DateTime VERY_OLD_DATE = now().withTimeAtStartOfDay().withDate(1980, 1, 1);
+    private final MatcherMapper<Query> matcherMapper;
 	private int nextId;
 
 	private final JdbcTemplate jdbc;
@@ -112,12 +113,12 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 		}
 	}
 
-	private static java.sql.Date date(Date date) {
-		return new java.sql.Date(date.asTimestamp());
+	private static java.sql.Date date(DateTime date) {
+		return new java.sql.Date(date.getMillis());
 	}
 
 	private static Timestamp timestamp(DateTime date) {
-		return new Timestamp(date.asTimestamp());
+		return new Timestamp(date.getMillis());
 	}
 
 	/**
@@ -225,11 +226,11 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 	}
 
 	@Override
-	public int removeOldEntries(Date date) throws LogStorageException {
+	public int removeOldEntries(DateMidnight date) throws LogStorageException {
 		try {
 			checkNotNull(date);
 			Collection<LogEntryMatcher> criterias = new ArrayList<LogEntryMatcher>();
-			criterias.add(new DateMatcher(january(1, 1980), date.minusDay(1)));
+			criterias.add(new DateMatcher(VERY_OLD_DATE, date.minusDays(1).toDateTime()));
 			Integer[] ids;
 			int recordsRemoved = 0;
 
@@ -298,7 +299,7 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 	}
 
 	@Override
-	public Set<String> getUniquieApplicationIds(Date date) {
+	public Set<String> getUniquieApplicationIds(DateTime date) {
 		checkNotNull(date);
 		List<String> ids = jdbc.queryForList("SELECT application_id FROM aggregated_entry WHERE date = ? GROUP BY application_id",
 			String.class, date(date));
@@ -306,7 +307,7 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 	}
 
 	@Override
-	public List<AggregatedEntry> getAggregatedEntries(String applicationId, Date date, Severity severity)
+	public List<AggregatedEntry> getAggregatedEntries(String applicationId, DateTime date, Severity severity)
 		throws LogStorageException, InvalidCriteriaException {
 		return jdbc.query(
 			"SELECT checksum, application_id, last_time, count, severity, content FROM aggregated_entry WHERE application_id = ? AND date = ? AND severity >= ?",
