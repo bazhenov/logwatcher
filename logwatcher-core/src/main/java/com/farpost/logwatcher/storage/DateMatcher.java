@@ -15,14 +15,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class DateMatcher implements LogEntryMatcher {
 
 	private final Interval interval;
-	private final LocalDate from;
-	private final LocalDate to;
 
 	public DateMatcher(LocalDate date) {
 		checkNotNull(date, "Date must not be null");
 		interval = date.toInterval();
-		from = date;
-		to = date;
 	}
 
 	/**
@@ -35,31 +31,30 @@ public class DateMatcher implements LogEntryMatcher {
 	 * @param to	 конец диапазона дат
 	 */
 	public DateMatcher(LocalDate from, LocalDate to) {
-		checkNotNull(from, "From date must not be null");
-		checkNotNull(to, "To date must not be null");
+		checkNotNull(from, "Date 'from' must not be null");
+		checkNotNull(to, "Date 'to' must not be null");
 
-		this.from = from;
-		this.to = to;
-
-		if (from.equals(to)) {
-			interval = from.toInterval();
-		} else if (from.isAfter(to)) {
-			interval = new Interval(to.plusDays(1).toDateTimeAtStartOfDay(), from.plusDays(1).toDateTimeAtStartOfDay());
+		if (from.isAfter(to)) {
+			interval = new Interval(to.toDateTimeAtStartOfDay(), from.plusDays(1).toDateTimeAtStartOfDay());
 		} else {
-			interval = new Interval(from.plusDays(1).toDateTimeAtStartOfDay(), to.plusDays(1).toDateTimeAtStartOfDay());
+			interval = new Interval(from.toDateTimeAtStartOfDay(), to.plusDays(1).toDateTimeAtStartOfDay());
 		}
 	}
 
 	public LocalDate getDateFrom() {
-		return from;
+		return interval.getStart().toLocalDate();
 	}
 
 	public LocalDate getDateTo() {
-		return to;
+		return interval.getEnd().toLocalDate().minusDays(1);
 	}
 
 	public boolean isMatch(LogEntry entry) {
-		return interval.contains(entry.getDate());
+		if(interval.getStart().plusDays(1).equals(interval.getEnd())) { //если интервал инициализировался одной датой
+			return interval.contains(entry.getDate());
+		} else { // если разными, то исключаем первый день в интервале, дурацкая немного логика конечно
+			return interval.withStart(interval.getStart().plusDays(1)).contains(entry.getDate());
+		}
 	}
 
 	@Override
