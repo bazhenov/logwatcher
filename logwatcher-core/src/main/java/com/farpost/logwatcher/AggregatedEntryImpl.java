@@ -1,6 +1,7 @@
 package com.farpost.logwatcher;
 
 import org.joda.time.DateTime;
+import org.joda.time.ReadableDateTime;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -15,10 +16,10 @@ public class AggregatedEntryImpl implements AggregatedEntry {
 	private final String applicationId;
 
 	public AggregatedEntryImpl(String message, String checksum, String applicationId,
-														 Severity severity, int count, DateTime lastTime, Cause sampleCause) {
+														 Severity severity, int count, ReadableDateTime lastTime, Cause sampleCause) {
 		this.applicationId = applicationId;
 		this.severity = severity;
-		this.lastTime = lastTime;
+		this.lastTime = lastTime.toDateTime();
 		this.checksum = checksum;
 		this.count = new AtomicInteger(count);
 		this.message = message;
@@ -58,9 +59,9 @@ public class AggregatedEntryImpl implements AggregatedEntry {
 		return checksum;
 	}
 
-	public void happensAgain(int times, DateTime lastTime) {
+	public void happensAgain(int times, ReadableDateTime lastTime) {
 		if (lastTime.isAfter(this.lastTime)) {
-			this.lastTime = lastTime;
+			this.lastTime = lastTime.toDateTime();
 		}
 		count.addAndGet(times);
 	}

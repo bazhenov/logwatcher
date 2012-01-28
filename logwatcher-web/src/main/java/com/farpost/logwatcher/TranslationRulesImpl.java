@@ -1,7 +1,7 @@
 package com.farpost.logwatcher;
 
 import com.farpost.logwatcher.storage.*;
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -50,8 +50,8 @@ public class TranslationRulesImpl {
 				period = 1;
 				quantificatorStr = parts[1];
 			}
-			DateTime from;
-			DateTime to = DateTime.now().withTimeAtStartOfDay();
+			LocalDate from;
+			LocalDate to = LocalDate.now();
 			if ( "days".equals(quantificatorStr) ) {
 				from = to.minusDays(period);
 			} else if ( "weeks".equals(quantificatorStr) ) {
@@ -66,13 +66,13 @@ public class TranslationRulesImpl {
 		} else if ( dateString.contains("/") ) {
 			// Парсим строчку вида occurred: 2009-12-19/2009-12-21
 			String[] parts = dateString.split("/", 2);
-			DateTime from = new DateTime(dateFormat.get().parse(parts[0]));
-			DateTime to = new DateTime(dateFormat.get().parse(parts[1]));
+			LocalDate from = new LocalDate(dateFormat.get().parse(parts[0]));
+			LocalDate to = new LocalDate(dateFormat.get().parse(parts[1]));
 			return new DateMatcher(from, to);
 
 		} else {
 			// Парсим строчку вида occurred: 2009-12-19
-			DateTime date = new DateTime(dateFormat.get().parse(dateString));
+			LocalDate date = new LocalDate(dateFormat.get().parse(dateString));
 			return new DateMatcher(date);
 		}
 	}

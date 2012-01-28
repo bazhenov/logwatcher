@@ -1,13 +1,12 @@
 package com.farpost.logwatcher.web.page;
 
 import com.farpost.logwatcher.AggregatedEntry;
-import com.farpost.logwatcher.ByLastOccurenceDateComparator;
+import com.farpost.logwatcher.ByLastOccurrenceDateComparator;
 import com.farpost.logwatcher.ByOccurenceCountComparator;
 import com.farpost.logwatcher.Severity;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.web.JiraInfo;
 import com.farpost.logwatcher.web.ViewNameAwarePage;
-import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 import static java.util.Collections.sort;
+import static org.joda.time.LocalDate.fromDateFields;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @Component
@@ -38,8 +38,8 @@ public class FeedPage implements ViewNameAwarePage, InitializingBean {
 	private static final Logger log = getLogger(FeedPage.class);
 
 	private final HashMap<String, Comparator<AggregatedEntry>> comparators = new HashMap<String, Comparator<AggregatedEntry>>() {{
-		put(null, new ByLastOccurenceDateComparator());
-		put("last-occurence", new ByLastOccurenceDateComparator());
+		put(null, new ByLastOccurrenceDateComparator());
+		put("last-occurence", new ByLastOccurrenceDateComparator());
 		put("occurence-count", new ByOccurenceCountComparator());
 	}};
 	private List<AggregatedEntry> entries;
@@ -56,7 +56,7 @@ public class FeedPage implements ViewNameAwarePage, InitializingBean {
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		entries = storage.getAggregatedEntries(applicationId, new DateTime(date), severity);
+		entries = storage.getAggregatedEntries(applicationId, fromDateFields(date), severity);
 		entriesCount = sumCount(entries);
 		Comparator<AggregatedEntry> comparator = comparators.containsKey(this.sortOrder)
 			? comparators.get(this.sortOrder)
@@ -134,10 +134,10 @@ public class FeedPage implements ViewNameAwarePage, InitializingBean {
 	 * @return множество всех уникальных идентификаторов приложений
 	 */
 	public Set<Application> getApplications() {
-		Set<String> applicationIds = storage.getUniquieApplicationIds(new DateTime(date));
+		Set<String> applicationIds = storage.getUniquieApplicationIds(fromDateFields(date));
 		Set<Application> set = new HashSet<Application>();
 		for (String applicationId : applicationIds) {
-			String dateAsString = new DateTime(date).toString();
+			String dateAsString = fromDateFields(date).toString();
 			String url = request.getContextPath() + "/feed/" + applicationId + "?date=" + dateAsString;
 			set.add(new Application(applicationId, url));
 		}

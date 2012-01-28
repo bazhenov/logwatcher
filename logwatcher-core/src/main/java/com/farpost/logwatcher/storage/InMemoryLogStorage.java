@@ -1,8 +1,7 @@
 package com.farpost.logwatcher.storage;
 
 import com.farpost.logwatcher.*;
-import org.joda.time.DateMidnight;
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import java.util.*;
 import java.util.concurrent.Callable;
@@ -36,7 +35,7 @@ public class InMemoryLogStorage implements LogStorage {
 		});
 	}
 
-	public int removeOldEntries(final DateMidnight date) throws LogStorageException {
+	public int removeOldEntries(final LocalDate date) throws LogStorageException {
 		return withLock(writeLock, new Callable<Integer>() {
 
 			public Integer call() throws Exception {
@@ -44,7 +43,7 @@ public class InMemoryLogStorage implements LogStorage {
 				int removed = 0;
 				while (iterator.hasNext()) {
 					LogEntry entry = iterator.next();
-					if (entry.getDate().toDateMidnight().isBefore(date)) {
+					if (entry.getDate().toLocalDate().isBefore(date)) {
 						iterator.remove();
 						removed++;
 					}
@@ -90,7 +89,7 @@ public class InMemoryLogStorage implements LogStorage {
 	}
 
 	@Override
-	public Set<String> getUniquieApplicationIds(DateTime date) {
+	public Set<String> getUniquieApplicationIds(LocalDate date) {
 		List<LogEntry> entries = findEntries(entries().date(date).criterias());
 		HashSet<String> applicationIds = new HashSet<String>();
 		for (LogEntry entry : entries) {
@@ -99,7 +98,7 @@ public class InMemoryLogStorage implements LogStorage {
 		return applicationIds;
 	}
 
-	public List<AggregatedEntry> getAggregatedEntries(String applicationId, DateTime date, Severity severity) {
+	public List<AggregatedEntry> getAggregatedEntries(String applicationId, LocalDate date, Severity severity) {
 		List<LogEntryMatcher> criterias = entries().
 			applicationId(applicationId).
 			date(date).

@@ -34,7 +34,7 @@ public class WriteToStorageTransportListenerTest {
 		listener.onMessage(marshaller.marshall(entry));
 
 		int count = entries().
-			date(date).
+			date(date.toLocalDate()).
 			count(storage);
 		assertThat(count, equalTo(1));
 	}

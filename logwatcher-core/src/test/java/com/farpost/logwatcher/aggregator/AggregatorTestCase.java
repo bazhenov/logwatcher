@@ -17,6 +17,7 @@ import java.util.List;
 import static com.farpost.logwatcher.LogEntryBuilder.entry;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.joda.time.DateTimeConstants.NOVEMBER;
 
 abstract public class AggregatorTestCase {
 
@@ -30,7 +31,7 @@ abstract public class AggregatorTestCase {
 
 	@Test
 	public void testAggregatorCanFilterEntries() {
-		DateTime date = new DateTime(2009, 11, 12, 15, 12);
+		DateTime date = new DateTime(2009, NOVEMBER, 12, 15, 12);
 		int problemSize = 333;
 		List<byte[]> entries = new ArrayList<byte[]>(problemSize);
 

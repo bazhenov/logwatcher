@@ -8,13 +8,14 @@ import static com.farpost.logwatcher.Severity.warning;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.joda.time.DateTime.now;
+import static org.joda.time.DateTimeConstants.NOVEMBER;
 
 public class LogEntryTest {
 
 	@Test
 	public void entryParameters() {
 		String logMessage = "ExceptionMessage";
-		DateTime date = new DateTime(2008, 11, 12, 15, 23);
+		DateTime date = new DateTime(2008, NOVEMBER, 12, 15, 23);
 		String group = "group";
 		String checksum = "3d4f";
 		LogEntry logEntry = new LogEntryImpl(date, group, logMessage, info, checksum, "default", null);

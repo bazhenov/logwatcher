@@ -1,6 +1,6 @@
 package com.farpost.logwatcher.storage;
 
-import org.joda.time.DateMidnight;
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +29,7 @@ public class CleanupStorageTask implements Runnable {
 	@Override
 	public void run() {
 		try {
-			DateMidnight date = DateMidnight.now().minusDays(daysToKeep);
+			LocalDate date = LocalDate.now().minusDays(daysToKeep);
 			int removed = storage.removeOldEntries(date);
 			log.info("Removed " + removed + " entries from storage older than: " + date);
 		} catch (LogStorageException e) {

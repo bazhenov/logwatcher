@@ -1,12 +1,15 @@
 package com.farpost.logwatcher;
 
 import com.farpost.logwatcher.storage.*;
+import org.joda.time.LocalDate;
 import org.testng.annotations.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 public class QueryTranslatorTest {
+
+	private static final LocalDate today = LocalDate.now();
 
 	QueryTranslator translator = new AnnotationDrivenQueryTranslator(new TranslationRulesImpl());
 
@@ -26,23 +29,22 @@ public class QueryTranslatorTest {
 
 	@Test
 	public void dateCriteria() throws InvalidQueryException {
-		LogEntryMatcher expectedMatcher = new DateMatcher(today());
+		LogEntryMatcher expectedMatcher = new DateMatcher(today);
 
-		assertThat(translate("occurred: " + today()), equalTo(expectedMatcher));
+		assertThat(translate("occurred: " + today), equalTo(expectedMatcher));
 	}
 
 	@Test
 	public void dateIntervalCriteria() throws InvalidQueryException {
-		Date date = today();
-		LogEntryMatcher expectedMatcher = new DateMatcher(date.minusDay(1), date);
+		LocalDate date = today;
+		LogEntryMatcher expectedMatcher = new DateMatcher(date.minusDays(1), date);
 
-		assertThat(translate("occurred: " + date+" / "+date.minusDay(1)), equalTo(expectedMatcher));
+		assertThat(translate("occurred: " + date + " / " + date.minusDays(1)), equalTo(expectedMatcher));
 	}
 
 	@Test
 	public void dateHumanReadableIntervalCriteria() throws InvalidQueryException {
-		Date today = today();
-		LogEntryMatcher expectedMatcher = new DateMatcher(today.minusDay(2), today);
+		LogEntryMatcher expectedMatcher = new DateMatcher(today.minusDays(2), today);
 
 		assertThat(translate("occurred: last 2 days"), equalTo(expectedMatcher));
 	}
@@ -64,7 +66,7 @@ public class QueryTranslatorTest {
 
 	private LogEntryMatcher translate(String query) throws InvalidQueryException {
 		LogEntryMatcher matcher = translator.translate(query).get(0);
-		if ( matcher == null ) {
+		if (matcher == null) {
 			throw new AssertionError("No matcher created for: " + query);
 		}
 		return matcher;

@@ -2,6 +2,7 @@ package com.farpost.logwatcher.web.taglib;
 
 import com.farpost.logwatcher.AggregatedEntry;
 import com.farpost.logwatcher.Cause;
+import org.joda.time.ReadableDateTime;
 
 import java.text.DateFormat;
 
@@ -46,7 +47,7 @@ public class Functions {
 	}
 
 	public static boolean isNew(AggregatedEntry entry) {
-		return entry.getLastTime().plusMinute(30).isInFuture();
+		return entry.getLastTime().plusMinutes(30).isAfterNow();
 	}
 
 	public static Cause rootCause(Cause cause) {
@@ -91,7 +92,7 @@ public class Functions {
 		return (int) Math.log10(number);
 	}
 
-	public static java.util.Date date(org.joda.time.DateTime date) {
-		return date.toDate();
+	public static java.util.Date date(ReadableDateTime date) {
+		return date.toDateTime().toDate();
 	}
 }

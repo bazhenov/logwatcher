@@ -20,7 +20,7 @@ abstract class LogwatcherFunctionalTestSuite extends GebReportingTest {
 	private static final String APPLICATION_URL = System.getProperty("it.location")
 	private static final String REPORT_DIRECTORY = System.getProperty("reportsDir")
 	private static final int port = 6578
-	private static final WebDriver driver;
+	private static WebDriver driver;
 	private HashMap<String, Appender<ILoggingEvent>> appenders = new HashMap<String, Appender<ILoggingEvent>>()
 	protected Logger logger = getLogger(getClass())
 
