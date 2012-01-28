@@ -5,6 +5,7 @@ import com.farpost.logwatcher.Cause;
 import org.joda.time.ReadableDateTime;
 
 import java.text.DateFormat;
+import java.util.Date;
 
 import static java.lang.Math.abs;
 
@@ -17,7 +18,7 @@ public class Functions {
 		}
 	};
 
-	public static String shortFormat(java.util.Date date) {
+	public static String shortFormat(Date date) {
 		return shortFormat.get().format(date);
 	}
 
@@ -92,7 +93,7 @@ public class Functions {
 		return (int) Math.log10(number);
 	}
 
-	public static java.util.Date date(ReadableDateTime date) {
+	public static Date date(ReadableDateTime date) {
 		return date.toDateTime().toDate();
 	}
 }

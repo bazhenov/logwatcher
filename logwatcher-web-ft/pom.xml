@@ -7,7 +7,7 @@
 	<parent>
 		<artifactId>logwatcher-parent</artifactId>
 		<groupId>com.farpost.logwatcher</groupId>
-		<version>1.3</version>
+		<version>1.4</version>
 	</parent>
 
 	<artifactId>logwatcher-web-ft</artifactId>
@@ -21,7 +21,7 @@
 		<it.location>http://localhost:${it.port}</it.location>
 
 		<sut.artifactId>logwatcher-web</sut.artifactId>
-		<sut.version>1.3</sut.version>
+		<sut.version>1.4</sut.version>
 		<sut.location>${basedir}/../${sut.artifactId}/target/${sut.artifactId}-${sut.version}.war</sut.location>
 
 		<reportsDir>/tmp/logwatcher/reports</reportsDir>
@@ -31,7 +31,7 @@
 		<dependency>
 			<artifactId>logwatcher-logback-appender</artifactId>
 			<groupId>com.farpost.logwatcher</groupId>
-			<version>1.3.2</version>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
