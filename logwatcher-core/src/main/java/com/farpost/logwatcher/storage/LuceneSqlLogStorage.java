@@ -113,7 +113,7 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 	}
 
 	private static java.sql.Date date(LocalDate date) {
-		return new java.sql.Date(date.toDateMidnight().getMillis());
+		return new java.sql.Date(date.toDateTimeAtStartOfDay().getMillis());
 	}
 
 	private static Timestamp timestamp(DateTime date) {
