@@ -134,7 +134,7 @@ public class FeedPage implements ViewNameAwarePage, InitializingBean {
 	 * @return множество всех уникальных идентификаторов приложений
 	 */
 	public Set<Application> getApplications() {
-		Set<String> applicationIds = storage.getUniquieApplicationIds(fromDateFields(date));
+		Set<String> applicationIds = storage.getUniqueApplicationIds(fromDateFields(date));
 		Set<Application> set = new HashSet<Application>();
 		for (String applicationId : applicationIds) {
 			String dateAsString = fromDateFields(date).toString();

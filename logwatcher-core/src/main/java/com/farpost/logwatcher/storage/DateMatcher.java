@@ -50,7 +50,7 @@ public class DateMatcher implements LogEntryMatcher {
 	}
 
 	public boolean isMatch(LogEntry entry) {
-		if(interval.getStart().plusDays(1).equals(interval.getEnd())) { //если интервал инициализировался одной датой
+		if (interval.getStart().plusDays(1).equals(interval.getEnd())) { //если интервал инициализировался одной датой
 			return interval.contains(entry.getDate());
 		} else { // если разными, то исключаем первый день в интервале, дурацкая немного логика конечно
 			return interval.withStart(interval.getStart().plusDays(1)).contains(entry.getDate());
@@ -69,13 +69,12 @@ public class DateMatcher implements LogEntryMatcher {
 
 		DateMatcher that = (DateMatcher) o;
 
-		if (interval != null ? !interval.equals(that.interval) : that.interval != null) return false;
+		return interval.equals(that.interval);
 
-		return true;
 	}
 
 	@Override
 	public int hashCode() {
-		return interval != null ? interval.hashCode() : 0;
+		return interval.hashCode();
 	}
 }

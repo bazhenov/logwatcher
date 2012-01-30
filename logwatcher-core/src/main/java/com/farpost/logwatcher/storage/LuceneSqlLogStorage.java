@@ -26,6 +26,7 @@ import org.springframework.jdbc.core.RowMapper;
 import javax.sql.DataSource;
 import java.io.Closeable;
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -38,7 +39,6 @@ import static org.springframework.util.StringUtils.arrayToCommaDelimitedString;
 
 public class LuceneSqlLogStorage implements LogStorage, Closeable {
 
-	private static final LocalDate VERY_OLD_DATE = new LocalDate(0);
 	private final MatcherMapper<Query> matcherMapper;
 	private int nextId;
 
@@ -83,11 +83,11 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 			int entryId = getNextId();
 
 			Timestamp entryTimestamp = timestamp(impl.getDate());
-			java.sql.Date entryDate = date(impl.getDate().toLocalDate());
-			byte[] marshalledEntry = marshaller.marshall(impl);
+			Date entryDate = date(impl.getDate().toLocalDate());
+			byte[] marshaledEntry = marshaller.marshall(impl);
 
 			jdbc.update("INSERT INTO entry (id, date, checksum,value) VALUES (?, ?, ?, ?)", entryId, entryDate,
-				checksum, marshalledEntry);
+				checksum, marshaledEntry);
 
 			int affectedRows = jdbc.update(
 				"UPDATE aggregated_entry SET count = count + 1, last_time = ? WHERE date = ? AND checksum = ?",
@@ -96,7 +96,7 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 				jdbc.update(
 					"INSERT INTO aggregated_entry (date, checksum, last_time, category, severity, application_id, count, content) VALUES (?, ?, ?, ?, ?, ?, 1, ?)",
 					entryDate, checksum, entryTimestamp, impl.getCategory(),
-					impl.getSeverity().getCode(), impl.getApplicationId(), marshalledEntry);
+					impl.getSeverity().getCode(), impl.getApplicationId(), marshaledEntry);
 			}
 
 			if (log.isDebugEnabled()) {
@@ -112,8 +112,8 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 		}
 	}
 
-	private static java.sql.Date date(LocalDate date) {
-		return new java.sql.Date(date.toDateTimeAtStartOfDay().getMillis());
+	private static Date date(LocalDate date) {
+		return new Date(date.toDateTimeAtStartOfDay().getMillis());
 	}
 
 	private static Timestamp timestamp(DateTime date) {
@@ -185,9 +185,9 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 		return walk(criterias, new CollectingVisitor<LogEntry>());
 	}
 
-	private Integer[] findEntriesIds(Collection<LogEntryMatcher> criterias) {
+	private Integer[] findEntriesIds(Collection<LogEntryMatcher> criteria) {
 		try {
-			Query query = createLuceneQuery(criterias);
+			Query query = createLuceneQuery(criteria);
 
 			/**
 			 * Сохраняем ссылку на tuple({@link org.apache.lucene.search.IndexSearcher}, {@link org.apache.lucene.search.FieldCache}) локально
@@ -212,9 +212,9 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 		}
 	}
 
-	private Query createLuceneQuery(Collection<LogEntryMatcher> criterias) throws MatcherMapperException {
+	private Query createLuceneQuery(Collection<LogEntryMatcher> criteria) throws MatcherMapperException {
 		BooleanQuery query = new BooleanQuery();
-		for (LogEntryMatcher matcher : criterias) {
+		for (LogEntryMatcher matcher : criteria) {
 			Query q = matcherMapper.handle(matcher);
 			if (q == null) {
 				throw new InvalidCriteriaException("Unable to map matcher of type: " + matcher.getClass().getName());
@@ -228,12 +228,12 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 	public int removeOldEntries(LocalDate date) throws LogStorageException {
 		try {
 			checkNotNull(date);
-			Collection<LogEntryMatcher> criterias = new ArrayList<LogEntryMatcher>();
-			criterias.add(new DateMatcher(VERY_OLD_DATE, date.minusDays(1)));
+			Collection<LogEntryMatcher> criteria = new ArrayList<LogEntryMatcher>();
+			criteria.add(new DateMatcher(new LocalDate(0), date.minusDays(1)));
 			Integer[] ids;
 			int recordsRemoved = 0;
 
-			while ((ids = findEntriesIds(criterias)).length > 0) {
+			while ((ids = findEntriesIds(criteria)).length > 0) {
 				jdbc.update("DELETE FROM entry WHERE id IN (" + arrayToCommaDelimitedString(ids) + ")");
 				for (int id : ids) {
 					writer.deleteDocuments(new Term("id", Integer.toString(id)));
@@ -254,12 +254,12 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 	}
 
 	@Override
-	public int countEntries(Collection<LogEntryMatcher> criterias) throws LogStorageException, InvalidCriteriaException {
+	public int countEntries(Collection<LogEntryMatcher> criteria) throws LogStorageException, InvalidCriteriaException {
 		try {
 			Searcher searcher = searcherRef.getSearcher();
-			Query query = criterias.isEmpty()
+			Query query = criteria.isEmpty()
 				? new MatchAllDocsQuery()
-				: createLuceneQuery(criterias);
+				: createLuceneQuery(criteria);
 			return searcher.search(query, 1).totalHits;
 		} catch (MatcherMapperException e) {
 			throw new LogStorageException(e);
@@ -283,9 +283,9 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 	}
 
 	@Override
-	public <T> T walk(Collection<LogEntryMatcher> criterias, Visitor<LogEntry, T> visitor)
+	public <T> T walk(Collection<LogEntryMatcher> criteria, Visitor<LogEntry, T> visitor)
 		throws LogStorageException, InvalidCriteriaException {
-		Integer[] ids = findEntriesIds(criterias);
+		Integer[] ids = findEntriesIds(criteria);
 		if (ids.length > 0) {
 			String idString = arrayToCommaDelimitedString(ids);
 
@@ -298,7 +298,7 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 	}
 
 	@Override
-	public Set<String> getUniquieApplicationIds(LocalDate date) {
+	public Set<String> getUniqueApplicationIds(LocalDate date) {
 		checkNotNull(date);
 		List<String> ids = jdbc.queryForList("SELECT application_id FROM aggregated_entry WHERE date = ? GROUP BY application_id",
 			String.class, date(date));

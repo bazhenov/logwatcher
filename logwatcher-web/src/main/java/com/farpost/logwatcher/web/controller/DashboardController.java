@@ -28,7 +28,7 @@ public class DashboardController {
 
 	@RequestMapping("/dashboard")
 	public String doDashboard(ModelMap map) {
-		map.put("applicationIds", storage.getUniquieApplicationIds(LocalDate.now()));
+		map.put("applicationIds", storage.getUniqueApplicationIds(LocalDate.now()));
 		return "dashboard";
 	}
 

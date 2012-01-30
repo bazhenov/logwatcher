@@ -91,7 +91,7 @@ public interface LogStorage {
 	 * @param date дата выборки
 	 * @return множество идентификаторов приложений
 	 */
-	Set<String> getUniquieApplicationIds(LocalDate date);
+	Set<String> getUniqueApplicationIds(LocalDate date);
 
 	/**
 	 * Возвращает список аггрегированных записей за указанную дату с указанным severity произошедших

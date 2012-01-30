@@ -207,7 +207,7 @@ abstract public class LogStorageTestCase {
 			occurred(yesterday.toDateTime(parse("13:52"))).
 			saveIn(storage);
 
-		Set<String> ids = storage.getUniquieApplicationIds(today);
+		Set<String> ids = storage.getUniqueApplicationIds(today);
 		assertThat(ids.size(), equalTo(2));
 		assertThat(ids, hasItem("foo"));
 		assertThat(ids, hasItem("bar"));

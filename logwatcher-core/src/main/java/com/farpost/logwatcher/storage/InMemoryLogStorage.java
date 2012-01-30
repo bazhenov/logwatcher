@@ -89,7 +89,7 @@ public class InMemoryLogStorage implements LogStorage {
 	}
 
 	@Override
-	public Set<String> getUniquieApplicationIds(LocalDate date) {
+	public Set<String> getUniqueApplicationIds(LocalDate date) {
 		List<LogEntry> entries = findEntries(entries().date(date).criterias());
 		HashSet<String> applicationIds = new HashSet<String>();
 		for (LogEntry entry : entries) {

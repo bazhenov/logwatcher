@@ -45,7 +45,7 @@ class LuceneUtils {
 	 * @return строковое представление даты и времени в формате без разделителей
 	 */
 	static String normalizeDateTime(ReadableDateTime date) {
-		return format("%d%02d%02d%02d%02d%02d", date.getYear(), date.getMonthOfYear(), date.getDayOfMonth(), date.getHourOfDay(),
-			date.getMinuteOfHour(), date.getSecondOfMinute());
+		return format("%d%02d%02d%02d%02d%02d", date.getYear(), date.getMonthOfYear(), date.getDayOfMonth(),
+			date.getHourOfDay(), date.getMinuteOfHour(), date.getSecondOfMinute());
 	}
 }
