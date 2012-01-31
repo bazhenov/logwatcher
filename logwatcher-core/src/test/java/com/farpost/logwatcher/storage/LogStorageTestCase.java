@@ -4,8 +4,8 @@ import com.farpost.logwatcher.AggregatedEntry;
 import com.farpost.logwatcher.CountVisitor;
 import com.farpost.logwatcher.LogEntry;
 import com.farpost.logwatcher.Severity;
-import com.farpost.timepoint.Date;
-import com.farpost.timepoint.DateTime;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -14,19 +14,21 @@ import java.util.Set;
 
 import static com.farpost.logwatcher.LogEntryBuilder.entry;
 import static com.farpost.logwatcher.storage.LogEntries.entries;
-import static com.farpost.timepoint.Date.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.joda.time.DateTimeConstants.NOVEMBER;
+import static org.joda.time.LocalTime.parse;
 import static org.testng.Assert.fail;
 
 abstract public class LogStorageTestCase {
 
 	private LogStorage storage;
 
-	private final Date today = today();
-	private final Date yesterday = today().minusDay(1);
+	private static final LocalDate today = LocalDate.now();
+	private static final LocalDate yesterday = LocalDate.now().minusDays(1);
+	private static final LocalDate tomorrow = LocalDate.now().plusDays(1);
 
 	@BeforeMethod
 	public void setUp() throws Exception {
@@ -35,9 +37,9 @@ abstract public class LogStorageTestCase {
 
 	@Test
 	public void storageCanSaveEntry() throws Exception {
-		DateTime date = today.at("11:35");
+		DateTime occurredDate = today.toDateTime(parse("11:35"));
 		LogEntry entry = entry().
-			occurred(date).
+			occurred(occurredDate).
 			attribute("foo", "bar").
 			create();
 		storage.writeEntry(entry);
@@ -48,7 +50,7 @@ abstract public class LogStorageTestCase {
 			get(0);
 
 		assertThat(entryRef.getChecksum(), notNullValue());
-		assertThat(entryRef.getDate(), equalTo(date));
+		assertThat(entryRef.getDate(), equalTo(occurredDate));
 	}
 
 	@Test
@@ -65,7 +67,7 @@ abstract public class LogStorageTestCase {
 		entry().saveIn(storage);
 		entry().saveIn(storage);
 
-		List<LogEntry> entries = entries().date(today()).find(storage);
+		List<LogEntry> entries = entries().date(today).find(storage);
 		assertThat(entries.size(), equalTo(2));
 
 		assertThat(entries.get(0).getChecksum(), equalTo(entries.get(1).getChecksum()));
@@ -77,7 +79,7 @@ abstract public class LogStorageTestCase {
 		entry().causedBy(new RuntimeException("another first exception")).saveIn(storage);
 		entry().causedBy(new RuntimeException("second exception")).saveIn(storage);
 
-		List<LogEntry> entries = entries().date(today()).contains("first").find(storage);
+		List<LogEntry> entries = entries().date(today).contains("first").find(storage);
 
 		assertThat(entries.size(), equalTo(2));
 	}
@@ -90,7 +92,7 @@ abstract public class LogStorageTestCase {
 
 		CountVisitor<LogEntry> visitor = new CountVisitor<LogEntry>();
 		int count = entries().
-			date(today()).
+			date(today).
 			contains("foo").
 			walk(storage, visitor);
 
@@ -99,9 +101,9 @@ abstract public class LogStorageTestCase {
 
 	@Test
 	public void storageCanGetAggregatedEntries() throws Exception {
-		Date date = november(12, 2008);
-		DateTime morning = date.at("11:00");
-		DateTime evening = date.at("18:05");
+		LocalDate date = new LocalDate(2008, NOVEMBER, 12);
+		DateTime morning = date.toDateTime(parse("11:00"));
+		DateTime evening = date.toDateTime(parse("18:05"));
 
 		entry().
 			applicationId("search").
@@ -155,28 +157,24 @@ abstract public class LogStorageTestCase {
 	@Test
 	public void storageCanFilterEntriesByDate() throws LogStorageException, InvalidCriteriaException {
 		entry().
-			occurred(today().at("12:22")).message("a").
+			occurred(today.toDateTime(parse("12:22"))).message("a").
 			saveIn(storage);
 
 		entry().
-			occurred(yesterday().at("10:00")).message("b").
+			occurred(yesterday.toDateTime(parse("10:00"))).message("b").
 			saveIn(storage);
 
-		int count = entries().date(today(), today()).
-			count(storage);
+		int count = entries().date(today, today).count(storage);
 		assertThat(count, equalTo(1));
 
-		count = entries().date(yesterday(), today()).
-			count(storage);
+		count = entries().date(yesterday, today).count(storage);
 		assertThat(count, equalTo(1));
 
-		count = entries().date(today().minusDay(2), today()).
-			count(storage);
+		count = entries().date(today.minusDays(2), tomorrow).count(storage);
 		assertThat(count, equalTo(2));
 
-		count = entries().date(today(), tomorrow()).
-			count(storage);
-		assertThat(count, equalTo(0));
+		count = entries().date(today, tomorrow).count(storage);
+		assertThat(count, equalTo(1));
 	}
 
 	@Test
@@ -190,7 +188,7 @@ abstract public class LogStorageTestCase {
 			checksum("bar").
 			saveIn(storage);
 
-		List<AggregatedEntry> list = storage.getAggregatedEntries("appl", today(), Severity.debug);
+		List<AggregatedEntry> list = storage.getAggregatedEntries("appl", today, Severity.debug);
 		assertThat(list.size(), equalTo(2));
 	}
 
@@ -198,18 +196,18 @@ abstract public class LogStorageTestCase {
 	public void storageCanReturnUniqueApplicationIdSet() {
 		entry().
 			applicationId("foo").
-			occurred(today.at("12:00")).
+			occurred(today.toDateTime(parse("12:00"))).
 			saveIn(storage);
 		entry().
 			applicationId("bar").
-			occurred(today.at("12:00")).
+			occurred(today.toDateTime(parse("12:00"))).
 			saveIn(storage);
 		entry().
 			applicationId("baz").
-			occurred(yesterday.at("13:32")).
+			occurred(yesterday.toDateTime(parse("13:52"))).
 			saveIn(storage);
 
-		Set<String> ids = storage.getUniquieApplicationIds(today());
+		Set<String> ids = storage.getUniqueApplicationIds(today);
 		assertThat(ids.size(), equalTo(2));
 		assertThat(ids, hasItem("foo"));
 		assertThat(ids, hasItem("bar"));
@@ -228,7 +226,7 @@ abstract public class LogStorageTestCase {
 	@Test
 	public void storageCanCountEntriesByCriteria() {
 		entry().
-			occurred(yesterday.at("12:23")).
+			occurred(yesterday.toDateTime(parse("12:23"))).
 			checksum("ffe").
 			message("foo").
 			saveIn(storage);
@@ -248,7 +246,7 @@ abstract public class LogStorageTestCase {
 		assertThat(count, equalTo(1));
 
 		count = entries().
-			date(yesterday.minusDay(1)).
+			date(yesterday.minusDays(1)).
 			count(storage);
 		assertThat(count, equalTo(0));
 
@@ -317,20 +315,20 @@ abstract public class LogStorageTestCase {
 
 		entry().
 			applicationId("application").
-			occurred(today.at("12:35")).
+			occurred(today.toDateTime(parse("12:35"))).
 			checksum("foo").
 			saveIn(storage);
 
 		entry().
 			applicationId("application").
-			occurred(today.at("12:35")).
+			occurred(today.toDateTime(parse("12:35"))).
 			checksum("bar").
 			saveIn(storage);
 
 		LogEntry entry = entry().
 			applicationId("application").
 			checksum("foo").
-			occurred(yesterday.at("11:36")).
+			occurred(yesterday.toDateTime(parse("11:36"))).
 			saveIn(storage);
 
 		storage.removeEntriesWithChecksum(entry.getChecksum());
@@ -347,15 +345,15 @@ abstract public class LogStorageTestCase {
 	public void storageCanRemoveOldEntries() throws LogStorageException, InvalidCriteriaException {
 		entry().
 			applicationId("foo").
-			occurred(yesterday().at("15:32")).
+			occurred(yesterday.toDateTime(parse("15:32"))).
 			saveIn(storage);
 
 		LogEntry todayEntry = entry().
 			applicationId("foo").
-			occurred(today().at("16:00")).
+			occurred(today.toDateTime(parse("16:00"))).
 			saveIn(storage);
 
-		int removedEntriesCount = storage.removeOldEntries(today());
+		int removedEntriesCount = storage.removeOldEntries(today);
 		assertThat(removedEntriesCount, equalTo(1));
 
 		List<LogEntryMatcher> criteria = entries().

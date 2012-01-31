@@ -2,12 +2,13 @@ package com.farpost.logwatcher;
 
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
-import com.farpost.timepoint.DateTime;
+import org.joda.time.DateTime;
+import org.joda.time.ReadableDateTime;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.farpost.timepoint.DateTime.now;
+import static org.joda.time.DateTime.now;
 
 /**
  * Просто builder новых записей, которые записываются в хранилище.
@@ -60,8 +61,8 @@ public class LogEntryBuilder {
 	 * @param time время возникновения события
 	 * @return новый экземпляр {@link LogEntryBuilder}
 	 */
-	public LogEntryBuilder occurred(DateTime time) {
-		this.time = time;
+	public LogEntryBuilder occurred(ReadableDateTime time) {
+		this.time = time.toDateTime();
 		return this;
 	}
 

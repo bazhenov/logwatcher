@@ -2,9 +2,10 @@ package com.farpost.logwatcher.web.taglib;
 
 import com.farpost.logwatcher.AggregatedEntry;
 import com.farpost.logwatcher.Cause;
-import com.farpost.timepoint.Date;
+import org.joda.time.ReadableDateTime;
 
 import java.text.DateFormat;
+import java.util.Date;
 
 import static java.lang.Math.abs;
 
@@ -17,7 +18,7 @@ public class Functions {
 		}
 	};
 
-	public static String shortFormat(java.util.Date date) {
+	public static String shortFormat(Date date) {
 		return shortFormat.get().format(date);
 	}
 
@@ -47,7 +48,7 @@ public class Functions {
 	}
 
 	public static boolean isNew(AggregatedEntry entry) {
-		return entry.getLastTime().plusMinute(30).isInFuture();
+		return entry.getLastTime().plusMinutes(30).isAfterNow();
 	}
 
 	public static Cause rootCause(Cause cause) {
@@ -92,7 +93,7 @@ public class Functions {
 		return (int) Math.log10(number);
 	}
 
-	public static java.util.Date date(Date date) {
-		return date.asDate();
+	public static Date date(ReadableDateTime date) {
+		return date.toDateTime().toDate();
 	}
 }

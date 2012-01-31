@@ -1,7 +1,7 @@
 package com.farpost.logwatcher.storage;
 
 import com.farpost.logwatcher.*;
-import com.farpost.timepoint.Date;
+import org.joda.time.LocalDate;
 
 import java.util.*;
 import java.util.concurrent.Callable;
@@ -35,7 +35,7 @@ public class InMemoryLogStorage implements LogStorage {
 		});
 	}
 
-	public int removeOldEntries(final Date date) throws LogStorageException {
+	public int removeOldEntries(final LocalDate date) throws LogStorageException {
 		return withLock(writeLock, new Callable<Integer>() {
 
 			public Integer call() throws Exception {
@@ -43,7 +43,7 @@ public class InMemoryLogStorage implements LogStorage {
 				int removed = 0;
 				while (iterator.hasNext()) {
 					LogEntry entry = iterator.next();
-					if (entry.getDate().getDate().lessThan(date)) {
+					if (entry.getDate().toLocalDate().isBefore(date)) {
 						iterator.remove();
 						removed++;
 					}
@@ -53,13 +53,13 @@ public class InMemoryLogStorage implements LogStorage {
 		});
 	}
 
-	public List<LogEntry> findEntries(final Collection<LogEntryMatcher> criterias) {
+	public List<LogEntry> findEntries(final Collection<LogEntryMatcher> criteria) {
 		return withLock(readLock, new Callable<List<LogEntry>>() {
 
 			public List<LogEntry> call() throws Exception {
 				List<LogEntry> result = new ArrayList<LogEntry>();
 				for (LogEntry entry : entries) {
-					if (MatcherUtils.isMatching(entry, criterias)) {
+					if (MatcherUtils.isMatching(entry, criteria)) {
 						result.add(entry);
 					}
 				}
@@ -89,7 +89,7 @@ public class InMemoryLogStorage implements LogStorage {
 	}
 
 	@Override
-	public Set<String> getUniquieApplicationIds(Date date) {
+	public Set<String> getUniqueApplicationIds(LocalDate date) {
 		List<LogEntry> entries = findEntries(entries().date(date).criterias());
 		HashSet<String> applicationIds = new HashSet<String>();
 		for (LogEntry entry : entries) {
@@ -98,7 +98,7 @@ public class InMemoryLogStorage implements LogStorage {
 		return applicationIds;
 	}
 
-	public List<AggregatedEntry> getAggregatedEntries(String applicationId, Date date, Severity severity) {
+	public List<AggregatedEntry> getAggregatedEntries(String applicationId, LocalDate date, Severity severity) {
 		List<LogEntryMatcher> criterias = entries().
 			applicationId(applicationId).
 			date(date).
@@ -107,12 +107,12 @@ public class InMemoryLogStorage implements LogStorage {
 		return findAggregatedEntries(criterias);
 	}
 
-	public <T> T walk(final Collection<LogEntryMatcher> criterias, final Visitor<LogEntry, T> visitor) {
+	public <T> T walk(final Collection<LogEntryMatcher> criteria, final Visitor<LogEntry, T> visitor) {
 		withLock(readLock, new Callable<Void>() {
 
 			public Void call() throws Exception {
 				for (LogEntry entry : entries) {
-					if (MatcherUtils.isMatching(entry, criterias)) {
+					if (MatcherUtils.isMatching(entry, criteria)) {
 						visitor.visit(entry);
 					}
 				}
@@ -123,8 +123,8 @@ public class InMemoryLogStorage implements LogStorage {
 		return visitor.getResult();
 	}
 
-	public int countEntries(Collection<LogEntryMatcher> criterias) {
-		return findAggregatedEntries(criterias).size();
+	public int countEntries(Collection<LogEntryMatcher> criteria) {
+		return findAggregatedEntries(criteria).size();
 	}
 
 	public void removeEntriesWithChecksum(final String checksum) throws LogStorageException {

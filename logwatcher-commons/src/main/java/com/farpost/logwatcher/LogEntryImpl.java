@@ -2,7 +2,8 @@ package com.farpost.logwatcher;
 
 import com.farpost.logwatcher.marshalling.JaxbAttributesMapAdapter;
 import com.farpost.logwatcher.marshalling.JaxbDateAdapter;
-import com.farpost.timepoint.DateTime;
+import org.joda.time.DateTime;
+import org.joda.time.ReadableDateTime;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
@@ -54,12 +55,12 @@ public class LogEntryImpl implements LogEntry {
 		this.attributes = new HashMap<String, String>();
 	}
 
-	public LogEntryImpl(DateTime date, String group, String message, Severity severity, String checksum,
+	public LogEntryImpl(ReadableDateTime date, String group, String message, Severity severity, String checksum,
 											String applicationId, Map<String, String> attributes) {
 		this(date, group, message, severity, checksum, applicationId, attributes, null);
 	}
 
-	public LogEntryImpl(DateTime date, String group, String message, Severity severity, String checksum,
+	public LogEntryImpl(ReadableDateTime date, String group, String message, Severity severity, String checksum,
 											String applicationId, Map<String, String> attributes, Cause cause) {
 		checkNotNull(date);
 		checkNotNull(group);
@@ -67,7 +68,7 @@ public class LogEntryImpl implements LogEntry {
 		checkNotNull(severity);
 		checkNotNull(applicationId);
 
-		this.date = date;
+		this.date = date.toDateTime();
 		this.groupContainer = new GroupContainer(group);
 		this.message = message;
 		this.severity = new SeverityContainer(severity);

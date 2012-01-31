@@ -10,7 +10,7 @@ import com.farpost.logwatcher.LogEntryImpl;
 import com.farpost.logwatcher.Severity;
 import com.farpost.logwatcher.marshalling.Jaxb2Marshaller;
 import com.farpost.logwatcher.marshalling.Marshaller;
-import com.farpost.timepoint.DateTime;
+import org.joda.time.DateTime;
 
 import java.io.IOException;
 import java.net.*;

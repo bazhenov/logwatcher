@@ -4,7 +4,7 @@ import com.farpost.logwatcher.AggregatedEntry;
 import com.farpost.logwatcher.LogEntry;
 import com.farpost.logwatcher.Severity;
 import com.farpost.logwatcher.Visitor;
-import com.farpost.timepoint.Date;
+import org.joda.time.LocalDate;
 
 import java.util.Collection;
 import java.util.List;
@@ -37,18 +37,18 @@ public interface LogStorage {
 	 * @return возвращает количество удаленных записей
 	 * @throws LogStorageException в случае возникновения внутренних ошибок хранилища
 	 */
-	int removeOldEntries(Date date) throws LogStorageException;
+	int removeOldEntries(LocalDate date) throws LogStorageException;
 
 	/**
 	 * Подсчитывает колличество записей в хранилище с заданными условиями.
 	 *
-	 * @param criterias условия отбора записей или {@code null} если интересует общее количество
-	 *                  записей в хранилище
+	 * @param criteria условия отбора записей или {@code null} если интересует общее количество
+	 *                 записей в хранилище
 	 * @return колличество записей
 	 * @throws LogStorageException			в случае внутренней ошибки
 	 * @throws InvalidCriteriaException в случае если заданные критерии неверны
 	 */
-	int countEntries(Collection<LogEntryMatcher> criterias)
+	int countEntries(Collection<LogEntryMatcher> criteria)
 		throws LogStorageException, InvalidCriteriaException;
 
 	/**
@@ -62,12 +62,12 @@ public interface LogStorage {
 	/**
 	 * Возвращает список записей удовлетворяющих заданным критериям.
 	 *
-	 * @param criterias критерии отбора записей
+	 * @param criteria критерии отбора записей
 	 * @return список записей
 	 * @throws LogStorageException			в случае внутренней ошибки хранилища
 	 * @throws InvalidCriteriaException в случае если указанные неверные критерии отбора
 	 */
-	List<LogEntry> findEntries(Collection<LogEntryMatcher> criterias)
+	List<LogEntry> findEntries(Collection<LogEntryMatcher> criteria)
 		throws LogStorageException, InvalidCriteriaException;
 
 	/**
@@ -76,13 +76,13 @@ public interface LogStorage {
 	 * относительно того в каком потоке будет вызыватся visitor, поэтому имплементация visitor'а должна
 	 * быть потокобезопасна.
 	 *
-	 * @param criterias критерии по которым осуществляется итерация
-	 * @param visitor	 visitor
+	 * @param criteria критерии по которым осуществляется итерация
+	 * @param visitor	visitor
 	 * @return результат расчитанный имплементацией {@link Visitor}.
 	 * @throws LogStorageException			в случае внутренней ошибки хранилища
 	 * @throws InvalidCriteriaException в случае если некорректно заданы критерии поиска
 	 */
-	<T> T walk(Collection<LogEntryMatcher> criterias, Visitor<LogEntry, T> visitor)
+	<T> T walk(Collection<LogEntryMatcher> criteria, Visitor<LogEntry, T> visitor)
 		throws LogStorageException, InvalidCriteriaException;
 
 	/**
@@ -91,7 +91,7 @@ public interface LogStorage {
 	 * @param date дата выборки
 	 * @return множество идентификаторов приложений
 	 */
-	Set<String> getUniquieApplicationIds(Date date);
+	Set<String> getUniqueApplicationIds(LocalDate date);
 
 	/**
 	 * Возвращает список аггрегированных записей за указанную дату с указанным severity произошедших
@@ -104,6 +104,6 @@ public interface LogStorage {
 	 * @throws LogStorageException			в случае возникновения внутренних ошибок хранилища
 	 * @throws InvalidCriteriaException в случае задания клиентом некорректных критериев отбора
 	 */
-	List<AggregatedEntry> getAggregatedEntries(String applicationId, Date date, Severity severity)
+	List<AggregatedEntry> getAggregatedEntries(String applicationId, LocalDate date, Severity severity)
 		throws LogStorageException, InvalidCriteriaException;
 }

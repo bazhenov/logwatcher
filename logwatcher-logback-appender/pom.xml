@@ -6,10 +6,10 @@
 	<parent>
 		<artifactId>logwatcher-parent</artifactId>
 		<groupId>com.farpost.logwatcher</groupId>
-		<version>1.3</version>
+		<version>1.4</version>
 	</parent>
 	<artifactId>logwatcher-logback-appender</artifactId>
-	<version>1.3.3</version>
+	<version>1.4.0</version>
 
 	<name>LogWatcher Logback Appender</name>
 

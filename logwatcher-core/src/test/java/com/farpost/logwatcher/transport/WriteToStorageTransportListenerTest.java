@@ -10,13 +10,13 @@ import com.farpost.logwatcher.storage.InMemoryLogStorage;
 import com.farpost.logwatcher.storage.InvalidCriteriaException;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
-import com.farpost.timepoint.DateTime;
+import org.joda.time.DateTime;
 import org.testng.annotations.Test;
 
 import static com.farpost.logwatcher.storage.LogEntries.entries;
-import static com.farpost.timepoint.DateTime.now;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.joda.time.DateTime.now;
 
 public class WriteToStorageTransportListenerTest {
 
@@ -34,7 +34,7 @@ public class WriteToStorageTransportListenerTest {
 		listener.onMessage(marshaller.marshall(entry));
 
 		int count = entries().
-			date(date.getDate()).
+			date(date.toLocalDate()).
 			count(storage);
 		assertThat(count, equalTo(1));
 	}

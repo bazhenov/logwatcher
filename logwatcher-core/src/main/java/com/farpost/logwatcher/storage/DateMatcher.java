@@ -1,7 +1,10 @@
 package com.farpost.logwatcher.storage;
 
 import com.farpost.logwatcher.LogEntry;
-import com.farpost.timepoint.Date;
+import org.joda.time.Interval;
+import org.joda.time.LocalDate;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matcher по дате возникновения ошибки.
@@ -11,79 +14,65 @@ import com.farpost.timepoint.Date;
  */
 public class DateMatcher implements LogEntryMatcher {
 
-	private final Date from;
-	private final Date to;
+	private final Interval interval;
 
-	public DateMatcher(Date date) {
-		if (date == null) {
-			throw new NullPointerException("Date must not be null");
-		}
-		this.to = this.from = date;
+	public DateMatcher(LocalDate date) {
+		checkNotNull(date, "Date must not be null");
+		interval = date.toInterval();
 	}
 
 	/**
 	 * Создает matcher для фильтрации по диапазону дат. Если дата выражаемая первым аргументом
 	 * больше чем дата выражаемая вторым, то даты будут поменяны местами. Если переданные даты
 	 * одинаковы - это семантически эквивалентно использованию конструктора
-	 * {@link DateMatcher#DateMatcher(Date)}.
+	 * {@link DateMatcher#DateMatcher(LocalDate)}.
 	 *
-	 * @param from начало диапазона дат (исключается из диапазона поиска)
-	 * @param to	 конец диапазона дат
+	 * @param from начало диапазона дат
+	 * @param to	 конец диапазона дат (исключается из диапазона поиска)
 	 */
-	public DateMatcher(Date from, Date to) {
-		if (from == null || to == null) {
-			throw new NullPointerException("Dates must not be null");
-		}
-		if (from.greaterThan(to)) {
-			this.to = from;
-			this.from = to;
+	public DateMatcher(LocalDate from, LocalDate to) {
+		checkNotNull(from, "Date 'from' must not be null");
+		checkNotNull(to, "Date 'to' must not be null");
+
+		if (from.isEqual(to)) {
+			interval = from.toInterval();
+		} else if (from.isAfter(to)) {
+			interval = new Interval(to.toDateTimeAtStartOfDay(), from.toDateTimeAtStartOfDay());
 		} else {
-			this.from = from;
-			this.to = to;
+			interval = new Interval(from.toDateTimeAtStartOfDay(), to.toDateTimeAtStartOfDay());
 		}
 	}
 
-	public Date getDateFrom() {
-		return from;
+	public LocalDate getDateFrom() {
+		return interval.getStart().toLocalDate();
 	}
 
-	public Date getDateTo() {
-		return to;
+	public LocalDate getDateTo() {
+		return interval.getEnd().toLocalDate();
 	}
 
 	public boolean isMatch(LogEntry entry) {
-		Date date = entry.getDate().getDate();
-		if (from.equals(to)) {
-			return date.equals(from);
-		} else {
-			return date.greaterThan(from) && date.lessOrEqualThan(to);
-		}
+		return interval.contains(entry.getDate());
 	}
 
 	@Override
 	public String toString() {
-		if (from.lessThan(to)) {
-			return "occurred:" + from + "/" + to;
-		} else {
-			return "occurred:" + from;
-		}
+		return "occurred:" + interval.getStart() + "/" + interval.getEnd();
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 
 		DateMatcher that = (DateMatcher) o;
-		return to.equals(that.to) && from.equals(that.from);
+
+		return interval.equals(that.interval);
+
 	}
 
 	@Override
 	public int hashCode() {
-		return 31 * from.hashCode() + to.hashCode();
+		return interval.hashCode();
 	}
 }

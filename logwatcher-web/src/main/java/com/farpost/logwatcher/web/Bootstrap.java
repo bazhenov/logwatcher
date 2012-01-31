@@ -4,7 +4,7 @@ import com.farpost.logwatcher.Cause;
 import com.farpost.logwatcher.LogEntryImpl;
 import com.farpost.logwatcher.Severity;
 import com.farpost.logwatcher.storage.LogStorage;
-import com.farpost.timepoint.DateTime;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 import static com.google.common.io.Files.deleteDirectoryContents;
+import static org.joda.time.DateTime.now;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Bootstrap implements InitializingBean {
@@ -46,7 +47,7 @@ public class Bootstrap implements InitializingBean {
 	private void loadSampleDump() {
 		Random rnd = new Random();
 		log.info("Loading sample dump...");
-		storage.writeEntry(new LogEntryImpl(DateTime.now(), "group", "AdvertServiceException: Error Fetching http headers", Severity.error, "sum", "advertisement", null));
+		storage.writeEntry(new LogEntryImpl(now(), "group", "AdvertServiceException: Error Fetching http headers", Severity.error, "sum", "advertisement", null));
 		Cause cause = new Cause("RuntimeException", "Socket reading timeout", "AdvertServiceException: Error Fetching http headers\n" +
 			"  at /var/www/baza.farpost.ru/rev/20100325-1520/slr/advert/src/remote/AdvertSoapDecorator.class.php:16\n" +
 			"  10: slrSoapDecorator.class.php:94 AdvertSoapDecorator->handleException(\"Error Fetc...\", SoapFault)\n" +
@@ -61,7 +62,7 @@ public class Bootstrap implements InitializingBean {
 			"  1 : service_runner.php:38 advertUnpopularDeactivationService->run()");
 
 		for (int i = 0; i < 200; i++) {
-			DateTime now = DateTime.now();
+			DateTime now = now();
 			storage.writeEntry(new LogEntryImpl(now.minusSeconds(rnd.nextInt(800)), "group", "OverflowFundsException", Severity.warning, "sum2",
 				"billing", new HashMap<String, String>() {{
 					put("url", "/some/foo/very/long/url/to/fit/in/screen");
@@ -69,26 +70,26 @@ public class Bootstrap implements InitializingBean {
 				}}, cause));
 		}
 
-		storage.writeEntry(new LogEntryImpl(DateTime.now().minusHour(1), "group", "Ooops", Severity.info, "sum4",
+		storage.writeEntry(new LogEntryImpl(now().minusHours(1), "group", "Ooops", Severity.info, "sum4",
 			"geocoder", null, cause));
-		storage.writeEntry(new LogEntryImpl(DateTime.now().minusHour(1), "group", "Ooops", Severity.debug, "sum4",
-			"geocoder", null, cause));
-
-		storage.writeEntry(new LogEntryImpl(DateTime.now().minusHour(1), "group", "Ooops", Severity.trace, "sum4",
+		storage.writeEntry(new LogEntryImpl(now().minusHours(1), "group", "Ooops", Severity.debug, "sum4",
 			"geocoder", null, cause));
 
-		storage.writeEntry(new LogEntryImpl(DateTime.now().minusHour(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
+		storage.writeEntry(new LogEntryImpl(now().minusHours(1), "group", "Ooops", Severity.trace, "sum4",
+			"geocoder", null, cause));
+
+		storage.writeEntry(new LogEntryImpl(now().minusHours(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
 			"frontend", null, cause));
-		storage.writeEntry(new LogEntryImpl(DateTime.now().minusHour(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
+		storage.writeEntry(new LogEntryImpl(now().minusHours(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
 			"frontend", null, cause));
-		storage.writeEntry(new LogEntryImpl(DateTime.now().minusHour(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
+		storage.writeEntry(new LogEntryImpl(now().minusHours(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
 			"frontend", null, cause));
-		storage.writeEntry(new LogEntryImpl(DateTime.now().minusHour(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very very long longvery very long longvery very very long long Exception", Severity.error, "sum4",
+		storage.writeEntry(new LogEntryImpl(now().minusHours(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very very long longvery very long longvery very very long long Exception", Severity.error, "sum4",
 			"frontend", null, cause));
 
-		storage.writeEntry(new LogEntryImpl(DateTime.now().minusHour(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum5",
+		storage.writeEntry(new LogEntryImpl(now().minusHours(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum5",
 			"frontend", null, null));
-		storage.writeEntry(new LogEntryImpl(DateTime.now().minusHour(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum5",
+		storage.writeEntry(new LogEntryImpl(now().minusHours(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum5",
 			"frontend", null, null));
 	}
 }

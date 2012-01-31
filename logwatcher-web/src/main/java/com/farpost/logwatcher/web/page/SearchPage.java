@@ -7,6 +7,7 @@ import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.SeverityMatcher;
 import com.farpost.logwatcher.web.ViewNameAwarePage;
 import com.google.common.collect.Ordering;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.farpost.logwatcher.storage.LogEntries.entries;
-import static com.farpost.timepoint.Date.today;
 
 @Component
 public class SearchPage implements ViewNameAwarePage, InitializingBean {
@@ -45,13 +45,13 @@ public class SearchPage implements ViewNameAwarePage, InitializingBean {
 			try {
 				List<LogEntryMatcher> matchers = translator.translate(query.trim());
 				if (!contains(matchers, DateMatcher.class)) {
-					matchers.add(new DateMatcher(today()));
+					matchers.add(new DateMatcher(LocalDate.now()));
 				}
 				if (!contains(matchers, SeverityMatcher.class)) {
 					matchers.add(new SeverityMatcher(Severity.error));
 				}
 				entries = entries().withCriteria(matchers).find(storage);
-				entries = Ordering.from(new ByOccurenceDateComparator()).sortedCopy(entries);
+				entries = Ordering.from(new ByOccurrenceDateComparator()).sortedCopy(entries);
 				viewName = "search-page";
 			} catch (InvalidQueryException e) {
 				viewName = "invalid-query";

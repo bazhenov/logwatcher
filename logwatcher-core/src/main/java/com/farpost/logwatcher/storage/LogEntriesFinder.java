@@ -3,7 +3,7 @@ package com.farpost.logwatcher.storage;
 import com.farpost.logwatcher.LogEntry;
 import com.farpost.logwatcher.Severity;
 import com.farpost.logwatcher.Visitor;
-import com.farpost.timepoint.Date;
+import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,7 +14,7 @@ public class LogEntriesFinder {
 
 	private final List<LogEntryMatcher> criterias = new LinkedList<LogEntryMatcher>();
 
-	public LogEntriesFinder date(Date date) {
+	public LogEntriesFinder date(LocalDate date) {
 		criterias.add(new DateMatcher(date));
 		return this;
 	}
@@ -24,8 +24,9 @@ public class LogEntriesFinder {
 	 *
 	 * @param from начало диапазона (исключая саму дату)
 	 * @param to	 конец диапазона (включительно)
+	 * @return this
 	 */
-	public LogEntriesFinder date(Date from, Date to) {
+	public LogEntriesFinder date(LocalDate from, LocalDate to) {
 		criterias.add(new DateMatcher(from, to));
 		return this;
 	}
@@ -34,6 +35,7 @@ public class LogEntriesFinder {
 	 * Добавляет критерий по идентификатору приложения
 	 *
 	 * @param applicationId идентификатор приложения
+	 * @return this
 	 */
 	public LogEntriesFinder applicationId(String applicationId) {
 		return withCriteria(new ApplicationIdMatcher(applicationId));
@@ -43,6 +45,7 @@ public class LogEntriesFinder {
 	 * Добавляет критерий по контрольной сумме
 	 *
 	 * @param checksum контрольная сумма
+	 * @return this
 	 */
 	public LogEntriesFinder checksum(String checksum) {
 		return withCriteria(new ChecksumMatcher(checksum));
@@ -86,8 +89,10 @@ public class LogEntriesFinder {
 	/**
 	 * Возвращает количество записей в хранилище подпадающих под заданные критерии.
 	 *
+	 * @param storage Хранилище логов
 	 * @return количество записей
 	 * @throws LogStorageException в случае внутренней ошибки
+	 * @throws InvalidCriteriaException в случае некорректно составленных критериев
 	 */
 	public int count(LogStorage storage) throws LogStorageException, InvalidCriteriaException {
 		return storage.countEntries(criterias);

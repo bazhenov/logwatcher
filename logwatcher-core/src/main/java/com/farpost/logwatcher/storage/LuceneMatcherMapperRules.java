@@ -13,6 +13,7 @@ import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.util.Version;
 
 import static com.farpost.logwatcher.storage.LuceneUtils.normalize;
+import static com.farpost.logwatcher.storage.LuceneUtils.normalizeDate;
 import static org.apache.lucene.search.BooleanClause.Occur;
 
 final public class LuceneMatcherMapperRules {
@@ -20,14 +21,14 @@ final public class LuceneMatcherMapperRules {
 	@Matcher
 	public Query date(DateMatcher matcher) {
 		String lowerTerm = matcher.getDateFrom() != null
-			? LuceneUtils.normilizeDate(matcher.getDateFrom())
+			? normalizeDate(matcher.getDateFrom())
 			: "00000000";
 		String upperTerm = matcher.getDateTo() != null
-			? LuceneUtils.normilizeDate(matcher.getDateTo())
+			? normalizeDate(matcher.getDateTo())
 			: "99999999";
 		return upperTerm.equals(lowerTerm)
 			? new TermQuery(new Term("date", upperTerm))
-			: new TermRangeQuery("date", lowerTerm, upperTerm, false, true);
+			: new TermRangeQuery("date", lowerTerm, upperTerm, true, false);
 	}
 
 	@Matcher

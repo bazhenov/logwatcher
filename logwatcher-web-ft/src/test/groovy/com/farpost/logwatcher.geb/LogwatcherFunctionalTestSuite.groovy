@@ -19,8 +19,8 @@ abstract class LogwatcherFunctionalTestSuite extends GebReportingTest {
 
 	private static final String APPLICATION_URL = System.getProperty("it.location")
 	private static final String REPORT_DIRECTORY = System.getProperty("reportsDir")
-	private static final int port = 6578
-	private static final WebDriver driver;
+	private static final int PORT = 6578
+	private static WebDriver driver;
 	private HashMap<String, Appender<ILoggingEvent>> appenders = new HashMap<String, Appender<ILoggingEvent>>()
 	protected Logger logger = getLogger(getClass())
 
@@ -70,7 +70,7 @@ abstract class LogwatcherFunctionalTestSuite extends GebReportingTest {
 			return appenders.get(applicationId)
 		} else {
 			LogWatcherAppender appender = new LogWatcherAppender()
-			appender.setAddress("0.0.0.0:" + port)
+			appender.setAddress("0.0.0.0:" + PORT)
 			appender.setApplicationId(applicationId)
 			appender.start()
 			appenders.put(applicationId, appender)

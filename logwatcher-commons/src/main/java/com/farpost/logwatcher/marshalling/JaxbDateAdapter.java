@@ -1,6 +1,6 @@
 package com.farpost.logwatcher.marshalling;
 
-import com.farpost.timepoint.DateTime;
+import org.joda.time.DateTime;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.util.Date;
@@ -17,6 +17,6 @@ public class JaxbDateAdapter extends XmlAdapter<Date, DateTime> {
 
 	@Override
 	public Date marshal(DateTime date) throws Exception {
-		return date.asDate();
+		return date.toDate();
 	}
 }

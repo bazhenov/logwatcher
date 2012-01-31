@@ -39,7 +39,7 @@ public class DashboardControllerTest {
 		controller.doDashboard(map);
 
 		assertThat(map.get("applicationIds"), instanceOf(Set.class));
-		Set<String> info = (Set<String>) map.get("applicationIds");
+		@SuppressWarnings({"unchecked"}) Set<String> info = (Set<String>) map.get("applicationIds");
 
 		// Проверяем что показывается информация об одном приложении
 		assertThat(info.size(), equalTo(1));

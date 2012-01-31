@@ -37,7 +37,7 @@
 	<function>
 		<name>date</name>
 		<function-class>com.farpost.logwatcher.web.taglib.Functions</function-class>
-		<function-signature>java.util.Date date(com.farpost.timepoint.Date)</function-signature>
+		<function-signature>java.util.Date date(org.joda.time.ReadableDateTime)</function-signature>
 	</function>
 
 	<function>

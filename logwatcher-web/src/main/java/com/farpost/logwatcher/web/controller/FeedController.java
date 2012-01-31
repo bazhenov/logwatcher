@@ -7,6 +7,7 @@ import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
 import com.farpost.logwatcher.web.page.DetailsPage;
 import com.farpost.logwatcher.web.page.FeedPage;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -19,7 +20,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-import static com.farpost.timepoint.Date.today;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @Controller
@@ -69,7 +69,7 @@ public class FeedController {
 		Severity severity = (s == null)
 			? Severity.error
 			: Severity.forName(s);
-		List<AggregatedEntry> entries = storage.getAggregatedEntries(applicationId, today(), severity);
+		List<AggregatedEntry> entries = storage.getAggregatedEntries(applicationId, LocalDate.now(), severity);
 
 		//Comparator<AggregatedEntry> comparator = comparators.get("last-occurence");
 		//sort(entries, comparator);

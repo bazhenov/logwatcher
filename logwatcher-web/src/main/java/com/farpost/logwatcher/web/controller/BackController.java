@@ -5,7 +5,7 @@ import com.farpost.logwatcher.AggregationResult;
 import com.farpost.logwatcher.storage.InvalidCriteriaException;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
-import com.farpost.timepoint.Date;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -44,7 +44,7 @@ public class BackController {
 		throws LogStorageException, InvalidCriteriaException, ParseException {
 
 		AggregateAttributesVisitor visitor = new AggregateAttributesVisitor();
-		Date dt = new Date(format.get().parse(date).getTime());
+		LocalDate dt = new LocalDate(format.get().parse(date).getTime());
 
 		AggregationResult result = entries().
 			checksum(checksum).

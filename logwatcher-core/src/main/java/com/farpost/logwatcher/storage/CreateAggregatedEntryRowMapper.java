@@ -5,7 +5,7 @@ import com.farpost.logwatcher.AggregatedEntryImpl;
 import com.farpost.logwatcher.LogEntry;
 import com.farpost.logwatcher.Severity;
 import com.farpost.logwatcher.marshalling.Marshaller;
-import com.farpost.timepoint.DateTime;
+import org.joda.time.DateTime;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 
 import java.sql.ResultSet;
