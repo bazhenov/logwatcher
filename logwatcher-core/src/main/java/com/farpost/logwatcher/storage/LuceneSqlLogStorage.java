@@ -180,9 +180,9 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 	}
 
 	@Override
-	public List<LogEntry> findEntries(Collection<LogEntryMatcher> criterias)
+	public List<LogEntry> findEntries(Collection<LogEntryMatcher> criteria)
 		throws LogStorageException, InvalidCriteriaException {
-		return walk(criterias, new CollectingVisitor<LogEntry>());
+		return walk(criteria, new CollectingVisitor<LogEntry>());
 	}
 
 	private Integer[] findEntriesIds(Collection<LogEntryMatcher> criteria) {
@@ -229,7 +229,7 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 		try {
 			checkNotNull(date);
 			Collection<LogEntryMatcher> criteria = new ArrayList<LogEntryMatcher>();
-			criteria.add(new DateMatcher(new LocalDate(0), date.minusDays(1)));
+			criteria.add(new DateMatcher(new LocalDate(0), date));
 			Integer[] ids;
 			int recordsRemoved = 0;
 

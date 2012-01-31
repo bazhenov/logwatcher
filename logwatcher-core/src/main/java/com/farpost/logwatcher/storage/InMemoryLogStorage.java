@@ -53,13 +53,13 @@ public class InMemoryLogStorage implements LogStorage {
 		});
 	}
 
-	public List<LogEntry> findEntries(final Collection<LogEntryMatcher> criterias) {
+	public List<LogEntry> findEntries(final Collection<LogEntryMatcher> criteria) {
 		return withLock(readLock, new Callable<List<LogEntry>>() {
 
 			public List<LogEntry> call() throws Exception {
 				List<LogEntry> result = new ArrayList<LogEntry>();
 				for (LogEntry entry : entries) {
-					if (MatcherUtils.isMatching(entry, criterias)) {
+					if (MatcherUtils.isMatching(entry, criteria)) {
 						result.add(entry);
 					}
 				}
@@ -107,12 +107,12 @@ public class InMemoryLogStorage implements LogStorage {
 		return findAggregatedEntries(criterias);
 	}
 
-	public <T> T walk(final Collection<LogEntryMatcher> criterias, final Visitor<LogEntry, T> visitor) {
+	public <T> T walk(final Collection<LogEntryMatcher> criteria, final Visitor<LogEntry, T> visitor) {
 		withLock(readLock, new Callable<Void>() {
 
 			public Void call() throws Exception {
 				for (LogEntry entry : entries) {
-					if (MatcherUtils.isMatching(entry, criterias)) {
+					if (MatcherUtils.isMatching(entry, criteria)) {
 						visitor.visit(entry);
 					}
 				}
@@ -123,8 +123,8 @@ public class InMemoryLogStorage implements LogStorage {
 		return visitor.getResult();
 	}
 
-	public int countEntries(Collection<LogEntryMatcher> criterias) {
-		return findAggregatedEntries(criterias).size();
+	public int countEntries(Collection<LogEntryMatcher> criteria) {
+		return findAggregatedEntries(criteria).size();
 	}
 
 	public void removeEntriesWithChecksum(final String checksum) throws LogStorageException {

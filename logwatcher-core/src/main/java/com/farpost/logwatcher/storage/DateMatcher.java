@@ -27,17 +27,19 @@ public class DateMatcher implements LogEntryMatcher {
 	 * одинаковы - это семантически эквивалентно использованию конструктора
 	 * {@link DateMatcher#DateMatcher(LocalDate)}.
 	 *
-	 * @param from начало диапазона дат (исключается из диапазона поиска)
-	 * @param to	 конец диапазона дат
+	 * @param from начало диапазона дат
+	 * @param to	 конец диапазона дат (исключается из диапазона поиска)
 	 */
 	public DateMatcher(LocalDate from, LocalDate to) {
 		checkNotNull(from, "Date 'from' must not be null");
 		checkNotNull(to, "Date 'to' must not be null");
 
-		if (from.isAfter(to)) {
-			interval = new Interval(to.toDateTimeAtStartOfDay(), from.plusDays(1).toDateTimeAtStartOfDay());
+		if (from.isEqual(to)) {
+			interval = from.toInterval();
+		} else if (from.isAfter(to)) {
+			interval = new Interval(to.toDateTimeAtStartOfDay(), from.toDateTimeAtStartOfDay());
 		} else {
-			interval = new Interval(from.toDateTimeAtStartOfDay(), to.plusDays(1).toDateTimeAtStartOfDay());
+			interval = new Interval(from.toDateTimeAtStartOfDay(), to.toDateTimeAtStartOfDay());
 		}
 	}
 
@@ -46,15 +48,11 @@ public class DateMatcher implements LogEntryMatcher {
 	}
 
 	public LocalDate getDateTo() {
-		return interval.getEnd().toLocalDate().minusDays(1);
+		return interval.getEnd().toLocalDate();
 	}
 
 	public boolean isMatch(LogEntry entry) {
-		if (interval.getStart().plusDays(1).equals(interval.getEnd())) { //если интервал инициализировался одной датой
-			return interval.contains(entry.getDate());
-		} else { // если разными, то исключаем первый день в интервале, дурацкая немного логика конечно
-			return interval.withStart(interval.getStart().plusDays(1)).contains(entry.getDate());
-		}
+		return interval.contains(entry.getDate());
 	}
 
 	@Override

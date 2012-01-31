@@ -28,7 +28,7 @@ final public class LuceneMatcherMapperRules {
 			: "99999999";
 		return upperTerm.equals(lowerTerm)
 			? new TermQuery(new Term("date", upperTerm))
-			: new TermRangeQuery("date", lowerTerm, upperTerm, false, true);
+			: new TermRangeQuery("date", lowerTerm, upperTerm, true, false);
 	}
 
 	@Matcher

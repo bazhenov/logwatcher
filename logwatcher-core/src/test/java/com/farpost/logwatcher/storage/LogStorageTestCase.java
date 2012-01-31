@@ -170,11 +170,11 @@ abstract public class LogStorageTestCase {
 		count = entries().date(yesterday, today).count(storage);
 		assertThat(count, equalTo(1));
 
-		count = entries().date(today.minusDays(2), today).count(storage);
+		count = entries().date(today.minusDays(2), tomorrow).count(storage);
 		assertThat(count, equalTo(2));
 
 		count = entries().date(today, tomorrow).count(storage);
-		assertThat(count, equalTo(0));
+		assertThat(count, equalTo(1));
 	}
 
 	@Test
