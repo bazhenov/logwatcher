@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 			 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-			 xmlns:p="http://www.springframework.org/schema/p" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+			 xmlns:p="http://www.springframework.org/schema/p"
+			 xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+			 xmlns:int="http://www.springframework.org/schema/integration"
 			 xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-			 			 http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
+			 http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+			 http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd">
 
 	<jdbc:initialize-database data-source="dataSource" enabled="${jdbc.prepareSchema}">
 		<jdbc:script location="classpath:/com/farpost/logwatcher/storage/schema.sql"/>
@@ -16,17 +19,34 @@
 		<property name="password" value="${jdbc.password}"/>
 	</bean>
 
+	<!-- Канал сообщений, аккумулирующий логи для последующей записи в хранилище -->
+	<int:channel id="messageChannel">
+		<int:queue capacity="${logs.queue.capacity}"/>
+	</int:channel>
+
+	<!-- Чтение логов из очереди и добавление их в хранилище -->
+	<int:service-activator input-channel="messageChannel" ref="writeToStorageTransportListener" method="onMessage">
+		<!-- конфигурация poller'ов: http://static.springsource.org/spring-integration/reference/htmlsingle/#channel-adapter-namespace-inbound -->
+		<!-- как вариант можно это еще более "заасинхронить" http://static.springsource.org/spring-integration/reference/htmlsingle/#async-polling -->
+		<int:poller time-unit="MILLISECONDS" fixed-delay="100"/>
+	</int:service-activator>
+
+	<!-- "Сервис", записывающий логи в хранилище -->
+	<bean id="writeToStorageTransportListener" class="com.farpost.logwatcher.transport.WriteToStorageTransportListener">
+		<constructor-arg name="marshaller" ref="marshaller"/>
+		<constructor-arg name="storage" ref="storage"/>
+	</bean>
+
 	<bean class="com.farpost.logwatcher.transport.UdpTransport"
 				lazy-init="false"
 				init-method="start"
 				destroy-method="stop"
 				p:bufferSize="${udp.bufferSize}">
 
-		<constructor-arg value="${udp.port}"/>
-		<constructor-arg>
-			<bean class="com.farpost.logwatcher.transport.WriteToStorageTransportListener">
-				<constructor-arg ref="storage"/>
-				<constructor-arg ref="marshaller"/>
+		<constructor-arg name="port" value="${udp.port}"/>
+		<constructor-arg name="listener">
+			<bean class="com.farpost.logwatcher.transport.WriteToChannelTransportListener">
+				<constructor-arg name="messageChannel" ref="messageChannel"/>
 			</bean>
 		</constructor-arg>
 	</bean>
