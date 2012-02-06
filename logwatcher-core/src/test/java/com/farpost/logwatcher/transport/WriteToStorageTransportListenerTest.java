@@ -11,6 +11,7 @@ import com.farpost.logwatcher.storage.InvalidCriteriaException;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
 import org.joda.time.DateTime;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static com.farpost.logwatcher.storage.LogEntries.entries;
@@ -20,17 +21,23 @@ import static org.joda.time.DateTime.now;
 
 public class WriteToStorageTransportListenerTest {
 
+	private final Marshaller marshaller = new Jaxb2Marshaller();
+	private LogStorage storage;
+	private TransportListener listener;
+
+	@BeforeMethod
+	protected void setUp() throws Exception {
+		storage = new InMemoryLogStorage();
+		listener = new WriteToStorageTransportListener(storage, marshaller);
+	}
+
 	@Test
 	public void listenerShouldWriteEntryToDatabase()
 		throws TransportException, LogStorageException, InvalidCriteriaException {
 		DateTime date = now();
 		Cause cause = new Cause("type", "message", "stack");
-		LogEntry entry = new LogEntryImpl(date, "group", "message", Severity.error, "checksum", "default",
-			null, cause);
+		LogEntry entry = new LogEntryImpl(date, "group", "message", Severity.error, "checksum", "default", null, cause);
 
-		LogStorage storage = new InMemoryLogStorage();
-		Marshaller marshaller = new Jaxb2Marshaller();
-		TransportListener listener = new WriteToStorageTransportListener(storage, marshaller);
 		listener.onMessage(marshaller.marshall(entry));
 
 		int count = entries().
