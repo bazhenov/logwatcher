@@ -5,7 +5,7 @@ import org.springframework.integration.message.GenericMessage;
 
 public class WriteToChannelTransportListener implements TransportListener {
 
-	private volatile MessageChannel messageChannel;
+	private final MessageChannel messageChannel;
 
 	public WriteToChannelTransportListener(MessageChannel messageChannel) {
 		this.messageChannel = messageChannel;
