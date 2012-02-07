@@ -1,60 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-			 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-			 xmlns:p="http://www.springframework.org/schema/p"
-			 xmlns:jdbc="http://www.springframework.org/schema/jdbc"
-			 xmlns:int="http://www.springframework.org/schema/integration"
-			 xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:u="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 			 http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
-			 http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd">
+			 http://www.springframework.org/schema/integration
+			 http://www.springframework.org/schema/integration/spring-integration.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
 
-	<jdbc:initialize-database data-source="dataSource" enabled="${jdbc.prepareSchema}">
-		<jdbc:script location="classpath:/com/farpost/logwatcher/storage/schema.sql"/>
-	</jdbc:initialize-database>
+    <jdbc:initialize-database data-source="dataSource" enabled="${jdbc.prepareSchema}">
+        <jdbc:script location="classpath:/com/farpost/logwatcher/storage/schema.sql"/>
+    </jdbc:initialize-database>
 
-	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-		<property name="driverClassName" value="${jdbc.driverClassName}"/>
-		<property name="url" value="${jdbc.url}"/>
-		<property name="username" value="${jdbc.username}"/>
-		<property name="password" value="${jdbc.password}"/>
-	</bean>
+    <bean class="com.iterative.groovy.service.GroovyShellService"
+          lazy-init="false"
+          init-method="start"
+          destroy-method="destroy"
+          p:port="${groovyShell.port}"
+          p:launchAtStart="${groovyShell.launchAtStart}"
+          p:bindings-ref="groovyShellBindings"/>
 
-	<!-- Канал сообщений, аккумулирующий логи для последующей записи в хранилище -->
-	<int:channel id="messageChannel">
-		<int:queue capacity="${logs.queue.capacity}"/>
-	</int:channel>
+    <u:map id="groovyShellBindings">
+        <entry key="channel" value-ref="messageChannel"/>
+    </u:map>
 
-	<!-- Чтение логов из очереди и добавление их в хранилище -->
-	<int:service-activator input-channel="messageChannel" ref="writeToStorageTransportListener" method="onMessage">
-		<!-- конфигурация poller'ов: http://static.springsource.org/spring-integration/reference/htmlsingle/#channel-adapter-namespace-inbound -->
-		<!-- как вариант можно это еще более "заасинхронить" http://static.springsource.org/spring-integration/reference/htmlsingle/#async-polling -->
-		<int:poller time-unit="MILLISECONDS" fixed-delay="100"/>
-	</int:service-activator>
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
 
-	<!-- "Сервис", записывающий логи в хранилище -->
-	<bean id="writeToStorageTransportListener" class="com.farpost.logwatcher.transport.WriteToStorageTransportListener">
-		<constructor-arg name="marshaller" ref="marshaller"/>
-		<constructor-arg name="storage" ref="storage"/>
-	</bean>
+    <!-- Канал сообщений, аккумулирующий логи для последующей записи в хранилище -->
+    <int:channel id="messageChannel">
+        <int:queue capacity="${logs.queue.capacity}"/>
+    </int:channel>
 
-	<bean class="com.farpost.logwatcher.transport.UdpTransport"
-				lazy-init="false"
-				init-method="start"
-				destroy-method="stop"
-				p:bufferSize="${udp.bufferSize}">
+    <!-- Чтение логов из очереди и добавление их в хранилище -->
+    <int:service-activator input-channel="messageChannel" ref="writeToStorageTransportListener" method="onMessage">
+        <!-- конфигурация poller'ов: http://static.springsource.org/spring-integration/reference/htmlsingle/#channel-adapter-namespace-inbound -->
+        <!-- как вариант можно это еще более "заасинхронить" http://static.springsource.org/spring-integration/reference/htmlsingle/#async-polling -->
+        <int:poller time-unit="MILLISECONDS" fixed-delay="100"/>
+    </int:service-activator>
 
-		<constructor-arg name="port" value="${udp.port}"/>
-		<constructor-arg name="listener">
-			<bean class="com.farpost.logwatcher.transport.WriteToChannelTransportListener">
-				<constructor-arg name="messageChannel" ref="messageChannel"/>
-			</bean>
-		</constructor-arg>
-	</bean>
+    <!-- "Сервис", записывающий логи в хранилище -->
+    <bean id="writeToStorageTransportListener" class="com.farpost.logwatcher.transport.WriteToStorageTransportListener">
+        <constructor-arg name="marshaller" ref="marshaller"/>
+        <constructor-arg name="storage" ref="storage"/>
+    </bean>
 
-	<bean id="jiraInfo" class="com.farpost.logwatcher.web.JiraInfo">
-		<constructor-arg value="${jira.location}"/>
-		<constructor-arg value="${jira.projectPid}"/>
-		<constructor-arg value="${jira.issueType}"/>
-		<constructor-arg value="${jira.priority}"/>
-	</bean>
+    <bean class="com.farpost.logwatcher.transport.UdpTransport"
+          lazy-init="false"
+          init-method="start"
+          destroy-method="stop"
+          p:bufferSize="${udp.bufferSize}">
+
+        <constructor-arg name="port" value="${udp.port}"/>
+        <constructor-arg name="listener">
+            <bean class="com.farpost.logwatcher.transport.WriteToChannelTransportListener">
+                <constructor-arg name="messageChannel" ref="messageChannel"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean id="jiraInfo" class="com.farpost.logwatcher.web.JiraInfo">
+        <constructor-arg value="${jira.location}"/>
+        <constructor-arg value="${jira.projectPid}"/>
+        <constructor-arg value="${jira.issueType}"/>
+        <constructor-arg value="${jira.priority}"/>
+    </bean>
+
+    <bean id="exporter" class="org.springframework.jmx.export.MBeanExporter" lazy-init="false">
+        <property name="beans">
+            <map>
+                <entry key="bean:name=logChannel" value-ref="messageChannel"/>
+            </map>
+        </property>
+    </bean>
 </beans>
