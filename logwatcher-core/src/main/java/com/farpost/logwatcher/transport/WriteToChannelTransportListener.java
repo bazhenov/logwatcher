@@ -13,8 +13,8 @@ public class WriteToChannelTransportListener implements TransportListener {
 
 	@Override
 	public void onMessage(byte[] message) throws TransportException {
-		if(!messageChannel.send(new GenericMessage<byte[]>(message), 0)) {
-            throw new TransportException(new RuntimeException("Queue overflowed"));
-        }
+		if (!messageChannel.send(new GenericMessage<byte[]>(message), 0)) {
+			throw new TransportException(new RuntimeException("Queue overflowed"));
+		}
 	}
 }
