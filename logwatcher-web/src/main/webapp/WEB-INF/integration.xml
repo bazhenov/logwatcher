@@ -4,13 +4,27 @@
 			 xmlns:p="http://www.springframework.org/schema/p"
 			 xmlns:jdbc="http://www.springframework.org/schema/jdbc"
 			 xmlns:int="http://www.springframework.org/schema/integration"
+			 xmlns:u="http://www.springframework.org/schema/util"
 			 xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 			 http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
-			 http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd">
+			 http://www.springframework.org/schema/integration
+			 http://www.springframework.org/schema/integration/spring-integration.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
 
 	<jdbc:initialize-database data-source="dataSource" enabled="${jdbc.prepareSchema}">
 		<jdbc:script location="classpath:/com/farpost/logwatcher/storage/schema.sql"/>
 	</jdbc:initialize-database>
+
+	<bean class="com.iterative.groovy.service.GroovyShellService"
+				lazy-init="false"
+				init-method="start"
+				destroy-method="destroy"
+				p:port="${groovyShell.port}"
+				p:launchAtStart="${groovyShell.launchAtStart}"
+				p:bindings-ref="groovyShellBindings"/>
+
+	<u:map id="groovyShellBindings">
+		<entry key="channel" value-ref="messageChannel"/>
+	</u:map>
 
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="${jdbc.driverClassName}"/>
@@ -56,5 +70,13 @@
 		<constructor-arg value="${jira.projectPid}"/>
 		<constructor-arg value="${jira.issueType}"/>
 		<constructor-arg value="${jira.priority}"/>
+	</bean>
+
+	<bean id="exporter" class="org.springframework.jmx.export.MBeanExporter" lazy-init="false">
+		<property name="beans">
+			<map>
+				<entry key="bean:name=logChannel" value-ref="messageChannel"/>
+			</map>
+		</property>
 	</bean>
 </beans>

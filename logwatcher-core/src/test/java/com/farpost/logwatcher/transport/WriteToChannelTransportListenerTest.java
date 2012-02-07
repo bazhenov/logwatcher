@@ -38,4 +38,14 @@ public class WriteToChannelTransportListenerTest {
 		byte[] actualMessage = (byte[]) messageChannel.receive().getPayload();
 		assertThat(actualMessage, equalTo(message));
 	}
+
+	@Test(expectedExceptions = TransportException.class)
+	public void listenerShouldThrowExceptionOnQueueOverflow() throws TransportException, InterruptedException {
+		Cause cause = new Cause("type", "message", "stack");
+		LogEntry entry = new LogEntryImpl(now(), "group", "message", error, "checksum", "default", null, cause);
+
+		byte[] message = marshaller.marshall(entry);
+		listener.onMessage(message);
+		listener.onMessage(message);
+	}
 }
