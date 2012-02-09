@@ -171,7 +171,7 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 			document.add(text("stacktrace", cause.getStackTrace()));
 			cause = cause.getCause();
 		}
-		document.add(storedTerm("id", Integer.toString(entryId)));
+		document.add(term("id", Integer.toString(entryId)));
 		for (Map.Entry<String, String> row : entry.getAttributes().entrySet()) {
 			document.add(term("@" + row.getKey(), normalize(row.getValue())));
 		}
