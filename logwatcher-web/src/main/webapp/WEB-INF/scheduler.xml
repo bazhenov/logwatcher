@@ -13,7 +13,7 @@
 	</task:scheduled-tasks>
 
 	<bean id='cleanupTask' class="com.farpost.logwatcher.storage.CleanupStorageTask"
-		p:daysToKeep="10">
+		p:daysToKeep="${daysToKeep}">
 		<constructor-arg ref="storage"/>
 	</bean>
 
