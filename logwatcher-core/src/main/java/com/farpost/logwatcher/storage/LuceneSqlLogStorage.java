@@ -160,8 +160,8 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 	private Document createLuceneDocument(LogEntry entry, int entryId) {
 		Document document = new Document();
 		document.add(term("applicationId", normalize(entry.getApplicationId())));
-		document.add(term("date", normalizeDate(entry.getDate())));
-		document.add(term("datetime", normalizeDateTime(entry.getDate())));
+		document.add(numeric("date", normalizeDate(entry.getDate().toLocalDate())));
+		document.add(numeric("datetime", entry.getDate().getMillis()));
 		document.add(text("message", entry.getMessage()));
 		document.add(term("severity", entry.getSeverity().name()));
 		document.add(term("checksum", normalize(entry.getChecksum())));
@@ -195,7 +195,7 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 			SearcherReference ref = searcherRef;
 			Searcher searcher = ref.getSearcher();			
 
-			TopDocs topDocs = searcher.search(query, null, 100, new Sort(new SortField("datetime", SortField.STRING, true)));
+			TopDocs topDocs = searcher.search(query, null, 100, new Sort(new SortField("datetime", SortField.LONG, true)));
 
 			Integer result[] = new Integer[topDocs.scoreDocs.length];
 			for (int i = 0; i < topDocs.scoreDocs.length; i++) {

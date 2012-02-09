@@ -9,26 +9,25 @@ import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
-import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.util.Version;
 
 import static com.farpost.logwatcher.storage.LuceneUtils.normalize;
 import static com.farpost.logwatcher.storage.LuceneUtils.normalizeDate;
 import static org.apache.lucene.search.BooleanClause.Occur;
+import static org.apache.lucene.search.NumericRangeQuery.newLongRange;
 
 final public class LuceneMatcherMapperRules {
 
 	@Matcher
 	public Query date(DateMatcher matcher) {
-		String lowerTerm = matcher.getDateFrom() != null
+		long lowerTerm = matcher.getDateFrom() != null
 			? normalizeDate(matcher.getDateFrom())
-			: "00000000";
-		String upperTerm = matcher.getDateTo() != null
+			: 0;
+		long upperTerm = matcher.getDateTo() != null
 			? normalizeDate(matcher.getDateTo())
-			: "99999999";
-		return upperTerm.equals(lowerTerm)
-			? new TermQuery(new Term("date", upperTerm))
-			: new TermRangeQuery("date", lowerTerm, upperTerm, true, false);
+			: Long.MAX_VALUE;
+
+		return newLongRange("date", lowerTerm, upperTerm, true, false);
 	}
 
 	@Matcher

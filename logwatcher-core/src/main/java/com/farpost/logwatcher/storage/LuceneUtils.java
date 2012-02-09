@@ -1,12 +1,14 @@
 package com.farpost.logwatcher.storage;
 
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.NumericField;
 import org.joda.time.LocalDate;
-import org.joda.time.ReadableDateTime;
-
-import static java.lang.String.format;
 
 class LuceneUtils {
+
+	static NumericField numeric(String name, long value) {
+		return new NumericField(name, Field.Store.NO, true).setLongValue(value);
+	}
 
 	static Field term(String name, String value) {
 		return new Field(name, value, Field.Store.NO, Field.Index.NOT_ANALYZED_NO_NORMS);
@@ -24,28 +26,13 @@ class LuceneUtils {
 		return term.toLowerCase().trim();
 	}
 
-	static String normalizeDate(ReadableDateTime date) {
-		return normalizeDate(date.toDateTime().toLocalDate());
-	}
-
 	/**
-	 * Для заданной даты возвращает строку в формате YYYYMMDD. Например, "20110118"
+	 * Для заданной даты возвращает ее timestamp
 	 *
 	 * @param date дата
-	 * @return строковое представление даты в формате без разделителей
+	 * @return timestamp даты
 	 */
-	static String normalizeDate(LocalDate date) {
-		return format("%d%02d%02d", date.getYear(), date.getMonthOfYear(), date.getDayOfMonth());
-	}
-
-	/**
-	 * Для заданной даты возвращает строку в формате YYYYMMDDHHMMII. Например, "20110118122412"
-	 *
-	 * @param date дата
-	 * @return строковое представление даты и времени в формате без разделителей
-	 */
-	static String normalizeDateTime(ReadableDateTime date) {
-		return format("%d%02d%02d%02d%02d%02d", date.getYear(), date.getMonthOfYear(), date.getDayOfMonth(),
-			date.getHourOfDay(), date.getMinuteOfHour(), date.getSecondOfMinute());
+	static long normalizeDate(LocalDate date) {
+		return date.toDateTimeAtStartOfDay().getMillis();
 	}
 }
