@@ -129,10 +129,9 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 	 */
 	private SearcherReference reopenSearcher() throws IOException {
 		IndexReader indexReader = writer.getReader();
-		IndexSearcher searcher = new IndexSearcher(indexReader);
-		int[] ids = FieldCache.DEFAULT.getInts(indexReader, "id");
-		return new SearcherReference(indexReader, searcher, ids);
-	}
+		IndexSearcher searcher = new IndexSearcher(indexReader);		
+		return new SearcherReference(indexReader, searcher, gatherDocumentIds(searcher));
+	}		
 
 	public void setCommitThreshold(int commitThreshold) {
 		this.commitThreshold = commitThreshold;
@@ -194,14 +193,13 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 			 * чтобы избежать race condition
 			 */
 			SearcherReference ref = searcherRef;
-			Searcher searcher = ref.getSearcher();
-			int[] ids = ref.getIdFieldCache();
+			Searcher searcher = ref.getSearcher();			
 
 			TopDocs topDocs = searcher.search(query, null, 100, new Sort(new SortField("datetime", SortField.STRING, true)));
 
 			Integer result[] = new Integer[topDocs.scoreDocs.length];
 			for (int i = 0; i < topDocs.scoreDocs.length; i++) {
-				result[i] = ids[topDocs.scoreDocs[i].doc];
+				result[i] = ref.getDocumentId(topDocs.scoreDocs[i].doc);
 			}
 			return result;
 
@@ -311,5 +309,16 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 		return jdbc.query(
 			"SELECT checksum, application_id, last_time, count, severity, content FROM aggregated_entry WHERE application_id = ? AND date = ? AND severity >= ?",
 			aggregateEntryMapper, applicationId, date(date), severity.getCode());
+	}
+
+	private static List<int[]> gatherDocumentIds(IndexSearcher searcher) throws IOException {
+		int documentCount = searcher.maxDoc();
+		if (documentCount > 0) {
+			GatherDocumentIdsCollector collector = new GatherDocumentIdsCollector("id");
+			searcher.search(new MatchAllDocsQuery(), collector);
+			return collector.getValues();
+		} else {
+			return Collections.emptyList();
+		}
 	}
 }
