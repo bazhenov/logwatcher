@@ -39,6 +39,7 @@ import static org.springframework.util.StringUtils.arrayToCommaDelimitedString;
 
 public class LuceneSqlLogStorage implements LogStorage, Closeable {
 
+	private static final Sort DATETIME_SORT = new Sort(new SortField("datetime", SortField.LONG, true));
 	private final MatcherMapper<Query> matcherMapper;
 	private int nextId;
 
@@ -87,16 +88,16 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 			byte[] marshaledEntry = marshaller.marshall(impl);
 
 			jdbc.update("INSERT INTO entry (id, date, checksum,value) VALUES (?, ?, ?, ?)", entryId, entryDate,
-				checksum, marshaledEntry);
+					checksum, marshaledEntry);
 
 			int affectedRows = jdbc.update(
-				"UPDATE aggregated_entry SET count = count + 1, last_time = ? WHERE date = ? AND checksum = ?",
-				entryTimestamp, entryDate, checksum);
+					"UPDATE aggregated_entry SET count = count + 1, last_time = ? WHERE date = ? AND checksum = ?",
+					entryTimestamp, entryDate, checksum);
 			if (affectedRows == 0) {
 				jdbc.update(
-					"INSERT INTO aggregated_entry (date, checksum, last_time, category, severity, application_id, count, content) VALUES (?, ?, ?, ?, ?, ?, 1, ?)",
-					entryDate, checksum, entryTimestamp, impl.getCategory(),
-					impl.getSeverity().getCode(), impl.getApplicationId(), marshaledEntry);
+						"INSERT INTO aggregated_entry (date, checksum, last_time, category, severity, application_id, count, content) VALUES (?, ?, ?, ?, ?, ?, 1, ?)",
+						entryDate, checksum, entryTimestamp, impl.getCategory(),
+						impl.getSeverity().getCode(), impl.getApplicationId(), marshaledEntry);
 			}
 
 			if (log.isDebugEnabled()) {
@@ -129,9 +130,9 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 	 */
 	private SearcherReference reopenSearcher() throws IOException {
 		IndexReader indexReader = writer.getReader();
-		IndexSearcher searcher = new IndexSearcher(indexReader);		
+		IndexSearcher searcher = new IndexSearcher(indexReader);
 		return new SearcherReference(indexReader, searcher, gatherDocumentIds(searcher));
-	}		
+	}
 
 	public void setCommitThreshold(int commitThreshold) {
 		this.commitThreshold = commitThreshold;
@@ -180,11 +181,15 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 
 	@Override
 	public List<LogEntry> findEntries(Collection<LogEntryMatcher> criteria)
-		throws LogStorageException, InvalidCriteriaException {
+			throws LogStorageException, InvalidCriteriaException {
 		return walk(criteria, new CollectingVisitor<LogEntry>());
 	}
 
 	private Integer[] findEntriesIds(Collection<LogEntryMatcher> criteria) {
+		return findEntriesIds(criteria, null);
+	}
+
+	private Integer[] findEntriesIds(Collection<LogEntryMatcher> criteria, Sort sort) {
 		try {
 			Query query = createLuceneQuery(criteria);
 
@@ -193,9 +198,11 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 			 * чтобы избежать race condition
 			 */
 			SearcherReference ref = searcherRef;
-			Searcher searcher = ref.getSearcher();			
+			Searcher searcher = ref.getSearcher();
 
-			TopDocs topDocs = searcher.search(query, null, 100, new Sort(new SortField("datetime", SortField.LONG, true)));
+			TopDocs topDocs = sort != null
+					? searcher.search(query, null, 100, DATETIME_SORT)
+					: searcher.search(query, null, 100);
 
 			Integer result[] = new Integer[topDocs.scoreDocs.length];
 			for (int i = 0; i < topDocs.scoreDocs.length; i++) {
@@ -256,8 +263,8 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 		try {
 			Searcher searcher = searcherRef.getSearcher();
 			Query query = criteria.isEmpty()
-				? new MatchAllDocsQuery()
-				: createLuceneQuery(criteria);
+					? new MatchAllDocsQuery()
+					: createLuceneQuery(criteria);
 			return searcher.search(query, 1).totalHits;
 		} catch (MatcherMapperException e) {
 			throw new LogStorageException(e);
@@ -282,8 +289,8 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 
 	@Override
 	public <T> T walk(Collection<LogEntryMatcher> criteria, Visitor<LogEntry, T> visitor)
-		throws LogStorageException, InvalidCriteriaException {
-		Integer[] ids = findEntriesIds(criteria);
+			throws LogStorageException, InvalidCriteriaException {
+		Integer[] ids = findEntriesIds(criteria, DATETIME_SORT);
 		if (ids.length > 0) {
 			String idString = arrayToCommaDelimitedString(ids);
 
@@ -299,16 +306,16 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 	public Set<String> getUniqueApplicationIds(LocalDate date) {
 		checkNotNull(date);
 		List<String> ids = jdbc.queryForList("SELECT application_id FROM aggregated_entry WHERE date = ? GROUP BY application_id",
-			String.class, date(date));
+				String.class, date(date));
 		return new HashSet<String>(ids);
 	}
 
 	@Override
 	public List<AggregatedEntry> getAggregatedEntries(String applicationId, LocalDate date, Severity severity)
-		throws LogStorageException, InvalidCriteriaException {
+			throws LogStorageException, InvalidCriteriaException {
 		return jdbc.query(
-			"SELECT checksum, application_id, last_time, count, severity, content FROM aggregated_entry WHERE application_id = ? AND date = ? AND severity >= ?",
-			aggregateEntryMapper, applicationId, date(date), severity.getCode());
+				"SELECT checksum, application_id, last_time, count, severity, content FROM aggregated_entry WHERE application_id = ? AND date = ? AND severity >= ?",
+				aggregateEntryMapper, applicationId, date(date), severity.getCode());
 	}
 
 	private static List<int[]> gatherDocumentIds(IndexSearcher searcher) throws IOException {
