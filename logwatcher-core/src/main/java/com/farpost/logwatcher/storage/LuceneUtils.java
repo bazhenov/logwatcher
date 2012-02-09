@@ -3,6 +3,9 @@ package com.farpost.logwatcher.storage;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.NumericField;
 import org.joda.time.LocalDate;
+import org.joda.time.ReadableDateTime;
+
+import static java.lang.String.format;
 
 class LuceneUtils {
 
@@ -22,13 +25,17 @@ class LuceneUtils {
 		return term.toLowerCase().trim();
 	}
 
+	static String normalizeDate(ReadableDateTime date) {
+		return normalizeDate(date.toDateTime().toLocalDate());
+	}
+
 	/**
-	 * Для заданной даты возвращает ее timestamp
+	 * Для заданной даты возвращает строку в формате YYYYMMDD. Например, "20110118"
 	 *
 	 * @param date дата
-	 * @return timestamp даты
+	 * @return строковое представление даты в формате без разделителей
 	 */
-	static long normalizeDate(LocalDate date) {
-		return date.toDateTimeAtStartOfDay().getMillis();
+	static String normalizeDate(LocalDate date) {
+		return format("%d%02d%02d", date.getYear(), date.getMonthOfYear(), date.getDayOfMonth());
 	}
 }

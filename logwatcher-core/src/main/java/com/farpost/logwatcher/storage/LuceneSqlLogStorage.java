@@ -160,7 +160,7 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 	private Document createLuceneDocument(LogEntry entry, int entryId) {
 		Document document = new Document();
 		document.add(term("applicationId", normalize(entry.getApplicationId())));
-		document.add(numeric("date", normalizeDate(entry.getDate().toLocalDate())));
+		document.add(term("date", normalizeDate(entry.getDate())));
 		document.add(numeric("datetime", entry.getDate().getMillis()));
 		document.add(text("message", entry.getMessage()));
 		document.add(term("severity", entry.getSeverity().name()));
