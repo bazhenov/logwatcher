@@ -32,12 +32,15 @@ import java.util.*;
 
 import static com.farpost.logwatcher.storage.LuceneUtils.*;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.io.Closeables.closeQuietly;
 import static java.lang.System.nanoTime;
 import static org.apache.lucene.index.IndexWriter.MaxFieldLength;
 import static org.apache.lucene.search.BooleanClause.Occur;
 import static org.springframework.util.StringUtils.arrayToCommaDelimitedString;
 
 public class LuceneSqlLogStorage implements LogStorage, Closeable {
+
+	private final Object writerLock = new Object();
 
 	private static final Sort DATETIME_SORT = new Sort(new SortField("datetime", SortField.LONG, true));
 	private final MatcherMapper<Query> matcherMapper;
@@ -58,7 +61,7 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 	public LuceneSqlLogStorage(Directory directory, DataSource dataSource) throws IOException {
 		matcherMapper = new AnnotationDrivenMatcherMapperImpl<Query>(new LuceneMatcherMapperRules());
 		writer = new IndexWriter(directory, new StandardAnalyzer(Version.LUCENE_30), MaxFieldLength.UNLIMITED);
-		searcherRef = reopenSearcher();
+		searcherRef = createSearcher();
 		this.jdbc = new JdbcTemplate(dataSource);
 		this.marshaller = new Jaxb2Marshaller();
 		this.aggregateEntryMapper = new CreateAggregatedEntryRowMapper(marshaller);
@@ -73,7 +76,7 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 
 	// TODO: объективных причин для сериализации потоков при записи нет
 	@Override
-	public synchronized void writeEntry(LogEntry entry) throws LogStorageException {
+	public void writeEntry(LogEntry entry) throws LogStorageException {
 		try {
 			checkNotNull(entry);
 			// TODO: контрольная сумма должна расчитыватся где-то в другом месте. Это слой хранения данных
@@ -104,7 +107,9 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 				log.debug("Entry with checksum: " + checksum + " wrote to database");
 			}
 
-			writer.addDocument(createLuceneDocument(entry, entryId));
+			synchronized (writerLock) {
+				writer.addDocument(createLuceneDocument(entry, entryId));
+			}
 
 			commitChangesIfNeeded();
 
@@ -122,16 +127,35 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 	}
 
 	/**
-	 * Переоткрывает {@link IndexSearcher} для заданной директории, а также выполняет предзагрузку
+	 * Открывает {@link IndexSearcher} для текущего writer'a, а также выполняет предзагрузку
 	 * {@link FieldCache}'а для поля {@code id}.
 	 *
 	 * @return tuple состоящий из {@link IndexSearcher}'а и {@link FieldCache}'а.
 	 * @throws IOException в случае ошибки ввода/вывода открытии {@link IndexReader}'а или {@link IndexSearcher}'а.
 	 */
-	private SearcherReference reopenSearcher() throws IOException {
+	private SearcherReference createSearcher() throws IOException {
 		IndexReader indexReader = writer.getReader();
 		IndexSearcher searcher = new IndexSearcher(indexReader);
 		return new SearcherReference(indexReader, searcher, gatherDocumentIds(searcher));
+	}
+
+	/**
+	 * Переоткрывает {@link IndexReader} и подменяет ссылку на новый {@link SearcherReference},
+	 * таким образом все изменения произошедшие перед
+	 * последним вызовом метода {@link IndexWriter#commit()} становятся видны клиентам.
+	 * <p/>
+	 * Требует синхронизации извне
+	 * <p/>
+	 * Во время переоткрытия данный метод убеждается что старый {@code IndexReader} будет корреткно
+	 * закрыт.
+	 *
+	 * @throws IOException в случае ошибки ввода вывода во время переоткрытия {@link IndexReader}'а
+	 */
+	private void reopenReader() throws IOException {
+		SearcherReference newSearcher = createSearcher();
+		SearcherReference oldSearcher = searcherRef;
+		searcherRef = newSearcher;
+		closeQuietly(oldSearcher);
 	}
 
 	public void setCommitThreshold(int commitThreshold) {
@@ -147,14 +171,16 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 	 *
 	 * @throws IOException в случае ошибки ввода/вывода при коммите изменений в индекс
 	 */
-	private synchronized void commitChangesIfNeeded() throws IOException {
-		boolean realTimeModeEnabled = commitThreshold <= 0;
-		boolean commitThresholdReached = lastCommitTime < nanoTime() - commitThreshold * 1e+9;
+	private void commitChangesIfNeeded() throws IOException {
+		synchronized (writerLock) {
+			boolean realTimeModeEnabled = commitThreshold <= 0;
+			boolean commitThresholdReached = lastCommitTime < nanoTime() - commitThreshold * 1e+9;
 
-		if (realTimeModeEnabled || commitThresholdReached) {
-			writer.commit();
-			searcherRef = reopenSearcher();
-			lastCommitTime = nanoTime();
+			if (realTimeModeEnabled || commitThresholdReached) {
+				writer.commit();
+				reopenReader();
+				lastCommitTime = nanoTime();
+			}
 		}
 	}
 
@@ -185,19 +211,18 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 		return walk(criteria, new CollectingVisitor<LogEntry>());
 	}
 
-	private Integer[] findEntriesIds(Collection<LogEntryMatcher> criteria) {
-		return findEntriesIds(criteria, null);
+	private Integer[] findEntriesIds(final Collection<LogEntryMatcher> criteria) {
+		return withSearcher(new SearcherTask<Integer[]>() {
+			@Override
+			public Integer[] call(SearcherReference ref) throws IOException {
+				return findEntriesIds(criteria, null, ref);
+			}
+		});
 	}
 
-	private Integer[] findEntriesIds(Collection<LogEntryMatcher> criteria, Sort sort) {
+	private Integer[] findEntriesIds(Collection<LogEntryMatcher> criteria, Sort sort, SearcherReference ref) {
 		try {
 			Query query = createLuceneQuery(criteria);
-
-			/**
-			 * Сохраняем ссылку на tuple({@link org.apache.lucene.search.IndexSearcher}, {@link org.apache.lucene.search.FieldCache}) локально
-			 * чтобы избежать race condition
-			 */
-			SearcherReference ref = searcherRef;
 			Searcher searcher = ref.getSearcher();
 
 			TopDocs topDocs = sort != null
@@ -241,7 +266,9 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 			while ((ids = findEntriesIds(criteria)).length > 0) {
 				jdbc.update("DELETE FROM entry WHERE id IN (" + arrayToCommaDelimitedString(ids) + ")");
 				for (int id : ids) {
-					writer.deleteDocuments(new Term("id", Integer.toString(id)));
+					synchronized (writerLock) {
+						writer.deleteDocuments(new Term("id", Integer.toString(id)));
+					}
 				}
 				recordsRemoved += ids.length;
 				commitChangesIfNeeded();
@@ -259,25 +286,31 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 	}
 
 	@Override
-	public int countEntries(Collection<LogEntryMatcher> criteria) throws LogStorageException, InvalidCriteriaException {
-		try {
-			Searcher searcher = searcherRef.getSearcher();
-			Query query = criteria.isEmpty()
-					? new MatchAllDocsQuery()
-					: createLuceneQuery(criteria);
-			return searcher.search(query, 1).totalHits;
-		} catch (MatcherMapperException e) {
-			throw new LogStorageException(e);
-		} catch (IOException e) {
-			throw new LogStorageException(e);
-		}
-
+	public int countEntries(final Collection<LogEntryMatcher> criteria) throws LogStorageException, InvalidCriteriaException {
+		return withSearcher(new SearcherTask<Integer>() {
+			@Override
+			public Integer call(SearcherReference ref) throws IOException {
+				try {
+					Searcher searcher = ref.getSearcher();
+					Query query = criteria.isEmpty()
+							? new MatchAllDocsQuery()
+							: createLuceneQuery(criteria);
+					return searcher.search(query, 1).totalHits;
+				} catch (MatcherMapperException e) {
+					throw new LogStorageException(e);
+				} catch (IOException e) {
+					throw new LogStorageException(e);
+				}
+			}
+		});
 	}
 
 	@Override
 	public void removeEntriesWithChecksum(String checksum) throws LogStorageException {
 		try {
-			writer.deleteDocuments(new Term("checksum", normalize(checksum)));
+			synchronized (writerLock) {
+				writer.deleteDocuments(new Term("checksum", normalize(checksum)));
+			}
 			jdbc.update("DELETE FROM entry WHERE checksum = ?", checksum);
 			jdbc.update("DELETE FROM aggregated_entry WHERE checksum = ?", checksum);
 
@@ -288,9 +321,14 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 	}
 
 	@Override
-	public <T> T walk(Collection<LogEntryMatcher> criteria, Visitor<LogEntry, T> visitor)
+	public <T> T walk(final Collection<LogEntryMatcher> criteria, Visitor<LogEntry, T> visitor)
 			throws LogStorageException, InvalidCriteriaException {
-		Integer[] ids = findEntriesIds(criteria, DATETIME_SORT);
+		Integer[] ids = withSearcher(new SearcherTask<Integer[]>() {
+			@Override
+			public Integer[] call(SearcherReference ref) throws IOException {
+				return findEntriesIds(criteria, DATETIME_SORT, ref);
+			}
+		});
 		if (ids.length > 0) {
 			String idString = arrayToCommaDelimitedString(ids);
 
@@ -327,5 +365,15 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 		} else {
 			return Collections.emptyList();
 		}
+	}
+
+	private <T> T withSearcher(SearcherTask<T> task) {
+		do {
+			try {
+				return searcherRef.withSearch(task);
+			} catch (IllegalStateException e) {
+				log.warn("Searcher reference closed while searching", e);
+			}
+		} while (true);
 	}
 }
