@@ -24,6 +24,10 @@
 
 	<u:map id="groovyShellBindings">
 		<entry key="channel" value-ref="messageChannel"/>
+		<entry key="ds" value-ref="dataSource"/>
+		<entry key="ctx">
+			<bean class="com.farpost.logwatcher.web.ApplicationContextReference"/>
+		</entry>
 	</u:map>
 
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">

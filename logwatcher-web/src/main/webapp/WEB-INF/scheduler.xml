@@ -11,9 +11,10 @@
 	<task:scheduled-tasks scheduler="scheduler">
 		<task:scheduled ref="cleanupTask" method="run" cron="0 0 * * * *"/>
 	</task:scheduled-tasks>
+	ssh
 
 	<bean id='cleanupTask' class="com.farpost.logwatcher.storage.CleanupStorageTask"
-		p:daysToKeep="${daysToKeep}">
+				p:daysToKeep="${daysToKeep}">
 		<constructor-arg ref="storage"/>
 	</bean>
 
