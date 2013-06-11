@@ -25,7 +25,6 @@ public class LogWatcherAppenderTest {
 
 	private BlockingQueue<byte[]> messages;
 	private Marshaller marshaller = new Jaxb2Marshaller();
-	private int port = 6590;
 	private UdpTransport transport;
 	private String applicationId = "foobar";
 	private LogWatcherAppender appender;
@@ -35,11 +34,12 @@ public class LogWatcherAppenderTest {
 	@BeforeMethod
 	public void setUp() throws SocketException, TransportException {
 		messages = new LinkedBlockingQueue<byte[]>();
+		int port = 6590;
 		transport = new UdpTransport(port, new QueueAppendListener(messages));
 		transport.setBufferSize(100 * 1024);
 		transport.start();
 
-		appender = createAppender("0.0.0.0:" + port, applicationId);
+		appender = createAppender("127.1:" + port, applicationId);
 
 		root.addAppender(appender);
 		oldLevel = root.getLevel();

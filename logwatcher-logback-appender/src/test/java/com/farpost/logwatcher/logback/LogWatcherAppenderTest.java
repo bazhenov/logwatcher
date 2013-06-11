@@ -16,18 +16,22 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
 import java.net.BindException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.net.SocketException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import static java.lang.Integer.parseInt;
-import static java.lang.System.getProperty;
+import static java.lang.Math.random;
+import static java.lang.Thread.currentThread;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasEntry;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class LogWatcherAppenderTest {
@@ -41,8 +45,8 @@ public class LogWatcherAppenderTest {
 	private Level level;
 
 	@BeforeMethod
-	public void setUp() throws SocketException, TransportException {
-		int port = parseInt(getProperty("it.udp-appender.port", "6590"));
+	public void setUp() throws IOException, TransportException {
+		int port = findUnboundPort();
 		try {
 			messages = new LinkedBlockingQueue<byte[]>();
 			transport = new UdpTransport(port, new QueueAppendListener(messages));
@@ -51,7 +55,7 @@ public class LogWatcherAppenderTest {
 			throw new RuntimeException("Unable bind UdpTransport to port " + port);
 		}
 
-		appender = createAppender("0.0.0.0:" + port, applicationId);
+		appender = createAppender("127.1:" + port, applicationId);
 		appender.start();
 		root.addAppender(appender);
 		level = root.getLevel();
@@ -136,6 +140,7 @@ public class LogWatcherAppenderTest {
 	 */
 	private LogEntry getLastMessage() throws InterruptedException {
 		byte[] lastMessage = messages.poll(1, TimeUnit.SECONDS);
+		assertThat("No message received", lastMessage, notNullValue());
 		return marshaller.unmarshall(lastMessage);
 	}
 
@@ -144,5 +149,30 @@ public class LogWatcherAppenderTest {
 		appender.setAddress(address);
 		appender.setApplicationId(applicationId);
 		return appender;
+	}
+
+	/**
+	 * @return случайный свободный порт в диапазоне от 1025 до 65535
+	 * @throws java.io.IOException в случае ошибки при закрытии временного сокета
+	 */
+	public static int findUnboundPort() throws IOException {
+		int port;
+		while (!currentThread().isInterrupted()) {
+			// pick a random port in 1025-65535 range
+			port = (int) ((random() * (65535 - 1025)) + 1025);
+			Socket socket = null;
+			try {
+				socket = new Socket();
+				socket.bind(new InetSocketAddress(port));
+			} catch (IOException e) {
+				continue;
+			} finally {
+				if (socket != null) {
+					socket.close();
+				}
+			}
+			return port;
+		}
+		throw new IllegalStateException("Someone interrupts me. So I give up.");
 	}
 }
