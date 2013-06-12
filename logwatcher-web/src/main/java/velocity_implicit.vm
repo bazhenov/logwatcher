@@ -1,0 +1,6 @@
+#* @implicitly included *#
+#* @vtlvariable name="math" type="org.apache.velocity.tools.generic.MathTool" *#
+#* @vtlvariable name="number" type="org.apache.velocity.tools.generic.NumberTool" *#
+#* @vtlvariable name="date" type="org.apache.velocity.tools.generic.DateTool" *#
+#* @vtlvariable name="link" type="org.apache.velocity.tools.view.LinkTool" *#
+#* @vtlvariable name="esc" type="org.apache.velocity.tools.generic.EscapeTool" *#

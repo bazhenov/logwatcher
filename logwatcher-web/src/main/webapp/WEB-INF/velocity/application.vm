@@ -1,0 +1,14 @@
+#* @vtlvariable name="p" type="com.farpost.logwatcher.web.controller.FeedController.ApplicationViewPage" *#
+<html>
+<head>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js">/**/</script>
+	<script type="text/javascript" src="$link.uri('/js/feed.js')">/**/</script>
+
+	<link rel="stylesheet" href="/css/aggregated-feed.css"/>
+</head>
+<body>
+<div id="sidebar">
+	<div ng-view=""></div>
+</div>
+</body>
+</html>

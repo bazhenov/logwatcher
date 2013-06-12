@@ -1,0 +1,11 @@
+<div id="sidebar" ng-controller="FeedController">
+	1 + 2 = {{1+2}}
+	<input ng-model="nameFilter"/>
+
+	<ul>
+		<li ng-repeat="name in names | filter:nameFilter">{{name}}</li>
+	</ul>
+	Name: <input ng-model="newCustomer.name">
+	<br/>
+	<button ng-click="addCustomer()">Add</button>
+</div>
