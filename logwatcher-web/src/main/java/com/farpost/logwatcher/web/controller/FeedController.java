@@ -13,11 +13,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
 import java.util.List;
 
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
@@ -80,6 +82,17 @@ public class FeedController {
 		return "feed-rss";
 	}
 
+	@RequestMapping("/rest/feed/{applicationId}")
+	@ResponseBody
+	public Collection<AggregatedEntry> handleFeed(@PathVariable String applicationId) {
+		return storage.getAggregatedEntries(applicationId, new LocalDate(), Severity.debug);
+	}
+
+	@RequestMapping("/app/{applicationId}")
+	public ModelAndView handleApplicationView(@PathVariable String applicationId) {
+		return new ModelAndView("application", "p", new ApplicationViewPage(applicationId));
+	}
+
 	private static Severity getSeverity(HttpServletRequest request) {
 		String get = request.getParameter("severity");
 		if (get != null) {
@@ -107,5 +120,18 @@ public class FeedController {
 			}
 		}
 		return null;
+	}
+
+	public class ApplicationViewPage {
+
+		private final String applicationId;
+
+		public ApplicationViewPage(String applicationId) {
+			this.applicationId = applicationId;
+		}
+
+		public String getApplicationId() {
+			return applicationId;
+		}
 	}
 }
