@@ -7,6 +7,7 @@ import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
 import com.farpost.logwatcher.web.page.DetailsPage;
 import com.farpost.logwatcher.web.page.FeedPage;
+import com.farpost.logwatcher.web.page.InnerFeedPage;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -20,6 +21,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
@@ -55,6 +57,21 @@ public class FeedController {
 		String sortOrder = getSortOrder(request);
 
 		return new FeedPage(request, date, applicationId, severity, sortOrder);
+	}
+
+	@RequestMapping("/service/feed/{applicationId}")
+	@ModelAttribute("p")
+	public InnerFeedPage handleInnerFeed(@PathVariable String applicationId,
+																			 @RequestParam(required = false) @DateTimeFormat(iso = DATE) Date date,
+																			 HttpServletRequest request) {
+		if (date == null) {
+			date = new java.util.Date();
+		}
+
+		Severity severity = getSeverity(request);
+		String sortOrder = getSortOrder(request);
+
+		return new InnerFeedPage(request, date, applicationId, severity, sortOrder);
 	}
 
 	@RequestMapping("/entries/{applicationId}/{checksum}")

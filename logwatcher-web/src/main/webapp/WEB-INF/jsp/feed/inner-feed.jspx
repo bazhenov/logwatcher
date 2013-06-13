@@ -1,0 +1,36 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns="http://www.w3.org/1999/xhtml"
+          version="2.1"
+          xmlns:c="http://java.sun.com/jsp/jstl/core"
+          xmlns:l="http://bazhenov.org/logging"
+          xmlns:f="http://java.sun.com/jsp/jstl/functions"
+          xmlns:lt="urn:jsptagdir:/WEB-INF/tags">
+
+    <jsp:directive.page contentType="text/html"/>
+    <jsp:useBean id="p" scope="request" type="com.farpost.logwatcher.web.page.InnerFeedPage"/>
+
+
+    <c:choose>
+        <c:when test="${f:length(p.entries) > 0}">
+            <div class="entries">
+                <c:forEach var="entry" items="${p.entries}">
+                    <lt:aggregated-entry entry="${entry}" currentApplicationId="${p.applicationId}"
+                                         jiraInfo="${p.jiraInfo}"/>
+                </c:forEach>
+            </div>
+
+            <div id="footer">
+                ${l:pluralize(f:length(p.entries), "entry entries entries")},
+                ${l:pluralize(p.entriesCount, "message messages messages")}
+            </div>
+        </c:when>
+        <c:otherwise>
+            <div id="notificationPanel">
+                <p>Try to change severity settings</p>
+                <span>&amp;empty;</span>
+                <br/>No results found.
+            </div>
+
+        </c:otherwise>
+    </c:choose>
+
+</jsp:root>
