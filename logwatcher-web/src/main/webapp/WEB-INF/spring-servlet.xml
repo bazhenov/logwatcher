@@ -6,6 +6,15 @@
 			 xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 			 http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:default.properties</value>
+				<value>${resourcesFile}</value>
+			</list>
+		</property>
+	</bean>
+
 	<mvc:annotation-driven/>
 	<mvc:interceptors>
 		<bean class="com.farpost.logwatcher.web.AutowireModeAttributesHandlerInterceptor"/>
@@ -26,6 +35,7 @@
 		<property name="viewNames">
 			<list>
 				<value>application</value>
+				<value>system/generate-message</value>
 			</list>
 		</property>
 	</bean>

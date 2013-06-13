@@ -1,9 +1,6 @@
 package com.farpost.logwatcher.web.page;
 
-import com.farpost.logwatcher.AggregatedEntry;
-import com.farpost.logwatcher.ByLastOccurrenceDateComparator;
-import com.farpost.logwatcher.ByOccurenceCountComparator;
-import com.farpost.logwatcher.Severity;
+import com.farpost.logwatcher.*;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.web.JiraInfo;
 import com.farpost.logwatcher.web.ViewNameAwarePage;
@@ -38,7 +35,7 @@ public class InnerFeedPage implements ViewNameAwarePage, InitializingBean {
 	private static final Logger log = getLogger(InnerFeedPage.class);
 
 	private final HashMap<String, Comparator<AggregatedEntry>> comparators = new HashMap<String, Comparator<AggregatedEntry>>() {{
-		put(null, new ByLastOccurrenceDateComparator());
+		put(null, new ByTitleComparator());
 		put("last-occurence", new ByLastOccurrenceDateComparator());
 		put("occurence-count", new ByOccurenceCountComparator());
 	}};

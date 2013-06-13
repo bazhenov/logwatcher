@@ -30,6 +30,11 @@
 			<version>1.6.1</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>11.0</version>
+		</dependency>
 
 		<!-- тестовые зависимости -->
 		<dependency>

@@ -12,7 +12,8 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Random;
 
-import static com.google.common.io.Files.deleteDirectoryContents;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 import static org.joda.time.DateTime.now;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -39,9 +40,24 @@ public class Bootstrap implements InitializingBean {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		if (loadSampleDump) {
-			deleteDirectoryContents(indexLocation);
+			deleteDirectory(indexLocation);
+			checkState(indexLocation.mkdir());
 			loadSampleDump();
 		}
+	}
+
+	public static boolean deleteDirectory(File path) {
+		if (path.exists()) {
+			File[] files = checkNotNull(path.listFiles());
+			for (File file : files) {
+				if (file.isDirectory()) {
+					checkState(deleteDirectory(file), "Unable to remove directory", file.getAbsolutePath());
+				} else {
+					checkState(file.delete(), "Unable to remove file: %s", file.getAbsolutePath());
+				}
+			}
+		}
+		return path.delete();
 	}
 
 	private void loadSampleDump() {
@@ -65,9 +81,9 @@ public class Bootstrap implements InitializingBean {
 			DateTime now = now();
 			storage.writeEntry(new LogEntryImpl(now.minusSeconds(rnd.nextInt(800)), "group", "OverflowFundsException", Severity.warning, "sum2",
 				"billing", new HashMap<String, String>() {{
-					put("url", "/some/foo/very/long/url/to/fit/in/screen");
-					put("machine", "aux1.srv.loc");
-				}}, cause));
+				put("url", "/some/foo/very/long/url/to/fit/in/screen");
+				put("machine", "aux1.srv.loc");
+			}}, cause));
 		}
 
 		storage.writeEntry(new LogEntryImpl(now().minusHours(1), "group", "Ooops", Severity.info, "sum4",

@@ -13,12 +13,13 @@ import org.openqa.selenium.htmlunit.HtmlUnitDriver
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.testng.annotations.AfterSuite
+
 import static org.slf4j.LoggerFactory.getLogger
 
 abstract class LogwatcherFunctionalTestSuite extends GebReportingTest {
 
 	private static final String APPLICATION_URL = System.getProperty("it.location")
-	private static final String REPORT_DIRECTORY = System.getProperty("reportsDir")
+	private static final String REPORT_DIRECTORY = System.getProperty("reportsDir", "./report")
 	private static final int PORT = 6578
 	private static WebDriver driver;
 	private HashMap<String, Appender<ILoggingEvent>> appenders = new HashMap<String, Appender<ILoggingEvent>>()

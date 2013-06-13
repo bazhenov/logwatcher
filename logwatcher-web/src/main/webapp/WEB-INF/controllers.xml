@@ -6,6 +6,9 @@
 	<c:annotation-config/>
 
 	<bean class="com.farpost.logwatcher.web.controller.FeedController"/>
+	<bean class="com.farpost.logwatcher.web.controller.SystemController">
+		<constructor-arg value="${udp.port}"/>
+	</bean>
 	<bean class="com.farpost.logwatcher.web.controller.BackController"/>
 	<bean class="com.farpost.logwatcher.web.controller.LayoutController"/>
 	<bean class="com.farpost.logwatcher.web.controller.SessionController"/>
