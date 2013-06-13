@@ -4,3 +4,4 @@
 #* @vtlvariable name="date" type="org.apache.velocity.tools.generic.DateTool" *#
 #* @vtlvariable name="link" type="org.apache.velocity.tools.view.LinkTool" *#
 #* @vtlvariable name="esc" type="org.apache.velocity.tools.generic.EscapeTool" *#
+#* @vtlvariable name="f" type="com.farpost.logwatcher.web.Functions" *#
