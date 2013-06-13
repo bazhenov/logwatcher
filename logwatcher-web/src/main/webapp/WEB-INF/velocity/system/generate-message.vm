@@ -1,0 +1,85 @@
+<html>
+<head>
+	<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$("#sendMessage").click(function () {
+				var form = {
+					title: $("#title").attr('value'),
+					checksum: $("#checksum").attr('value'),
+					applicationId: $("#applicationId").attr('value'),
+					causeTitle: $("#causeTitle").attr('value'),
+					group: $("#group").attr('value')
+				};
+
+				$.ajax({
+					data: form,
+					type: 'POST',
+					cache: false
+				}).success(function () {
+						alert("Successfully send");
+					}).fail(function (rq, status) {
+						alert("Failed: " + status)
+					});
+
+			});
+		})
+		;
+	</script>
+</head>
+<body>
+<form class="form-horizontal">
+	<fieldset>
+		<legend>Message information</legend>
+
+		<div class="control-group">
+			<label class="control-label" for="applicationId">Application</label>
+
+			<div class="controls">
+				<input id="applicationId" type="text" placeholder="Application"/>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="title">Message title</label>
+
+			<div class="controls">
+				<input id="title" type="text" placeholder="Title"/>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="checksum">Message checksum</label>
+
+			<div class="controls">
+				<input id="checksum" type="text" placeholder="Checksim"/>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="causeTitle">Cause title</label>
+
+			<div class="controls">
+				<input id="causeTitle" type="text" placeholder="Cause title"/>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="group">Group</label>
+
+			<div class="controls">
+				<input id="group" type="text" placeholder="Group"/>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<div class="controls">
+				<input id="sendMessage" class="btn" type="button" value="Send"/>
+			</div>
+		</div>
+	</fieldset>
+
+
+</form>
+</body>
+</html>
