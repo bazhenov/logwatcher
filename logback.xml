@@ -1,4 +1,4 @@
-<configuration>
+<configuration scan="true" scanPeriod="1 second">
 
 	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
@@ -10,6 +10,6 @@
 		<appender-ref ref="stdout"/>
 	</root>
 
-	<logger name="com.farpost" level="info" />
+	<logger name="com.farpost" level="info"/>
 
 </configuration>
