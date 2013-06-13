@@ -1,114 +1,327 @@
 @import url("application-box.css");
 @import url("ui.all.css");
 
-.entries												{ padding: 20px 0 0 0; }
+.entries {
+	padding: 20px 0 0 0;
+}
 
-.entryHeader										{ height: 46px; }
+.entryHeader {
+	height: 60px;
+	padding: 8px 0;
+	font-family: 'Open Sans', sans-serif;
+}
 
-.entryHeader .count             { position: absolute; width: 45px; height: 42px; color: white;
-																	font-weight: bold; font-size: 70%;
-																	text-align: center; top: 9px; left: 11px; line-height:42px;
-																	-moz-border-radius: 4px 4px 4px 4px; -webkit-border-top-left-radius: 4px;
-																	-webkit-border-bottom-left-radius: 4px; -webkit-border-bottom-right-radius: 4px;
-																	-webkit-border-top-right-radius: 4px; border-radius: 4px }
+.entryHeader .count {
+	position: absolute;
+	width: 60px;
+	height: 60px;
+	padding: 0;
+	margin: 0;
+	color: white;
+	font-weight: bold;
+	text-align: center;
+	top: 8px;
+	left: 10px;
+	line-height: 55px;
+	border-radius: 60px
+}
 
-.error .count    { background-color: #990000; }
-.warning .count  { background-color: #ff6600; }
-.info .count     { background-color: #339900; }
-.debug .count    { background-color: #247; }
-.trace .count    { background-color: #aaa; }
+.error .count {
+	background-color: #990000;
+}
 
-.entry .message                 { color: #444; margin-left: 68px; margin-right: 225px;
-																	overflow: hidden; height: 28px; white-space: nowrap; line-height: 26px }
+.warning .count {
+	background-color: #ff6600;
+}
 
-.entry .message .causeType      { font-size: 70%; color: #666; }
+.info .count {
+	background-color: #339900;
+}
 
+.debug .count {
+	background-color: #247;
+}
 
-.entryHeader .times             { color: #666; font-size: 60%; line-height: 16px; margin-left: 68px; }
-.entryHeader .applicationId     { font-variant:small-caps; font-size: 120%; color: black; }
-.entryHeader .group             { color: gray !important; }
+.trace .count {
+	background-color: #aaa;
+}
 
-.entry .spinner                 {	background: url("../images/spinner_large.gif") no-repeat center;
-																	height: 66px; width: 100%; padding-bottom: 20px; opacity: 0.7; }
+.entry .message {
+	color: #111;
+	margin-left: 85px;
+	margin-right: 225px;
+	margin-top: 6px;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 18px;
+	overflow: hidden;
+	height: 28px;
+	white-space: nowrap;
+	line-height: 26px
+}
+
+.entry .message .causeType {
+	font-size: 14px;
+	color: #444;
+	background-color: #eee;
+	font-weight: 400;
+	border-radius: 4px;
+	padding: 1px 10px;
+	margin-right: 3px;
+}
+
+.entryHeader .times {
+	color: #666;
+	font-size: 60%;
+	line-height: 16px;
+	margin-left: 85px;
+}
+
+.entryHeader .applicationId {
+	font-variant: small-caps;
+	font-size: 120%;
+	color: black;
+}
+
+.entryHeader .group {
+	color: gray !important;
+}
+
+.entry .spinner {
+	background: url("../images/spinner_large.gif") no-repeat center;
+	height: 66px;
+	width: 100%;
+	padding-bottom: 20px;
+	opacity: 0.7;
+}
+
 .removing .spinner,
-.loadingAttributes .spinner     { display: block !important; }
+.loadingAttributes .spinner {
+	display: block !important;
+}
 
-.entry .entryHeader .operations       { position: absolute; right: 10px; top: 14px;	visibility: hidden }
+.entry .entryHeader .operations {
+	position: absolute;
+	right: 10px;
+	top: 14px;
+	visibility: hidden
+}
 
-.entry:hover .entryHeader .operations { visibility: visible; }
-.entry .entryHeader .operations A     { padding: 2px 20px; line-height: 30px; }
+.entry:hover .entryHeader .operations {
+	visibility: visible;
+}
 
-.entryFooter        { background-color: #eec; padding: 3px 10px 4px 34px; font-size: 120%; }
-.entryFooter a      { margin-right: 15px; }
+.entry .entryHeader .operations A {
+	padding: 2px 20px;
+	line-height: 30px;
+}
 
-.messageOverlay                 { position: absolute; height: 28px; width:50px; top: 6px; right: 224px;
-																	background: url("../images/sha.png") repeat-y;}
+.entryFooter {
+	background-color: #eec;
+	padding: 3px 10px 4px 34px;
+	font-size: 120%;
+}
+
+.entryFooter a {
+	margin-right: 15px;
+}
+
+.messageOverlay {
+	position: absolute;
+	height: 28px;
+	width: 50px;
+	top: 14px;
+	right: 224px;
+	background: url("../images/sha.png") repeat-y;
+}
 
 .entry:hover .messageOverlay,
-.selectedEntry .messageOverlay  { background: url("../images/sha-hover.png") repeat-y; }
+.selectedEntry .messageOverlay {
+	background: url("../images/sha-hover.png") repeat-y;
+}
 
+.entryContainer .attributes {
+	list-style: none;
+	padding-left: 34px;
+	line-height: 18px;
+}
 
-.entryContainer .attributes       { list-style: none; padding-left: 34px; line-height: 18px; }
-.entryContainer .attributes label { font-variant: normal; font-size: 120% }
-.entryContainer .attributes span  { border-left: 1px dotted #997; margin-left: 4px;
-																	padding-left: 4px; padding-right: 2px; color: #777 !important;
-																	font-family: monospace; }
+.entryContainer .attributes label {
+	font-variant: normal;
+	font-size: 120%
+}
 
-.entryContainer .attributes code  { background-color: #eec; border: 1px dotted #997; padding: 0 2px; font-family: monospace;
-																	margin-right: 10px;}
-.entryContent ul                { list-style-type: none; padding: 0; color: gray }
-.entryContent li span           { color: black }
+.entryContainer .attributes span {
+	border-left: 1px dotted #997;
+	margin-left: 4px;
+	padding-left: 4px;
+	padding-right: 2px;
+	color: #777 !important;
+	font-family: monospace;
+}
 
-#severityContainer							{ position: absolute; right: -26px; top: -9px;  }
-#severityContainer							{ width: 160px; font-size: 16px; padding: 15px; z-index: 1; color: #4f4f4f;
-																	font-family: 'Licaida Grande', Tahoma, sans-serif; }
-#severityContainer TABLE TD			{ vertical-align: top; }
+.entryContainer .attributes code {
+	background-color: #eec;
+	border: 1px dotted #997;
+	padding: 0 2px;
+	font-family: monospace;
+	margin-right: 10px;
+}
 
-#severityContainer .label				{ padding-top: 7px; padding-right: 5px; }
+.entryContent ul {
+	list-style-type: none;
+	padding: 0;
+	color: gray
+}
 
-#severityMenu										{ margin: 0; list-style: none; background-color: white; padding: 4px; }
-#severityMenu:hover							{ border: 1px solid #ccc; padding: 3px;
-																	-moz-border-radius: 4px 4px 4px 4px; -webkit-border-top-left-radius: 4px;
-																	-webkit-border-bottom-left-radius: 4px; -webkit-border-bottom-right-radius: 4px;
-																	-webkit-border-top-right-radius: 4px; border-radius: 4px;
-																	}
+.entryContent li span {
+	color: black
+}
 
-#severityMenu a									{ color: #f60; }
+#severityContainer {
+	position: absolute;
+	right: -26px;
+	top: -9px;
+}
 
-#severityMenu li								{ display: none; margin: 2px; color: #f60; }
-#severityMenu:hover li, #severityMenu.hover li					{ display: block !important  }
-#severityMenu li.selected				{ display: block !important }
-#severityMenu li.selected span	{ border-bottom: 1px dashed #f60; cursor: pointer }
+#severityContainer {
+	width: 160px;
+	font-size: 16px;
+	padding: 15px;
+	z-index: 1;
+	color: #4f4f4f;
+	font-family: 'Licaida Grande', Tahoma, sans-serif;
+}
 
-#severityContainer:hover #severityMenu	{ display: block; }
+#severityContainer TABLE TD {
+	vertical-align: top;
+}
+
+#severityContainer .label {
+	padding-top: 7px;
+	padding-right: 5px;
+}
+
+#severityMenu {
+	margin: 0;
+	list-style: none;
+	background-color: white;
+	padding: 4px;
+}
+
+#severityMenu:hover {
+	border: 1px solid #ccc;
+	padding: 3px;
+	border-radius: 4px;
+}
+
+#severityMenu a {
+	color: #f60;
+}
+
+#severityMenu li {
+	display: none;
+	margin: 2px;
+	color: #f60;
+}
+
+#severityMenu:hover li, #severityMenu.hover li {
+	display: block !important
+}
+
+#severityMenu li.selected {
+	display: block !important
+}
+
+#severityMenu li.selected span {
+	border-bottom: 1px dashed #f60;
+	cursor: pointer
+}
+
+#severityContainer:hover #severityMenu {
+	display: block;
+}
 
 h2 span#applicationId,
 h2 span#pieChartLink,
-h2 span#date										{ cursor: pointer }
+h2 span#date {
+	cursor: pointer
+}
 
-h2 span#pieChartLink						{ margin-left: 5px; }
+h2 span#pieChartLink {
+	margin-left: 5px;
+}
 
-#applicationSelector										{ width: 250px }
+#applicationSelector {
+	width: 250px
+}
 
-#applicationSelector	.notification			{ text-align: center; padding: 5px; }
+#applicationSelector	.notification {
+	text-align: center;
+	padding: 5px;
+}
 
-#applicationSelector A.applicationLink				{ font-size: 14px; width: 108px; float: left }
-#applicationSelector A.applicationLink				{ dispaly: block; padding: 5px; }
-#applicationSelector A.applicationLink:hover  { background-color: #a2a2a2 }
+#applicationSelector A.applicationLink {
+	font-size: 14px;
+	width: 108px;
+	float: left
+}
+
+#applicationSelector A.applicationLink {
+	dispaly: block;
+	padding: 5px;
+}
+
+#applicationSelector A.applicationLink:hover {
+	background-color: #a2a2a2
+}
 
 .popupContainer .innerBlock A,
 .popupContainer .innerBlock A:visited,
-.popupContainer .innerBlock A:hover			{ color: white; text-decoration: none }
+.popupContainer .innerBlock A:hover {
+	color: white;
+	text-decoration: none
+}
 
+#dateSelector {
+	font-size: 12px;
+}
 
-#dateSelector										{ font-size: 12px; }
+#dateSelector TD {
+	padding: 2px;
+	font-weight: bold
+}
 
-#dateSelector TD								{ padding: 2px; font-weight: bold }
-#dateSelector TABLE							{ padding: 0; }
-#dateSelector TH								{ color: #ddd; }
-#dateSelector span.today A			{ color: #ee3; }
-#dateSelector span.inactive			{ color: #999; }
+#dateSelector TABLE {
+	padding: 0;
+}
 
-#pieChartPlaceHolder						{ width: 200px; height: 200px; margin: 5px;}
-#pieChartData										{ display:none }
-#chartTooltip										{width: 200px; padding: 2px; font-size: 13px;border: 2px solid #F4F4F4; background-color: #FAFAFA; opacity: 0.90 }
+#dateSelector TH {
+	color: #ddd;
+}
+
+#dateSelector span.today A {
+	color: #ee3;
+}
+
+#dateSelector span.inactive {
+	color: #999;
+}
+
+#pieChartPlaceHolder {
+	width: 200px;
+	height: 200px;
+	margin: 5px;
+}
+
+#pieChartData {
+	display: none
+}
+
+#chartTooltip {
+	width: 200px;
+	padding: 2px;
+	font-size: 13px;
+	border: 2px solid #F4F4F4;
+	background-color: #FAFAFA;
+	opacity: 0.90
+}

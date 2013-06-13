@@ -1,25 +1,73 @@
-.entry				                  { border-top: 1px dotted gray }
+.entry {
+	border-top: 1px dashed #ccc
+}
 
-.entry:hover                    { background-color: #ffffe5; }
-.selectedEntry                  { background-color: #ffffe5; }
+.entry:hover {
+	background-color: #ffffe5;
+}
 
-.entryHeader                    { padding-bottom: 8px; padding-top: 6px; cursor: pointer; position: relative; }
+.selectedEntry {
+	background-color: #ffffe5;
+}
 
-.entry a			                  { display: inline; text-align: right; }
+.entryHeader {
+	padding-bottom: 8px;
+	padding-top: 6px;
+	cursor: pointer;
+	position: relative;
+}
 
-.selectedEntry .entryContainer  { display: block !important }
-.entryContainer                 { font-size: 12px; display: none }
+.entry a {
+	display: inline;
+	text-align: right;
+}
 
-.entryContent                   { padding: 0 10px 15px 34px;  }
+.selectedEntry .entryContainer {
+	display: block !important
+}
 
-.stacktrace                     { font-family: monospace;	white-space: pre-wrap; color: #333; font-size: 1.2em; cursor:text; margin:0 }
+.entryContainer {
+	font-size: 12px;
+	display: none
+}
 
-.marker                         { position: absolute; left: 12px; top: 28px; width: 14px; height: 15px;
-																	cursor: pointer; margin: 0; padding: 0; line-height: 9px;}
+.entryContent {
+	padding: 0 10px 15px 34px;
+}
 
-.warningMarker                  { color: #990000; }
+.stacktrace {
+	font-family: monospace;
+	white-space: pre-wrap;
+	color: #333;
+	font-size: 1.2em;
+	cursor: text;
+	margin: 0
+}
 
-span.tag            { font-size: 70%; background-color: #E0EAF1; border-bottom: 1px solid #3E6D8E;
-											border-right: 1px solid #7F9FB6; color: #3E6D8E; margin: 1px; padding: 1px }
+.marker {
+	position: absolute;
+	left: 12px;
+	top: 28px;
+	width: 14px;
+	height: 15px;
+	cursor: pointer;
+	margin: 0;
+	padding: 0;
+	line-height: 9px;
+}
+
+.warningMarker {
+	color: #990000;
+}
+
+span.tag {
+	font-size: 70%;
+	background-color: #E0EAF1;
+	border-bottom: 1px solid #3E6D8E;
+	border-right: 1px solid #7F9FB6;
+	color: #3E6D8E;
+	margin: 1px;
+	padding: 1px
+}
 
 

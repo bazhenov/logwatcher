@@ -1,13 +1,11 @@
 package com.farpost.logwatcher.web.controller;
 
-import com.farpost.logwatcher.AggregatedEntry;
-import com.farpost.logwatcher.Severity;
+import com.farpost.logwatcher.*;
 import com.farpost.logwatcher.storage.InvalidCriteriaException;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
 import com.farpost.logwatcher.web.page.DetailsPage;
 import com.farpost.logwatcher.web.page.FeedPage;
-import com.farpost.logwatcher.web.page.InnerFeedPage;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -20,10 +18,10 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
+import static java.util.Collections.sort;
+import static org.joda.time.LocalDate.fromDateFields;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @Controller
@@ -60,10 +58,9 @@ public class FeedController {
 	}
 
 	@RequestMapping("/service/feed/{applicationId}")
-	@ModelAttribute("p")
-	public InnerFeedPage handleInnerFeed(@PathVariable String applicationId,
-																			 @RequestParam(required = false) @DateTimeFormat(iso = DATE) Date date,
-																			 HttpServletRequest request) {
+	public ModelAndView handleInnerFeed(@PathVariable String applicationId,
+																			@RequestParam(required = false) @DateTimeFormat(iso = DATE) Date date,
+																			HttpServletRequest request) {
 		if (date == null) {
 			date = new java.util.Date();
 		}
@@ -71,7 +68,7 @@ public class FeedController {
 		Severity severity = getSeverity(request);
 		String sortOrder = getSortOrder(request);
 
-		return new InnerFeedPage(request, date, applicationId, severity, sortOrder);
+		return new ModelAndView("feed/inner-feed", "p", new InnerFeedPage(date, applicationId, severity, sortOrder));
 	}
 
 	@RequestMapping("/entries/{applicationId}/{checksum}")
@@ -145,6 +142,52 @@ public class FeedController {
 
 		public ApplicationViewPage(String applicationId) {
 			this.applicationId = applicationId;
+		}
+
+		public String getApplicationId() {
+			return applicationId;
+		}
+	}
+
+	private static int sumCount(List<AggregatedEntry> entries) {
+		int times = 0;
+		for (AggregatedEntry e : entries) {
+			times += e.getCount();
+		}
+		return times;
+	}
+
+	public class InnerFeedPage {
+
+		private String applicationId;
+
+		private final HashMap<String, Comparator<AggregatedEntry>> comparators = new HashMap<String, Comparator<AggregatedEntry>>() {{
+			put(null, new ByTitleComparator());
+			put("last-occurence", new ByLastOccurrenceDateComparator());
+			put("occurence-count", new ByOccurenceCountComparator());
+		}};
+		private List<AggregatedEntry> entries;
+		private String sortOrder;
+		private int entriesCount;
+
+		public InnerFeedPage(Date date, String applicationId, Severity severity, String sortOrder) {
+			this.applicationId = applicationId;
+			this.sortOrder = sortOrder;
+
+			entries = storage.getAggregatedEntries(applicationId, fromDateFields(date), severity);
+			entriesCount = sumCount(entries);
+			Comparator<AggregatedEntry> comparator = comparators.containsKey(this.sortOrder)
+				? comparators.get(this.sortOrder)
+				: comparators.get(null);
+			sort(entries, comparator);
+		}
+
+		public int getEntriesCount() {
+			return entriesCount;
+		}
+
+		public Collection<AggregatedEntry> getEntries() {
+			return entries;
 		}
 
 		public String getApplicationId() {

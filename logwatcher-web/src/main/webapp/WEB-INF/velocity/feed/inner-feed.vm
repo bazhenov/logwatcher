@@ -1,0 +1,110 @@
+#* @vtlvariable name="p" type="com.farpost.logwatcher.web.controller.FeedController.InnerFeedPage" *#
+#if($p.entries.isEmpty())
+<div id="notificationPanel">
+	<p>Try to change severity settings</p>
+	<span>&empty;</span>
+	<br/>No results found.
+</div>
+#else
+<div class="entries">
+	#foreach($e in $p.entries)
+		<a name='$e.checksum'></a>
+
+		#set($lastDate = $e.lastTime.toDate())
+		#set($lastOccurredDate = $date.format("yyyy-MM-dd", $lastDate))
+
+		<div class='entry ${e.severity}' checksum='${e.checksum}' lastOccurredDate='${lastOccurredDate}'>
+			<div class='entryHeader'>
+
+				<div class="count">
+					#if($e.count > 100000)
+						<abbr title="$e.count times">10<sup>x</sup></abbr>
+					#elseif($e.count > 1000)
+						<abbr title="$e.count times">$math.floor($math.div($e.count, 1000))K</abbr>
+					#else
+						$e.count
+					#end
+				</div>
+				<div class='message'>
+					#if ($e.sampleCause)
+						<span class="causeType">$e.sampleCause.type</span>
+					#end
+					$e.message
+				</div>
+				<div class='messageOverlay'></div>
+				<div class='times'>
+					<abbr title='$date.format("d MMMM yyyy, HH:mm:ss zz", $lastDate)'>
+						$date.format("short", $lastDate)
+					</abbr>
+					#if($p.applicationId != $e.applicationId)
+						&mdash; <span class='applicationId'>$e.applicationId</span>
+					#end
+					2 seconds ago, ~2 messages per minute
+				</div>
+
+				<div class="operations noBubble">
+					<a href='$link.uri("/entries/$e.applicationId/$e.checksum").params({'date': $lastOccurredDate})'>
+						Details &rarr;</a>
+				</div>
+			</div>
+
+		#*<div class="entryContainer">
+			<div class="attributesContainer" loaded="false">
+				<div class="spinner"></div>
+			</div>
+			<div class='entryContent'>
+				<c:choose>
+					<c:when test="${not empty entry.sampleCause}">
+						<pre class="stacktrace noBubble"><c:out value="${lf:formatCause(entry.sampleCause)}"/></pre>
+					</c:when>
+					<c:otherwise>
+						<pre class="stacktrace noBubble"><c:out value="${e.message}"/></pre>
+					</c:otherwise>
+				</c:choose>
+			</div>
+
+			<c:url var="permaLink" value="/feed/${e.applicationId}">
+				<c:param name="date">
+					<fmt:formatDate value="${lf:date(entry.lastTime)}" pattern="yyyy-MM-dd"/>
+				</c:param>
+				<c:param name="severity" value="${e.severity}"/>
+			</c:url>
+			<c:set var="permaLink" value="${permaLink}\#${e.checksum}"/>
+
+			<c:set var="issueDescription">${lf:trim(entry.message, 300, '')}
+				<c:if test="${e.sampleCause ne null}">
+
+					Stacktrace:
+					${lf:trim(lf:formatCause(entry.sampleCause), 500, '')}
+				</c:if>
+
+				http://${pageContext.request.serverName}:${pageContext.request.serverPort}${permaLink}</c:set>
+
+			<div class="entryFooter">
+				<c:url value="${jiraInfo.location}/secure/CreateIssueDetails.jspa" var="jiraLink">
+					<c:param name="pid" value="${jiraInfo.projectPid}"/>
+					<c:param name="issuetype" value="${jiraInfo.issueType}"/>
+					<c:param name="summary" value="${lf:trim(entry.message, 100, '...')}"/>
+					<c:param name="description" value="${issueDescription}"/>
+					<c:param name="priority" value="${jiraInfo.priority}"/>
+				</c:url>
+				<c:set var="jiraLink">
+					<c:out value="${jiraLink}"/>
+				</c:set>
+				<a href="${jiraLink}" target='_blank'>Create task</a>
+				<a href='${permaLink}'>Permalink</a>
+
+				<a href="${detailsLink}">Details</a>
+				<a class='removeEntry asynchronous' href='#'>Remove</a>
+			</div>
+		</div>*#
+
+		</div>
+	#end
+</div>
+
+<div id="footer">
+	$f.pluralize($p.entries.size(), "entry entries entries")
+	$f.pluralize($p.entriesCount, "message messages messages")
+</div>
+#end

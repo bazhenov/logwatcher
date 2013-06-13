@@ -36,6 +36,7 @@
 			<list>
 				<value>application</value>
 				<value>system/generate-message</value>
+				<value>feed/inner-feed</value>
 			</list>
 		</property>
 	</bean>
