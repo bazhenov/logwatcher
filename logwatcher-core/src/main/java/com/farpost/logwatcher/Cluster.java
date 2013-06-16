@@ -22,9 +22,9 @@ public final class Cluster {
 	@Nullable
 	private String issueKey;
 
-	private byte[] checksum;
+	private Checksum checksum;
 
-	public Cluster(String originalTitle, byte[] checksum, String customTitle, String description, String issueKey) {
+	public Cluster(String originalTitle, Checksum checksum, String customTitle, String description, String issueKey) {
 		this.originalTitle = checkNotNull(originalTitle);
 		this.checksum = checkNotNull(checksum);
 		this.customTitle = customTitle;
@@ -33,6 +33,10 @@ public final class Cluster {
 	}
 
 	public Cluster(String originalTitle, byte[] checksum) {
+		this(originalTitle, new Checksum(checksum), null, null, null);
+	}
+
+	public Cluster(String originalTitle, Checksum checksum) {
 		this(originalTitle, checksum, null, null, null);
 	}
 
@@ -61,7 +65,7 @@ public final class Cluster {
 		return issueKey;
 	}
 
-	public byte[] getChecksum() {
+	public Checksum getChecksum() {
 		return checksum;
 	}
 
