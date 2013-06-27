@@ -11,27 +11,28 @@
 	</div>
 	#else
 	<div class="entries">
-		#foreach($e in $p.entries)
-			<a name='$e.checksum'></a>
+		#foreach($c in $p.clusters)
+			#set($stat = $p.getStatistics($c))
+			<a name='$c.checksum'></a>
 
-			#set($lastDate = $e.lastTime.toDate())
+			#set($lastDate = $stat.lastSeenAt.toDate())
 			#set($lastOccurredDate = $date.format("yyyy-MM-dd", $lastDate))
 
-			<div class='entry ${e.severity}' checksum='${e.checksum}' lastOccurredDate='${lastOccurredDate}'>
+			<div class='entry ${c.severity}' checksum='${c.checksum}' lastOccurredDate='${lastOccurredDate}'>
 				<div class='entryHeader'>
 
-					<canvas class="count" width="60" height="60" data-count="$e.count" data-severity="$e.severity"></canvas>
+					<canvas class="count" width="60" height="60" data-count="$stat.count" data-severity="$c.severity"></canvas>
 
 					<div class='message'>
-						#if ($e.sampleCause)
-							#if($f.formatClassName($e.sampleCause.type) == $e.sampleCause.type)
-								<span class="causeType">$e.sampleCause.type</span>
+						#if ($c.sampleCause)
+							#if($f.formatClassName($c.sampleCause.type) == $c.sampleCause.type)
+								<span class="causeType">$c.sampleCause.type</span>
 							#else
 								<span class="causeType">
-									<abbr title="$e.sampleCause.type">$f.formatClassName($e.sampleCause.type)<abbr></span>
+									<abbr title="$c.sampleCause.type">$f.formatClassName($c.sampleCause.type)<abbr></span>
 							#end
 						#end
-						$e.message
+						$c.originalTitle
 					</div>
 					<div class='messageOverlay'></div>
 					<div class='times'>
@@ -44,14 +45,14 @@
 								$date.format("short", $lastDate)
 							</abbr>
 						#end
-						#if($p.applicationId != $e.applicationId)
-							&mdash; <span class='applicationId'>$e.applicationId</span>
+						#if($p.applicationId != $c.applicationId)
+							&mdash; <span class='applicationId'>$c.applicationId</span>
 						#end
-						2 seconds ago, ~2 messages per minute
+						~2 messages per minute
 					</div>
 
 					<div class="operations noBubble">
-						<a href='$link.uri("/entries/$e.applicationId/$e.checksum").params({'date': $lastOccurredDate})'>
+						<a href='$link.uri("/entries/$c.applicationId/$c.checksum").params({'date': $lastOccurredDate})'>
 							Details &rarr;</a>
 					</div>
 				</div>

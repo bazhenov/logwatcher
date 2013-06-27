@@ -5,6 +5,8 @@ import com.farpost.logwatcher.Cluster;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import static com.farpost.logwatcher.Severity.error;
+import static com.farpost.logwatcher.Severity.info;
 import static com.farpost.logwatcher.TestUtils.checksum;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -26,7 +28,7 @@ public abstract class ClusterDaoTestCase {
 		Checksum checksum = checksum(1, 2, 3);
 		String applicationId = "foo";
 		assertThat(dao.isClusterRegistered(applicationId, checksum), is(false));
-		Cluster cluster = new Cluster(applicationId, "Message title", checksum);
+		Cluster cluster = new Cluster(applicationId, error, "Message title", checksum);
 		dao.registerCluster(cluster);
 		// Intentionally use another instance of checksum to check non-reference equality
 		assertThat(dao.isClusterRegistered(applicationId, checksum(1, 2, 3)), is(true));
@@ -36,7 +38,7 @@ public abstract class ClusterDaoTestCase {
 	public void shouldBeAbleToFindClusterInfo() {
 		String applicationId = "foo";
 		Checksum checksum = checksum(1, 2, 3);
-		Cluster cluster = new Cluster(applicationId, "title", checksum);
+		Cluster cluster = new Cluster(applicationId, info, "title", checksum);
 		dao.registerCluster(cluster);
 
 		Cluster clusterCopy = dao.findCluster(applicationId, checksum);

@@ -6,10 +6,11 @@ import org.joda.time.LocalDate;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.Collection;
+
 import static com.farpost.logwatcher.TestUtils.checksum;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 
 public abstract class ClusterStatisticsTestCase {
 
@@ -38,5 +39,14 @@ public abstract class ClusterStatisticsTestCase {
 		DayStatistic dayStat = stat.getDayStatistic("application", checksum, new LocalDate(dateTime));
 
 		assertThat(dayStat, equalTo(new DayStatistic("application", checksum, new LocalDate(dateTime), dateTime, 1)));
+	}
+
+	@Test
+	public void getActiveChecksumsForADate() {
+		Checksum checksum = checksum(1, 3, 4);
+		DateTime dateTime = new DateTime();
+		stat.registerEvent("application", dateTime, checksum);
+		Collection<Checksum> checksums = stat.getActiveClusterChecksums("application", new LocalDate(dateTime));
+		assertThat(checksums, hasItems(checksum));
 	}
 }

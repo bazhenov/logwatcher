@@ -4,6 +4,7 @@ import com.farpost.logwatcher.Checksum;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
+import java.util.Collection;
 import java.util.Set;
 
 public interface ClusterStatistic {
@@ -13,4 +14,6 @@ public interface ClusterStatistic {
 	Set<String> getActiveApplications();
 
 	DayStatistic getDayStatistic(String applicationId, Checksum checksum, LocalDate date);
+
+	Collection<Checksum> getActiveClusterChecksums(String applicationId, LocalDate date);
 }

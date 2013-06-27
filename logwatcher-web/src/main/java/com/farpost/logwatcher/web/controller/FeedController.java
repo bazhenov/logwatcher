@@ -1,6 +1,9 @@
 package com.farpost.logwatcher.web.controller;
 
 import com.farpost.logwatcher.*;
+import com.farpost.logwatcher.cluster.ClusterDao;
+import com.farpost.logwatcher.statistics.ClusterStatistic;
+import com.farpost.logwatcher.statistics.DayStatistic;
 import com.farpost.logwatcher.storage.InvalidCriteriaException;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
@@ -20,6 +23,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.sort;
 import static org.joda.time.LocalDate.fromDateFields;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
@@ -29,6 +33,12 @@ public class FeedController {
 
 	@Autowired
 	private LogStorage storage;
+
+	@Autowired
+	private ClusterStatistic clusterStatistic;
+
+	@Autowired
+	private ClusterDao clusterDao;
 
 	@RequestMapping("/")
 	public View handleRoot() {
@@ -159,6 +169,7 @@ public class FeedController {
 
 	public class InnerFeedPage {
 
+		private final LocalDate date;
 		private String applicationId;
 
 		private final HashMap<String, Comparator<AggregatedEntry>> comparators = new HashMap<String, Comparator<AggregatedEntry>>() {{
@@ -169,6 +180,7 @@ public class FeedController {
 		private List<AggregatedEntry> entries;
 		private String sortOrder;
 		private int entriesCount;
+		private Collection<Cluster> clusters;
 
 		public InnerFeedPage(Date date, String applicationId, Severity severity, String sortOrder) {
 			this.applicationId = applicationId;
@@ -180,6 +192,14 @@ public class FeedController {
 				? comparators.get(this.sortOrder)
 				: comparators.get(null);
 			sort(entries, comparator);
+
+			this.date = new LocalDate(date.getTime());
+			Collection<Checksum> checksums = clusterStatistic.getActiveClusterChecksums(applicationId, this.date);
+
+			clusters = newArrayList();
+			for (Checksum checksum : checksums) {
+				clusters.add(clusterDao.findCluster(applicationId, checksum));
+			}
 		}
 
 		public int getEntriesCount() {
@@ -188,6 +208,14 @@ public class FeedController {
 
 		public Collection<AggregatedEntry> getEntries() {
 			return entries;
+		}
+
+		public Collection<Cluster> getClusters() {
+			return clusters;
+		}
+
+		public DayStatistic getStatistics(Cluster c) {
+			return clusterStatistic.getDayStatistic(applicationId, c.getChecksum(), new LocalDate(date));
 		}
 
 		public String getApplicationId() {

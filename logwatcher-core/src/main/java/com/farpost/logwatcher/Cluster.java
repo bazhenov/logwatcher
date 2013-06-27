@@ -15,31 +15,29 @@ public final class Cluster {
 
 	@Nullable
 	private String customTitle;
-
 	private String originalTitle;
+
 	private String description;
 	private final String applicationId;
 	private final Checksum checksum;
+	private final Severity severity;
 
 	@Nullable
 	private String issueKey;
 
 	public Cluster(String applicationId, String originalTitle, Checksum checksum, String customTitle, String description,
-								 String issueKey) {
+								 String issueKey, Severity severity) {
 		this.applicationId = applicationId;
 		this.originalTitle = checkNotNull(originalTitle);
 		this.checksum = checkNotNull(checksum);
+		this.severity = checkNotNull(severity);
 		this.customTitle = customTitle;
 		this.description = description;
 		this.issueKey = issueKey;
 	}
 
-	public Cluster(String applicationId, String originalTitle, byte[] checksum) {
-		this(applicationId, originalTitle, new Checksum(checksum), null, null, null);
-	}
-
-	public Cluster(String applicationId, String originalTitle, Checksum checksum) {
-		this(applicationId, originalTitle, checksum, null, null, null);
+	public Cluster(String applicationId, Severity severity, String originalTitle, Checksum checksum) {
+		this(applicationId, originalTitle, checksum, null, null, null, severity);
 	}
 
 	/**
@@ -74,6 +72,10 @@ public final class Cluster {
 		return issueKey;
 	}
 
+	public Severity getSeverity() {
+		return severity;
+	}
+
 	public Checksum getChecksum() {
 		return checksum;
 	}
@@ -86,11 +88,11 @@ public final class Cluster {
 		Cluster that = (Cluster) o;
 		return equal(checksum, that.checksum) && equal(description, that.description) && equal(issueKey, that.issueKey) &&
 			equal(customTitle, that.customTitle) && equal(originalTitle, that.originalTitle) &&
-			equal(applicationId, that.applicationId);
+			equal(applicationId, that.applicationId) && equal(severity, that.severity);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(customTitle, issueKey, description, checksum, originalTitle, applicationId);
+		return Objects.hashCode(customTitle, issueKey, description, checksum, originalTitle, applicationId, severity);
 	}
 }
