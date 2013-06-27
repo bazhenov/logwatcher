@@ -1,78 +1,80 @@
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns="http://www.w3.org/1999/xhtml"
-					version="2.1"
-					xmlns:c="http://java.sun.com/jsp/jstl/core"
-					xmlns:l="http://bazhenov.org/logging"
-					xmlns:f="http://java.sun.com/jsp/jstl/functions"
-					xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
-					xmlns:lt="urn:jsptagdir:/WEB-INF/tags" xmlns:sitemesh="http://sitemesh.org/"
-					xmlns:s="http://www.springframework.org/tags">
+          version="2.1"
+          xmlns:c="http://java.sun.com/jsp/jstl/core"
+          xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+          xmlns:sitemesh="http://sitemesh.org/"
+          xmlns:s="http://www.springframework.org/tags">
 
-	<jsp:directive.page contentType="text/html"/>
+    <jsp:directive.page contentType="text/html"/>
 
-	&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"&gt;
-	<html ng-app="logWatcher">
-	<head>
-		<title>
-			<sitemesh:write property="title">LogWatcher</sitemesh:write>
-		</title>
-		<meta http-equiv="Pragma" content="no-cache"/>
+    &lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"&gt;
+    <html ng-app="logWatcher">
+    <head>
+        <title>
+            <sitemesh:write property="title">LogWatcher</sitemesh:write>
+        </title>
+        <meta http-equiv="Pragma" content="no-cache"/>
 
-		<fmt:formatDate value="${date}" pattern="yyyy-MM-dd" var="dateAsString"/>
+        <fmt:formatDate value="${date}" pattern="yyyy-MM-dd" var="dateAsString"/>
 
-		<c:url value='/css/main.css' var="cssUrl"/>
-		<link rel="stylesheet" href="${cssUrl}"/>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,300,600,700' rel='stylesheet'
+              type='text/css'/>
 
-		<c:url value="/js/jquery-1.6.1.min.js" var="jsUrl"/>
-		<script type="text/javascript" src="${jsUrl}">/**/</script>
+        <c:url value='/css/main.css' var="cssUrl"/>
+        <link rel="stylesheet" href="${cssUrl}"/>
 
-		<c:url value="/js/jquery-ui-1.7.2.js" var="jsUrl"/>
-		<script type="text/javascript" src="${jsUrl}">/**/</script>
-
-		<c:url value="/js/events.js" var="jsUrl"/>
-		<script type="text/javascript" src="${jsUrl}">/**/</script>
-
-<!--
-        <c:url value="/js/underscore.js" var="jsUrl"/>
+        <c:url value="/js/jquery-1.6.1.min.js" var="jsUrl"/>
         <script type="text/javascript" src="${jsUrl}">/**/</script>
 
-        <c:url value="/js/backbone.js" var="jsUrl"/>
+        <c:url value="/js/jquery-ui-1.7.2.js" var="jsUrl"/>
         <script type="text/javascript" src="${jsUrl}">/**/</script>
--->
 
-		<sitemesh:write property="head"/>
-	</head>
+        <c:url value="/js/events.js" var="jsUrl"/>
+        <script type="text/javascript" src="${jsUrl}">/**/</script>
 
-	<body>
-	<table width="100%">
-		<tr>
-			<td align="center">
-				<div id="header">
-					<s:url value="/images/logwatcher-logo.png" var="logoSrc"/>
-					<s:url value="/dashboard" var="dashboardUrl"/>
-					<a href="${dashboardUrl}"><img class="logo" src="${logoSrc}" alt="LogWatcher"/></a>
+        <!--
+                <c:url value="/js/underscore.js" var="jsUrl"/>
+                <script type="text/javascript" src="${jsUrl}">/**/</script>
 
-					<div id="searchPanel">
-						<form action="/search">
-							<input id="searchInput" type="text" name="q" accesskey="s" placeholder="Search..." size="25"/>
-						</form>
-					</div>
+                <c:url value="/js/backbone.js" var="jsUrl"/>
+                <script type="text/javascript" src="${jsUrl}">/**/</script>
+        -->
 
-					<div id="menuBar">
-						<a href="${dashboardUrl}">Dashboard</a>
-						<span class="devider">&amp;nbsp;</span>
+        <sitemesh:write property="head"/>
+    </head>
 
-						<c:url value="/search" var="url"/>
-						<a href="${url}">Advanced search</a>
-					</div>
-				</div>
+    <body>
+    <table width="100%">
+        <tr>
+            <td align="center">
+                <div id="header">
+                    <s:url value="/images/logwatcher-logo.png" var="logoSrc"/>
+                    <s:url value="/dashboard" var="dashboardUrl"/>
+                    <a href="${dashboardUrl}"><img class="logo" src="${logoSrc}" alt="LogWatcher"/></a>
 
-				<div id="contentPanel">
-					<sitemesh:write property="body"/>
-				</div>
-			</td>
-		</tr>
-	</table>
+                    <div id="searchPanel">
+                        <form action="/search">
+                            <input id="searchInput" type="text" name="q" accesskey="s" placeholder="Search..."
+                                   size="25"/>
+                        </form>
+                    </div>
 
-	</body>
-	</html>
+                    <div id="menuBar">
+                        <a href="${dashboardUrl}">Dashboard</a>
+                        <span class="devider">&amp;nbsp;</span>
+
+                        <c:url value="/search" var="url"/>
+                        <a href="${url}">Advanced search</a>
+                    </div>
+                </div>
+
+                <div id="contentPanel">
+                    <sitemesh:write property="body"/>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    </body>
+    </html>
 </jsp:root>
