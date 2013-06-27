@@ -1,9 +1,10 @@
 package com.farpost.logwatcher.web;
 
-import com.farpost.logwatcher.Cause;
-import com.farpost.logwatcher.LogEntryImpl;
-import com.farpost.logwatcher.Severity;
+import com.farpost.logwatcher.*;
+import com.farpost.logwatcher.cluster.ClusterDao;
+import com.farpost.logwatcher.statistics.ClusterStatistic;
 import com.farpost.logwatcher.storage.LogStorage;
+import com.google.common.base.Charsets;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
@@ -22,11 +23,22 @@ public class Bootstrap implements InitializingBean {
 	private static final Logger log = getLogger(Bootstrap.class);
 
 	private LogStorage storage;
+	private ClusterDao clusterDao;
+	private ClusterStatistic clusterStatistic;
+
 	private boolean loadSampleDump = false;
 	private File indexLocation;
 
 	public void setStorage(LogStorage storage) {
 		this.storage = storage;
+	}
+
+	public void setClusterDao(ClusterDao clusterDao) {
+		this.clusterDao = clusterDao;
+	}
+
+	public void setClusterStatistic(ClusterStatistic clusterStatistic) {
+		this.clusterStatistic = clusterStatistic;
 	}
 
 	public void setIndexLocation(File indexLocation) {
@@ -63,7 +75,7 @@ public class Bootstrap implements InitializingBean {
 	private void loadSampleDump() {
 		Random rnd = new Random();
 		log.info("Loading sample dump...");
-		storage.writeEntry(new LogEntryImpl(now(), "group", "AdvertServiceException: Error Fetching http headers", Severity.error, "sum", "advertisement", null));
+		write(new LogEntryImpl(now(), "group", "AdvertServiceException: Error Fetching http headers", Severity.error, "sum", "advertisement", null));
 		Cause cause = new Cause("java.lang.RuntimeException", "Socket reading timeout", "AdvertServiceException: Error Fetching http headers\n" +
 			"  at /var/www/baza.farpost.ru/rev/20100325-1520/slr/advert/src/remote/AdvertSoapDecorator.class.php:16\n" +
 			"  10: slrSoapDecorator.class.php:94 AdvertSoapDecorator->handleException(\"Error Fetc...\", SoapFault)\n" +
@@ -79,33 +91,42 @@ public class Bootstrap implements InitializingBean {
 
 		for (int i = 0; i < 200; i++) {
 			DateTime now = now();
-			storage.writeEntry(new LogEntryImpl(now.minusSeconds(rnd.nextInt(800)), "group", "OverflowFundsException", Severity.warning, "sum2",
+			write(new LogEntryImpl(now.minusSeconds(rnd.nextInt(800)), "group", "OverflowFundsException", Severity.warning, "sum2",
 				"billing", new HashMap<String, String>() {{
 				put("url", "/some/foo/very/long/url/to/fit/in/screen");
 				put("machine", "aux1.srv.loc");
 			}}, cause));
 		}
 
-		storage.writeEntry(new LogEntryImpl(now().minusHours(1), "group", "Ooops", Severity.info, "sum4",
+		write(new LogEntryImpl(now().minusHours(1), "group", "Ooops", Severity.info, "sum4",
 			"geocoder", null, cause));
-		storage.writeEntry(new LogEntryImpl(now().minusHours(1), "group", "Ooops", Severity.debug, "sum4",
-			"geocoder", null, cause));
-
-		storage.writeEntry(new LogEntryImpl(now().minusHours(1), "group", "Ooops", Severity.trace, "sum4",
+		write(new LogEntryImpl(now().minusHours(1), "group", "Ooops", Severity.debug, "sum4",
 			"geocoder", null, cause));
 
-		storage.writeEntry(new LogEntryImpl(now().minusHours(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
+		write(new LogEntryImpl(now().minusHours(1), "group", "Ooops", Severity.trace, "sum4",
+			"geocoder", null, cause));
+
+		write(new LogEntryImpl(now().minusHours(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
 			"frontend", null, cause));
-		storage.writeEntry(new LogEntryImpl(now().minusHours(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
+		write(new LogEntryImpl(now().minusHours(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
 			"frontend", null, cause));
-		storage.writeEntry(new LogEntryImpl(now().minusHours(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
+		write(new LogEntryImpl(now().minusHours(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
 			"frontend", null, cause));
-		storage.writeEntry(new LogEntryImpl(now().minusHours(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very very long longvery very long longvery very very long long Exception", Severity.error, "sum4",
+		write(new LogEntryImpl(now().minusHours(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very very long longvery very long longvery very very long long Exception", Severity.error, "sum4",
 			"frontend", null, cause));
 
-		storage.writeEntry(new LogEntryImpl(now().minusHours(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum5",
+		write(new LogEntryImpl(now().minusHours(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum5",
 			"frontend", null, null));
-		storage.writeEntry(new LogEntryImpl(now().minusHours(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum5",
+		write(new LogEntryImpl(now().minusHours(1), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum5",
 			"frontend", null, null));
+	}
+
+	private void write(LogEntry entry) {
+		storage.writeEntry(entry);
+		Checksum checksum = new Checksum(entry.getChecksum().getBytes(Charsets.UTF_8));
+		if (!clusterDao.isClusterRegistered(entry.getApplicationId(), checksum)) {
+			clusterDao.registerCluster(new Cluster(entry.getApplicationId(), entry.getSeverity(), entry.getMessage(), checksum));
+		}
+		clusterStatistic.registerEvent(entry.getApplicationId(), entry.getDate(), checksum);
 	}
 }

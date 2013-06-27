@@ -18,12 +18,17 @@
 
 	<bean id="bootstrap" class="com.farpost.logwatcher.web.Bootstrap"
 				p:storage-ref="storage"
+				p:clusterDao-ref="clusterDao"
+				p:clusterStatistic-ref="clusterStatistics"
 				p:indexLocation-ref="indexLocation"
 				p:loadSampleDump="${loadSampleDump}"/>
 
 	<bean id="indexLocation" class="java.io.File" init-method="mkdirs">
 		<constructor-arg value="${index.location}"/>
 	</bean>
+
+	<bean id="clusterDao" class="com.farpost.logwatcher.cluster.InMemoryClusterDao"/>
+	<bean id="clusterStatistics" class="com.farpost.logwatcher.statistics.InMemoryClusterStatistics"/>
 
 	<bean id="luceneDirectory" class="org.apache.lucene.store.FSDirectory" factory-method="open">
 		<constructor-arg ref="indexLocation"/>

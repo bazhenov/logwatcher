@@ -50,9 +50,11 @@
 	</int:service-activator>
 
 	<!-- "Сервис", записывающий логи в хранилище -->
-	<bean id="writeToStorageTransportListener" class="com.farpost.logwatcher.transport.WriteToStorageTransportListener">
+	<bean id="writeToStorageTransportListener" class="com.farpost.logwatcher.transport.NgApiTransportListener">
 		<constructor-arg name="marshaller" ref="marshaller"/>
 		<constructor-arg name="storage" ref="storage"/>
+		<constructor-arg name="clusterDao" ref="clusterDao"/>
+		<constructor-arg name="clusterStatistic" ref="clusterStatistics"/>
 	</bean>
 
 	<bean class="com.farpost.logwatcher.transport.UdpTransport"
