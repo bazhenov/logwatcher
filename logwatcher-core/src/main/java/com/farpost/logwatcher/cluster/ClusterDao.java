@@ -5,7 +5,9 @@ import com.farpost.logwatcher.Cluster;
 
 public interface ClusterDao {
 
-	boolean isClusterRegistered(Checksum checksum);
+	boolean isClusterRegistered(String applicationId, Checksum checksum);
 
 	void registerCluster(Cluster cluster);
+
+	Cluster findCluster(String applicationId, Checksum checksum);
 }

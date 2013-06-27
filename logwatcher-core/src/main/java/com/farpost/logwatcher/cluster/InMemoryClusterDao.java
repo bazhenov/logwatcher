@@ -10,17 +10,29 @@ import static com.google.common.collect.Maps.newHashMap;
 
 public class InMemoryClusterDao implements ClusterDao {
 
-	private final Map<Checksum, Cluster> clusterMap = newHashMap();
+	private final Map<String, Map<Checksum, Cluster>> clusterMap = newHashMap();
 
 	@Override
-	public boolean isClusterRegistered(Checksum checksum) {
-		return clusterMap.containsKey(checksum);
+	public boolean isClusterRegistered(String applicationId, Checksum checksum) {
+		return clusterMap.containsKey(applicationId) && clusterMap.get(applicationId).containsKey(checksum);
 	}
 
 	@Override
 	public synchronized void registerCluster(Cluster cluster) {
-		checkArgument(!clusterMap.containsKey(cluster.getChecksum()), "Cluster already registered");
-		clusterMap.put(cluster.getChecksum(), cluster);
+		Map<Checksum, Cluster> map = clusterMap.get(cluster.getApplicationId());
+		if (map == null) {
+			map = newHashMap();
+			clusterMap.put(cluster.getApplicationId(), map);
+		}
+		checkArgument(!map.containsKey(cluster.getChecksum()), "Cluster already registered");
+		map.put(cluster.getChecksum(), cluster);
+	}
+
+	@Override
+	public Cluster findCluster(String applicationId, Checksum checksum) {
+		return clusterMap.containsKey(applicationId)
+			? clusterMap.get(applicationId).get(checksum)
+			: null;
 	}
 }
 
