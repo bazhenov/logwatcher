@@ -13,4 +13,13 @@ public class Functions {
 			: cases[((int) Math.min(abs % 10, 5))]];
 		return number + " " + result;
 	}
+
+	public static String formatClassName(String className) {
+		int index = className.lastIndexOf('.');
+		if (index > 0 && index < className.length() - 1) {
+			return className.substring(index + 1);
+		} else {
+			return className;
+		}
+	}
 }

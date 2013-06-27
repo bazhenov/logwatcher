@@ -2,71 +2,203 @@
 @import url("sort-box.css");
 @import url("entry.css");
 
-body				                    { font-size: 22px; font-family: tahoma, sans-serif; background-color: #fafafa; margin: 0; padding: 0 }
-img                             { border: 0 }
+body {
+	font-size: 22px;
+	font-family: tahoma, sans-serif;
+	background-color: #fafafa;
+	margin: 0;
+	padding: 0
+}
 
-.logo														{ margin-top: 10px }
+img {
+	border: 0
+}
 
-TABLE, TR, TBODY, TD            { padding: 0; margin: 0; }
+.logo {
+	margin-top: 10px
+}
 
-#header                         { padding: 0; margin: 0; height: 65px; width: 950px; text-align: left;
-                                  position: relative; }
+TABLE, TR, TBODY, TD {
+	padding: 0;
+	margin: 0;
+}
 
-#searchPanel                    { position: absolute; right: 0; top: 60%; color: gray; font-size: 12px; }
+#header {
+	padding: 0;
+	margin: 0;
+	height: 65px;
+	width: 950px;
+	text-align: left;
+	position: relative;
+}
 
-#searchInput										{ font-size: 14px; }
+#searchPanel {
+	position: absolute;
+	right: 0;
+	top: 60%;
+	color: gray;
+	font-size: 12px;
+}
 
-h2                              { font-size: 21px; letter-spacing: -1px; color: #4f4f4f; margin: 5px 0 5px 0;
-                                  font-family: 'Lucida grande', helvetica, arial, clean, sans-serif;
-																	font-weight: normal; }
-h2:first-letter									{ text-transform: capitalize; }
-h2 span.additionalInfo					{ color: #b1b1b1 }
+#searchInput {
+	font-size: 14px;
+}
 
-a					                      { color: #0099ff; text-decoration: none }
-a:hover				                  { color: red; text-decoration: underline }
-a:visited			                  { color: brown; text-decoration: underline }
+h2 {
+	font-size: 21px;
+	letter-spacing: -1px;
+	color: #4f4f4f;
+	margin: 5px 0 5px 0;
+	font-family: 'Lucida grande', helvetica, arial, clean, sans-serif;
+	font-weight: normal;
+}
 
-.noBubble                       { cursor: auto }
+h2:first-letter {
+	text-transform: capitalize;
+}
 
-#breadcrumbsContainer           { font-size: 12px; }
+h2 span.additionalInfo {
+	color: #b1b1b1
+}
 
-.asynchronous                   { color: #0099ff !important; text-decoration: none !important;
-																	border-bottom: 1px dashed !important; cursor: pointer }
+a {
+	color: #0099ff;
+	text-decoration: none
+}
 
-#mainPanel                      { position: relative; width: 970px; text-align: left; }
+a:hover {
+	color: red;
+	text-decoration: underline
+}
 
-#contentPanel                   { padding: 10px 20px; margin-top: 10px; background-color: white;
-																	box-shadow: 0 0 10px #ddd; -moz-box-shadow: 0 0 10px #ddd;
-																	-webkit-box-shadow: 0 0 10px #ddd; width: 970px; text-align: left;
-																	border: 1px solid white; border-radius: 5px; -webkit-border-radius: 5px;
-																	-moz-border-radius: 5px; position: relative; }
+a:visited {
+	color: brown;
+	text-decoration: underline
+}
 
-#notificationPanel              { text-align: center; font-size: 200%; color: #ddd; padding-bottom: 80px; font-weight: bold }
-#notificationPanel span         { font-size: 650% }
-#notificationPanel p 						{ font-weight: normal; color: #333; font-size: 50%; }
+.noBubble {
+	cursor: auto
+}
 
-abbr                            { cursor: default; border-bottom: 1px dotted !important }
+#breadcrumbsContainer {
+	font-size: 12px;
+}
 
-#slider             { font-size: 50%; width: 100px }
-#sliderValue        { width: 100px; text-align: center; padding-bottom: 5px; font-size: 70%;
-											visibility: hidden; font-variant: small-caps; }
-#sliderContainer                       { padding: 10px; position: absolute; right: 20px; top: 0; }
-#sliderContainer:hover #sliderValue    { visibility: visible; }
+.asynchronous {
+	color: #0099ff !important;
+	text-decoration: none !important;
+	border-bottom: 1px dashed !important;
+	cursor: pointer
+}
 
-p                   { font-size: 14px; }
+#mainPanel {
+	position: relative;
+	width: 970px;
+	text-align: left;
+}
 
-FORM                { margin: 0 }
+#contentPanel {
+	padding: 10px 20px;
+	margin-top: 10px;
+	background-color: white;
+	box-shadow: 0 0 10px #ddd;
+	-moz-box-shadow: 0 0 10px #ddd;
+	-webkit-box-shadow: 0 0 10px #ddd;
+	width: 970px;
+	text-align: left;
+	border: 1px solid white;
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	position: relative;
+}
 
-#footer                         { font-size: 16px; font-family: 'Lucida Grande', Tahoma, Verdana, Helvetica, sans-serif;
-																	margin-top: 20px; color: #333; text-align: center; text-shadow: 1px 1px 0 #eee }
+#notificationPanel {
+	text-align: center;
+	font-size: 200%;
+	color: #ddd;
+	padding-bottom: 80px;
+	font-weight: bold
+}
 
-#errorPanel 							{ text-align: center; margin-top: 20%; padding: 10px; background-color: #ffffe5;
-														border: 1px solid #ddddc3; max-width: 50% }
+#notificationPanel span {
+	font-size: 650%
+}
 
-#errorPanel h1						{ font-size: 26px; letter-spacing: -1px; color: #4f4f4f; margin: 5px 0 5px 0;
-														font-family: 'Lucida grande', helvetica, arial, clean, sans-serif;
-														font-weight: normal; }
+#notificationPanel p {
+	font-weight: normal;
+	color: #333;
+	font-size: 50%;
+}
 
-#errorPanel h2						{ font-size: 16px; letter-spacing: 0; }
+#slider {
+	font-size: 50%;
+	width: 100px
+}
 
-#errorPanel pre						{ font-family: monospace;	white-space: pre-wrap; color: #777; font-size: 15px;}
+#sliderValue {
+	width: 100px;
+	text-align: center;
+	padding-bottom: 5px;
+	font-size: 70%;
+	visibility: hidden;
+	font-variant: small-caps;
+}
+
+#sliderContainer {
+	padding: 10px;
+	position: absolute;
+	right: 20px;
+	top: 0;
+}
+
+#sliderContainer:hover #sliderValue {
+	visibility: visible;
+}
+
+p {
+	font-size: 14px;
+}
+
+FORM {
+	margin: 0
+}
+
+#footer {
+	font-size: 16px;
+	font-family: 'Lucida Grande', Tahoma, Verdana, Helvetica, sans-serif;
+	margin-top: 20px;
+	color: #333;
+	text-align: center;
+	text-shadow: 1px 1px 0 #eee
+}
+
+#errorPanel {
+	text-align: center;
+	margin-top: 20%;
+	padding: 10px;
+	background-color: #ffffe5;
+	border: 1px solid #ddddc3;
+	max-width: 50%
+}
+
+#errorPanel h1 {
+	font-size: 26px;
+	letter-spacing: -1px;
+	color: #4f4f4f;
+	margin: 5px 0 5px 0;
+	font-family: 'Lucida grande', helvetica, arial, clean, sans-serif;
+	font-weight: normal;
+}
+
+#errorPanel h2 {
+	font-size: 16px;
+	letter-spacing: 0;
+}
+
+#errorPanel pre {
+	font-family: monospace;
+	white-space: pre-wrap;
+	color: #777;
+	font-size: 15px;
+}
