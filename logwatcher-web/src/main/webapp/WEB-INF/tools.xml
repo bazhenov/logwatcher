@@ -1,0 +1,13 @@
+<tools>
+	<toolbox scope="application">
+		<tool class="org.apache.velocity.tools.generic.DateTool" locale="RU_ru"/>
+		<tool class="org.apache.velocity.tools.generic.DisplayTool" locale="RU_ru"/>
+		<tool class="org.apache.velocity.tools.generic.NumberTool"/>
+		<tool class="org.apache.velocity.tools.generic.MathTool"/>
+		<tool class="org.apache.velocity.tools.generic.EscapeTool"/>
+	</toolbox>
+
+	<toolbox scope="request">
+		<tool class="org.apache.velocity.tools.view.LinkTool"/>
+	</toolbox>
+</tools>

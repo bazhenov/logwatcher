@@ -7,17 +7,21 @@ import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
 import com.farpost.logwatcher.web.page.DetailsPage;
 import com.farpost.logwatcher.web.page.FeedPage;
+import com.farpost.logwatcher.web.page.InnerFeedPage;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
@@ -55,6 +59,21 @@ public class FeedController {
 		return new FeedPage(request, date, applicationId, severity, sortOrder);
 	}
 
+	@RequestMapping("/service/feed/{applicationId}")
+	@ModelAttribute("p")
+	public InnerFeedPage handleInnerFeed(@PathVariable String applicationId,
+																			 @RequestParam(required = false) @DateTimeFormat(iso = DATE) Date date,
+																			 HttpServletRequest request) {
+		if (date == null) {
+			date = new java.util.Date();
+		}
+
+		Severity severity = getSeverity(request);
+		String sortOrder = getSortOrder(request);
+
+		return new InnerFeedPage(request, date, applicationId, severity, sortOrder);
+	}
+
 	@RequestMapping("/entries/{applicationId}/{checksum}")
 	@ModelAttribute("p")
 	public DetailsPage handleEntries(@PathVariable String checksum, @PathVariable String applicationId,
@@ -78,6 +97,17 @@ public class FeedController {
 		map.addAttribute("date", new java.util.Date());
 
 		return "feed-rss";
+	}
+
+	@RequestMapping("/rest/feed/{applicationId}")
+	@ResponseBody
+	public Collection<AggregatedEntry> handleFeed(@PathVariable String applicationId) {
+		return storage.getAggregatedEntries(applicationId, new LocalDate(), Severity.debug);
+	}
+
+	@RequestMapping("/app/{applicationId}")
+	public ModelAndView handleApplicationView(@PathVariable String applicationId) {
+		return new ModelAndView("application", "p", new ApplicationViewPage(applicationId));
 	}
 
 	private static Severity getSeverity(HttpServletRequest request) {
@@ -107,5 +137,18 @@ public class FeedController {
 			}
 		}
 		return null;
+	}
+
+	public class ApplicationViewPage {
+
+		private final String applicationId;
+
+		public ApplicationViewPage(String applicationId) {
+			this.applicationId = applicationId;
+		}
+
+		public String getApplicationId() {
+			return applicationId;
+		}
 	}
 }
