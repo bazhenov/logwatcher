@@ -41,7 +41,7 @@
 	font-size: 14px;
 	color: #444;
 	background-color: #eee;
-	font-weight: 400;
+	font-weight: 600;
 	border-radius: 4px;
 	padding: 1px 10px;
 	margin-right: 3px;
@@ -52,6 +52,16 @@
 	font-size: 60%;
 	line-height: 16px;
 	margin-left: 85px;
+}
+
+.times abbr {
+	margin-right: 5px;
+	cursor: default;
+	border-bottom: 1px dotted !important
+}
+
+.causeType abbr {
+	cursor: default;
 }
 
 .entryHeader .applicationId {

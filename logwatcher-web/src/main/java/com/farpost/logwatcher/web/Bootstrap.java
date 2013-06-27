@@ -64,7 +64,7 @@ public class Bootstrap implements InitializingBean {
 		Random rnd = new Random();
 		log.info("Loading sample dump...");
 		storage.writeEntry(new LogEntryImpl(now(), "group", "AdvertServiceException: Error Fetching http headers", Severity.error, "sum", "advertisement", null));
-		Cause cause = new Cause("RuntimeException", "Socket reading timeout", "AdvertServiceException: Error Fetching http headers\n" +
+		Cause cause = new Cause("java.lang.RuntimeException", "Socket reading timeout", "AdvertServiceException: Error Fetching http headers\n" +
 			"  at /var/www/baza.farpost.ru/rev/20100325-1520/slr/advert/src/remote/AdvertSoapDecorator.class.php:16\n" +
 			"  10: slrSoapDecorator.class.php:94 AdvertSoapDecorator->handleException(\"Error Fetc...\", SoapFault)\n" +
 			"  9 : unknown:0 slrSoapDecorator->__call(\"findLinks\", [1])\n" +
