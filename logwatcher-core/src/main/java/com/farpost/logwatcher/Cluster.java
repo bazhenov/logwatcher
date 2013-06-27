@@ -18,13 +18,15 @@ public final class Cluster {
 
 	private String originalTitle;
 	private String description;
+	private final String applicationId;
+	private final Checksum checksum;
 
 	@Nullable
 	private String issueKey;
 
-	private Checksum checksum;
-
-	public Cluster(String originalTitle, Checksum checksum, String customTitle, String description, String issueKey) {
+	public Cluster(String applicationId, String originalTitle, Checksum checksum, String customTitle, String description,
+								 String issueKey) {
+		this.applicationId = applicationId;
 		this.originalTitle = checkNotNull(originalTitle);
 		this.checksum = checkNotNull(checksum);
 		this.customTitle = customTitle;
@@ -32,12 +34,12 @@ public final class Cluster {
 		this.issueKey = issueKey;
 	}
 
-	public Cluster(String originalTitle, byte[] checksum) {
-		this(originalTitle, new Checksum(checksum), null, null, null);
+	public Cluster(String applicationId, String originalTitle, byte[] checksum) {
+		this(applicationId, originalTitle, new Checksum(checksum), null, null, null);
 	}
 
-	public Cluster(String originalTitle, Checksum checksum) {
-		this(originalTitle, checksum, null, null, null);
+	public Cluster(String applicationId, String originalTitle, Checksum checksum) {
+		this(applicationId, originalTitle, checksum, null, null, null);
 	}
 
 	/**
@@ -53,6 +55,13 @@ public final class Cluster {
 	 */
 	public String getOriginalTitle() {
 		return originalTitle;
+	}
+
+	/**
+	 * @return application id from which this cluster is
+	 */
+	public String getApplicationId() {
+		return applicationId;
 	}
 
 	@Nullable
@@ -76,11 +85,12 @@ public final class Cluster {
 
 		Cluster that = (Cluster) o;
 		return equal(checksum, that.checksum) && equal(description, that.description) && equal(issueKey, that.issueKey) &&
-			equal(customTitle, that.customTitle) && equal(originalTitle, that.originalTitle);
+			equal(customTitle, that.customTitle) && equal(originalTitle, that.originalTitle) &&
+			equal(applicationId, that.applicationId);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(customTitle, issueKey, description, checksum, originalTitle);
+		return Objects.hashCode(customTitle, issueKey, description, checksum, originalTitle, applicationId);
 	}
 }
