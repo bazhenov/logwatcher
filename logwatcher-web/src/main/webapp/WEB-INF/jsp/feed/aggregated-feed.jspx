@@ -109,6 +109,16 @@
                 data: {'date': "${date}"}
             }).done(function (data) {
                         $(".entries").html(data);
+                        var maxData = 0;
+                        $(".entry .count").each(function (i, canvas) {
+                            var count = parseInt($(canvas).attr("data-count"));
+                            if (count > maxData) maxData = count;
+                        });
+                        $(".entry .count").each(function (i, canvas) {
+                            var count = parseInt($(canvas).attr("data-count"));
+                            var severity = $(canvas).attr("data-severity");
+                            new Counterina(canvas, maxData).draw(count, severity);
+                        })
                     });
             setTimeout("updateFeed()", 3000);
         }

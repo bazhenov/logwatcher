@@ -22,28 +22,6 @@
 	text-align: center;
 	top: 8px;
 	left: 10px;
-	line-height: 55px;
-	border-radius: 60px
-}
-
-.error .count {
-	background-color: #990000;
-}
-
-.warning .count {
-	background-color: #ff6600;
-}
-
-.info .count {
-	background-color: #339900;
-}
-
-.debug .count {
-	background-color: #247;
-}
-
-.trace .count {
-	background-color: #aaa;
 }
 
 .entry .message {

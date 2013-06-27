@@ -16,15 +16,9 @@
 		<div class='entry ${e.severity}' checksum='${e.checksum}' lastOccurredDate='${lastOccurredDate}'>
 			<div class='entryHeader'>
 
-				<div class="count">
-					#if($e.count > 100000)
-						<abbr title="$e.count times">10<sup>x</sup></abbr>
-					#elseif($e.count > 1000)
-						<abbr title="$e.count times">$math.floor($math.div($e.count, 1000))K</abbr>
-					#else
-						$e.count
-					#end
-				</div>
+				<canvas class="count" width="60" height="60" data-count="$e.count" data-severity="$e.severity">
+
+				</canvas>
 				<div class='message'>
 					#if ($e.sampleCause)
 						<span class="causeType">$e.sampleCause.type</span>
