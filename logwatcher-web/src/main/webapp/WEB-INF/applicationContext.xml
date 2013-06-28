@@ -27,7 +27,6 @@
 
 	<bean id="clusterDao" class="com.farpost.logwatcher.cluster.InMemoryClusterDao"/>
 	<bean id="clusterStatistics" class="com.farpost.logwatcher.statistics.InMemoryClusterStatistics"/>
-	<bean id="activeApplicationsService" class="com.farpost.logwatcher.statistics.InMemoryActiveApplicationsServiceImpl"/>
 
 	<bean id="luceneDirectory" class="org.apache.lucene.store.FSDirectory" factory-method="open">
 		<constructor-arg ref="indexLocation"/>
@@ -44,7 +43,6 @@
 		<constructor-arg name="storage" ref="storage"/>
 		<constructor-arg name="clusterDao" ref="clusterDao"/>
 		<constructor-arg name="clusterStatistic" ref="clusterStatistics"/>
-		<constructor-arg name="activeApplications" ref="activeApplicationsService"/>
 	</bean>
 
 	<bean id="aggregator" class="com.farpost.logwatcher.aggregator.ExecutorServiceAggregator"
