@@ -3,7 +3,6 @@ package com.farpost.logwatcher.web.controller;
 import com.farpost.logwatcher.Checksum;
 import com.farpost.logwatcher.Cluster;
 import com.farpost.logwatcher.cluster.ClusterDao;
-import com.farpost.logwatcher.statistics.ActiveApplicationsService;
 import com.farpost.logwatcher.statistics.ClusterStatistic;
 import com.google.common.base.Function;
 import org.joda.time.LocalDate;
@@ -21,9 +20,6 @@ import static com.google.common.collect.FluentIterable.from;
 public class DashboardController {
 
 	@Autowired
-	private ActiveApplicationsService activeApplicationsService;
-
-	@Autowired
 	private ClusterStatistic clusterStatistic;
 
 	@Autowired
@@ -38,7 +34,7 @@ public class DashboardController {
 	public class DashboardPage {
 
 		public Set<String> getApplications() {
-			return activeApplicationsService.getActiveApplications();
+			return clusterStatistic.getActiveApplications();
 		}
 
 		public Collection<Cluster> getClusters(final String applicationId) {
@@ -49,6 +45,7 @@ public class DashboardController {
 						return clusterDao.findCluster(applicationId, input);
 					}
 				})
+				.limit(5)
 				.toList();
 		}
 	}

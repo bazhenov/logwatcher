@@ -12,13 +12,13 @@ public class SessionController {
 
 	@RequestMapping(value = "/session")
 	public void handleFeed(@RequestParam(value = "severity", required = false) String severity,
-	                       @RequestParam(value = "sortOrder", required = false) String sortOrder,
-	                       HttpServletResponse response) {
-		if ( severity != null ) {
+												 @RequestParam(value = "sortOrder", required = false) String sortOrder,
+												 HttpServletResponse response) {
+		if (severity != null) {
 			Cookie cookie = new Cookie("severity", severity);
 			response.addCookie(cookie);
 		}
-		if ( sortOrder != null ) {
+		if (sortOrder != null) {
 			Cookie cookie = new Cookie("sortOrder", sortOrder);
 			response.addCookie(cookie);
 		}

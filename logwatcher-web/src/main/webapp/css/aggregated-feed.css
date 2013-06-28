@@ -86,19 +86,6 @@
 	color: gray !important;
 }
 
-.entry .spinner {
-	background: url("../images/spinner_large.gif") no-repeat center;
-	height: 66px;
-	width: 100%;
-	padding-bottom: 20px;
-	opacity: 0.7;
-}
-
-.removing .spinner,
-.loadingAttributes .spinner {
-	display: block !important;
-}
-
 .entryFooter {
 	background-color: #eec;
 	padding: 3px 10px 4px 34px;
@@ -121,34 +108,6 @@
 .entry:hover .messageOverlay,
 .selectedEntry .messageOverlay {
 	background: url("../images/sha-hover.png") repeat-y;
-}
-
-.entryContainer .attributes {
-	list-style: none;
-	padding-left: 34px;
-	line-height: 18px;
-}
-
-.entryContainer .attributes label {
-	font-variant: normal;
-	font-size: 120%
-}
-
-.entryContainer .attributes span {
-	border-left: 1px dotted #997;
-	margin-left: 4px;
-	padding-left: 4px;
-	padding-right: 2px;
-	color: #777 !important;
-	font-family: monospace;
-}
-
-.entryContainer .attributes code {
-	background-color: #eec;
-	border: 1px dotted #997;
-	padding: 0 2px;
-	font-family: monospace;
-	margin-right: 10px;
 }
 
 .entryContent ul {
