@@ -35,6 +35,7 @@
 		<property name="viewNames">
 			<list>
 				<value>application</value>
+				<value>dashboard</value>
 				<value>system/generate-message</value>
 				<value>feed/inner-feed</value>
 			</list>

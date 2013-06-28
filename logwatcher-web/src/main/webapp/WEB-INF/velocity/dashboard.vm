@@ -1,0 +1,35 @@
+#* @vtlvariable name="p" type="com.farpost.logwatcher.web.controller.DashboardController.DashboardPage" *#
+<html>
+<head>
+	<title>LogWatcher Dashboard</title>
+	<link rel="stylesheet" type="text/css" href="/css/dashboard.css"/>
+</head>
+<body>
+<h2>Dashboard</h2>
+
+	#if($p.applications.isEmpty())
+	<div id="notificationPanel">
+		<span>&empty;</span><br/>
+		No entries found
+	</div>
+	#else
+		#foreach($id in $p.applications)
+		<div class="dashboardWidget">
+			<div class="title"><a href="/feed/$id">$id</a></div>
+			<ul>
+				#set($clusters = $p.getClusters($id))
+				#if ($clusters.isEmpty())
+					<li>No errors for today</li>
+				#else
+					#foreach($cluster in $clusters)
+						<li><a href="/feed/$id/#${cluster.checksum}">$cluster.originalTitle</a></li>
+					#end
+				#end
+			</ul>
+		</div>
+		#end
+	#end
+
+<div style="clear: both;"></div>
+</body>
+</html>

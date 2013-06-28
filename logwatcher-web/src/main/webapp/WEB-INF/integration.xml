@@ -55,6 +55,7 @@
 		<constructor-arg name="storage" ref="storage"/>
 		<constructor-arg name="clusterDao" ref="clusterDao"/>
 		<constructor-arg name="clusterStatistic" ref="clusterStatistics"/>
+		<constructor-arg name="activeApplications" ref="activeApplicationsService"/>
 	</bean>
 
 	<bean class="com.farpost.logwatcher.transport.UdpTransport"
