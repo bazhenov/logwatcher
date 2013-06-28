@@ -42,21 +42,12 @@
 		<int:queue capacity="${logs.queue.capacity}"/>
 	</int:channel>
 
-	<!-- Чтение логов из очереди и добавление их в хранилище -->
-	<int:service-activator input-channel="messageChannel" ref="writeToStorageTransportListener" method="onMessage">
-		<!-- конфигурация poller'ов: http://static.springsource.org/spring-integration/reference/htmlsingle/#channel-adapter-namespace-inbound -->
-		<!-- как вариант можно это еще более "заасинхронить" http://static.springsource.org/spring-integration/reference/htmlsingle/#async-polling -->
+	<int:chain input-channel="messageChannel">
 		<int:poller time-unit="MILLISECONDS" fixed-delay="100"/>
-	</int:service-activator>
-
-	<!-- "Сервис", записывающий логи в хранилище -->
-	<bean id="writeToStorageTransportListener" class="com.farpost.logwatcher.transport.NgApiTransportListener">
-		<constructor-arg name="marshaller" ref="marshaller"/>
-		<constructor-arg name="storage" ref="storage"/>
-		<constructor-arg name="clusterDao" ref="clusterDao"/>
-		<constructor-arg name="clusterStatistic" ref="clusterStatistics"/>
-		<constructor-arg name="activeApplications" ref="activeApplicationsService"/>
-	</bean>
+		<int:transformer ref="marshaller" method="marshall"/>
+		<!-- Чтение логов из очереди и добавление их в хранилище -->
+		<int:service-activator ref="writeToStorageTransportListener" method="onEntry"/>
+	</int:chain>
 
 	<bean class="com.farpost.logwatcher.transport.UdpTransport"
 				lazy-init="false"
