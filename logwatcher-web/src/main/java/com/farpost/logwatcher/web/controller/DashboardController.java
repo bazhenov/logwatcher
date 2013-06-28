@@ -1,43 +1,55 @@
 package com.farpost.logwatcher.web.controller;
 
-import com.farpost.logwatcher.AggregatedEntry;
-import com.farpost.logwatcher.Severity;
-import com.farpost.logwatcher.storage.LogStorage;
-import com.farpost.logwatcher.web.ApplicationInfo;
+import com.farpost.logwatcher.Checksum;
+import com.farpost.logwatcher.Cluster;
+import com.farpost.logwatcher.cluster.ClusterDao;
+import com.farpost.logwatcher.statistics.ActiveApplicationsService;
+import com.farpost.logwatcher.statistics.ClusterStatistic;
+import com.google.common.base.Function;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.Set;
+
+import static com.google.common.collect.FluentIterable.from;
 
 @Controller
 public class DashboardController {
 
 	@Autowired
-	private LogStorage storage;
+	private ActiveApplicationsService activeApplicationsService;
 
-	public DashboardController() {
-	}
+	@Autowired
+	private ClusterStatistic clusterStatistic;
 
-	public DashboardController(LogStorage storage) {
-		this.storage = storage;
-	}
+	@Autowired
+	private ClusterDao clusterDao;
 
 	@RequestMapping("/dashboard")
-	public String doDashboard(ModelMap map) {
-		map.put("applicationIds", storage.getUniqueApplicationIds(LocalDate.now()));
-		return "dashboard";
+	@ModelAttribute("p")
+	public DashboardPage doDashboard() {
+		return new DashboardPage();
 	}
 
-	@RequestMapping("/widget/dashboard-widget")
-	public String doDashboardWidget(@RequestParam String applicationId, ModelMap map) {
-		List<AggregatedEntry> entries = storage.getAggregatedEntries(applicationId, LocalDate.now(), Severity.error);
-		map.put("info", new ApplicationInfo(applicationId, entries));
-		return "widget/dashboard-widget";
+	public class DashboardPage {
+
+		public Set<String> getApplications() {
+			return activeApplicationsService.getActiveApplications();
+		}
+
+		public Collection<Cluster> getClusters(final String applicationId) {
+			return from(clusterStatistic.getActiveClusterChecksums(applicationId, new LocalDate()))
+				.transform(new Function<Checksum, Cluster>() {
+					@Override
+					public Cluster apply(Checksum input) {
+						return clusterDao.findCluster(applicationId, input);
+					}
+				})
+				.toList();
+		}
 	}
 }
