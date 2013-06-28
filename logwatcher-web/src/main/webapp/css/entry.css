@@ -1,11 +1,3 @@
-.entry {
-	border-top: 1px dashed #ccc
-}
-
-.entry:hover {
-	background-color: #ffffe5;
-}
-
 .selectedEntry {
 	background-color: #ffffe5;
 }
@@ -15,11 +7,6 @@
 	padding-top: 6px;
 	cursor: pointer;
 	position: relative;
-}
-
-.entry a {
-	display: inline;
-	text-align: right;
 }
 
 .selectedEntry .entryContainer {

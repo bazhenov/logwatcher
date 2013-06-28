@@ -66,15 +66,6 @@ $(document).ready(function () {
 		return false;
 	});
 
-	var checksum = location.hash.substring(1);
-	if (checksum.length > 0) {
-		$('.entry').each(function () {
-			if ($(this).attr('checksum') == checksum) {
-				toggleEntry($(this));
-			}
-		});
-	}
-
 	$('#applicationId').click(function () {
 		showPopup($(this), $('#applicationSelector'));
 		return false;

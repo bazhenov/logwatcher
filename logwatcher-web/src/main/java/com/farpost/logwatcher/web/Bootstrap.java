@@ -4,7 +4,6 @@ import com.farpost.logwatcher.*;
 import com.farpost.logwatcher.cluster.ClusterDao;
 import com.farpost.logwatcher.statistics.ClusterStatistic;
 import com.farpost.logwatcher.storage.LogStorage;
-import com.google.common.base.Charsets;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
@@ -123,7 +122,7 @@ public class Bootstrap implements InitializingBean {
 
 	private void write(LogEntry entry) {
 		storage.writeEntry(entry);
-		Checksum checksum = new Checksum(entry.getChecksum().getBytes(Charsets.UTF_8));
+		Checksum checksum = Checksum.fromHexString(entry.getChecksum());
 		if (!clusterDao.isClusterRegistered(entry.getApplicationId(), checksum)) {
 			clusterDao.registerCluster(new Cluster(entry.getApplicationId(), entry.getSeverity(), entry.getMessage(), checksum));
 		}

@@ -44,7 +44,6 @@ public class FeedPage implements ViewNameAwarePage, InitializingBean {
 	}};
 	private List<AggregatedEntry> entries;
 	private String sortOrder;
-	private int entriesCount;
 
 	public FeedPage(HttpServletRequest request, Date date, String applicationId, Severity severity, String sortOrder) {
 		this.request = request;
@@ -57,7 +56,6 @@ public class FeedPage implements ViewNameAwarePage, InitializingBean {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		entries = storage.getAggregatedEntries(applicationId, fromDateFields(date), severity);
-		entriesCount = sumCount(entries);
 		Comparator<AggregatedEntry> comparator = comparators.containsKey(this.sortOrder)
 			? comparators.get(this.sortOrder)
 			: comparators.get(null);
@@ -94,14 +92,6 @@ public class FeedPage implements ViewNameAwarePage, InitializingBean {
 	@Override
 	public String getViewName() {
 		return "feed/aggregated-feed";
-	}
-
-	public String getSortOrder() {
-		return sortOrder;
-	}
-
-	public int getEntriesCount() {
-		return entriesCount;
 	}
 
 	private static int sumCount(List<AggregatedEntry> entries) {

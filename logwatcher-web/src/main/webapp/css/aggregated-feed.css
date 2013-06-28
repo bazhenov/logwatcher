@@ -24,6 +24,18 @@
 	left: 10px;
 }
 
+.entry a {
+	text-decoration: inherit;
+}
+
+.entry {
+	border-top: 1px dashed #ccc
+}
+
+.entry:hover {
+	background-color: #ffffe5;
+}
+
 .entry .message {
 	color: #111;
 	margin-left: 85px;
@@ -85,22 +97,6 @@
 .removing .spinner,
 .loadingAttributes .spinner {
 	display: block !important;
-}
-
-.entry .entryHeader .operations {
-	position: absolute;
-	right: 10px;
-	top: 14px;
-	visibility: hidden
-}
-
-.entry:hover .entryHeader .operations {
-	visibility: visible;
-}
-
-.entry .entryHeader .operations A {
-	padding: 2px 20px;
-	line-height: 30px;
 }
 
 .entryFooter {
