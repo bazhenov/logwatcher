@@ -1,9 +1,10 @@
 package com.farpost.logwatcher.web;
 
-import com.farpost.logwatcher.*;
-import com.farpost.logwatcher.cluster.ClusterDao;
-import com.farpost.logwatcher.statistics.ClusterStatistic;
-import com.farpost.logwatcher.storage.LogStorage;
+import com.farpost.logwatcher.Cause;
+import com.farpost.logwatcher.LogEntry;
+import com.farpost.logwatcher.LogEntryImpl;
+import com.farpost.logwatcher.Severity;
+import com.farpost.logwatcher.transport.LogEntryListener;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
@@ -21,23 +22,13 @@ public class Bootstrap implements InitializingBean {
 
 	private static final Logger log = getLogger(Bootstrap.class);
 
-	private LogStorage storage;
-	private ClusterDao clusterDao;
-	private ClusterStatistic clusterStatistic;
+	private LogEntryListener entryListener;
 
 	private boolean loadSampleDump = false;
 	private File indexLocation;
 
-	public void setStorage(LogStorage storage) {
-		this.storage = storage;
-	}
-
-	public void setClusterDao(ClusterDao clusterDao) {
-		this.clusterDao = clusterDao;
-	}
-
-	public void setClusterStatistic(ClusterStatistic clusterStatistic) {
-		this.clusterStatistic = clusterStatistic;
+	public void setEntryListener(LogEntryListener entryListener) {
+		this.entryListener = entryListener;
 	}
 
 	public void setIndexLocation(File indexLocation) {
@@ -121,11 +112,6 @@ public class Bootstrap implements InitializingBean {
 	}
 
 	private void write(LogEntry entry) {
-		storage.writeEntry(entry);
-		Checksum checksum = Checksum.fromHexString(entry.getChecksum());
-		if (!clusterDao.isClusterRegistered(entry.getApplicationId(), checksum)) {
-			clusterDao.registerCluster(new Cluster(entry.getApplicationId(), entry.getSeverity(), entry.getMessage(), checksum));
-		}
-		clusterStatistic.registerEvent(entry.getApplicationId(), entry.getDate(), checksum);
+		entryListener.onEntry(entry);
 	}
 }

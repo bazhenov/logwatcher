@@ -17,10 +17,8 @@
 	<import resource="scheduler.xml"/>
 
 	<bean id="bootstrap" class="com.farpost.logwatcher.web.Bootstrap"
-				p:storage-ref="storage"
-				p:clusterDao-ref="clusterDao"
-				p:clusterStatistic-ref="clusterStatistics"
 				p:indexLocation-ref="indexLocation"
+				p:entryListener-ref="writeToStorageTransportListener"
 				p:loadSampleDump="${loadSampleDump}"/>
 
 	<bean id="indexLocation" class="java.io.File" init-method="mkdirs">
@@ -39,6 +37,14 @@
 				p:commitThreshold="${index.commitThreshold}" destroy-method="close">
 		<constructor-arg ref="luceneDirectory"/>
 		<constructor-arg ref="dataSource"/>
+	</bean>
+
+	<!-- "Сервис", записывающий логи в хранилище -->
+	<bean id="writeToStorageTransportListener" class="com.farpost.logwatcher.transport.NgApiEntryListener">
+		<constructor-arg name="storage" ref="storage"/>
+		<constructor-arg name="clusterDao" ref="clusterDao"/>
+		<constructor-arg name="clusterStatistic" ref="clusterStatistics"/>
+		<constructor-arg name="activeApplications" ref="activeApplicationsService"/>
 	</bean>
 
 	<bean id="aggregator" class="com.farpost.logwatcher.aggregator.ExecutorServiceAggregator"
