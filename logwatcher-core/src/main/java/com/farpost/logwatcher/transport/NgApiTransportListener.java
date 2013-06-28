@@ -8,7 +8,6 @@ import com.farpost.logwatcher.marshalling.Marshaller;
 import com.farpost.logwatcher.statistics.ClusterStatistic;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
-import com.google.common.base.Charsets;
 
 public class NgApiTransportListener implements TransportListener {
 
@@ -17,7 +16,8 @@ public class NgApiTransportListener implements TransportListener {
 	private final ClusterDao clusterDao;
 	private final ClusterStatistic clusterStatistic;
 
-	public NgApiTransportListener(LogStorage storage, Marshaller marshaller, ClusterDao clusterDao, ClusterStatistic clusterStatistic) {
+	public NgApiTransportListener(LogStorage storage, Marshaller marshaller, ClusterDao clusterDao,
+																ClusterStatistic clusterStatistic) {
 		this.storage = storage;
 		this.marshaller = marshaller;
 		this.clusterDao = clusterDao;
@@ -27,7 +27,7 @@ public class NgApiTransportListener implements TransportListener {
 	public void onMessage(byte[] message) throws TransportException {
 		try {
 			LogEntry entry = marshaller.unmarshall(message);
-			Checksum checksum = new Checksum(entry.getChecksum().getBytes(Charsets.UTF_8));
+			Checksum checksum = Checksum.fromHexString(entry.getChecksum());
 			if (!clusterDao.isClusterRegistered(entry.getApplicationId(), checksum)) {
 				clusterDao.registerCluster(new Cluster(entry.getApplicationId(), entry.getSeverity(), entry.getMessage(),
 					checksum));
