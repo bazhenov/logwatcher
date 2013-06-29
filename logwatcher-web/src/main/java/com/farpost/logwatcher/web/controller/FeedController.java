@@ -1,15 +1,13 @@
 package com.farpost.logwatcher.web.controller;
 
-import com.farpost.logwatcher.Checksum;
-import com.farpost.logwatcher.Cluster;
-import com.farpost.logwatcher.Severity;
+import com.farpost.logwatcher.*;
 import com.farpost.logwatcher.cluster.ClusterDao;
 import com.farpost.logwatcher.statistics.ClusterStatistic;
 import com.farpost.logwatcher.statistics.DayStatistic;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
-import com.farpost.logwatcher.web.page.DetailsPage;
 import com.farpost.logwatcher.web.page.FeedPage;
+import com.google.common.collect.Ordering;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -24,7 +22,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.Date;
 
+import static com.farpost.logwatcher.Checksum.fromHexString;
+import static com.farpost.logwatcher.storage.LogEntries.entries;
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Lists.newArrayList;
+import static org.joda.time.LocalDate.fromDateFields;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @Controller
@@ -80,10 +82,12 @@ public class FeedController {
 	}
 
 	@RequestMapping("/entries/{applicationId}/{checksum}")
-	@ModelAttribute("p")
-	public DetailsPage handleEntries(@PathVariable String checksum, @PathVariable String applicationId,
-																	 @RequestParam @DateTimeFormat(iso = DATE) java.util.Date date) {
-		return new DetailsPage(applicationId, checksum, date);
+	public ModelAndView handleEntries(@PathVariable String checksum, @PathVariable String applicationId,
+																		@RequestParam @DateTimeFormat(iso = DATE) java.util.Date date) {
+		Checksum cs = fromHexString(checksum);
+		Cluster cluster = clusterDao.findCluster(applicationId, cs);
+		DayStatistic statistic = clusterStatistic.getDayStatistic(applicationId, cs, fromDateFields(date));
+		return new ModelAndView("entries", "p", new DetailsPage(cluster, statistic, date));
 	}
 
 	private static Severity getSeverity(HttpServletRequest request) {
@@ -153,6 +157,43 @@ public class FeedController {
 
 		public String getApplicationId() {
 			return applicationId;
+		}
+	}
+
+	public class DetailsPage {
+
+		private final Cluster cluster;
+		private final DayStatistic statistics;
+		private Collection<LogEntry> entries;
+		private Date date;
+
+		public DetailsPage(Cluster cluster, DayStatistic statistics, Date date) {
+			this.statistics = checkNotNull(statistics);
+			this.cluster = checkNotNull(cluster);
+			this.date = date;
+
+			entries = entries().
+				applicationId(cluster.getApplicationId()).
+				checksum(cluster.getChecksum().toString()).
+				date(fromDateFields(date)).
+				find(storage);
+			entries = Ordering.from(new ByOccurrenceDateComparator()).sortedCopy(entries);
+		}
+
+		public Date getDate() {
+			return date;
+		}
+
+		public Cluster getCluster() {
+			return cluster;
+		}
+
+		public Collection<LogEntry> getEntries() {
+			return entries;
+		}
+
+		public DayStatistic getStatistics() {
+			return statistics;
 		}
 	}
 }

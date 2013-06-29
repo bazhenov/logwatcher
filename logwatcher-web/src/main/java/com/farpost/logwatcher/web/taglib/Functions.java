@@ -22,31 +22,6 @@ public class Functions {
 		return shortFormat.get().format(date);
 	}
 
-	public static String formatCause(Cause rootCause) {
-		if (rootCause == null) {
-			return "";
-		}
-		StringBuilder prefix = new StringBuilder();
-		StringBuilder stackTrace = new StringBuilder();
-
-		Cause cause = rootCause;
-		while (cause != null) {
-			if (cause != rootCause) {
-				stackTrace.append("\n\n").append(prefix).append("Caused by ");
-			}
-			String iStack = cause.getStackTrace().replaceAll("\n", "\n" + prefix);
-			stackTrace.append(cause.getType())
-				.append(": ")
-				.append(cause.getMessage())
-				.append("\n")
-				.append(prefix)
-				.append(iStack);
-			cause = cause.getCause();
-			prefix.append("  ");
-		}
-		return stackTrace.toString();
-	}
-
 	public static boolean isNew(AggregatedEntry entry) {
 		return entry.getLastTime().plusMinutes(30).isAfterNow();
 	}

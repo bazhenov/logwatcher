@@ -10,8 +10,21 @@ body {
 	padding: 0
 }
 
+h3 {
+	font-family: 'Open Sans', serif;
+	font-weight: 600;
+	font-size: 18px;
+	margin-bottom: 10px;
+}
+
 img {
 	border: 0
+}
+
+.section {
+	margin: 0 20px;
+	font-family: 'Open Sans', serif;
+	font-size: 13px;
 }
 
 .logo {
@@ -45,11 +58,11 @@ TABLE, TR, TBODY, TD {
 }
 
 h2 {
-	font-size: 21px;
+	font-size: 24px;
 	letter-spacing: -1px;
 	color: #4f4f4f;
-	margin: 5px 0 5px 0;
-	font-family: 'Lucida grande', helvetica, arial, clean, sans-serif;
+	margin: 15px 0;
+	font-family: 'Open Sans', helvetica, sans-serif;
 	font-weight: normal;
 }
 
@@ -98,7 +111,7 @@ a:visited {
 }
 
 #contentPanel {
-	padding: 10px 20px;
+	padding: 0 20px 20px 20px;
 	margin-top: 10px;
 	background-color: white;
 	box-shadow: 0 0 10px #ddd;

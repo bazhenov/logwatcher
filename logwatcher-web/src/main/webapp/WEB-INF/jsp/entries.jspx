@@ -7,7 +7,7 @@
 
     <jsp:directive.page contentType="text/html"/>
 
-    <jsp:useBean id="p" scope="request" type="com.farpost.logwatcher.web.page.DetailsPage"/>
+    <jsp:useBean id="p" scope="request" type="com.farpost.logwatcher.web.controller.FeedController.DetailsPage"/>
 
     <html>
     <head>
