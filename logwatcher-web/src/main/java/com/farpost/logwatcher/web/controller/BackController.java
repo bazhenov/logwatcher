@@ -12,9 +12,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 import static com.farpost.logwatcher.storage.LogEntries.entries;
 
@@ -23,12 +21,6 @@ public class BackController {
 
 	@Autowired
 	private LogStorage storage;
-	private final ThreadLocal<DateFormat> format = new ThreadLocal<DateFormat>() {
-		@Override
-		protected DateFormat initialValue() {
-			return new SimpleDateFormat("yyyy-MM-dd");
-		}
-	};
 
 	public BackController() {
 	}
@@ -38,17 +30,14 @@ public class BackController {
 	}
 
 	@RequestMapping("/service/content")
-	public String handleAttributes(@RequestParam("checksum") String checksum,
-																 @RequestParam("date") String date,
-																 ModelMap map)
+	public String handleAttributes(@RequestParam("checksum") String checksum, ModelMap map)
 		throws LogStorageException, InvalidCriteriaException, ParseException {
 
 		AggregateAttributesVisitor visitor = new AggregateAttributesVisitor();
-		LocalDate dt = new LocalDate(format.get().parse(date).getTime());
 
 		AggregationResult result = entries().
 			checksum(checksum).
-			date(dt).
+			date(LocalDate.now()).
 			walk(storage, visitor);
 
 		map.addAttribute("attributes", result.getAttributeMap());

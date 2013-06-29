@@ -18,7 +18,7 @@
 			#set($lastDate = $stat.lastSeenAt.toDate())
 			#set($lastOccurredDate = $date.format("yyyy-MM-dd", $lastDate))
 
-			<div class='entry ${c.severity}' checksum='${c.checksum}' lastOccurredDate='${lastOccurredDate}'>
+			<div class='entry ${c.severity}'>
 				<a href="$link.uri("/entries/$c.applicationId/$c.checksum")">
 					<div class='entryHeader'>
 
