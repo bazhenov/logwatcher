@@ -35,29 +35,26 @@
 
 .attributes {
 	list-style: none;
-	padding-left: 34px;
-	line-height: 18px;
-	font-size: 12px;
+	padding: 0;
+	font-size: 14px;
+	font-family: 'Open Sans', "Helvetica Neue", Helvetica, sans-serif;
+	font-weight: normal;
 }
 
 .attributes label {
-	font-variant: normal;
-	font-size: 120%
+	font-weight: 600;
 }
 
 .attributes span {
-	border-left: 1px dotted #997;
 	margin-left: 4px;
 	padding-left: 4px;
 	padding-right: 2px;
 	color: #777 !important;
-	font-family: monospace;
 }
 
 .attributes code {
-	background-color: #eec;
-	border: 1px dotted #997;
 	padding: 0 2px;
-	font-family: monospace;
+	font-weight: 300;
+	font-family: 'Open Sans', "Helvetica Neue", Helvetica, sans-serif;
 	margin-right: 10px;
 }

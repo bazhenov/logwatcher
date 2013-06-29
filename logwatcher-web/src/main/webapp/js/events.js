@@ -11,36 +11,12 @@ function changeSeverity(url) {
 }
 
 $(document).ready(function () {
-	function toggleEntry(entry) {
-		entry.toggleClass('selectedEntry');
-		var checksum = entry.attr("checksum");
-		var lastOccurredDate = entry.attr("lastOccurredDate");
-		var content = entry.find('.entryContainer .attributesContainer');
-		if (content.attr("loaded") == "false") {
-			content.attr("loaded", "true");
-			entry.addClass("loadingContent");
-			content.load("/service/content", {'checksum': checksum, 'date': lastOccurredDate}, function (response, code) {
-				if (code != "success") {
-					content.html("");
-				}
-				entry.removeClass("loadingContent");
-
-			});
-		}
-	}
-
 	$('.givenQuery').click(function (target) {
 		var el = $(target.target).parents('.givenQuery');
 		var query = el.attr('rawQuery');
 		el.html("<form action='/search'><input id='searchInput' type='text' name='q' value='" + query + "' /></form>");
 		$('#searchInput').focus();
 		el.unbind('click');
-	});
-
-	$('.entryHeader').click(function (target) {
-		if ($(target.target).parents(".noBubble").length <= 0) {
-			toggleEntry($(this).parents(".entry"));
-		}
 	});
 
 	$('a.removeEntry').live('click', function () {

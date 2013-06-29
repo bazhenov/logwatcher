@@ -1,15 +1,15 @@
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns="http://www.w3.org/1999/xhtml"
-					version="2.1"
-					xmlns:c="http://java.sun.com/jsp/jstl/core"
-					xmlns:l="urn:jsptagdir:/WEB-INF/tags">
+          version="2.1"
+          xmlns:c="http://java.sun.com/jsp/jstl/core"
+          xmlns:l="urn:jsptagdir:/WEB-INF/tags">
 
-	<jsp:directive.page contentType="text/html"/>
+    <jsp:directive.page contentType="text/html"/>
 
-	<jsp:useBean id="attributes" scope="request" type="java.util.Map"/>
+    <jsp:useBean id="attributes" scope="request" type="java.util.Map"/>
 
-	<ol class='attributes'>
-		<c:forEach var="row" items="${attributes}">
-			<li><l:attribute name="${row.key}" attribute="${row.value}"/></li>
-		</c:forEach>
-	</ol>
+    <ol class='attributes'>
+        <c:forEach var="row" items="${attributes}">
+            <li><l:attribute name="${row.key}" attribute="${row.value}"/></li>
+        </c:forEach>
+    </ol>
 </jsp:root>
