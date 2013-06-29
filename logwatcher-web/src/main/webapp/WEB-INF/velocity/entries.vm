@@ -13,8 +13,7 @@
 	#set($dt = $date.format("yyyy-MM-dd", $p.date))
 
 <p>
-	<a href="/feed/$p.cluster.applicationId?date=$dt">&larr; Back</a> to $p.cluster.applicationId &mdash;
-	$date.format("MMMM dd, yyyy", $p.date)
+	<a href="/feed/$p.cluster.applicationId?date=$dt">&larr; Back</a> to $p.cluster.applicationId
 </p>
 
 <h3>Statistics</h3>
