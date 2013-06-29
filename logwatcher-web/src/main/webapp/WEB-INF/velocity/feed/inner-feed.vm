@@ -19,7 +19,7 @@
 			#set($lastOccurredDate = $date.format("yyyy-MM-dd", $lastDate))
 
 			<div class='entry ${c.severity}' checksum='${c.checksum}' lastOccurredDate='${lastOccurredDate}'>
-				<a href="$link.uri("/entries/$c.applicationId/$c.checksum").params({'date': $lastOccurredDate})">
+				<a href="$link.uri("/entries/$c.applicationId/$c.checksum")">
 					<div class='entryHeader'>
 
 						<canvas class="count" width="60" height="60" data-count="$stat.count" data-severity="$c.severity"></canvas>
@@ -49,7 +49,7 @@
 							#if($p.applicationId != $c.applicationId)
 								&mdash; <span class='applicationId'>$c.applicationId</span>
 							#end
-							~2 messages per minute
+						#*~2 messages per minute*#
 						</div>
 					</div>
 

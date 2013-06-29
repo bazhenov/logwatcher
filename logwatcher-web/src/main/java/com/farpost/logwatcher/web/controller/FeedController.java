@@ -26,7 +26,6 @@ import static com.farpost.logwatcher.Checksum.fromHexString;
 import static com.farpost.logwatcher.storage.LogEntries.entries;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Lists.newArrayList;
-import static org.joda.time.LocalDate.fromDateFields;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @Controller
@@ -82,12 +81,11 @@ public class FeedController {
 	}
 
 	@RequestMapping("/entries/{applicationId}/{checksum}")
-	public ModelAndView handleEntries(@PathVariable String checksum, @PathVariable String applicationId,
-																		@RequestParam @DateTimeFormat(iso = DATE) java.util.Date date) {
+	public ModelAndView handleDetails(@PathVariable String checksum, @PathVariable String applicationId) {
 		Checksum cs = fromHexString(checksum);
 		Cluster cluster = clusterDao.findCluster(applicationId, cs);
-		DayStatistic statistic = clusterStatistic.getDayStatistic(applicationId, cs, fromDateFields(date));
-		return new ModelAndView("entries", "p", new DetailsPage(cluster, statistic, date));
+		DayStatistic statistic = clusterStatistic.getDayStatistic(applicationId, cs, LocalDate.now());
+		return new ModelAndView("entries", "p", new DetailsPage(cluster, statistic));
 	}
 
 	private static Severity getSeverity(HttpServletRequest request) {
@@ -165,23 +163,17 @@ public class FeedController {
 		private final Cluster cluster;
 		private final DayStatistic statistics;
 		private Collection<LogEntry> entries;
-		private Date date;
 
-		public DetailsPage(Cluster cluster, DayStatistic statistics, Date date) {
+		public DetailsPage(Cluster cluster, DayStatistic statistics) {
 			this.statistics = checkNotNull(statistics);
 			this.cluster = checkNotNull(cluster);
-			this.date = date;
 
 			entries = entries().
 				applicationId(cluster.getApplicationId()).
 				checksum(cluster.getChecksum().toString()).
-				date(fromDateFields(date)).
+				date(LocalDate.now()).
 				find(storage);
 			entries = Ordering.from(new ByOccurrenceDateComparator()).sortedCopy(entries);
-		}
-
-		public Date getDate() {
-			return date;
 		}
 
 		public Cluster getCluster() {
