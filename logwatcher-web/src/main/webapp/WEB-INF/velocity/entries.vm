@@ -30,16 +30,18 @@
 	<div class="spinner"></div>
 </div>
 
+	#if($p.cluster.description)
+	<h3>Description</h3>
+
+	<p class="section">No description given</p>
+	#end
+
+
 	#if($p.entries.empty)
 	<div id="notificationPanel">
 		<span>&empty;</span><br/>No results found
 	</div>
 	#else
-
-	<h3>Description</h3>
-
-	<p class="section">No description given <a href="#">[Change]</a></p>
-
 	<h3>Log samples</h3>
 
 	<div class="log section">
