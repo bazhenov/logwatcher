@@ -1,0 +1,59 @@
+#* @vtlvariable name="p" type="com.farpost.logwatcher.web.controller.FeedController.DetailsPage" *#
+
+<html>
+<head>
+	<title>LogWatcher: detailed information for entry</title>
+
+	<link rel="stylesheet" type="text/css" href="/css/log.css"/>
+	<script src="/js/events.detailed-view.js">/**/</script>
+</head>
+
+<body>
+<h2>$p.cluster.originalTitle</h2>
+	#set($dt = $date.format("yyyy-MM-dd", $p.date))
+
+<p>
+	<a href="/feed/$p.cluster.applicationId?date=$dt">&larr; Back</a> to $p.cluster.applicationId &mdash;
+	$date.format("MMMM dd, yyyy", $p.date)
+</p>
+
+<h3>Statistics</h3>
+
+<p class="section">
+	Today: $p.statistics.count times. Last seen: $date.format("HH:mm:ss", $p.statistics.lastSeenAt.toDate())
+</p>
+
+<h3>Context Sampling</h3>
+
+<div id="attributesContainer" class="section" data-loaded="false" data-checksum="${p.cluster.checksum}"
+		 data-date="${dt}">
+	<div class="spinner"></div>
+</div>
+
+	#if($p.entries.empty)
+	<div id="notificationPanel">
+		<span>&empty;</span><br/>No results found
+	</div>
+	#else
+
+	<h3>Description</h3>
+
+	<p class="section">No description given <a href="#">[Change]</a></p>
+
+	<h3>Log samples</h3>
+
+	<div class="log section">
+		#foreach($e in $p.entries)
+			<p>$date.format("HH:mm:ss", $e.date.toDate()) $e.message</p>
+			#if(!$e.attributes.isEmpty())
+				<p>#foreach($i in $e.attributes.entrySet())@$i.key: $i.value #end</p>
+			#end
+			#if($e.cause)
+				<pre>$f.formatCause($e.cause)</pre>
+			#end
+
+		#end
+	</div>
+	#end
+</body>
+</html>

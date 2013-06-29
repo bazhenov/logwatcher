@@ -11,7 +11,7 @@
 	<function>
 		<description>Форматирует Cause объект</description>
 		<name>formatCause</name>
-		<function-class>com.farpost.logwatcher.web.taglib.Functions</function-class>
+		<function-class>com.farpost.logwatcher.web.Functions</function-class>
 		<function-signature>java.lang.String formatCause(com.farpost.logwatcher.Cause)</function-signature>
 		<example>formatCause(cause)</example>
 	</function>
