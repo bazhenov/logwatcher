@@ -1,52 +1,53 @@
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns="http://www.w3.org/1999/xhtml"
-					version="2.1"
-					xmlns:c="http://java.sun.com/jsp/jstl/core"
-					xmlns:l="http://bazhenov.org/logging"
-					xmlns:f="http://java.sun.com/jsp/jstl/functions"
-					xmlns:lt="urn:jsptagdir:/WEB-INF/tags">
+          version="2.1"
+          xmlns:c="http://java.sun.com/jsp/jstl/core"
+          xmlns:l="http://bazhenov.org/logging"
+          xmlns:f="http://java.sun.com/jsp/jstl/functions"
+          xmlns:lt="urn:jsptagdir:/WEB-INF/tags">
 
-	<jsp:useBean id="p" type="com.farpost.logwatcher.web.page.SearchPage" scope="request"/>
+    <jsp:useBean id="p" type="com.farpost.logwatcher.web.page.SearchPage" scope="request"/>
 
-	<jsp:directive.page contentType="text/html"/>
+    <jsp:directive.page contentType="text/html"/>
 
-	<html>
-	<head>
-		<title>LogWatcher Search: <c:out value="${p.query}"/></title>
-		<c:url value='/css/search-feed.css' var="cssUrl"/>
-		<link rel="stylesheet" href="${cssUrl}"/>
+    <html>
+    <head>
+        <title>LogWatcher Search: <c:out value="${p.query}"/></title>
+        <c:url value='/css/search-feed.css' var="cssUrl"/>
+        <link rel="stylesheet" href="${cssUrl}"/>
 
-		<c:url value='/css/log.css' var="cssUrl"/>
-		<link rel="stylesheet" href="${cssUrl}"/>
-	</head>
-	<body>
-	<h2>Search</h2>
+        <c:url value='/css/log.css' var="cssUrl"/>
+        <link rel="stylesheet" href="${cssUrl}"/>
+    </head>
+    <body>
+    <h2>Search</h2>
 
-	<div class="queryBox givenQuery" rawQuery="${p.query}">
+    <div class="queryBox givenQuery" rawQuery="${p.query}">
     <span id="query">
       <c:forEach items="${p.queryTerms}" var="term">
-				<span class="keyword"><c:out value="${term.key}"/>:</span><span><c:out value="${term.value}"/>&amp;nbsp;</span>
-			</c:forEach>
+          <span class="keyword"><c:out value="${term.key}"/>:</span><span><c:out
+              value="${term.value}"/>&amp;nbsp;</span>
+      </c:forEach>
     </span>
-	</div>
+    </div>
 
-	<c:choose>
-		<c:when test="${f:length(p.entries) > 0}">
-			<div class="log">
-				<c:forEach var="entry" items="${p.entries}">
-					<lt:entry entry="${entry}"/>
-				</c:forEach>
-			</div>
+    <c:choose>
+        <c:when test="${f:length(p.entries) > 0}">
+            <div class="log section">
+                <c:forEach var="entry" items="${p.entries}">
+                    <lt:entry entry="${entry}"/>
+                </c:forEach>
+            </div>
 
-			<div id="footer">
-				${l:pluralize(f:length(p.entries), "entry entries entries")}
-			</div>
-		</c:when>
-		<c:otherwise>
-			<div id="notificationPanel">
-				<span>&amp;empty;</span><br/>No results found
-			</div>
-		</c:otherwise>
-	</c:choose>
-	</body>
-	</html>
+            <div id="footer">
+                ${l:pluralize(f:length(p.entries), "entry entries entries")}
+            </div>
+        </c:when>
+        <c:otherwise>
+            <div id="notificationPanel">
+                <span>&amp;empty;</span><br/>No results found
+            </div>
+        </c:otherwise>
+    </c:choose>
+    </body>
+    </html>
 </jsp:root>

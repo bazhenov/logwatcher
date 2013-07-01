@@ -2,6 +2,9 @@ package com.farpost.logwatcher.web;
 
 import com.farpost.logwatcher.Cause;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static java.lang.Math.abs;
 
 public class Functions {
@@ -16,7 +19,7 @@ public class Functions {
 		return number + " " + result;
 	}
 
-	public static String formatClassName(String className) {
+	public static String getSimpleType(String className) {
 		int index = className.lastIndexOf('.');
 		if (index > 0 && index < className.length() - 1) {
 			return className.substring(index + 1);
@@ -48,5 +51,18 @@ public class Functions {
 			prefix.append("  ");
 		}
 		return stackTrace.toString();
+	}
+
+	public static CauseDef extractExceptionClass(String title) {
+		Pattern pattern = Pattern.compile("\\b([a-z]+[\\.])*[a-z]*Exception\\b", Pattern.CASE_INSENSITIVE);
+		Matcher matcher = pattern.matcher(title);
+		if (matcher.find()) {
+			String fqnClassName = matcher.group();
+			String simpleClassName = getSimpleType(fqnClassName);
+			title = title.substring(fqnClassName.length());
+			title = title.replaceFirst("^[^a-zA-Z0-9]+", "");
+			return new CauseDef(simpleClassName, fqnClassName, title);
+		}
+		return new CauseDef(null, null, title);
 	}
 }

@@ -1,6 +1,6 @@
 <tools>
 	<toolbox scope="application">
-		<tool class="org.apache.velocity.tools.generic.DateTool" locale="RU_ru"/>
+		<tool class="org.apache.velocity.tools.generic.DateTool"/>
 		<tool class="org.apache.velocity.tools.generic.DisplayTool" locale="RU_ru"/>
 		<tool class="org.apache.velocity.tools.generic.NumberTool"/>
 		<tool key="f" class="com.farpost.logwatcher.web.Functions"/>

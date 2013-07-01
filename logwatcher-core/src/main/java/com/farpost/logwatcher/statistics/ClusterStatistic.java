@@ -13,7 +13,7 @@ public interface ClusterStatistic {
 
 	Set<String> getActiveApplications();
 
-	DayStatistic getDayStatistic(String applicationId, Checksum checksum, LocalDate date);
+	ByDayStatistic getByDayStatistic(String applicationId, Checksum checksum);
 
 	Collection<Checksum> getActiveClusterChecksums(String applicationId, LocalDate date);
 }
