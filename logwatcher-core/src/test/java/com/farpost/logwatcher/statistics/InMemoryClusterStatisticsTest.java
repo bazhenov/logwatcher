@@ -1,6 +1,6 @@
 package com.farpost.logwatcher.statistics;
 
-public class InMemoryClusterStatisticsTest extends ClusterStatisticsTestCase {
+public class InMemoryClusterStatisticsTest extends ClusterStatisticsTest {
 
 	@Override
 	protected ClusterStatistic createClusterStatistic() {

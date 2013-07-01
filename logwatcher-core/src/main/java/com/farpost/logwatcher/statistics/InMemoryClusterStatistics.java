@@ -8,8 +8,10 @@ import org.joda.time.LocalDate;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
 
+import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.collect.Sets.newHashSet;
 
 public class InMemoryClusterStatistics implements ClusterStatistic {
@@ -42,11 +44,11 @@ public class InMemoryClusterStatistics implements ClusterStatistic {
 	}
 
 	@Override
-	public DayStatistic getDayStatistic(String applicationId, Checksum checksum, LocalDate date) {
+	public ByDayStatistic getByDayStatistic(String applicationId, Checksum checksum) {
 		StatTuple tuple = statTable.get(applicationId, checksum);
 		return tuple != null
-			? new DayStatistic(applicationId, checksum, date, tuple.lastSeen, tuple.count)
-			: new DayStatistic(applicationId, checksum, date, null, 0);
+			? new ByDayStatistic(applicationId, checksum, tuple.lastSeen, tuple.counts)
+			: null;
 	}
 
 	@Override
@@ -58,16 +60,18 @@ public class InMemoryClusterStatistics implements ClusterStatistic {
 
 	private static class StatTuple {
 
-		int count;
+		Map<LocalDate, Integer> counts = newHashMap();
 		DateTime lastSeen;
 
 		private StatTuple(DateTime lastSeen) {
-			this.count = 1;
+			counts.put(new LocalDate(lastSeen), 1);
 			this.lastSeen = lastSeen;
 		}
 
 		public void register(DateTime date) {
-			count++;
+			LocalDate localDate = new LocalDate(date);
+			int prevCount = counts.containsKey(localDate) ? counts.get(localDate) : 0;
+			counts.put(localDate, prevCount + 1);
 			if (date.isAfter(lastSeen))
 				lastSeen = date;
 		}

@@ -1,24 +1,22 @@
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.1"
-					xmlns:c="http://java.sun.com/jsp/jstl/core"
-					xmlns:lf="http://bazhenov.org/logging" xmlns:fmt="http://java.sun.com/jsp/jstl/fmt">
+          xmlns:c="http://java.sun.com/jsp/jstl/core"
+          xmlns:lf="http://bazhenov.org/logging" xmlns:fmt="http://java.sun.com/jsp/jstl/fmt">
 
-	<jsp:directive.attribute name="entry" type="com.farpost.logwatcher.LogEntry" required="true"/>
+    <jsp:directive.attribute name="entry" type="com.farpost.logwatcher.LogEntry" required="true"/>
 
-	<div class="logEntry">
-		[<fmt:formatDate value="${lf:date(entry.date)}" pattern="HH:mm:ss"/>]
-		<c:out value="${entry.message}"/>
-		<c:if test="${!empty(entry.attributes)}">
-			(<c:forEach items="${entry.attributes}" var="row" varStatus="status">
-			<c:out value="${row.key}"/>: <c:out value="${row.value}"/>
-			<c:if test="${!status.last}">&amp;nbsp;</c:if>
-		</c:forEach>)
-		</c:if>
-		<c:if test="${!empty(entry.cause)}">
-			<pre>
-			<c:out value="${lf:formatCause(entry.cause)}"/>
-			</pre>
-		</c:if>
-	</div>
+    <div class="logEntry">
+        <p><fmt:formatDate value="${lf:date(entry.date)}" pattern="HH:mm:ss"/>
+            &amp;nbsp;<c:out value="${entry.message}"/></p>
+        <c:if test="${!empty(entry.attributes)}">
+            (<c:forEach items="${entry.attributes}" var="row" varStatus="status">
+            <c:out value="${row.key}"/>: <c:out value="${row.value}"/>
+            <c:if test="${!status.last}">&amp;nbsp;</c:if>
+        </c:forEach>)
+        </c:if>
+        <c:if test="${!empty(entry.cause)}">
+            <pre><c:out value="${lf:formatCause(entry.cause)}"/></pre>
+        </c:if>
+    </div>
 
 </jsp:root>
 

@@ -22,18 +22,20 @@
 				<a href="$link.uri("/entries/$c.applicationId/$c.checksum")">
 					<div class='entryHeader'>
 
-						<canvas class="count" width="60" height="60" data-count="$stat.count" data-severity="$c.severity"></canvas>
+						<canvas class="count" width="60" height="60" data-count="$stat.getCount($p.date)"
+										data-severity="$c.severity"></canvas>
 
 						<div class='message'>
-						#*#if ($c.sampleCause)
-							#if($f.formatClassName($c.sampleCause.type) == $c.sampleCause.type)
-								<span class="causeType">$c.sampleCause.type</span>
-							#else
-								<span class="causeType">
-									<abbr title="$c.sampleCause.type">$f.formatClassName($c.sampleCause.type)<abbr></span>
+							#set($cause = $f.extractExceptionClass($c.originalTitle))
+							#if ($cause.type)
+								#if($cause.type == $cause.simpleType)
+									<span class="causeType">$cause.type</span>
+								#else
+									<span class="causeType">
+									<abbr title="$cause.type">$cause.simpleType<abbr></span>
+								#end
 							#end
-						#end*#
-						$c.originalTitle
+							$cause.message
 						</div>
 						<div class='messageOverlay'></div>
 						<div class='times'>
@@ -111,7 +113,7 @@
 
 	<div id="footer">
 		$f.pluralize($p.clusters.size(), "entry entries entries")
-	$f.pluralize($p.entriesCount, "message messages messages")
+		$f.pluralize($p.entriesCount, "message messages messages")
 	</div>
 	#end
 </body>

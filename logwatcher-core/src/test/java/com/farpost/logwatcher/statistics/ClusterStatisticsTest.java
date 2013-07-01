@@ -12,7 +12,7 @@ import static com.farpost.logwatcher.TestUtils.checksum;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-public abstract class ClusterStatisticsTestCase {
+public abstract class ClusterStatisticsTest {
 
 	ClusterStatistic stat;
 
@@ -35,10 +35,16 @@ public abstract class ClusterStatisticsTestCase {
 	public void shouldBeAbleToTrackDayBasedStatistic() {
 		Checksum checksum = checksum(1, 3, 4);
 		DateTime dateTime = new DateTime();
-		stat.registerEvent("application", dateTime, checksum);
-		DayStatistic dayStat = stat.getDayStatistic("application", checksum, new LocalDate(dateTime));
+		String applicationId = "application";
+		stat.registerEvent(applicationId, dateTime, checksum);
+		stat.registerEvent(applicationId, dateTime, checksum);
+		stat.registerEvent(applicationId, dateTime.minusDays(1), checksum);
+		ByDayStatistic dayStat = stat.getByDayStatistic(applicationId, checksum);
 
-		assertThat(dayStat, equalTo(new DayStatistic("application", checksum, new LocalDate(dateTime), dateTime, 1)));
+		assertThat(dayStat.getApplicationId(), is(applicationId));
+		assertThat(dayStat.getChecksum(), is(checksum));
+		assertThat(dayStat.getCount(LocalDate.now()), is(2));
+		assertThat(dayStat.getCount(LocalDate.now().minusDays(1)), is(1));
 	}
 
 	@Test

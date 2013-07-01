@@ -2,8 +2,8 @@ package com.farpost.logwatcher.web.controller;
 
 import com.farpost.logwatcher.*;
 import com.farpost.logwatcher.cluster.ClusterDao;
+import com.farpost.logwatcher.statistics.ByDayStatistic;
 import com.farpost.logwatcher.statistics.ClusterStatistic;
-import com.farpost.logwatcher.statistics.DayStatistic;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
 import com.farpost.logwatcher.web.page.FeedPage;
@@ -84,7 +84,7 @@ public class FeedController {
 	public ModelAndView handleDetails(@PathVariable String checksum, @PathVariable String applicationId) {
 		Checksum cs = fromHexString(checksum);
 		Cluster cluster = clusterDao.findCluster(applicationId, cs);
-		DayStatistic statistic = clusterStatistic.getDayStatistic(applicationId, cs, LocalDate.now());
+		ByDayStatistic statistic = clusterStatistic.getByDayStatistic(applicationId, cs);
 		return new ModelAndView("entries", "p", new DetailsPage(cluster, statistic));
 	}
 
@@ -128,14 +128,14 @@ public class FeedController {
 		public InnerFeedPage(Date date, String applicationId, Severity severity) {
 			this.applicationId = applicationId;
 
-			this.date = new LocalDate(date.getTime());
+			this.date = LocalDate.fromDateFields(date);
 			Collection<Checksum> checksums = clusterStatistic.getActiveClusterChecksums(applicationId, this.date);
 
 			clusters = newArrayList();
 			for (Checksum checksum : checksums) {
 				Cluster cluster = clusterDao.findCluster(applicationId, checksum);
 				if (cluster.getSeverity().isEqualOrMoreImportantThan(severity)) {
-					entriesCount += getStatistics(cluster).getCount();
+					entriesCount += getStatistics(cluster).getCount(this.date);
 					clusters.add(cluster);
 				}
 			}
@@ -145,12 +145,16 @@ public class FeedController {
 			return entriesCount;
 		}
 
+		public LocalDate getDate() {
+			return date;
+		}
+
 		public Collection<Cluster> getClusters() {
 			return clusters;
 		}
 
-		public DayStatistic getStatistics(Cluster c) {
-			return clusterStatistic.getDayStatistic(applicationId, c.getChecksum(), date);
+		public ByDayStatistic getStatistics(Cluster c) {
+			return clusterStatistic.getByDayStatistic(applicationId, c.getChecksum());
 		}
 
 		public String getApplicationId() {
@@ -161,10 +165,10 @@ public class FeedController {
 	public class DetailsPage {
 
 		private final Cluster cluster;
-		private final DayStatistic statistics;
+		private final ByDayStatistic statistics;
 		private Collection<LogEntry> entries;
 
-		public DetailsPage(Cluster cluster, DayStatistic statistics) {
+		public DetailsPage(Cluster cluster, ByDayStatistic statistics) {
 			this.statistics = checkNotNull(statistics);
 			this.cluster = checkNotNull(cluster);
 
@@ -184,7 +188,7 @@ public class FeedController {
 			return entries;
 		}
 
-		public DayStatistic getStatistics() {
+		public ByDayStatistic getStatistics() {
 			return statistics;
 		}
 	}
