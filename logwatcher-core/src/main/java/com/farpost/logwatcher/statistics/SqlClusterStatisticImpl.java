@@ -12,6 +12,7 @@ import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
@@ -41,38 +42,63 @@ public class SqlClusterStatisticImpl implements ClusterStatistic {
 	}
 
 	@Override
-	public void registerEvent(String applicationId, DateTime date, Checksum checksum) {
-		int affected = template.update("UPDATE cluster_stat SET count = count + 1 WHERE application = ? AND date = ? " +
-			"AND checksum = ? ",
+	public synchronized void registerEvent(String applicationId, DateTime date, Checksum checksum) {
+		updateGeneralStatistics(applicationId, date, checksum);
+		updateDayStatistics(applicationId, date, checksum);
+	}
+
+	private void updateGeneralStatistics(String applicationId, DateTime date, Checksum checksum) {
+		String dt = date.toString("yyyy-MM-dd HH:mm:ss");
+		int aff = template.update(
+			"UPDATE cluster_general_stat " +
+				"SET last_seen = CASE ? > last_seen WHEN TRUE THEN ? ELSE last_seen END, " +
+				"first_seen = CASE ? < first_seen WHEN TRUE THEN ? ELSE first_seen END " +
+				"WHERE application = ? AND checksum = ?",
+			dt, dt, dt, dt, applicationId, checksum.toString());
+		if (aff <= 0) {
+			template.update(
+				"INSERT INTO cluster_general_stat (first_seen, last_seen, application, checksum) VALUES (?, ?, ?, ?)",
+				dt, dt, applicationId, checksum.toString());
+		}
+	}
+
+	private void updateDayStatistics(String applicationId, DateTime date, Checksum checksum) {
+		int affected = template.update(
+			"UPDATE cluster_day_stat SET count = count + 1 WHERE application = ? AND date = ? AND checksum = ? ",
 			applicationId, date.toString("yyyy-MM-dd"), checksum.toString());
 		if (affected <= 0) {
-			template.update("INSERT INTO cluster_stat (application, date, checksum, count) VALUES (?, ?, ?, 1)",
+			template.update("INSERT INTO cluster_day_stat (application, date, checksum, count) VALUES (?, ?, ?, 1)",
 				applicationId, date.toString("yyyy-MM-dd"), checksum.toString());
 		}
 	}
 
 	@Override
 	public Set<String> getActiveApplications() {
-		Iterable<String> applications = template.queryForList("SELECT application FROM cluster_stat WHERE date > ?",
+		Iterable<String> applications = template.queryForList("SELECT application FROM cluster_day_stat WHERE date > ?",
 			String.class, LocalDate.now().minusDays(7).toString("yyyy-MM-dd"));
 		return from(applications).transform(toLowerCase).toSet();
 	}
 
 	@Override
 	public ByDayStatistic getByDayStatistic(String applicationId, Checksum checksum) {
-		SqlRowSet rowSet = template.queryForRowSet("SELECT date, count FROM cluster_stat WHERE application = ? AND checksum = ?",
+		SqlRowSet rowSet = template.queryForRowSet(
+			"SELECT date, count FROM cluster_day_stat WHERE application = ? AND checksum = ?",
 			applicationId, checksum.toString());
 		Map<LocalDate, Integer> counts = newHashMap();
 		while (rowSet.next()) {
 			counts.put(fromDateFields(rowSet.getDate("date")), rowSet.getInt("count"));
 		}
 
-		return new ByDayStatistic(applicationId, checksum, new DateTime().minusDays(1), counts);
+		Date lastSeen = template.queryForObject(
+			"SELECT last_seen FROM cluster_general_stat WHERE application = ? AND checksum = ?", Date.class,
+			applicationId, checksum.toString());
+
+		return new ByDayStatistic(applicationId, checksum, new DateTime(lastSeen), counts);
 	}
 
 	@Override
 	public Collection<Checksum> getActiveClusterChecksums(String applicationId, LocalDate date) {
-		return template.query("SELECT checksum FROM cluster_stat WHERE date = ? AND application = ?", createChecksum,
+		return template.query("SELECT checksum FROM cluster_day_stat WHERE date = ? AND application = ?", createChecksum,
 			date.toString("yyyy-MM-dd"), applicationId);
 	}
 }
