@@ -41,6 +41,7 @@ public abstract class ClusterStatisticsTest {
 		stat.registerEvent(applicationId, dateTime.minusDays(1), checksum);
 		ByDayStatistic dayStat = stat.getByDayStatistic(applicationId, checksum);
 
+		assertThat(dayStat, notNullValue());
 		assertThat(dayStat.getApplicationId(), is(applicationId));
 		assertThat(dayStat.getChecksum(), is(checksum));
 		assertThat(dayStat.getCount(LocalDate.now()), is(2));
