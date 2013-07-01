@@ -18,10 +18,18 @@ CREATE TABLE IF NOT EXISTS entry (
 	PRIMARY KEY(id)
 );
 
-CREATE TABLE IF NOT EXISTS cluster_stat (
+CREATE TABLE IF NOT EXISTS cluster_day_stat (
 	application VARCHAR(255) NOT NULL,
 	checksum VARCHAR(255) NOT NULL,
 	date DATE NOT NULL,
 	count INTEGER NOT NULL,
 	PRIMARY KEY(application, checksum, date)
+);
+
+CREATE TABLE IF NOT EXISTS cluster_general_stat (
+	application VARCHAR(255) NOT NULL,
+	checksum VARCHAR(255) NOT NULL,
+	last_seen DATETIME NOT NULL,
+	first_seen DATETIME NOT NULL,
+	PRIMARY KEY(application, checksum)
 );
