@@ -31,5 +31,6 @@ CREATE TABLE IF NOT EXISTS cluster_general_stat (
 	checksum VARCHAR(255) NOT NULL,
 	last_seen DATETIME NOT NULL,
 	first_seen DATETIME NOT NULL,
+	minute_vector BLOB NULL,
 	PRIMARY KEY(application, checksum)
 );

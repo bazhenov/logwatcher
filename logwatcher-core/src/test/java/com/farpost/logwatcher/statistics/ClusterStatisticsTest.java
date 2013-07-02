@@ -50,6 +50,14 @@ public abstract class ClusterStatisticsTest {
 	}
 
 	@Test
+	public void shouldBeAbleToTrackMinuteStatistics() {
+		stat.registerEvent("foo", new DateTime(), checksum(1, 3, 5));
+		MinuteVector v = stat.getMinuteVector("foo", checksum(1, 3, 5));
+		assertThat(v.get(0), is(1L));
+		assertThat(v.get(-1), is(0L));
+	}
+
+	@Test
 	public void getActiveChecksumsForADate() {
 		Checksum checksum = checksum(1, 3, 4);
 		DateTime dateTime = new DateTime();

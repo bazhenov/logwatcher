@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
+import static com.google.common.base.Objects.firstNonNull;
 import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.collect.Sets.newHashSet;
 
@@ -18,6 +19,7 @@ public class InMemoryClusterStatistics implements ClusterStatistic {
 
 	private final Set<String> activeApplications = newHashSet();
 	private final Table<String, Checksum, StatTuple> statTable = HashBasedTable.create();
+	private final Table<String, Checksum, MinuteVector> minuteVectorTable = HashBasedTable.create();
 	private final Table<String, LocalDate, Set<Checksum>> clustersByTheDay = HashBasedTable.create();
 
 	@Override
@@ -29,6 +31,15 @@ public class InMemoryClusterStatistics implements ClusterStatistic {
 		} else {
 			statTable.put(applicationId, checksum, new StatTuple(dateTime));
 		}
+
+		if (minuteVectorTable.contains(applicationId, checksum)) {
+			minuteVectorTable.get(applicationId, checksum).increment(dateTime);
+		} else {
+			MinuteVector v = new MinuteVector();
+			v.increment(dateTime);
+			minuteVectorTable.put(applicationId, checksum, v);
+		}
+
 		LocalDate date = new LocalDate(dateTime);
 		Set<Checksum> clusterChecksums = clustersByTheDay.get(applicationId, date);
 		if (clusterChecksums == null) {
@@ -36,6 +47,11 @@ public class InMemoryClusterStatistics implements ClusterStatistic {
 			clustersByTheDay.put(applicationId, date, clusterChecksums);
 		}
 		clusterChecksums.add(checksum);
+	}
+
+	@Override
+	public MinuteVector getMinuteVector(String applicationId, Checksum checksum) {
+		return firstNonNull(minuteVectorTable.get(applicationId, checksum), new MinuteVector());
 	}
 
 	@Override

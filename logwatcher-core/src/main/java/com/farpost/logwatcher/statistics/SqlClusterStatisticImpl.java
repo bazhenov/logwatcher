@@ -45,6 +45,11 @@ public class SqlClusterStatisticImpl implements ClusterStatistic {
 	public synchronized void registerEvent(String applicationId, DateTime date, Checksum checksum) {
 		updateGeneralStatistics(applicationId, date, checksum);
 		updateDayStatistics(applicationId, date, checksum);
+
+		MinuteVector v = getMinuteVector(applicationId, checksum);
+		v.increment(date);
+		template.update("UPDATE cluster_general_stat SET minute_vector = ? WHERE application = ? AND checksum = ?",
+			v.toByteArray(), applicationId, checksum.toString());
 	}
 
 	private void updateGeneralStatistics(String applicationId, DateTime date, Checksum checksum) {
@@ -77,6 +82,16 @@ public class SqlClusterStatisticImpl implements ClusterStatistic {
 		Iterable<String> applications = template.queryForList("SELECT application FROM cluster_day_stat WHERE date > ?",
 			String.class, LocalDate.now().minusDays(7).toString("yyyy-MM-dd"));
 		return from(applications).transform(toLowerCase).toSet();
+	}
+
+	@Override
+	public MinuteVector getMinuteVector(String applicationId, Checksum checksum) {
+		byte[] vector = template.queryForObject(
+			"SELECT minute_vector FROM cluster_general_stat WHERE application = ? AND checksum = ?",
+			byte[].class, applicationId, checksum.toString());
+		return vector == null
+			? new MinuteVector()
+			: new MinuteVector(vector);
 	}
 
 	@Override

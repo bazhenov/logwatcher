@@ -16,4 +16,6 @@ public interface ClusterStatistic {
 	ByDayStatistic getByDayStatistic(String applicationId, Checksum checksum);
 
 	Collection<Checksum> getActiveClusterChecksums(String applicationId, LocalDate date);
+
+	MinuteVector getMinuteVector(String applicationId, Checksum checksum);
 }
