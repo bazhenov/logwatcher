@@ -269,7 +269,17 @@ h2 span#pieChartLink {
 	opacity: 0.90
 }
 
-.no-message {
+.noMessage {
 	color: #ddd;
 	font-size: 90%;
+}
+
+.rightNowMarker {
+	background-color: #f60;
+	color: white;
+	font-weight: 600;
+	font-size: 80%;
+	padding: 0 5px;
+	border-radius: 4px;
+	margin-left: 5px;
 }
