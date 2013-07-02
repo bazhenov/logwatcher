@@ -36,7 +36,7 @@
 								#end
 							#end
 							#if($cause.message.isEmpty())
-								<span class="no-message">No message</span>
+								<span class="noMessage">No message</span>
 							#else
 								$cause.message
 							#end
@@ -48,14 +48,9 @@
 									$date.format("HH:mm", $lastDate)
 								</abbr>
 							#else
-								<abbr title='$date.format("d MMMM yyyy, HH:mm:ss zz", $lastDate)'>
-									$date.format("short", $lastDate)
-								</abbr>
+								$date.format("dd MMMM yyyy, HH:mm", $lastDate)
 							#end
-							#if($p.applicationId != $c.applicationId)
-								&mdash; <span class='applicationId'>$c.applicationId</span>
-							#end
-						#*~2 messages per minute*#
+						#*<span class="rightNowMarker">~30/second</span>*#
 						</div>
 					</div>
 
