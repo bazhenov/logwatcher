@@ -5,12 +5,15 @@
 	<title>LogWatcher: detailed information for entry</title>
 
 	<link rel="stylesheet" type="text/css" href="/css/log.css"/>
-	<script src="/js/events.detailed-view.js">/**/</script>
+	<script src="http://code.highcharts.com/highcharts.js"></script>
+	<script src="/js/events.detailed-view.js"></script>
+
 </head>
 
 <body>
-<h2>$p.cluster.originalTitle</h2>
-	#set($dt = $date.format("yyyy-MM-dd", $p.date))
+
+<h2 data-checksum="${p.cluster.checksum}" data-application="$p.cluster.applicationId">
+	$p.cluster.originalTitle</h2>
 
 <p>
 	<a href="/feed/$p.cluster.applicationId">&larr; Back</a> to $p.cluster.applicationId
@@ -21,12 +24,19 @@
 <p class="section">
 	Today: $p.statistics.todayCount times. Yesterday: $p.statistics.yesterdayCount times.
 	Last seen: $date.format("dd MMMM, HH:mm:ss", $p.statistics.lastSeenAt.toDate())
+
+<table id="statisticsTable">
+	<tr>
+		<td id="minuteStatistics"></td>
+		<td id="dayStatistics"></td>
+	</tr>
+</table>
+
 </p>
 
 <h3>Context Sampling</h3>
 
-<div id="attributesContainer" class="section" data-loaded="false" data-checksum="${p.cluster.checksum}"
-		 data-date="${dt}">
+<div id="attributesContainer" class="section">
 	<div class="spinner"></div>
 </div>
 

@@ -35,7 +35,11 @@
 									<abbr title="$cause.type">$cause.simpleType<abbr></span>
 								#end
 							#end
-							$cause.message
+							#if($cause.message.isEmpty())
+								<span class="no-message">No message</span>
+							#else
+								$cause.message
+							#end
 						</div>
 						<div class='messageOverlay'></div>
 						<div class='times'>

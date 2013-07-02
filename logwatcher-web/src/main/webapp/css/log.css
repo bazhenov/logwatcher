@@ -58,3 +58,17 @@
 	font-family: 'Open Sans', "Helvetica Neue", Helvetica, sans-serif;
 	margin-right: 10px;
 }
+
+#statisticsTable {
+	width: 100%
+}
+
+#minuteStatistics {
+	height: 150px;
+	width: 50%;
+}
+
+#dayStatistics {
+	height: 150px;
+	width: 50%;
+}

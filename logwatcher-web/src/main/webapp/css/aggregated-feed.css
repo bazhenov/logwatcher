@@ -268,3 +268,8 @@ h2 span#pieChartLink {
 	background-color: #FAFAFA;
 	opacity: 0.90
 }
+
+.no-message {
+	color: #ddd;
+	font-size: 90%;
+}
