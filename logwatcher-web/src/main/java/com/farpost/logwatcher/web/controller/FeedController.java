@@ -24,7 +24,6 @@ import java.util.Date;
 
 import static com.farpost.logwatcher.Checksum.fromHexString;
 import static com.farpost.logwatcher.storage.LogEntries.entries;
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
@@ -83,9 +82,8 @@ public class FeedController {
 	@RequestMapping("/entries/{applicationId}/{checksum}")
 	public ModelAndView handleDetails(@PathVariable String checksum, @PathVariable String applicationId) {
 		Checksum cs = fromHexString(checksum);
-		Cluster cluster = clusterDao.findCluster(applicationId, cs);
-		ByDayStatistic statistic = clusterStatistic.getByDayStatistic(applicationId, cs);
-		return new ModelAndView("entries", "p", new DetailsPage(cluster, statistic));
+
+		return new ModelAndView("entries", "p", new DetailsPage(applicationId, cs));
 	}
 
 	private static Severity getSeverity(HttpServletRequest request) {
@@ -168,13 +166,13 @@ public class FeedController {
 		private final ByDayStatistic statistics;
 		private Collection<LogEntry> entries;
 
-		public DetailsPage(Cluster cluster, ByDayStatistic statistics) {
-			this.statistics = checkNotNull(statistics);
-			this.cluster = checkNotNull(cluster);
+		public DetailsPage(String applicationId, Checksum checksum) {
+			cluster = clusterDao.findCluster(applicationId, checksum);
+			statistics = clusterStatistic.getByDayStatistic(applicationId, checksum);
 
 			entries = entries().
-				applicationId(cluster.getApplicationId()).
-				checksum(cluster.getChecksum().toString()).
+				applicationId(applicationId).
+				checksum(checksum.toString()).
 				date(LocalDate.now()).
 				find(storage);
 			entries = Ordering.from(new ByOccurrenceDateComparator()).sortedCopy(entries);

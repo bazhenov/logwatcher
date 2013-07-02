@@ -5,7 +5,6 @@ import com.farpost.logwatcher.ByLastOccurrenceDateComparator;
 import com.farpost.logwatcher.ByOccurenceCountComparator;
 import com.farpost.logwatcher.Severity;
 import com.farpost.logwatcher.storage.LogStorage;
-import com.farpost.logwatcher.web.JiraInfo;
 import com.farpost.logwatcher.web.ViewNameAwarePage;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,8 +25,6 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class FeedPage implements ViewNameAwarePage, InitializingBean {
 
 	private LogStorage storage;
-
-	private JiraInfo jiraInfo;
 
 	private HttpServletRequest request;
 	private Date date;
@@ -80,26 +77,9 @@ public class FeedPage implements ViewNameAwarePage, InitializingBean {
 		this.storage = storage;
 	}
 
-	@Autowired
-	public void setJiraInfo(JiraInfo jiraInfo) {
-		this.jiraInfo = jiraInfo;
-	}
-
-	public JiraInfo getJiraInfo() {
-		return jiraInfo;
-	}
-
 	@Override
 	public String getViewName() {
 		return "feed/aggregated-feed";
-	}
-
-	private static int sumCount(List<AggregatedEntry> entries) {
-		int times = 0;
-		for (AggregatedEntry e : entries) {
-			times += e.getCount();
-		}
-		return times;
 	}
 
 	public Severity getSeverity() {
@@ -112,10 +92,6 @@ public class FeedPage implements ViewNameAwarePage, InitializingBean {
 
 	public JSONArray getDataForPieChart() {
 		return pieChartData;
-	}
-
-	public Collection<AggregatedEntry> getEntries() {
-		return entries;
 	}
 
 	/**

@@ -81,7 +81,7 @@ public class Bootstrap implements InitializingBean {
 
 		for (int i = 0; i < 200; i++) {
 			DateTime now = now();
-			write(new LogEntryImpl(now.minusSeconds(rnd.nextInt(172800)), "group", "OverflowFundsException", Severity.warning, "sum2",
+			write(new LogEntryImpl(now.minusSeconds(rnd.nextInt(1728)), "group", "OverflowFundsException", Severity.warning, "sum2",
 				"billing", new HashMap<String, String>() {{
 				put("url", "/some/foo/very/long/url/to/fit/in/screen");
 				put("machine", "aux1.srv.loc");
