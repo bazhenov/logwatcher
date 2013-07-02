@@ -16,10 +16,6 @@
 	margin: 0;
 }
 
-.logEntry {
-	padding: 10px;
-}
-
 .spinner {
 	background: url("/images/spinner_large.gif") no-repeat center;
 	height: 66px;

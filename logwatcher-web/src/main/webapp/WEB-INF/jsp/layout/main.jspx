@@ -42,7 +42,8 @@
                 <div id="header">
                     <s:url value="/images/logwatcher-logo.png" var="logoSrc"/>
                     <s:url value="/dashboard" var="dashboardUrl"/>
-                    <a href="${dashboardUrl}"><img class="logo" src="${logoSrc}" alt="LogWatcher"/></a>
+                    <a href="${dashboardUrl}"><img class="logo" src="${logoSrc}" width="212" height="61"
+                                                   alt="LogWatcher"/></a>
 
                     <div id="searchPanel">
                         <form action="/search">
