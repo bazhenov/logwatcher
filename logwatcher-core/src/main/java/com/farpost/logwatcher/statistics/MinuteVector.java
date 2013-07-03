@@ -50,10 +50,14 @@ public final class MinuteVector {
 	}
 
 	public void increment(DateTime dateTime) {
+		increment(dateTime, 1);
+	}
+
+	public void increment(DateTime dateTime, int delta) {
 		int offset = dateTime.getMinuteOfDay();
 		long diffInDays = diffInDays(dateTime);
 		if (dayMarker(v[offset]) == diffInDays) {
-			v[offset]++;
+			v[offset] += delta;
 		} else if (diffInDays > dayMarker(v[offset])) {
 			v[offset] = buildValue(diffInDays, 1);
 		}

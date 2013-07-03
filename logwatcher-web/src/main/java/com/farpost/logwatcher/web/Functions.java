@@ -1,11 +1,12 @@
 package com.farpost.logwatcher.web;
 
 import com.farpost.logwatcher.Cause;
+import com.farpost.logwatcher.statistics.MinuteVector;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static java.lang.Math.abs;
+import static java.lang.Math.*;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static java.util.regex.Pattern.compile;
 
@@ -66,5 +67,21 @@ public class Functions {
 			return new CauseDef(simpleClassName, fqnClassName, title);
 		}
 		return new CauseDef(null, null, title);
+	}
+
+	public static double getIntensity(MinuteVector vector) {
+		return ((double) vector.get(0) + vector.get(-1)) / 120d;
+	}
+
+	public static String formatIntensity(double intensity) {
+		if (intensity < 1) {
+			return round(intensity * 60) + "/minute";
+		} else if (intensity <= 10) {
+			return round(intensity) + "/second";
+		} else {
+			double orderOfMagnitude = log10(intensity);
+			int factor = (int) pow(10, ceil(orderOfMagnitude - 2));
+			return round(intensity / factor) * factor + "/second";
+		}
 	}
 }
