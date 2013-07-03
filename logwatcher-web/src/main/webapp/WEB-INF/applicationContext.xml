@@ -25,7 +25,9 @@
 		<constructor-arg value="${index.location}"/>
 	</bean>
 
-	<bean id="clusterDao" class="com.farpost.logwatcher.cluster.InMemoryClusterDao"/>
+	<bean id="clusterDao" class="com.farpost.logwatcher.cluster.SqlClusterDao">
+		<constructor-arg ref="dataSource"/>
+	</bean>
 	<bean id="clusterStatistics" class="com.farpost.logwatcher.statistics.InMemoryClusterStatistics"/>
 
 	<bean id="luceneDirectory" class="org.apache.lucene.store.FSDirectory" factory-method="open">

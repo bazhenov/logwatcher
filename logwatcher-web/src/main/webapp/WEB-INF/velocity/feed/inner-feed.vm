@@ -50,7 +50,10 @@
 							#else
 								$date.format("dd MMMM yyyy, HH:mm", $lastDate)
 							#end
-						#*<span class="rightNowMarker">~30/second</span>*#
+							#set($intensity = $f.getIntensity($p.getMinuteVector($c)))
+							#if($intensity >= 0.1)
+								<span class="rightNowMarker">~$f.formatIntensity($intensity)</span>
+							#end
 						</div>
 					</div>
 

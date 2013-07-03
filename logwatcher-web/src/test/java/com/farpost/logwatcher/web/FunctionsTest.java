@@ -3,6 +3,7 @@ package com.farpost.logwatcher.web;
 import org.testng.annotations.Test;
 
 import static com.farpost.logwatcher.web.Functions.extractExceptionClass;
+import static com.farpost.logwatcher.web.Functions.formatIntensity;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -19,5 +20,18 @@ public class FunctionsTest {
 		assertThat(def.getSimpleType(), is("AdvertServiceException"));
 		assertThat(def.getType(), is("AdvertServiceException"));
 		assertThat(def.getMessage(), is("Error Fetching http headers"));
+	}
+
+	@Test
+	public void testFormatIntensity() {
+		assertThat(formatIntensity(0.1d), is("6/minute"));
+
+		assertThat(formatIntensity(2d), is("2/second"));
+		assertThat(formatIntensity(2.5d), is("3/second"));
+
+		assertThat(formatIntensity(11.9d), is("12/second"));
+		assertThat(formatIntensity(128d), is("130/second"));
+		assertThat(formatIntensity(1523d), is("1500/second"));
+		assertThat(formatIntensity(15234d), is("15000/second"));
 	}
 }

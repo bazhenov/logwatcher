@@ -21,9 +21,11 @@
 
 <h3>Statistics</h3>
 
+
 <p class="section">
 	Today: $p.statistics.todayCount times. Yesterday: $p.statistics.yesterdayCount times.
 	Last seen: $date.format("dd MMMM, HH:mm:ss", $p.statistics.lastSeenAt.toDate())
+</p>
 
 <table id="statisticsTable">
 	<tr>
@@ -32,7 +34,6 @@
 	</tr>
 </table>
 
-</p>
 
 <h3>Context Sampling</h3>
 

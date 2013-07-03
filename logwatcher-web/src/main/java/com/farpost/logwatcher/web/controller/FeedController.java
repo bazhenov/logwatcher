@@ -4,6 +4,7 @@ import com.farpost.logwatcher.*;
 import com.farpost.logwatcher.cluster.ClusterDao;
 import com.farpost.logwatcher.statistics.ByDayStatistic;
 import com.farpost.logwatcher.statistics.ClusterStatistic;
+import com.farpost.logwatcher.statistics.MinuteVector;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
 import com.farpost.logwatcher.web.page.FeedPage;
@@ -153,6 +154,10 @@ public class FeedController {
 
 		public ByDayStatistic getStatistics(Cluster c) {
 			return clusterStatistic.getByDayStatistic(applicationId, c.getChecksum());
+		}
+
+		public MinuteVector getMinuteVector(Cluster c) {
+			return clusterStatistic.getMinuteVector(applicationId, c.getChecksum());
 		}
 
 		public String getApplicationId() {
