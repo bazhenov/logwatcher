@@ -6,6 +6,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.lang.Math.abs;
+import static java.util.regex.Pattern.CASE_INSENSITIVE;
+import static java.util.regex.Pattern.compile;
 
 public class Functions {
 
@@ -54,7 +56,7 @@ public class Functions {
 	}
 
 	public static CauseDef extractExceptionClass(String title) {
-		Pattern pattern = Pattern.compile("\\b([a-z]+[\\.])*[a-z]*Exception\\b", Pattern.CASE_INSENSITIVE);
+		Pattern pattern = compile("\\b([a-z]+[\\.])*[a-z]*Exception\\b", CASE_INSENSITIVE);
 		Matcher matcher = pattern.matcher(title);
 		if (matcher.find()) {
 			String fqnClassName = matcher.group();

@@ -26,7 +26,7 @@
 										data-severity="$c.severity"></canvas>
 
 						<div class='message'>
-							#set($cause = $f.extractExceptionClass($c.originalTitle))
+							#set($cause = $f.extractExceptionClass($c.title))
 							#if ($cause.type)
 								#if($cause.type == $cause.simpleType)
 									<span class="causeType">$cause.type</span>

@@ -13,9 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public final class Cluster {
 
-	@Nullable
-	private String customTitle;
-	private String originalTitle;
+	private String title;
 
 	private String description;
 	private final String applicationId;
@@ -25,34 +23,25 @@ public final class Cluster {
 	@Nullable
 	private String issueKey;
 
-	public Cluster(String applicationId, String originalTitle, Checksum checksum, String customTitle, String description,
+	public Cluster(String applicationId, String title, Checksum checksum, String description,
 								 String issueKey, Severity severity) {
 		this.applicationId = applicationId;
-		this.originalTitle = checkNotNull(originalTitle);
+		this.title = checkNotNull(title);
 		this.checksum = checkNotNull(checksum);
 		this.severity = checkNotNull(severity);
-		this.customTitle = customTitle;
 		this.description = description;
 		this.issueKey = issueKey;
 	}
 
-	public Cluster(String applicationId, Severity severity, String originalTitle, Checksum checksum) {
-		this(applicationId, originalTitle, checksum, null, null, null, severity);
+	public Cluster(String applicationId, Severity severity, String title, Checksum checksum) {
+		this(applicationId, title, checksum, null, null, severity);
 	}
 
 	/**
-	 * @return custom title for a cluster. This is title given for a cluster by a end user
+	 * @return title for a cluster, that is log entry title from which this cluster was created
 	 */
-	@Nullable
-	public String getCustomTitle() {
-		return customTitle;
-	}
-
-	/**
-	 * @return original title for a cluster, that is log entry title from which this cluster was created
-	 */
-	public String getOriginalTitle() {
-		return originalTitle;
+	public String getTitle() {
+		return title;
 	}
 
 	/**
@@ -87,12 +76,20 @@ public final class Cluster {
 
 		Cluster that = (Cluster) o;
 		return equal(checksum, that.checksum) && equal(description, that.description) && equal(issueKey, that.issueKey) &&
-			equal(customTitle, that.customTitle) && equal(originalTitle, that.originalTitle) &&
-			equal(applicationId, that.applicationId) && equal(severity, that.severity);
+			equal(title, that.title) && equal(applicationId, that.applicationId) && equal(severity, that.severity);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(customTitle, issueKey, description, checksum, originalTitle, applicationId, severity);
+		return Objects.hashCode(issueKey, description, checksum, title, applicationId, severity);
+	}
+
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this)
+			.add("applicationId", applicationId)
+			.add("checksum", checksum)
+			.add("title", title)
+			.toString();
 	}
 }

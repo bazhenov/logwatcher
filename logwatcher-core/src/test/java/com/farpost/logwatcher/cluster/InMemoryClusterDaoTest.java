@@ -1,6 +1,6 @@
 package com.farpost.logwatcher.cluster;
 
-public class InMemoryClusterDaoTest extends ClusterDaoTestCase {
+public class InMemoryClusterDaoTest extends ClusterDaoTest {
 
 	@Override
 	protected ClusterDao createDao() {
