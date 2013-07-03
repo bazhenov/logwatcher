@@ -12,7 +12,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
-public abstract class ClusterDaoTestCase {
+public abstract class ClusterDaoTest {
 
 	ClusterDao dao;
 

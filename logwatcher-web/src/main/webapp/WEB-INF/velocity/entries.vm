@@ -13,7 +13,7 @@
 <body>
 
 <h2 data-checksum="${p.cluster.checksum}" data-application="$p.cluster.applicationId">
-	$p.cluster.originalTitle</h2>
+	$p.cluster.title</h2>
 
 <p>
 	<a href="/feed/$p.cluster.applicationId">&larr; Back</a> to $p.cluster.applicationId

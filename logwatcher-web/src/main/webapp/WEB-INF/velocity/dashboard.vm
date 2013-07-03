@@ -22,7 +22,7 @@
 					<li>No errors for today</li>
 				#else
 					#foreach($cluster in $clusters)
-						<li><a href="/entries/$cluster.applicationId/${cluster.checksum}">$cluster.originalTitle</a></li>
+						<li><a href="/entries/$cluster.applicationId/${cluster.checksum}">$cluster.title</a></li>
 					#end
 				#end
 			</ul>
