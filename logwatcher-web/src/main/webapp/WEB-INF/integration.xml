@@ -44,9 +44,13 @@
 
 	<int:chain input-channel="messageChannel">
 		<int:poller time-unit="MILLISECONDS" fixed-delay="100"/>
-		<int:transformer ref="marshaller" method="marshall"/>
 		<!-- Чтение логов из очереди и добавление их в хранилище -->
-		<int:service-activator ref="writeToStorageTransportListener" method="onEntry"/>
+		<int:service-activator>
+			<bean class="com.farpost.logwatcher.transport.DeserializeAndWriteToStorage">
+				<constructor-arg ref="marshaller"/>
+				<constructor-arg ref="writeToStorageTransportListener"/>
+			</bean>
+		</int:service-activator>
 	</int:chain>
 
 	<bean class="com.farpost.logwatcher.transport.UdpTransport"
