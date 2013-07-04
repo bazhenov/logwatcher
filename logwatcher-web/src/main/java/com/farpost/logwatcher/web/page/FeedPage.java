@@ -1,8 +1,6 @@
 package com.farpost.logwatcher.web.page;
 
 import com.farpost.logwatcher.AggregatedEntry;
-import com.farpost.logwatcher.ByLastOccurrenceDateComparator;
-import com.farpost.logwatcher.ByOccurenceCountComparator;
 import com.farpost.logwatcher.Severity;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.web.ViewNameAwarePage;
@@ -15,9 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import static java.util.Collections.sort;
 import static org.joda.time.LocalDate.fromDateFields;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -34,30 +34,16 @@ public class FeedPage implements ViewNameAwarePage, InitializingBean {
 
 	private static final Logger log = getLogger(FeedPage.class);
 
-	private final HashMap<String, Comparator<AggregatedEntry>> comparators = new HashMap<String, Comparator<AggregatedEntry>>() {{
-		put(null, new ByLastOccurrenceDateComparator());
-		put("last-occurence", new ByLastOccurrenceDateComparator());
-		put("occurence-count", new ByOccurenceCountComparator());
-	}};
-	private List<AggregatedEntry> entries;
-	private String sortOrder;
-
-	public FeedPage(HttpServletRequest request, Date date, String applicationId, Severity severity, String sortOrder) {
+	public FeedPage(HttpServletRequest request, Date date, String applicationId, Severity severity) {
 		this.request = request;
 		this.date = date;
 		this.applicationId = applicationId;
 		this.severity = severity;
-		this.sortOrder = sortOrder;
 	}
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		entries = storage.getAggregatedEntries(applicationId, fromDateFields(date), severity);
-		Comparator<AggregatedEntry> comparator = comparators.containsKey(this.sortOrder)
-			? comparators.get(this.sortOrder)
-			: comparators.get(null);
-		sort(entries, comparator);
-
+		List<AggregatedEntry> entries = storage.getAggregatedEntries(applicationId, fromDateFields(date), severity);
 		pieChartData = new JSONArray();
 		for (AggregatedEntry entry : entries) {
 			try {
