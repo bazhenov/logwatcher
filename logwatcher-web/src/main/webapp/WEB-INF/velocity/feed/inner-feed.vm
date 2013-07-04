@@ -6,8 +6,8 @@
 	#if($p.clusters.isEmpty())
 	<div id="notificationPanel">
 		<p>Try to change severity settings</p>
-		<span>&empty;</span>
-		<br/>No results found.
+		<br/>
+		No results found
 	</div>
 	#else
 	<div class="entries">

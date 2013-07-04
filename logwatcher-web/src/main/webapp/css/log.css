@@ -1,20 +1,18 @@
-.log, .log P, .log PRE {
+.log {
 	color: #efefef;
 	background-color: #262626;
 	border: 0;
-	font-size: 12px;
-	font-family: 'Monaco', monospace;
-}
-
-.log {
 	padding: 10px;
-	overflow: scroll;
 	border-radius: 5px;
+	overflow: scroll;
 }
 
 .log P {
-	padding: 0;
+	padding: 5px 0;
 	margin: 0;
+	font-size: 12px;
+	font-family: 'Monaco', monospace;
+	white-space: pre;
 }
 
 .spinner {

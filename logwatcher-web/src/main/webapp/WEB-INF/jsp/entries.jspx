@@ -39,7 +39,7 @@
     <c:choose>
         <c:when test="${empty p.entries}">
             <div id="notificationPanel">
-                <span>&amp;empty;</span><br/>No results found
+                No results found
             </div>
         </c:when>
         <c:otherwise>
