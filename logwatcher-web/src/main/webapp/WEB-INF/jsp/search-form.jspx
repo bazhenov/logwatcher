@@ -1,64 +1,64 @@
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns="http://www.w3.org/1999/xhtml"
           version="2.1"
           xmlns:c="http://java.sun.com/jsp/jstl/core"
-          xmlns:l="http://bazhenov.org/logging"
-          xmlns:f="http://java.sun.com/jsp/jstl/functions"
-          xmlns:lt="urn:jsptagdir:/WEB-INF/tags">
+        >
 
-  <jsp:directive.page contentType="text/html"/>
+    <jsp:directive.page contentType="text/html"/>
 
-  <html>
-  <head>
-    <title>LogWatcher Search</title>
-    <c:url value='/css/search-feed.css' var="cssUrl"/>
-    <link rel="stylesheet" href="${cssUrl}"/>
-  </head>
-  <body>
-  <h2>Search</h2>
+    <html>
+    <head>
+        <title>LogWatcher Search</title>
+        <c:url value='/css/search-feed.css' var="cssUrl"/>
+        <link rel="stylesheet" href="${cssUrl}"/>
+    </head>
+    <body>
+    <h2>Search</h2>
 
-  <div class="queryBox">
-		<form action="/search" name="searchForm" method="get">
-    	<input name="q" value=""/>
-			<input name="submit" type="submit" value=">>" style="display: none"/>
-		</form>
-  </div>
+    <div class="queryBox">
+        <form class="form-search" action="/search" name="searchForm" method="get">
+            <div class="input-append">
+                <input type="text" class="span2 search-query" name="q"/>
+                <button type="submit" class="btn">Search</button>
+            </div>
+        </form>
+    </div>
 
-  <table width="100%">
-    <tr>
-      <td align="center">
-        <table class="samplesTable">
-					<tr>
-            <td class="sampleDescription">log message</td>
-            <td><span>contains: {keywords with AND/OR/NOT/-/+ operators}</span></td>
-          </tr>
-          <tr>
-            <td class="sampleDescription">application id</td>
-            <td><span>at: {application id}</span></td>
-          </tr>
-          <tr>
-            <td class="sampleDescription">relative date</td>
-            <td><span>occurred: last N (days|week|month)</span></td>
-          </tr>
-          <tr>
-            <td class="sampleDescription">absolute date</td>
-            <td><span>occurred: YYYY-MM-DD</span></td>
-          </tr>
-          <tr>
-            <td class="sampleDescription">absolute date range</td>
-            <td><span>occurred: YYYY-MM-DD/YYY-MM-DD</span></td>
-          </tr>
-          <tr>
-            <td class="sampleDescription">exception type</td>
-            <td><span>caused-by: {exception type}</span></td>
-          </tr>
-          <tr>
-            <td class="sampleDescription">attribute value</td>
-            <td><span>@{name}: {value}</span></td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-  </body>
-  </html>
+    <table width="100%">
+        <tr>
+            <td align="center">
+                <table class="samplesTable">
+                    <tr>
+                        <td class="sampleDescription">log message</td>
+                        <td><span>contains: {keywords with AND/OR/NOT/-/+ operators}</span></td>
+                    </tr>
+                    <tr>
+                        <td class="sampleDescription">application id</td>
+                        <td><span>at: {application id}</span></td>
+                    </tr>
+                    <tr>
+                        <td class="sampleDescription">relative date</td>
+                        <td><span>occurred: last N (days|week|month)</span></td>
+                    </tr>
+                    <tr>
+                        <td class="sampleDescription">absolute date</td>
+                        <td><span>occurred: YYYY-MM-DD</span></td>
+                    </tr>
+                    <tr>
+                        <td class="sampleDescription">absolute date range</td>
+                        <td><span>occurred: YYYY-MM-DD/YYY-MM-DD</span></td>
+                    </tr>
+                    <tr>
+                        <td class="sampleDescription">exception type</td>
+                        <td><span>caused-by: {exception type}</span></td>
+                    </tr>
+                    <tr>
+                        <td class="sampleDescription">attribute value</td>
+                        <td><span>@{name}: {value}</span></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    </body>
+    </html>
 </jsp:root>

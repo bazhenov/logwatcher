@@ -115,14 +115,10 @@ a:visited {
 	margin-top: 10px;
 	background-color: white;
 	box-shadow: 0 0 10px #ddd;
-	-moz-box-shadow: 0 0 10px #ddd;
-	-webkit-box-shadow: 0 0 10px #ddd;
 	width: 970px;
 	text-align: left;
 	border: 1px solid white;
 	border-radius: 5px;
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
 	position: relative;
 }
 
@@ -135,7 +131,7 @@ a:visited {
 }
 
 #notificationPanel span {
-	font-size: 650%
+	display: block;
 }
 
 #notificationPanel p {
