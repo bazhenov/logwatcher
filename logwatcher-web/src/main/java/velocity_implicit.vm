@@ -1,4 +1,5 @@
 #* @implicitly included *#
+#* @vtlvariable name="display" type="org.apache.velocity.tools.generic.DisplayTool" *#
 #* @vtlvariable name="math" type="org.apache.velocity.tools.generic.MathTool" *#
 #* @vtlvariable name="number" type="org.apache.velocity.tools.generic.NumberTool" *#
 #* @vtlvariable name="date" type="org.apache.velocity.tools.generic.DateTool" *#

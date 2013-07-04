@@ -22,10 +22,12 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 
 import static com.farpost.logwatcher.Checksum.fromHexString;
 import static com.farpost.logwatcher.storage.LogEntries.entries;
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newHashMap;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @Controller
@@ -39,6 +41,8 @@ public class FeedController {
 
 	@Autowired
 	private ClusterDao clusterDao;
+
+	private int feedSize = 100;
 
 	@RequestMapping("/")
 	public View handleRoot() {
@@ -62,9 +66,7 @@ public class FeedController {
 		}
 
 		Severity severity = getSeverity(request);
-		String sortOrder = getSortOrder(request);
-
-		return new FeedPage(request, date, applicationId, severity, sortOrder);
+		return new FeedPage(request, date, applicationId, severity);
 	}
 
 	@RequestMapping("/service/feed/{applicationId}")
@@ -122,7 +124,9 @@ public class FeedController {
 		private final String applicationId;
 
 		private int entriesCount;
-		private Collection<Cluster> clusters;
+		private final Collection<Cluster> clusters;
+
+		private final Map<Checksum, ByDayStatistic> dayStatisticMap = newHashMap();
 
 		public InnerFeedPage(Date date, String applicationId, Severity severity) {
 			this.applicationId = applicationId;
@@ -130,14 +134,19 @@ public class FeedController {
 			this.date = LocalDate.fromDateFields(date);
 			Collection<Checksum> checksums = clusterStatistic.getActiveClusterChecksums(applicationId, this.date);
 
-			clusters = newArrayList();
+			Collection<Cluster> clusters = newArrayList();
 			for (Checksum checksum : checksums) {
 				Cluster cluster = clusterDao.findCluster(applicationId, checksum);
 				if (cluster.getSeverity().isEqualOrMoreImportantThan(severity)) {
-					entriesCount += getStatistics(cluster).getCount(this.date);
+					ByDayStatistic dayStatistic = clusterStatistic.getByDayStatistic(applicationId, checksum);
+					dayStatisticMap.put(checksum, dayStatistic);
+					entriesCount += dayStatistic.getCount(this.date);
 					clusters.add(cluster);
 				}
 			}
+			this.clusters = Ordering
+				.from(new ByLastOccurrenceDateComparator(dayStatisticMap))
+				.sortedCopy(clusters);
 		}
 
 		public int getEntriesCount() {
@@ -153,7 +162,7 @@ public class FeedController {
 		}
 
 		public ByDayStatistic getStatistics(Cluster c) {
-			return clusterStatistic.getByDayStatistic(applicationId, c.getChecksum());
+			return dayStatisticMap.get(c.getChecksum());
 		}
 
 		public MinuteVector getMinuteVector(Cluster c) {
@@ -180,7 +189,7 @@ public class FeedController {
 				checksum(checksum.toString()).
 				date(LocalDate.now()).
 				find(storage);
-			entries = Ordering.from(new ByOccurrenceDateComparator()).sortedCopy(entries);
+			entries = Ordering.from(new ByOccurrenceDateComparator()).greatestOf(entries, feedSize);
 		}
 
 		public Cluster getCluster() {

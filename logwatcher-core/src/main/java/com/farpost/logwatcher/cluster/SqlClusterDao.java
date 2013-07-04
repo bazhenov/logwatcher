@@ -35,10 +35,13 @@ public class SqlClusterDao implements ClusterDao {
 
 	@Override
 	public void registerCluster(Cluster cluster) {
+		String title = cluster.getTitle().length() > 255
+			? cluster.getTitle().substring(0, 255)
+			: cluster.getTitle();
 		template.update("INSERT INTO cluster (application, checksum, description, severity, title, issue_key) " +
 			"VALUES (?, ?, ?, ?, ?, ?)",
 			cluster.getApplicationId(), cluster.getChecksum().toString(), cluster.getDescription(),
-			cluster.getSeverity().toString(), cluster.getTitle(), cluster.getIssueKey());
+			cluster.getSeverity().toString(), title, cluster.getIssueKey());
 	}
 
 	@Override
