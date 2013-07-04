@@ -21,13 +21,13 @@
     <body>
     <h2>Search</h2>
 
-    <div class="queryBox givenQuery" rawQuery="${p.query}">
-    <span id="query">
-      <c:forEach items="${p.queryTerms}" var="term">
-          <span class="keyword"><c:out value="${term.key}"/>:</span><span><c:out
-              value="${term.value}"/>&amp;nbsp;</span>
-      </c:forEach>
-    </span>
+    <div class="queryBox">
+        <form class="form-search" action="/search" name="searchForm" method="get">
+            <div class="input-append">
+                <input type="text" class="span2 search-query" name="q" value="${p.query}"/>
+                <button type="submit" class="btn">Search</button>
+            </div>
+        </form>
     </div>
 
     <c:choose>
@@ -44,7 +44,7 @@
         </c:when>
         <c:otherwise>
             <div id="notificationPanel">
-                <span>&amp;empty;</span><br/>No results found
+                No results found
             </div>
         </c:otherwise>
     </c:choose>

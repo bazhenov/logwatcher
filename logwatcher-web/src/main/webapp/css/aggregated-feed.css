@@ -74,6 +74,7 @@
 
 .causeType abbr {
 	cursor: default;
+	border-bottom: 0;
 }
 
 .entryHeader .applicationId {

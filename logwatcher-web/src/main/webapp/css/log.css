@@ -1,12 +1,13 @@
-.log P, .log PRE {
-	font-family: 'Monaco', monospace;
+.log, .log P, .log PRE {
+	color: #efefef;
+	background-color: #262626;
+	border: 0;
 	font-size: 12px;
+	font-family: 'Monaco', monospace;
 }
 
 .log {
 	padding: 10px;
-	color: #efefef;
-	background-color: #262626;
 	overflow: scroll;
 	border-radius: 5px;
 }

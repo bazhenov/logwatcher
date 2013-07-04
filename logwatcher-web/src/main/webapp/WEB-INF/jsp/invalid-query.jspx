@@ -1,15 +1,27 @@
-<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns="http://www.w3.org/1999/xhtml" version="2.1">
-  <jsp:directive.page contentType="text/html"/>
-  <html>
-  <head>
-    <title>LogWatcher: invalid query</title>
-  </head>
-  <body>
-  <h2>Search: Invalid query</h2>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns="http://www.w3.org/1999/xhtml" version="2.1"
+          xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <jsp:directive.page contentType="text/html"/>
+    <html>
+    <head>
+        <title>LogWatcher: invalid query</title>
+        <c:url value='/css/search-feed.css' var="cssUrl"/>
+        <link rel="stylesheet" href="${cssUrl}"/>
+    </head>
+    <body>
+    <h2>Search: Invalid query</h2>
 
-  <div id="notificationPanel">
-    <span>&amp;iquest;</span><br/>What did you mean?
-  </div>
-  </body>
-  </html>
+    <div class="queryBox">
+        <form class="form-search" action="/search" name="searchForm" method="get">
+            <div class="input-append">
+                <input type="text" class="span2 search-query" name="q" value="${p.query}"/>
+                <button type="submit" class="btn">Search</button>
+            </div>
+        </form>
+    </div>
+
+    <div id="notificationPanel">
+        Invalid query
+    </div>
+    </body>
+    </html>
 </jsp:root>
