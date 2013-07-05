@@ -60,11 +60,13 @@ public class Functions {
 	public static CauseDef extractExceptionClass(String title) {
 		Pattern pattern = compile("\\b([a-z]+[\\.\\\\])*[a-z]*Exception\\b", CASE_INSENSITIVE);
 		Matcher matcher = pattern.matcher(title);
-		if (matcher.find()) {
+		while (matcher.find()) {
 			String fqnClassName = matcher.group();
+			if (fqnClassName.equalsIgnoreCase("exception")) continue;
 			String simpleClassName = getSimpleType(fqnClassName);
-			title = title.substring(fqnClassName.length());
-			title = title.replaceFirst("^[^a-zA-Z0-9]+", "");
+			if (matcher.start() == 0) {
+				title = title.substring(fqnClassName.length()).replaceFirst("^[^a-zA-Z0-9]+", "");
+			}
 			return new CauseDef(simpleClassName, fqnClassName, title);
 		}
 		return new CauseDef(null, null, title);
