@@ -294,12 +294,12 @@ abstract public class LogStorageTestCase {
 		entry().causedBy(new RuntimeException(new Exception())).saveIn(storage);
 
 		int count = entries().
-			causedBy("RuntimeException").
+			causedBy("java.lang.RuntimeException").
 			count(storage);
 		assertThat(count, equalTo(1));
 
 		count = entries().
-			causedBy("Exception").
+			causedBy("java.lang.Exception").
 			count(storage);
 		assertThat(count, equalTo(1));
 

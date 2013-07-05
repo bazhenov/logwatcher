@@ -45,7 +45,7 @@ public class Cause {
 	}
 
 	public Cause(Throwable throwable) {
-		type = throwable.getClass().getSimpleName();
+		type = throwable.getClass().getName();
 		message = throwable.getMessage();
 		stackTrace = StackTraceFormatter.extractStackTrace(throwable);
 		cause = throwable.getCause() == null
