@@ -20,6 +20,11 @@ public class FunctionsTest {
 		assertThat(def.getSimpleType(), is("AdvertServiceException"));
 		assertThat(def.getType(), is("AdvertServiceException"));
 		assertThat(def.getMessage(), is("Error Fetching http headers"));
+
+		def = extractExceptionClass("FarPost\\Search\\Client\\TimeoutException: Count error");
+		assertThat(def.getSimpleType(), is("TimeoutException"));
+		assertThat(def.getType(), is("FarPost\\Search\\Client\\TimeoutException"));
+		assertThat(def.getMessage(), is("Count error"));
 	}
 
 	@Test
