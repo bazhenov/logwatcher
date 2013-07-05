@@ -38,6 +38,7 @@
 
 .attributes label {
 	font-weight: 600;
+	display: inline;
 }
 
 .attributes span {
@@ -50,8 +51,11 @@
 .attributes code {
 	padding: 0 2px;
 	font-weight: 300;
+	color: black;
 	font-family: 'Open Sans', "Helvetica Neue", Helvetica, sans-serif;
 	margin-right: 10px;
+	background: none;
+	border: none;
 }
 
 #statisticsTable {
