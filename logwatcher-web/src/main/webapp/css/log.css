@@ -7,16 +7,27 @@
 	overflow: scroll;
 }
 
-.log P {
-	padding: 5px 0;
+.log P, .log TD {
+	padding: 0;
 	margin: 0;
 	font-size: 12px;
 	font-family: 'Monaco', monospace;
+}
+
+.log TABLE.attr TD {
+	padding: 0 5px;
+}
+
+.log TABLE.attr TD.attributeName {
+	text-align: right;
+}
+
+.log P.cause {
 	white-space: pre;
 }
 
-.logEntry {
-	padding: 10px;
+.log div {
+	padding: 5px 0;
 }
 
 .spinner {
