@@ -60,11 +60,11 @@ public class NioUdpTransport implements Transport {
 			try {
 				while (!interrupted()) {
 					buffer.clear();
-					channel.receive(buffer);
+					InetAddress sender = ((InetSocketAddress) channel.receive(buffer)).getAddress();
 					int receivedBytes = buffer.position();
 					byte[] data = new byte[receivedBytes];
 					arraycopy(buffer.array(), 0, data, 0, receivedBytes);
-					listener.onMessage(data);
+					listener.onMessage(data, sender);
 				}
 			} catch (ClosedByInterruptException e) {
 				currentThread().interrupt();

@@ -47,7 +47,7 @@ public class UdpTransportIT {
 
 		private byte[] data;
 
-		public void onMessage(byte[] message) throws TransportException {
+		public void onMessage(byte[] message, InetAddress sender) throws TransportException {
 			data = message;
 			synchronized (this) {
 				notify();

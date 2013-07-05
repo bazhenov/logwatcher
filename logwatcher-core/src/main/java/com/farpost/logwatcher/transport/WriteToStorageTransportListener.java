@@ -4,6 +4,8 @@ import com.farpost.logwatcher.marshalling.Marshaller;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
 
+import java.net.InetAddress;
+
 public class WriteToStorageTransportListener implements TransportListener {
 
 	private final LogStorage storage;
@@ -14,7 +16,7 @@ public class WriteToStorageTransportListener implements TransportListener {
 		this.marshaller = marshaller;
 	}
 
-	public void onMessage(byte[] message) throws TransportException {
+	public void onMessage(byte[] message, InetAddress sender) throws TransportException {
 		try {
 			storage.writeEntry(marshaller.unmarshall(message));
 		} catch (LogStorageException e) {

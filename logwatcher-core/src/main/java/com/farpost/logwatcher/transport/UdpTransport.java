@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.Arrays;
 
@@ -62,9 +63,11 @@ public class UdpTransport implements Transport {
 		public void run() {
 			while (!currentThread().isInterrupted()) {
 				byte[] message;
+				InetAddress sender;
 				try {
 					socket.receive(packet);
 					int receivedLength = packet.getLength();
+					sender = packet.getAddress();
 					message = new byte[receivedLength];
 					arraycopy(buffer, 0, message, 0, receivedLength);
 					if (log.isDebugEnabled()) {
@@ -80,7 +83,7 @@ public class UdpTransport implements Transport {
 				}
 
 				try {
-					listener.onMessage(message);
+					listener.onMessage(message, sender);
 				} catch (Exception e) {
 					log.error("Listener failed at message: " + Arrays.toString(message), e);
 				}

@@ -4,6 +4,8 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
+import static com.farpost.logwatcher.StackTraceFormatter.extractStackTrace;
+
 /**
  * Причина ошибки. Запись лога {@link LogEntry} может иметь причину. Как правило - это
  * исключительная ситуация которая привела к ошибке.
@@ -47,7 +49,7 @@ public class Cause {
 	public Cause(Throwable throwable) {
 		type = throwable.getClass().getName();
 		message = throwable.getMessage();
-		stackTrace = StackTraceFormatter.extractStackTrace(throwable);
+		stackTrace = extractStackTrace(throwable);
 		cause = throwable.getCause() == null
 			? null
 			: new Cause(throwable.getCause());
