@@ -38,9 +38,9 @@ public class LogWatcherAppender extends UnsynchronizedAppenderBase<ILoggingEvent
 		try {
 			DateTime time = new DateTime(event.getTimeStamp());
 			Severity severity = severity(event.getLevel());
-			ThrowableProxy throwableProxy = (ThrowableProxy) event.getThrowableProxy();
-			Cause cause = throwableProxy != null
-				? new Cause(throwableProxy.getThrowable())
+			ThrowableProxy proxy = (ThrowableProxy) event.getThrowableProxy();
+			Cause cause = proxy != null
+				? new Cause(proxy.getThrowable())
 				: null;
 
 			Map<String, String> attributes = event.getMDCPropertyMap();

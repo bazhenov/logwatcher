@@ -5,13 +5,20 @@ import com.farpost.logwatcher.LogEntry;
 import com.farpost.logwatcher.LogEntryImpl;
 import com.farpost.logwatcher.marshalling.Jaxb2Marshaller;
 import com.farpost.logwatcher.marshalling.Marshaller;
+import org.springframework.integration.Message;
 import org.springframework.integration.channel.QueueChannel;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import static com.farpost.logwatcher.Severity.error;
+import static com.farpost.logwatcher.transport.WriteToChannelTransportListener.SENDER_ADDRESS;
+import static java.net.InetAddress.getLocalHost;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
 
 public class WriteToChannelTransportListenerTest {
@@ -28,24 +35,30 @@ public class WriteToChannelTransportListenerTest {
 	}
 
 	@Test
-	public void listenerShouldWriteEntryToDatabase() throws TransportException, InterruptedException {
+	public void listenerShouldWriteEntryToChannel()
+		throws TransportException, InterruptedException, UnknownHostException {
 		Cause cause = new Cause("type", "message", "stack");
 		LogEntry entry = new LogEntryImpl(now(), "group", "message", error, "checksum", "default", null, cause);
 
 		byte[] message = marshaller.marshall(entry);
-		listener.onMessage(message);
+		InetAddress sender = getLocalHost();
+		listener.onMessage(message, sender);
 
-		byte[] actualMessage = (byte[]) messageChannel.receive().getPayload();
+		Message<?> envelope = messageChannel.receive();
+		byte[] actualMessage = (byte[]) envelope.getPayload();
 		assertThat(actualMessage, equalTo(message));
+		InetAddress senderCopy = envelope.getHeaders().get(SENDER_ADDRESS, InetAddress.class);
+		assertThat(senderCopy, is(sender));
 	}
 
 	@Test(expectedExceptions = TransportException.class)
-	public void listenerShouldThrowExceptionOnQueueOverflow() throws TransportException, InterruptedException {
+	public void listenerShouldThrowExceptionOnQueueOverflow()
+		throws TransportException, InterruptedException, UnknownHostException {
 		Cause cause = new Cause("type", "message", "stack");
 		LogEntry entry = new LogEntryImpl(now(), "group", "message", error, "checksum", "default", null, cause);
 
 		byte[] message = marshaller.marshall(entry);
-		listener.onMessage(message);
-		listener.onMessage(message);
+		listener.onMessage(message, getLocalHost());
+		listener.onMessage(message, getLocalHost());
 	}
 }

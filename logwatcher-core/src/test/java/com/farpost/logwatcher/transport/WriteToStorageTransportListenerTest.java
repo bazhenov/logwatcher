@@ -14,7 +14,10 @@ import org.joda.time.DateTime;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.net.UnknownHostException;
+
 import static com.farpost.logwatcher.storage.LogEntries.entries;
+import static java.net.InetAddress.getLocalHost;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.joda.time.DateTime.now;
@@ -33,12 +36,12 @@ public class WriteToStorageTransportListenerTest {
 
 	@Test
 	public void listenerShouldWriteEntryToDatabase()
-		throws TransportException, LogStorageException, InvalidCriteriaException {
+		throws TransportException, LogStorageException, InvalidCriteriaException, UnknownHostException {
 		DateTime date = now();
 		Cause cause = new Cause("type", "message", "stack");
 		LogEntry entry = new LogEntryImpl(date, "group", "message", Severity.error, "checksum", "default", null, cause);
 
-		listener.onMessage(marshaller.marshall(entry));
+		listener.onMessage(marshaller.marshall(entry), getLocalHost());
 
 		int count = entries().
 			date(date.toLocalDate()).
