@@ -76,16 +76,17 @@ function Counterina(canvas, maxData) {
 	this.maxData = maxData > 1 ? maxData : 2;
 
 	this.formatNumber = function (count) {
+		var countStr = count.toString();
 		if (count >= 1000000) {
 			return Math.round(count / 1000000) + "M";
 		} else if (count >= 100000) {
 			return Math.round(count / 1000) + "K";
-		} else if (count.toString().length == 5) {
-			return count.substring(0, 2) + " " + count.substring(2);
-		} else if (count.toString().length == 4) {
-			return count.substring(0, 1) + " " + count.substring(1);
+		} else if (countStr.length == 5) {
+			return countStr.substring(0, 2) + " " + countStr.substring(2);
+		} else if (countStr.length == 4) {
+			return countStr.substring(0, 1) + " " + countStr.substring(1);
 		}
-		return count;
+		return countStr;
 	};
 
 	this.hypLength = function (c1, c2) {
