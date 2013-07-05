@@ -56,14 +56,22 @@
 
 	<div class="log section">
 		#foreach($e in $p.entries)
-			<p>$date.format("dd MMM, HH:mm:ss", $e.date.toDate()) &mdash; $e.message</p>
-			#if(!$e.attributes.isEmpty())
-				<p>#foreach($i in $e.attributes.entrySet())@$i.key: $i.value #end</p>
-			#end
-			#if($e.cause)
-				<p>$f.formatCause($e.cause)</p>
-			#end
-
+			<div>
+				<p class="message">$date.format("dd MMM, HH:mm:ss", $e.date.toDate()) &mdash; $e.message</p>
+				#if(!$e.attributes.isEmpty())
+					<table class="attr">
+						#foreach($i in $e.attributes.entrySet())
+							<tr>
+								<td class="attributeName">@$i.key</td>
+								<td>$i.value</td>
+							</tr>
+						#end
+					</table>
+				#end
+				#if($e.cause)
+					<p class="cause">$f.formatCause($e.cause)</p>
+				#end
+			</div>
 		#end
 	</div>
 	#end
