@@ -24,6 +24,7 @@ public class Functions {
 
 	public static String getSimpleType(String className) {
 		int index = className.lastIndexOf('.');
+		if (index < 0) index = className.lastIndexOf('\\');
 		if (index > 0 && index < className.length() - 1) {
 			return className.substring(index + 1);
 		} else {
@@ -57,7 +58,7 @@ public class Functions {
 	}
 
 	public static CauseDef extractExceptionClass(String title) {
-		Pattern pattern = compile("\\b([a-z]+[\\.])*[a-z]*Exception\\b", CASE_INSENSITIVE);
+		Pattern pattern = compile("\\b([a-z]+[\\.\\\\])*[a-z]*Exception\\b", CASE_INSENSITIVE);
 		Matcher matcher = pattern.matcher(title);
 		if (matcher.find()) {
 			String fqnClassName = matcher.group();
