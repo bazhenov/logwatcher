@@ -68,7 +68,7 @@ public class LogWatcherAppenderTest {
 		assertThat(entry.getSeverity(), equalTo(Severity.debug));
 		assertThat(entry.getApplicationId(), equalTo(applicationId));
 		assertThat(entry.getCause().getMessage(), equalTo("Ooops"));
-		assertThat(entry.getCause().getType(), equalTo(RuntimeException.class.getSimpleName()));
+		assertThat(entry.getCause().getType(), equalTo(RuntimeException.class.getName()));
 	}
 
 	private static LogWatcherAppender createAppender(String address, String applicationId) {

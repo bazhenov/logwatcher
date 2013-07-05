@@ -83,7 +83,7 @@ public class LogWatcherAppenderTest {
 		assertThat(entry.getSeverity(), equalTo(Severity.debug));
 		assertThat(entry.getApplicationId(), equalTo(applicationId));
 		assertThat(entry.getCause().getMessage(), equalTo("This exception is generated intentionally"));
-		assertThat(entry.getCause().getType(), equalTo(RuntimeException.class.getSimpleName()));
+		assertThat(entry.getCause().getType(), equalTo(RuntimeException.class.getName()));
 	}
 
 	@Test
