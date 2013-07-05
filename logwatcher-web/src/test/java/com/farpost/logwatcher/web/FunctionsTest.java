@@ -25,6 +25,12 @@ public class FunctionsTest {
 		assertThat(def.getSimpleType(), is("TimeoutException"));
 		assertThat(def.getType(), is("FarPost\\Search\\Client\\TimeoutException"));
 		assertThat(def.getMessage(), is("Count error"));
+
+		String message = "search-admin-idxnode2.vfarm.loc:8080 failed to respond. Reason: I/O error: connect timed out; nested exception is java.net.SocketTimeoutException: connect timed out";
+		def = extractExceptionClass(message);
+		assertThat(def.getSimpleType(), is("SocketTimeoutException"));
+		assertThat(def.getType(), is("java.net.SocketTimeoutException"));
+		assertThat(def.getMessage(), is(message));
 	}
 
 	@Test
