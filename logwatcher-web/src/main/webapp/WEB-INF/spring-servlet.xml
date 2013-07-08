@@ -35,6 +35,7 @@
 		<property name="viewNames">
 			<list>
 				<value>application</value>
+				<value>aggregated-feed</value>
 				<value>entries</value>
 				<value>dashboard</value>
 				<value>search-page</value>
