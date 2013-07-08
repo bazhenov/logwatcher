@@ -58,7 +58,7 @@ public class Functions {
 	}
 
 	public static CauseDef extractExceptionClass(String title) {
-		Pattern pattern = compile("\\b([a-z]+[\\.\\\\])*[a-z]*Exception\\b", CASE_INSENSITIVE);
+		Pattern pattern = compile("\\b([a-z_0-9]+[\\.\\\\])*[a-z_0-9]*Exception\\b", CASE_INSENSITIVE);
 		Matcher matcher = pattern.matcher(title);
 		while (matcher.find()) {
 			String fqnClassName = matcher.group();

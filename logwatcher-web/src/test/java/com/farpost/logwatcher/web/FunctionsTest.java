@@ -31,6 +31,11 @@ public class FunctionsTest {
 		assertThat(def.getSimpleType(), is("SocketTimeoutException"));
 		assertThat(def.getType(), is("java.net.SocketTimeoutException"));
 		assertThat(def.getMessage(), is(message));
+
+		def = extractExceptionClass("HTTP_Request2_MessageException: Can't search similar images");
+		assertThat(def.getSimpleType(), is("HTTP_Request2_MessageException"));
+		assertThat(def.getType(), is("HTTP_Request2_MessageException"));
+		assertThat(def.getMessage(), is("Can't search similar images"));
 	}
 
 	@Test
