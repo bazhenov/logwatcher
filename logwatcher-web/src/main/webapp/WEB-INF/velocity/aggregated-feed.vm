@@ -105,7 +105,9 @@
 	#end
 
 <div class="entries">
-
+	<div class="spinner">
+		<img src="/images/spinner_large.gif">
+	</div>
 </div>
 
 <script type="text/javascript">
@@ -117,11 +119,12 @@
 		}).done(function (data) {
 				$(".entries").html(data);
 				var maxData = 0;
-				$(".entry .count").each(function (i, canvas) {
+				var sel = $('.entry .count');
+				sel.each(function (i, canvas) {
 					var count = parseInt($(canvas).attr("data-count"));
 					if (count > maxData) maxData = count;
 				});
-				$(".entry .count").each(function (i, canvas) {
+				sel.each(function (i, canvas) {
 					var count = parseInt($(canvas).attr("data-count"));
 					var severity = $(canvas).attr("data-severity");
 					new Counterina(canvas, maxData).draw(count, severity);
@@ -129,8 +132,7 @@
 			});
 		setTimeout("updateFeed()", 3000);
 	}
-	updateFeed();
-
+	setTimeout("updateFeed()", 0);
 </script>
 
 </body>
