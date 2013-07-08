@@ -7,7 +7,6 @@ import com.farpost.logwatcher.statistics.ClusterStatistic;
 import com.farpost.logwatcher.statistics.MinuteVector;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
-import com.farpost.logwatcher.web.page.FeedPage;
 import com.google.common.collect.Ordering;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +19,13 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 
 import static com.farpost.logwatcher.Checksum.fromHexString;
 import static com.farpost.logwatcher.storage.LogEntries.entries;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
+import static org.joda.time.LocalDate.fromDateFields;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @Controller
@@ -42,7 +40,7 @@ public class FeedController {
 	@Autowired
 	private ClusterDao clusterDao;
 
-	private int feedSize = 100;
+	private final static int feedSize = 100;
 
 	@RequestMapping("/")
 	public View handleRoot() {
@@ -58,15 +56,15 @@ public class FeedController {
 
 	@RequestMapping("/feed/{applicationId}")
 	@ModelAttribute("p")
-	public FeedPage handleFeed(@PathVariable String applicationId,
-														 @RequestParam(required = false) @DateTimeFormat(iso = DATE) java.util.Date date,
-														 HttpServletRequest request) {
+	public ModelAndView handleFeed(@PathVariable String applicationId,
+																 @RequestParam(required = false) @DateTimeFormat(iso = DATE) java.util.Date date,
+																 HttpServletRequest request) {
 		if (date == null) {
 			date = new java.util.Date();
 		}
 
 		Severity severity = getSeverity(request);
-		return new FeedPage(request, date, applicationId, severity);
+		return new ModelAndView("aggregated-feed", "p", new FeedPage(request, date, applicationId, severity));
 	}
 
 	@RequestMapping("/service/feed/{applicationId}")
@@ -104,18 +102,6 @@ public class FeedController {
 			}
 		}
 		return Severity.error;
-	}
-
-	private static String getSortOrder(HttpServletRequest request) {
-		Cookie[] cookies = request.getCookies();
-		if (cookies != null) {
-			for (Cookie cookie : cookies) {
-				if ("sortOrder".equals(cookie.getName())) {
-					return cookie.getValue();
-				}
-			}
-		}
-		return null;
 	}
 
 	public class InnerFeedPage {
@@ -169,9 +155,6 @@ public class FeedController {
 			return clusterStatistic.getMinuteVector(applicationId, c.getChecksum());
 		}
 
-		public String getApplicationId() {
-			return applicationId;
-		}
 	}
 
 	public class DetailsPage {
@@ -202,6 +185,84 @@ public class FeedController {
 
 		public ByDayStatistic getStatistics() {
 			return statistics;
+		}
+	}
+
+	public class FeedPage {
+
+		private HttpServletRequest request;
+		private Date date;
+		private String applicationId;
+		private Severity severity;
+
+		public FeedPage(HttpServletRequest request, Date date, String applicationId, Severity severity) {
+			this.request = request;
+			this.date = date;
+			this.applicationId = applicationId;
+			this.severity = severity;
+		}
+
+
+		public Severity getSeverity() {
+			return severity;
+		}
+
+		public Date getDate() {
+			return date;
+		}
+
+		/**
+		 * Возвращает множество всех уникальных идентификаторов приложений исключая текущее приложение
+		 *
+		 * @return множество всех уникальных идентификаторов приложений
+		 */
+		public Set<Application> getApplications() {
+			Set<String> applicationIds = storage.getUniqueApplicationIds(fromDateFields(date));
+			Set<Application> set = new HashSet<Application>();
+			for (String applicationId : applicationIds) {
+				String dateAsString = fromDateFields(date).toString();
+				String url = request.getContextPath() + "/feed/" + applicationId + "?date=" + dateAsString;
+				set.add(new Application(applicationId, url));
+			}
+			return set;
+		}
+
+		public String getApplicationId() {
+			return applicationId;
+		}
+	}
+
+	public static class Application {
+
+		private final String id;
+		private final String url;
+
+		public Application(String id, String url) {
+			this.id = id;
+			this.url = url;
+		}
+
+		public String getId() {
+			return id;
+		}
+
+		public String getUrl() {
+			return url;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+
+			Application that = (Application) o;
+
+			return !(id != null ? !id.equals(that.id) : that.id != null);
+		}
+
+		@Override
+		public int hashCode() {
+			return id != null ? id.hashCode() : 0;
 		}
 	}
 }

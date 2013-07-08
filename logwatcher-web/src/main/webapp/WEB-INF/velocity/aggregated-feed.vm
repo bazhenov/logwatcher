@@ -1,0 +1,137 @@
+#* @vtlvariable name="p" type="com.farpost.logwatcher.web.controller.FeedController.FeedPage" *#
+<html>
+<head>
+	<title>LogWatcher: $p.applicationId feed</title>
+
+	<link rel="stylesheet" type="text/css" href="/css/popup.css"/>
+	<link rel="stylesheet" type="text/css" href="/css/aggregated-feed.css"/>
+
+	<script type="text/javascript" src="/js/calendar.js"></script>
+
+	<script type="text/javascript">
+		var severityLevel = '$p.severity';
+	</script>
+
+	<link rel="alternate" type="application/rss+xml" title="LogWatcher RSS"
+				href="/rss/$p.applicationId?severity=$p.severity"/>
+	#set($dt = $date.format("yyyy-MM-dd", $p.date))
+</head>
+
+<body>
+<h2>
+	<span id="applicationId">$p.applicationId</span>
+		<span class="additionalInfo">
+			on <span id="date">$date.format("dd MMMM, yyyy", $p.date)</span>
+		</span>
+</h2>
+
+	#macro(popup $id)
+	<div class="popupContainer" id="${id}" style="display: none">
+		<div style="position: relative">
+
+			<img class="mark" src="/images/popup-mark.png" alt="" style="position: absolute; top: -10px; left: 30px"/>
+
+			<div class="outerBlock">
+				<div class="innerBlock">
+					#set($_body = $!bodyContent)
+					$_body
+				</div>
+			</div>
+		</div>
+	</div>
+	#end
+
+<div id="severityContainer">
+	#macro(severity $severity $currentSeverity)
+		#if($severity != $currentSeverity)
+			<!--suppress HtmlUnknownTag -->
+			<li><a href="#" onclick="changeSeverity('/session?severity=$severity')">$severity</a></li>
+		#end
+	#end
+	<table>
+		<tr>
+			<td class="severity-label">Severity:</td>
+			<td>
+				<ul id="severityMenu">
+					<li class="selected"><span>$p.severity</span></li>
+					#severity("error", $p.severity)
+					#severity("warning", $p.severity)
+					#severity("info", $p.severity)
+					#severity("debug", $p.severity)
+					#severity("trace", $p.severity)
+				</ul>
+			</td>
+		</tr>
+	</table>
+</div>
+
+	#@popup("applicationSelector")
+		#if($p.applications.isEmpty())
+		<div class="notification">
+			No applications found
+		</div>
+		#else
+			#foreach($a in $p.applications)
+			<a class="applicationLink" href="$a.url">$a.id</a>
+			#end
+		#end
+	<div style="clear: both;">&nbsp;</div>
+
+	<div class="relatedLinks"><a href="/dashboard">Return to dashboard</a></div>
+	#end
+
+<script type="text/javascript">
+	var baseUrl = "/feed/$p.applicationId";
+	var baseDate = new Date("$date.format('yyyy', $p.date)", $date.format('M', $p.date)-1, 1);
+	var urlCallback = function (date) {
+		return baseUrl + '?date=' + date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+	};
+	$("a.prevMonthLink").live("click", function () {
+		baseDate.setMonth(baseDate.getMonth() - 1);
+		var newContent = buildCal(baseDate, urlCallback);
+		$("#dateSelector .innerBlock").html(newContent);
+	});
+	$("a.nextMonthLink").live("click", function () {
+		baseDate.setMonth(baseDate.getMonth() + 1);
+		var newContent = buildCal(baseDate, urlCallback);
+		$("#dateSelector .innerBlock").html(newContent);
+	})
+</script>
+
+	#@popup("dateSelector")
+	<script type="text/javascript">
+		document.write(buildCal(baseDate, urlCallback));
+	</script>
+	#end
+
+<div class="entries">
+
+</div>
+
+<script type="text/javascript">
+	function updateFeed() {
+		console.log("Updating feed");
+		$.ajax({
+			url: "/service/feed/${p.applicationId}",
+			data: {'date': "$dt"}
+		}).done(function (data) {
+				$(".entries").html(data);
+				var maxData = 0;
+				$(".entry .count").each(function (i, canvas) {
+					var count = parseInt($(canvas).attr("data-count"));
+					if (count > maxData) maxData = count;
+				});
+				$(".entry .count").each(function (i, canvas) {
+					var count = parseInt($(canvas).attr("data-count"));
+					var severity = $(canvas).attr("data-severity");
+					new Counterina(canvas, maxData).draw(count, severity);
+				})
+			});
+		setTimeout("updateFeed()", 3000);
+	}
+	updateFeed();
+
+</script>
+
+</body>
+</html>
