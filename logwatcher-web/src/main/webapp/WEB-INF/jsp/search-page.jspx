@@ -5,7 +5,7 @@
           xmlns:f="http://java.sun.com/jsp/jstl/functions"
           xmlns:lt="urn:jsptagdir:/WEB-INF/tags">
 
-    <jsp:useBean id="p" type="com.farpost.logwatcher.web.page.SearchPage" scope="request"/>
+    <jsp:useBean id="p" type="com.farpost.logwatcher.web.controller.SearchController.SearchPage" scope="request"/>
 
     <jsp:directive.page contentType="text/html"/>
 
