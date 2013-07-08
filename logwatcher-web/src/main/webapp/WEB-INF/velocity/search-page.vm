@@ -1,0 +1,36 @@
+#* @vtlvariable name="p" type="com.farpost.logwatcher.web.controller.SearchController.SearchPage" *#
+<html>
+<head>
+	<title>LogWatcher Search: $p.query</title>
+	<link rel="stylesheet" href="/css/search-feed.css"/>
+	<link rel="stylesheet" href="/css/log.css"/>
+</head>
+<body>
+<h2>Search</h2>
+
+<div class="queryBox">
+	<form class="form-search" action="/search" name="searchForm" method="get">
+		<div class="input-append">
+			<input type="text" class="span2 search-query" name="q" value="$p.query"/>
+			<button type="submit" class="btn">Search</button>
+		</div>
+	</form>
+</div>
+
+	#if($p.entries.isEmpty())
+	<div id="notificationPanel">
+		No results found
+	</div>
+	#else
+	<div class="log section">
+		#foreach($e in $p.entries)
+			#logEntry($e)
+		#end
+	</div>
+
+	<div id="footer">
+		$f.pluralize($p.entries.size(), "entry entries entries")
+	</div>
+	#end
+</body>
+</html>

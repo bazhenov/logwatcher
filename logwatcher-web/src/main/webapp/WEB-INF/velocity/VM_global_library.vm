@@ -1,0 +1,19 @@
+#macro (logEntry $e)
+#* @vtlvariable name="e" type="com.farpost.logwatcher.LogEntry" *#
+<div>
+	<p class="message">$date.format("dd MMM, HH:mm:ss", $e.date.toDate()) &mdash; $e.message</p>
+	#if(!$e.attributes.isEmpty())
+		<table class="attr">
+			#foreach($i in $e.attributes.entrySet())
+				<tr>
+					<td class="attributeName">@$i.key</td>
+					<td>$i.value</td>
+				</tr>
+			#end
+		</table>
+	#end
+	#if($e.cause)
+		<p class="cause">$f.formatCause($e.cause)</p>
+	#end
+</div>
+#end

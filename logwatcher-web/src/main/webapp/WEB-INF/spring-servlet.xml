@@ -37,6 +37,7 @@
 				<value>application</value>
 				<value>entries</value>
 				<value>dashboard</value>
+				<value>search-page</value>
 				<value>system/generate-message</value>
 				<value>feed/inner-feed</value>
 			</list>
