@@ -1,7 +1,15 @@
 package com.farpost.logwatcher;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import com.google.common.hash.HashFunction;
+
+import java.util.Map;
+import java.util.regex.Pattern;
+
+import static com.google.common.base.Charsets.UTF_8;
+import static com.google.common.collect.Maps.newHashMap;
+import static com.google.common.hash.Hashing.md5;
+import static java.util.regex.Pattern.CASE_INSENSITIVE;
+import static java.util.regex.Pattern.compile;
 
 /**
  * Простая имплементация {@link ChecksumCalculator}, которая вычисляет контрольную сумму основываясь
@@ -9,18 +17,21 @@ import java.security.NoSuchAlgorithmException;
  */
 public class SimpleChecksumCalculator implements ChecksumCalculator {
 
-	private MessageDigest digest;
-	private static final String HEXES = "0123456789abcdef";
+	private final HashFunction hash = md5();
+	private final Map<String, Pattern> patterns = newHashMap();
 
 	public SimpleChecksumCalculator() {
-		try {
-			digest = MessageDigest.getInstance("MD5");
-		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException(e);
-		}
+		patterns.put("Maximum execution time exceeded",
+			compile("Maximum execution time of \\d+ seconds exceeded in (/[a-z\\.0-9-]+)+(:\\d+)?", CASE_INSENSITIVE));
+		patterns.put("Allowed memory size exhausted",
+			compile("Allowed memory size of \\d+ bytes exhausted \\(tried to allocate \\d+ bytes\\) in (/[a-z\\.0-9-]+)+(:\\d+)?", CASE_INSENSITIVE));
 	}
 
 	public String calculateChecksum(LogEntry entry) {
+		String title = checkForRegisteredPatterns(entry);
+		if (title != null) {
+			return hash.hashString(title, UTF_8).toString();
+		}
 		String checksum = entry.getApplicationId() + ":" + entry.getSeverity();
 		Cause cause = entry.getCause();
 		if (cause != null) {
@@ -30,20 +41,15 @@ public class SimpleChecksumCalculator implements ChecksumCalculator {
 		} else {
 			checksum += ":" + entry.getChecksum();
 		}
-		digest.reset();
-		return getHex(digest.digest(checksum.getBytes()));
+		return hash.hashString(checksum, UTF_8).toString();
 	}
 
-	public static String getHex(byte[] raw) {
-		if (raw == null) {
-			return null;
+	private String checkForRegisteredPatterns(LogEntry entry) {
+		for (Map.Entry<String, Pattern> e : patterns.entrySet()) {
+			if (e.getValue().matcher(entry.getMessage()).matches()) {
+				return e.getKey();
+			}
 		}
-		final StringBuilder hex = new StringBuilder(2 * raw.length);
-		for (byte b : raw) {
-			hex.
-				append(HEXES.charAt((b & 0xF0) >> 4)).
-				append(HEXES.charAt((b & 0x0F)));
-		}
-		return hex.toString();
+		return null;
 	}
 }
