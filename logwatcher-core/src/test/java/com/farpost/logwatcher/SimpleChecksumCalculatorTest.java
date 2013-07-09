@@ -3,6 +3,7 @@ package com.farpost.logwatcher;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import static com.farpost.logwatcher.LogEntryBuilder.entry;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -10,11 +11,11 @@ import static org.joda.time.DateTime.now;
 
 public class SimpleChecksumCalculatorTest {
 
-	private ChecksumCalculator checksumCalculator;
+	private ChecksumCalculator calculator;
 
 	@BeforeMethod
 	public void setUp() throws Exception {
-		checksumCalculator = new SimpleChecksumCalculator();
+		calculator = new SimpleChecksumCalculator();
 	}
 
 	@Test
@@ -28,7 +29,7 @@ public class SimpleChecksumCalculatorTest {
 			"checksum_2", "application", null,
 			new Cause(exception));
 
-		assertThat(checksumCalculator.calculateChecksum(firstEntry), equalTo(checksumCalculator.calculateChecksum(secondEntry)));
+		assertThat(calculator.calculateChecksum(firstEntry), equalTo(calculator.calculateChecksum(secondEntry)));
 	}
 
 	@Test
@@ -39,7 +40,7 @@ public class SimpleChecksumCalculatorTest {
 		LogEntry secondEntry = new LogEntryImpl(now(), "", "message_2", Severity.debug,
 			"checksum_same", "application", null);
 
-		assertThat(checksumCalculator.calculateChecksum(firstEntry), equalTo(checksumCalculator.calculateChecksum(secondEntry)));
+		assertThat(calculator.calculateChecksum(firstEntry), equalTo(calculator.calculateChecksum(secondEntry)));
 	}
 
 	@Test
@@ -50,7 +51,7 @@ public class SimpleChecksumCalculatorTest {
 		LogEntry secondEntry = new LogEntryImpl(now(), "", "message_same", Severity.debug,
 			null, "application", null);
 
-		assertThat(checksumCalculator.calculateChecksum(firstEntry), equalTo(checksumCalculator.calculateChecksum(secondEntry)));
+		assertThat(calculator.calculateChecksum(firstEntry), equalTo(calculator.calculateChecksum(secondEntry)));
 	}
 
 	@Test
@@ -62,7 +63,7 @@ public class SimpleChecksumCalculatorTest {
 		LogEntry secondEntry = new LogEntryImpl(now(), "", "message_same", Severity.debug,
 			"checksum_same", "application_2", null, new Cause(exceptionSame));
 
-		assertThat(checksumCalculator.calculateChecksum(firstEntry), not(equalTo(checksumCalculator.calculateChecksum(secondEntry))));
+		assertThat(calculator.calculateChecksum(firstEntry), not(equalTo(calculator.calculateChecksum(secondEntry))));
 	}
 
 	@Test
@@ -76,7 +77,7 @@ public class SimpleChecksumCalculatorTest {
 		LogEntry secondEntry = new LogEntryImpl(now(), "", "message_same", Severity.debug,
 			"checksum_same", "application_same", null, new Cause(exception2));
 
-		assertThat(checksumCalculator.calculateChecksum(firstEntry), not(equalTo(checksumCalculator.calculateChecksum(secondEntry))));
+		assertThat(calculator.calculateChecksum(firstEntry), not(equalTo(calculator.calculateChecksum(secondEntry))));
 	}
 
 	@Test
@@ -87,8 +88,30 @@ public class SimpleChecksumCalculatorTest {
 		LogEntry secondEntry = new LogEntryImpl(now(), "", "message_same", Severity.debug,
 			"checksum_2", "application_same", null);
 
-		assertThat(checksumCalculator.calculateChecksum(firstEntry), not(equalTo(checksumCalculator.calculateChecksum(secondEntry))));
+		assertThat(calculator.calculateChecksum(firstEntry), not(equalTo(calculator.calculateChecksum(secondEntry))));
+		assertThat(calculator.calculateChecksum(firstEntry), equalTo("77a11fd86c33ba53e92d2d4a9f1109eb"));
 	}
 
+	@Test
+	public void shouldCollapsePatternBasedMessages() {
+		LogEntry firstEntry = entry()
+			.message("Maximum execution time of 30 seconds exceeded in /var/www/baza.farpost.ru/rev/20130708-1134/slr/core/src/xml/xmlUtils.class.php:139")
+			.create();
 
+		LogEntry secondEntry = entry()
+			.message("Maximum execution time of 123 seconds exceeded in /var/www/baza.farpost.ru/xmlUtils.class.php:192")
+			.create();
+
+		assertThat(calculator.calculateChecksum(firstEntry), equalTo(calculator.calculateChecksum(secondEntry)));
+
+		firstEntry = entry()
+			.message("Allowed memory size of 268435456 bytes exhausted (tried to allocate 14313983 bytes) in /var/www/baza.farpost.ru/rev/20130709-1602/app/src/viewdir/cacheViewDirSearchFacade.class.php:35")
+			.create();
+
+		secondEntry = entry()
+			.message("Allowed memory size of 234245234 bytes exhausted (tried to allocate 32423 bytes) in /var/www/baza.farpost.ru/rev/viewdir/cacheViewDirSearchFacade.class.php")
+			.create();
+
+		assertThat(calculator.calculateChecksum(firstEntry), equalTo(calculator.calculateChecksum(secondEntry)));
+	}
 }
