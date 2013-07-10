@@ -6,7 +6,16 @@
 	<artifactId>logwatcher-parent</artifactId>
 	<packaging>pom</packaging>
 	<version>2.0</version>
-	<name>LogWatcher</name>
+	<name>LogWatcher Project</name>
+
+	<properties>
+		<logback.configurationFile>file:${basedir}/../logback.xml</logback.configurationFile>
+		<spring.version>3.0.5.RELEASE</spring.version>
+		<spring-integration.version>2.0.4.RELEASE</spring-integration.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<buildNumber>dev</buildNumber>
+	</properties>
 
 	<modules>
 		<module>logwatcher-commons</module>
@@ -17,12 +26,6 @@
 		<module>logwatcher-web-ft</module>
 	</modules>
 
-	<parent>
-		<groupId>com.farpost.maven</groupId>
-		<artifactId>maven-project</artifactId>
-		<version>1.0.8</version>
-	</parent>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -30,6 +33,25 @@
 			<version>1.6.1</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>6.0.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-core</artifactId>
+			<version>1.2.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-library</artifactId>
+			<version>1.2.1</version>
+			<scope>test</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
@@ -45,7 +67,7 @@
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>0.9.25</version>
+			<version>0.9.28</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -122,10 +144,151 @@
 		</dependencies>
 	</dependencyManagement>
 
-	<properties>
-		<logback.configurationFile>file:${basedir}/../logback.xml</logback.configurationFile>
-		<spring.version>3.0.5.RELEASE</spring.version>
-		<spring-integration.version>2.0.4.RELEASE</spring-integration.version>
-	</properties>
+	<build>
+		<defaultGoal>package</defaultGoal>
 
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.5.1</version>
+				<configuration>
+					<encoding>UTF-8</encoding>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.8.1</version>
+				<configuration>
+					<systemPropertyVariables>
+						<logback.configurationFile>${logback.configurationFile}</logback.configurationFile>
+					</systemPropertyVariables>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>2.8.1</version>
+				<configuration>
+					<systemPropertyVariables>
+						<logback.configurationFile>${logback.configurationFile}</logback.configurationFile>
+					</systemPropertyVariables>
+				</configuration>
+				<executions>
+					<execution>
+						<id>integration-test</id>
+						<goals>
+							<goal>integration-test</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>verify</id>
+						<goals>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.1.2</version>
+				<executions>
+					<execution>
+						<phase>verify</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+
+		<!--
+		Плагина прописанные в секции pluginManagement не подключаются к проекту до тех пор, пока POM-дескриптор
+		проекта явно не укажет их использование в секции build/plugins. Здесь находится конфигурация плагинов
+		по-умолчанию.
+		-->
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>2.1.1</version>
+					<configuration>
+						<archive>
+							<manifestEntries>
+								<GroupId>${project.groupId}</GroupId>
+								<ArtifactId>${project.artifactId}</ArtifactId>
+								<Version>${project.version}</Version>
+								<BuildNumber>${buildNumber}</BuildNumber>
+							</manifestEntries>
+						</archive>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>org.mortbay.jetty</groupId>
+					<artifactId>maven-jetty-plugin</artifactId>
+					<version>6.1.26</version>
+					<configuration>
+						<scanIntervalSeconds>1</scanIntervalSeconds>
+						<webAppConfig>
+							<contextPath>/</contextPath>
+							<overrideDescriptor>${basedir}/src/test/resources/web.xml</overrideDescriptor>
+							<serverClasses/>
+						</webAppConfig>
+						<systemProperties>
+							<systemProperty>
+								<name>resourcesFile</name>
+								<value>file:${basedir}/src/test/resources/resources.properties</value>
+							</systemProperty>
+							<systemProperty>
+								<name>logback.configurationFile</name>
+								<value>${logback.configurationFile}</value>
+							</systemProperty>
+						</systemProperties>
+						<useTestClasspath>true</useTestClasspath>
+					</configuration>
+					<dependencies>
+						<dependency>
+							<groupId>org.slf4j</groupId>
+							<artifactId>slf4j-api</artifactId>
+							<version>1.6.1</version>
+						</dependency>
+						<dependency>
+							<groupId>ch.qos.logback</groupId>
+							<artifactId>logback-classic</artifactId>
+							<version>0.9.28</version>
+						</dependency>
+						<dependency>
+							<groupId>org.slf4j</groupId>
+							<artifactId>jcl-over-slf4j</artifactId>
+							<version>1.6.1</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<threshold>Default</threshold>
+					<xmlOutput>true</xmlOutput>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
 </project>
