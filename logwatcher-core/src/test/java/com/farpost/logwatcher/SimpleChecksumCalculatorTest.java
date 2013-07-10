@@ -99,7 +99,7 @@ public class SimpleChecksumCalculatorTest {
 			.create();
 
 		LogEntry secondEntry = entry()
-			.message("Maximum execution time of 123 seconds exceeded in /var/www/baza.farpost.ru/xmlUtils.class.php:192")
+			.message("Maximum execution time of 30 seconds exceeded in /var/www/baza.farpost.ru/rev/20130710-1156/vendor/pear-pear.dev.loc/search_php_client/FarPost/Search/Client/Document.php:92")
 			.create();
 
 		assertThat(calculator.calculateChecksum(firstEntry), equalTo(calculator.calculateChecksum(secondEntry)));

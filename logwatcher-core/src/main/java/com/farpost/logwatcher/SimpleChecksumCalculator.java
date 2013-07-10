@@ -22,9 +22,9 @@ public class SimpleChecksumCalculator implements ChecksumCalculator {
 
 	public SimpleChecksumCalculator() {
 		patterns.put("Maximum execution time exceeded",
-			compile("Maximum execution time of \\d+ seconds exceeded in (/[a-z\\.0-9-]+)+(:\\d+)?", CASE_INSENSITIVE));
+			compile("Maximum execution time of \\d+ seconds exceeded in (/[a-z\\.0-9-_]+)+(:\\d+)?", CASE_INSENSITIVE));
 		patterns.put("Allowed memory size exhausted",
-			compile("Allowed memory size of \\d+ bytes exhausted \\(tried to allocate \\d+ bytes\\) in (/[a-z\\.0-9-]+)+(:\\d+)?", CASE_INSENSITIVE));
+			compile("Allowed memory size of \\d+ bytes exhausted \\(tried to allocate \\d+ bytes\\) in (/[a-z\\.0-9-_]+)+(:\\d+)?", CASE_INSENSITIVE));
 	}
 
 	public String calculateChecksum(LogEntry entry) {
