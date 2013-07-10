@@ -86,3 +86,7 @@
 	height: 150px;
 	width: 50%;
 }
+
+.datepicker TD, TH {
+	font-size: 14px;
+}

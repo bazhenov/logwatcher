@@ -4,8 +4,12 @@
 	<title>LogWatcher: detailed information for entry</title>
 
 	<link rel="stylesheet" type="text/css" href="/css/log.css"/>
+	<link rel="stylesheet" type="text/css" href="/css/datepicker.css"/>
+
 	<script src="http://code.highcharts.com/highcharts.js"></script>
 	<script src="/js/events.detailed-view.js"></script>
+	<script src="/js/bootstrap.min.js"></script>
+	<script src="/js/bootstrap-datepicker.js"></script>
 
 </head>
 
@@ -45,19 +49,35 @@
 	<p class="section">No description given</p>
 	#end
 
+<h3>Log samples</h3>
 
-	#if($p.entries.empty)
-	<div id="notificationPanel">
-		No results found
-	</div>
-	#else
-	<h3>Log samples</h3>
+<div class="input-append date">
+	<input id="datePicker" class="span2" type="text" value='$date.format("yyyy-MM-dd", $date.date)'
+				 data-date-format="yyyy-mm-dd"/>
+	<button id="showLog" class="btn" type="button">Show!</button>
+</div>
 
-	<div class="log section">
-		#foreach($e in $p.entries)
-			#logEntry($e)
-		#end
-	</div>
-	#end
+<div id="logSamples" class="log section">
+</div>
+
+<script>
+	$('#datePicker').datepicker({
+		onRender: function (date) {
+			return date.valueOf() > new Date().valueOf() ? 'disabled' : '';
+		}
+	});
+
+	var showLogButton = $("#showLog");
+	showLogButton.click(function () {
+		var date = $("#datePicker").val();
+		$.ajax({
+			url: "/service/log",
+			data: {'date': date, 'application': '$p.cluster.applicationId', 'checksum': '$p.cluster.checksum'}
+		}).done(function (data) {
+				$("#logSamples").html(data);
+			});
+	});
+	showLogButton.click();
+</script>
 </body>
 </html>

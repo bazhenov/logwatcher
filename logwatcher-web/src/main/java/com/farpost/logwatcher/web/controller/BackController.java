@@ -2,22 +2,29 @@ package com.farpost.logwatcher.web.controller;
 
 import com.farpost.logwatcher.AggregateAttributesVisitor;
 import com.farpost.logwatcher.AggregationResult;
+import com.farpost.logwatcher.ByOccurrenceDateComparator;
+import com.farpost.logwatcher.LogEntry;
 import com.farpost.logwatcher.statistics.ByDayStatistic;
 import com.farpost.logwatcher.statistics.ClusterStatistic;
 import com.farpost.logwatcher.statistics.MinuteVector;
 import com.farpost.logwatcher.storage.InvalidCriteriaException;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
+import com.google.common.collect.Ordering;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.text.ParseException;
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +33,8 @@ import static com.farpost.logwatcher.storage.LogEntries.entries;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
+import static org.joda.time.LocalDate.fromDateFields;
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @Controller
 public class BackController {
@@ -97,5 +106,31 @@ public class BackController {
 		result.put("labels", labels);
 
 		return result;
+	}
+
+	@RequestMapping("/service/log")
+	@ModelAttribute("p")
+	public DetailsLogPage handleLog(@RequestParam String application,
+																	@RequestParam @DateTimeFormat(iso = DATE) Date date,
+																	@RequestParam String checksum) {
+		return new DetailsLogPage(application, checksum, date);
+	}
+
+	public class DetailsLogPage {
+
+		private final List<LogEntry> entries;
+
+		public DetailsLogPage(String application, String checksum, Date date) {
+			Collection<LogEntry> logEntries = entries().
+				applicationId(application).
+				checksum(checksum).
+				date(fromDateFields(date)).
+				find(storage);
+			entries = Ordering.from(new ByOccurrenceDateComparator()).greatestOf(logEntries, 50);
+		}
+
+		public List<LogEntry> getEntries() {
+			return entries;
+		}
 	}
 }
