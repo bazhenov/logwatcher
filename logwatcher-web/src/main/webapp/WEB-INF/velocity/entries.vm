@@ -51,13 +51,13 @@
 
 <h3>Log samples</h3>
 
-<div class="input-append date">
-	<input id="datePicker" class="span2" type="text" value='$date.format("yyyy-MM-dd", $date.date)'
-				 data-date-format="yyyy-mm-dd"/>
-	<button id="showLog" class="btn" type="button">Show!</button>
-</div>
-
-<div id="logSamples" class="log section">
+<div class="log section">
+	<div class="input-append date">
+		<input id="datePicker" class="input-small" type="text" value='$date.format("yyyy-MM-dd", $date.date)'
+					 data-date-format="yyyy-mm-dd"/>
+		<button id="showLog" class="btn" type="button">Show!</button>
+	</div>
+	<div id="logSamples"></div>
 </div>
 
 <script>
