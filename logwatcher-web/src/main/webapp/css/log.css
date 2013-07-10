@@ -1,7 +1,7 @@
 .log {
-	color: #efefef;
-	background-color: #262626;
-	border: 0;
+	color: #222;
+	background-color: #fcfcfc;
+	border: 1px dashed #ddd;
 	padding: 10px;
 	border-radius: 5px;
 	overflow: scroll;
