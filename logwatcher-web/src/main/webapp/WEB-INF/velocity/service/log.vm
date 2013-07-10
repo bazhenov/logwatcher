@@ -1,0 +1,8 @@
+#* @vtlvariable name="p" type="com.farpost.logwatcher.web.controller.BackController.DetailsLogPage" *#
+#if($p.entries.isEmpty())
+No result found
+#else
+	#foreach($e in $p.entries)
+		#logEntry($e)
+	#end
+#end

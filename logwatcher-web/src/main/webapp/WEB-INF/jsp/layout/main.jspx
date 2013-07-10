@@ -22,18 +22,13 @@
 
         <link href="/css/bootstrap.min.css" rel="stylesheet" media="screen"/>
 
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js">/**/</script>
+
         <c:url value='/css/main.css' var="cssUrl"/>
         <link rel="stylesheet" href="${cssUrl}"/>
 
-        <c:url value="/js/jquery-1.6.1.min.js" var="jsUrl"/>
-        <script type="text/javascript" src="${jsUrl}">/**/</script>
-
-        <c:url value="/js/jquery-ui-1.7.2.js" var="jsUrl"/>
-        <script type="text/javascript" src="${jsUrl}">/**/</script>
-
         <c:url value="/js/events.js" var="jsUrl"/>
         <script type="text/javascript" src="${jsUrl}">/**/</script>
-
 
         <sitemesh:write property="head"/>
     </head>

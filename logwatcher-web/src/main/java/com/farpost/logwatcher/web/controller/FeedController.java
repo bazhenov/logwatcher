@@ -1,6 +1,9 @@
 package com.farpost.logwatcher.web.controller;
 
-import com.farpost.logwatcher.*;
+import com.farpost.logwatcher.ByLastOccurrenceDateComparator;
+import com.farpost.logwatcher.Checksum;
+import com.farpost.logwatcher.Cluster;
+import com.farpost.logwatcher.Severity;
 import com.farpost.logwatcher.cluster.ClusterDao;
 import com.farpost.logwatcher.statistics.ByDayStatistic;
 import com.farpost.logwatcher.statistics.ClusterStatistic;
@@ -22,7 +25,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 import static com.farpost.logwatcher.Checksum.fromHexString;
-import static com.farpost.logwatcher.storage.LogEntries.entries;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
 import static org.joda.time.LocalDate.fromDateFields;
@@ -161,26 +163,14 @@ public class FeedController {
 
 		private final Cluster cluster;
 		private final ByDayStatistic statistics;
-		private Collection<LogEntry> entries;
 
 		public DetailsPage(String applicationId, Checksum checksum) {
 			cluster = clusterDao.findCluster(applicationId, checksum);
 			statistics = clusterStatistic.getByDayStatistic(applicationId, checksum);
-
-			entries = entries().
-				applicationId(applicationId).
-				checksum(checksum.toString()).
-				date(LocalDate.now()).
-				find(storage);
-			entries = Ordering.from(new ByOccurrenceDateComparator()).greatestOf(entries, feedSize);
 		}
 
 		public Cluster getCluster() {
 			return cluster;
-		}
-
-		public Collection<LogEntry> getEntries() {
-			return entries;
 		}
 
 		public ByDayStatistic getStatistics() {
