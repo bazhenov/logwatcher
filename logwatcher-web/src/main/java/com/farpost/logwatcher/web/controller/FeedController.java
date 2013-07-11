@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 import static com.farpost.logwatcher.Checksum.fromHexString;
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
 import static org.joda.time.LocalDate.fromDateFields;
@@ -42,7 +43,7 @@ public class FeedController {
 	@Autowired
 	private ClusterDao clusterDao;
 
-	private final static int feedSize = 100;
+	private String issueLinkPattern;
 
 	@RequestMapping("/")
 	public View handleRoot() {
@@ -104,6 +105,10 @@ public class FeedController {
 			}
 		}
 		return Severity.error;
+	}
+
+	public void setIssueLinkPattern(String issueLinkPattern) {
+		this.issueLinkPattern = issueLinkPattern;
 	}
 
 	public class InnerFeedPage {
@@ -175,6 +180,12 @@ public class FeedController {
 
 		public ByDayStatistic getStatistics() {
 			return statistics;
+		}
+
+		public String getIssueLink(String issueKey) {
+			return isNullOrEmpty(issueLinkPattern) && !isNullOrEmpty(issueKey)
+				? null
+				: issueLinkPattern.replace("*", issueKey);
 		}
 	}
 
