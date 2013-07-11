@@ -26,6 +26,9 @@
 										data-severity="$c.severity"></canvas>
 
 						<div class='message'>
+							#if($c.issueKey)
+								<span class="issueKey">$c.issueKey</span>
+							#end
 							#set($cause = $f.extractExceptionClass($c.title))
 							#if ($cause.type)
 								#if($cause.type == $cause.simpleType)
@@ -53,6 +56,9 @@
 							#set($intensity = $f.getIntensity($p.getMinuteVector($c)))
 							#if($intensity >= 0.1)
 								<span class="rightNowMarker">~$f.formatIntensity($intensity)</span>
+							#end
+							#if($c.description)
+								<span class="description">$display.truncate($c.description, 110, "...", true)</span>
 							#end
 						</div>
 					</div>
