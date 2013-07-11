@@ -12,6 +12,7 @@ import static com.google.common.base.Preconditions.*;
 
 public final class MinuteVector {
 
+	public static final int SIZE = 1440;
 	/**
 	 * Curcular buffer of long values each describing the count of events in particular minute of the day.
 	 * <p/>
@@ -21,12 +22,12 @@ public final class MinuteVector {
 	private static final DateTime zeroPoint = new DateTime(2000, 1, 1, 0, 0);
 
 	public MinuteVector(long[] v) {
-		checkArgument(v.length == 1440);
+		checkArgument(v.length == SIZE);
 		this.v = checkNotNull(v);
 	}
 
 	public MinuteVector() {
-		this(new long[1440]);
+		this(new long[SIZE]);
 	}
 
 	public MinuteVector(byte[] raw) {
@@ -34,12 +35,12 @@ public final class MinuteVector {
 	}
 
 	private static long[] recostructFromByteArray(byte[] raw) {
-		checkArgument(raw.length == 1440 * 8);
+		checkArgument(raw.length == SIZE * 8);
 		ByteArrayInputStream is = new ByteArrayInputStream(raw);
 		byte[] b = new byte[8];
-		long[] v = new long[1440];
+		long[] v = new long[SIZE];
 		try {
-			for (int i = 0; i < 1440; i++) {
+			for (int i = 0; i < SIZE; i++) {
 				checkState(is.read(b) == 8);
 				v[i] = Longs.fromByteArray(b);
 			}
@@ -65,11 +66,16 @@ public final class MinuteVector {
 
 	public long get(int offset) {
 		DateTime now = DateTime.now();
-		offset = now.getMinuteOfDay() + offset;
+		offset = index(offset, now);
 		if (dayMarker(v[offset]) == diffInDays(now)) {
 			return v[offset] & 0xFFFFFFFFFFFFL;
 		}
 		return 0;
+	}
+
+	private static int index(int offset, DateTime now) {
+		int index = now.getMinuteOfDay() + offset;
+		return index < 0 ? SIZE + index : index;
 	}
 
 	/**

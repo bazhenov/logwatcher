@@ -90,3 +90,10 @@
 .datepicker TD, TH {
 	font-size: 14px;
 }
+
+#editModalButton {
+	position: absolute;
+	display: block;
+	right: 15px;
+	top: 15px;
+}

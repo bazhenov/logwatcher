@@ -98,7 +98,24 @@ $(document).ready(function () {
 		});
 	}
 
+	$('#datePicker').datepicker({
+		onRender: function (date) {
+			return date.valueOf() > new Date().valueOf() ? 'disabled' : '';
+		}
+	});
+
+	var showLogButton = $("#showLog");
+	showLogButton.click(function () {
+		var date = $("#datePicker").val();
+		$.ajax({
+			url: "/service/log",
+			data: {'date': date, 'application': application, 'checksum': checksum}
+		}).done(function (data) {
+				$("#logSamples").html(data);
+			});
+	});
+
+	showLogButton.click();
 	showMinuteStatistics();
 	loadAttributes();
-})
-;
+});
