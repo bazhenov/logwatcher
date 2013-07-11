@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.farpost.logwatcher.Checksum.fromHexString;
+import static com.farpost.logwatcher.statistics.MinuteVector.SIZE;
 import static com.farpost.logwatcher.storage.LogEntries.entries;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.Lists.newArrayList;
@@ -77,7 +78,8 @@ public class BackController {
 		Map<String, Object> result = newHashMap();
 		List<Long> data = newArrayList();
 		List<String> labels = newArrayList();
-		for (int i = -minutes; i < 0; i++) {
+		int start = calculateRelativeWindow(vec, minutes);
+		for (int i = start; i < start + minutes; i++) {
 			data.add(vec.get(i));
 			labels.add(DateTime.now().plusMinutes(i).toString("HH:mm"));
 		}
@@ -114,6 +116,18 @@ public class BackController {
 																	@RequestParam @DateTimeFormat(iso = DATE) Date date,
 																	@RequestParam String checksum) {
 		return new DetailsLogPage(application, checksum, date);
+	}
+
+	/**
+	 * @param v     minute vector
+	 * @param width the width of the wished window
+	 * @return the first relative index of minute vector so the window of given width will contains
+	 *         some statistical data (the empty tail of the graph will be cut off).
+	 */
+	public static int calculateRelativeWindow(MinuteVector v, int width) {
+		int start = 0 - width + 1;
+		while (start > -SIZE && v.get(start + width - 1) == 0) start--;
+		return Math.max(start, -1439);
 	}
 
 	public class DetailsLogPage {
