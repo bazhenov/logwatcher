@@ -2,6 +2,7 @@ package com.farpost.logwatcher.cluster;
 
 import com.farpost.logwatcher.Checksum;
 import com.farpost.logwatcher.Cluster;
+import com.google.common.base.Function;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -11,6 +12,7 @@ import java.sql.SQLException;
 
 import static com.farpost.logwatcher.Checksum.fromHexString;
 import static com.farpost.logwatcher.Severity.forName;
+import static com.google.common.base.Preconditions.checkArgument;
 
 public class SqlClusterDao implements ClusterDao {
 
@@ -48,5 +50,16 @@ public class SqlClusterDao implements ClusterDao {
 	public Cluster findCluster(String applicationId, Checksum checksum) {
 		return template.queryForObject("SELECT * FROM cluster WHERE application = ? AND checksum = ?", createCluster,
 			applicationId, checksum.toString());
+	}
+
+	@Override
+	public void changeCluster(String applicationId, Checksum checksum, Function<Cluster, Void> f) {
+		Cluster cluster = findCluster(applicationId, checksum);
+		checkArgument(cluster != null, "Cluster not found");
+		f.apply(cluster);
+		//noinspection ConstantConditions
+		template.update("UPDATE cluster SET title = ?, issue_key = ?, description = ? " +
+			"WHERE application = ? AND checksum = ?",
+			cluster.getTitle(), cluster.getIssueKey(), cluster.getDescription(), applicationId, checksum.toString());
 	}
 }

@@ -2,6 +2,7 @@ package com.farpost.logwatcher.cluster;
 
 import com.farpost.logwatcher.Checksum;
 import com.farpost.logwatcher.Cluster;
+import com.google.common.base.Function;
 
 import java.util.Map;
 
@@ -33,6 +34,13 @@ public class InMemoryClusterDao implements ClusterDao {
 		return clusterMap.containsKey(applicationId)
 			? clusterMap.get(applicationId).get(checksum)
 			: null;
+	}
+
+	@Override
+	public void changeCluster(String applicationId, Checksum checksum, Function<Cluster, Void> f) {
+		Cluster cluster = findCluster(applicationId, checksum);
+		checkArgument(cluster != null, "Cluster not found");
+		f.apply(cluster);
 	}
 }
 

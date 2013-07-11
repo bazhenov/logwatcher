@@ -5,7 +5,10 @@ import com.google.common.base.Objects;
 import javax.annotation.Nullable;
 
 import static com.google.common.base.Objects.equal;
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Strings.emptyToNull;
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 /**
  * This class represents the group of log messages ({@link LogEntry}) that grouped in cluster based on checksum
@@ -67,6 +70,19 @@ public final class Cluster {
 
 	public Checksum getChecksum() {
 		return checksum;
+	}
+
+	public void setTitle(String title) {
+		checkArgument(!isNullOrEmpty(title));
+		this.title = title;
+	}
+
+	public void setIssueKey(@Nullable String issueKey) {
+		this.issueKey = emptyToNull(issueKey);
+	}
+
+	public void setDescription(String description) {
+		this.description = emptyToNull(description);
 	}
 
 	@Override

@@ -118,4 +118,20 @@ $(document).ready(function () {
 	showLogButton.click();
 	showMinuteStatistics();
 	loadAttributes();
+
+	$("#clusterSave").click(function () {
+		var title = $("#clusterTitle").val();
+		var issueKey = $("#clusterIssueKey").val();
+		var description = $("#clusterDescription").val();
+
+		$.ajax({
+			url: "/cluster/" + application + "/" + checksum,
+			type: "POST",
+			data: {'title': title, 'issueKey': issueKey, 'description': description}
+		}).success(function () {
+				window.location = window.location;
+			}).error(function (req, text, error) {
+				alert("Operation failed. Server says: " + error);
+			});
+	})
 });

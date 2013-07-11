@@ -1,26 +1,23 @@
 package com.farpost.logwatcher.web.controller;
 
-import com.farpost.logwatcher.AggregateAttributesVisitor;
-import com.farpost.logwatcher.AggregationResult;
-import com.farpost.logwatcher.ByOccurrenceDateComparator;
-import com.farpost.logwatcher.LogEntry;
+import com.farpost.logwatcher.*;
+import com.farpost.logwatcher.cluster.ClusterDao;
 import com.farpost.logwatcher.statistics.ByDayStatistic;
 import com.farpost.logwatcher.statistics.ClusterStatistic;
 import com.farpost.logwatcher.statistics.MinuteVector;
 import com.farpost.logwatcher.storage.InvalidCriteriaException;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
+import com.google.common.base.Function;
 import com.google.common.collect.Ordering;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.util.Collection;
@@ -36,6 +33,9 @@ import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
 import static org.joda.time.LocalDate.fromDateFields;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 public class BackController {
@@ -45,6 +45,9 @@ public class BackController {
 
 	@Autowired
 	private ClusterStatistic stat;
+
+	@Autowired
+	private ClusterDao clusterDao;
 
 	public BackController() {
 	}
@@ -66,6 +69,27 @@ public class BackController {
 
 		map.addAttribute("attributes", result.getAttributeMap());
 		return "service/aggregated-entry-content";
+	}
+
+	@RequestMapping(value = "/cluster/{application}/{checksum}", method = POST)
+	public ResponseEntity<String> handleClusterSave(@PathVariable String application, @PathVariable String checksum,
+																									@RequestParam final String issueKey, @RequestParam final String title,
+																									@RequestParam final String description) {
+		try {
+			clusterDao.changeCluster(application, fromHexString(checksum), new Function<Cluster, Void>() {
+				@Override
+				public Void apply(Cluster input) {
+					input.setTitle(title);
+					input.setIssueKey(issueKey);
+					input.setDescription(description);
+					return null;
+				}
+			});
+			return new ResponseEntity<String>("Ok", OK);
+		} catch (IllegalArgumentException e) {
+			return new ResponseEntity<String>(e.getMessage(), BAD_REQUEST);
+		}
+
 	}
 
 	@RequestMapping("/service/stat/by-minute.json")
