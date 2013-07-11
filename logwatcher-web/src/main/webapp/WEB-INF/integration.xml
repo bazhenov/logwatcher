@@ -67,13 +67,6 @@
 		</constructor-arg>
 	</bean>
 
-	<bean id="jiraInfo" class="com.farpost.logwatcher.web.JiraInfo">
-		<constructor-arg value="${jira.location}"/>
-		<constructor-arg value="${jira.projectPid}"/>
-		<constructor-arg value="${jira.issueType}"/>
-		<constructor-arg value="${jira.priority}"/>
-	</bean>
-
 	<bean id="exporter" class="org.springframework.jmx.export.MBeanExporter" lazy-init="false">
 		<property name="beans">
 			<map>
