@@ -53,13 +53,17 @@
 	line-height: 26px
 }
 
-.entry .message .causeType {
+.entry .message .issueKey {
+	text-transform: uppercase;
+}
+
+.entry .message .causeType, .entry .message .issueKey {
 	font-size: 14px;
 	color: #444;
 	background-color: #eee;
 	font-weight: 600;
-	border-radius: 4px;
-	padding: 1px 10px;
+	border-radius: 3px;
+	padding: 1px 6px;
 	margin-right: 3px;
 }
 
@@ -287,4 +291,9 @@ h2 span#pieChartLink {
 	padding: 0 5px;
 	border-radius: 4px;
 	margin-left: 5px;
+}
+
+.description {
+	font-size: 12px;
+	padding: 0 5px;
 }
