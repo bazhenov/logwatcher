@@ -31,4 +31,6 @@ public interface LogEntry {
 	String getApplicationId();
 
 	Map<String, String> getAttributes();
+
+	String getGroup();
 }

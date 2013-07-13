@@ -144,6 +144,11 @@ public class LogEntryImpl implements LogEntry {
 	}
 
 	@Override
+	public String getGroup() {
+		return groupContainer.getGroup();
+	}
+
+	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
