@@ -22,12 +22,16 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Map;
+import java.util.Set;
 
 import static com.farpost.logwatcher.Checksum.fromHexString;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
+import static com.google.common.collect.Sets.newTreeSet;
 import static org.joda.time.LocalDate.fromDateFields;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
@@ -219,7 +223,7 @@ public class FeedController {
 		 */
 		public Set<Application> getApplications() {
 			Set<String> applicationIds = storage.getUniqueApplicationIds(fromDateFields(date));
-			Set<Application> set = new HashSet<Application>();
+			Set<Application> set = newTreeSet();
 			for (String applicationId : applicationIds) {
 				String dateAsString = fromDateFields(date).toString();
 				String url = request.getContextPath() + "/feed/" + applicationId + "?date=" + dateAsString;
@@ -233,7 +237,7 @@ public class FeedController {
 		}
 	}
 
-	public static class Application {
+	public static class Application implements Comparable<Application> {
 
 		private final String id;
 		private final String url;
@@ -249,6 +253,11 @@ public class FeedController {
 
 		public String getUrl() {
 			return url;
+		}
+
+		@Override
+		public int compareTo(Application o) {
+			return getId().compareTo(o.getId());
 		}
 
 		@Override

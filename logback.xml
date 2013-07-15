@@ -1,5 +1,7 @@
 <configuration scan="true" scanPeriod="1 second">
 
+	<contextName>pirozhok</contextName>
+
 	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
 			<pattern>[%d{dd MMM HH:mm:ss}] %-5level %logger{36} - %msg%n</pattern>

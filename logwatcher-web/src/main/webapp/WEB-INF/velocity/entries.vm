@@ -5,12 +5,6 @@
 
 	<link rel="stylesheet" type="text/css" href="/css/log.css"/>
 	<link rel="stylesheet" type="text/css" href="/css/datepicker.css"/>
-
-	<script src="http://code.highcharts.com/highcharts.js"></script>
-	<script src="/js/events.detailed-view.js"></script>
-	<script src="/js/bootstrap.min.js"></script>
-	<script src="/js/bootstrap-datepicker.js"></script>
-
 </head>
 
 <body>
@@ -110,5 +104,9 @@
 	</div>
 	<div id="logSamples"></div>
 </div>
+
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="/js/events.detailed-view.js"></script>
+<script src="/js/bootstrap-datepicker.js"></script>
 </body>
 </html>

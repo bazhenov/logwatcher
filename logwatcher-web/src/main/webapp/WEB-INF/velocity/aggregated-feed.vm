@@ -19,7 +19,23 @@
 
 <body>
 <h2>
-	<span id="applicationId">$p.applicationId</span>
+
+	<span class="dropdown">
+		<span id="applicationId" class="dropdown-toggle" data-toggle="dropdown">$p.applicationId</span>
+		<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+			#if($p.applications.isEmpty())
+				<li class="disabled"><a onclick="return false;">No applications found</a></li>
+			#else
+				#foreach($a in $p.applications)
+					<li><a href="$a.url">$a.id</a></li>
+				#end
+			#end
+
+			<li class="divider"><a href="#">Hello</a></li>
+			<li><a class="system" href="/">Return to dashboard</a></li>
+		</ul>
+	</span>
+
 		<span class="additionalInfo">
 			on <span id="date">$date.format("dd MMMM, yyyy", $p.date)</span>
 		</span>
@@ -79,6 +95,8 @@
 
 	<div class="relatedLinks"><a href="/dashboard">Return to dashboard</a></div>
 	#end
+
+
 
 <script type="text/javascript">
 	var baseUrl = "/feed/$p.applicationId";

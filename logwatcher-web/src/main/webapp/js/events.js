@@ -11,17 +11,6 @@ function changeSeverity(url) {
 }
 
 $(document).ready(function () {
-	$('#applicationId').click(function () {
-		showPopup($(this), $('#applicationSelector'));
-		return false;
-	});
-
-	$('#pieChartLink').click(function () {
-		showPopup($(this), $('#pieChart'));
-		return false;
-	});
-
-
 	$('#date').click(function () {
 		showPopup($(this), $('#dateSelector'));
 		return false;

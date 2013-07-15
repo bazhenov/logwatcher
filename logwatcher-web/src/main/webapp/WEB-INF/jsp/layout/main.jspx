@@ -65,6 +65,7 @@
         </tr>
     </table>
 
+    <script src="/js/bootstrap.min.js"><!----></script>
     </body>
     </html>
 </jsp:root>

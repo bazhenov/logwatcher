@@ -1,5 +1,6 @@
 #* @implicitly included *#
 #* @vtlmacrolibrary path="../webapp/WEB-INF/velocity/VM_global_library.vm" *#
+#* @vtlvariable name="sort" type="org.apache.velocity.tools.generic.SortTool" *#
 #* @vtlvariable name="display" type="org.apache.velocity.tools.generic.DisplayTool" *#
 #* @vtlvariable name="math" type="org.apache.velocity.tools.generic.MathTool" *#
 #* @vtlvariable name="number" type="org.apache.velocity.tools.generic.NumberTool" *#

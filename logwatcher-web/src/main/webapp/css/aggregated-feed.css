@@ -193,38 +193,39 @@
 	display: block;
 }
 
-h2 span#applicationId,
-h2 span#pieChartLink,
-h2 span#date {
+.dropdown span:first-child {
+	padding: 0 5px;
+	border-radius: 5px;
+}
+
+.open span:first-child {
+	background-color: #eee;
+}
+
+.dropdown li a {
+	font-size: 14px;
+	letter-spacing: 0;
+}
+
+.dropdown li a.system {
+	font-size: 12px;
+}
+
+.dropdown li a:first-letter {
+	text-transform: capitalize;
+}
+
+h2 #applicationId {
+	text-transform: capitalize;
+}
+
+h2 #applicationId,
+h2 #date {
 	cursor: pointer
 }
 
 h2 span#pieChartLink {
 	margin-left: 5px;
-}
-
-#applicationSelector {
-	width: 250px
-}
-
-#applicationSelector	.notification {
-	text-align: center;
-	padding: 5px;
-}
-
-#applicationSelector A.applicationLink {
-	font-size: 14px;
-	width: 108px;
-	float: left
-}
-
-#applicationSelector A.applicationLink {
-	dispaly: block;
-	padding: 5px;
-}
-
-#applicationSelector A.applicationLink:hover {
-	background-color: #a2a2a2
 }
 
 .popupContainer .innerBlock A,
