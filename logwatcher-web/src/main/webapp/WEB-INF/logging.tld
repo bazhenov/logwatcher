@@ -23,12 +23,6 @@
 	</function>
 
 	<function>
-		<name>isNew</name>
-		<function-class>com.farpost.logwatcher.web.taglib.Functions</function-class>
-		<function-signature>boolean isNew(com.farpost.logwatcher.AggregatedEntry)</function-signature>
-	</function>
-
-	<function>
 		<name>shortFormar</name>
 		<function-class>com.farpost.logwatcher.web.taglib.Functions</function-class>
 		<function-signature>java.lang.String shortFormat(java.util.Date)</function-signature>

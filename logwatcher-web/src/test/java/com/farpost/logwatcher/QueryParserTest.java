@@ -1,7 +1,5 @@
 package com.farpost.logwatcher;
 
-import com.farpost.logwatcher.InvalidQueryException;
-import com.farpost.logwatcher.QueryParser;
 import org.testng.annotations.Test;
 
 import java.util.Map;

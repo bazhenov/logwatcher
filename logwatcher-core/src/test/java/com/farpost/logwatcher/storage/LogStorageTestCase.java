@@ -1,6 +1,5 @@
 package com.farpost.logwatcher.storage;
 
-import com.farpost.logwatcher.AggregatedEntry;
 import com.farpost.logwatcher.CountVisitor;
 import com.farpost.logwatcher.LogEntry;
 import com.farpost.logwatcher.Severity;
@@ -18,9 +17,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.joda.time.DateTimeConstants.NOVEMBER;
 import static org.joda.time.LocalTime.parse;
-import static org.testng.Assert.fail;
 
 abstract public class LogStorageTestCase {
 
@@ -100,43 +97,6 @@ abstract public class LogStorageTestCase {
 	}
 
 	@Test
-	public void storageCanGetAggregatedEntries() throws Exception {
-		LocalDate date = new LocalDate(2008, NOVEMBER, 12);
-		DateTime morning = date.toDateTime(parse("11:00"));
-		DateTime evening = date.toDateTime(parse("18:05"));
-
-		entry().
-			applicationId("search").
-			message("Error in search").
-			occurred(morning).
-			saveIn(storage);
-		entry().
-			applicationId("billing").
-			message("Error in billing").
-			occurred(evening).
-			saveIn(storage);
-		entry().
-			applicationId("billing").
-			message("Error in billing").
-			occurred(evening).
-			saveIn(storage);
-
-		List<AggregatedEntry> list = storage.getAggregatedEntries("billing", date, Severity.info);
-		assertThat(list.size(), equalTo(1));
-
-		AggregatedEntry entry = list.get(0);
-		assertThat(entry.getMessage(), equalTo("Error in billing"));
-		assertThat(entry.getCount(), equalTo(2));
-
-		list = storage.getAggregatedEntries("search", date, Severity.info);
-		assertThat(list.size(), equalTo(1));
-
-		entry = list.get(0);
-		assertThat(entry.getMessage(), equalTo("Error in search"));
-		assertThat(entry.getCount(), equalTo(1));
-	}
-
-	@Test
 	public void storageCanFilterEntriesByApplicationId()
 		throws LogStorageException, InvalidCriteriaException {
 		entry().
@@ -175,21 +135,6 @@ abstract public class LogStorageTestCase {
 
 		count = entries().date(today, tomorrow).count(storage);
 		assertThat(count, equalTo(1));
-	}
-
-	@Test
-	public void storageShouldNotAggregateEntriesWithNonEqualsChecksum() throws Exception {
-		entry().
-			applicationId("appl").
-			checksum("foo").
-			saveIn(storage);
-		entry().
-			applicationId("appl").
-			checksum("bar").
-			saveIn(storage);
-
-		List<AggregatedEntry> list = storage.getAggregatedEntries("appl", today, Severity.debug);
-		assertThat(list.size(), equalTo(2));
 	}
 
 	@Test
@@ -334,11 +279,6 @@ abstract public class LogStorageTestCase {
 		storage.removeEntriesWithChecksum(entry.getChecksum());
 
 		assertThat(entries().count(storage), equalTo(1));
-		for (AggregatedEntry en : storage.getAggregatedEntries("application", today, Severity.info)) {
-			if (en.getChecksum().equals(entry.getChecksum())) {
-				fail("Collection must not contains entries with checksum '" + entry.getChecksum() + "'");
-			}
-		}
 	}
 
 	@Test

@@ -1,8 +1,6 @@
 package com.farpost.logwatcher.storage;
 
-import com.farpost.logwatcher.AggregatedEntry;
 import com.farpost.logwatcher.LogEntry;
-import com.farpost.logwatcher.Severity;
 import com.farpost.logwatcher.Visitor;
 import org.joda.time.LocalDate;
 
@@ -45,7 +43,7 @@ public interface LogStorage {
 	 * @param criteria условия отбора записей или {@code null} если интересует общее количество
 	 *                 записей в хранилище
 	 * @return колличество записей
-	 * @throws LogStorageException			в случае внутренней ошибки
+	 * @throws LogStorageException      в случае внутренней ошибки
 	 * @throws InvalidCriteriaException в случае если заданные критерии неверны
 	 */
 	int countEntries(Collection<LogEntryMatcher> criteria)
@@ -64,7 +62,7 @@ public interface LogStorage {
 	 *
 	 * @param criteria критерии отбора записей
 	 * @return список записей
-	 * @throws LogStorageException			в случае внутренней ошибки хранилища
+	 * @throws LogStorageException      в случае внутренней ошибки хранилища
 	 * @throws InvalidCriteriaException в случае если указанные неверные критерии отбора
 	 */
 	List<LogEntry> findEntries(Collection<LogEntryMatcher> criteria)
@@ -77,9 +75,9 @@ public interface LogStorage {
 	 * быть потокобезопасна.
 	 *
 	 * @param criteria критерии по которым осуществляется итерация
-	 * @param visitor	visitor
+	 * @param visitor  visitor
 	 * @return результат расчитанный имплементацией {@link Visitor}.
-	 * @throws LogStorageException			в случае внутренней ошибки хранилища
+	 * @throws LogStorageException      в случае внутренней ошибки хранилища
 	 * @throws InvalidCriteriaException в случае если некорректно заданы критерии поиска
 	 */
 	<T> T walk(Collection<LogEntryMatcher> criteria, Visitor<LogEntry, T> visitor)
@@ -91,19 +89,6 @@ public interface LogStorage {
 	 * @param date дата выборки
 	 * @return множество идентификаторов приложений
 	 */
+	@Deprecated
 	Set<String> getUniqueApplicationIds(LocalDate date);
-
-	/**
-	 * Возвращает список аггрегированных записей за указанную дату с указанным severity произошедших
-	 * в указанном приложении.
-	 *
-	 * @param applicationId идентификатор приложения
-	 * @param date					дата
-	 * @param severity			уровень
-	 * @return список аггрегированных записей
-	 * @throws LogStorageException			в случае возникновения внутренних ошибок хранилища
-	 * @throws InvalidCriteriaException в случае задания клиентом некорректных критериев отбора
-	 */
-	List<AggregatedEntry> getAggregatedEntries(String applicationId, LocalDate date, Severity severity)
-		throws LogStorageException, InvalidCriteriaException;
 }

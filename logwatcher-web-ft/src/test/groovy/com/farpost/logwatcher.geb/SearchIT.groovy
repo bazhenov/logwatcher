@@ -1,10 +1,9 @@
 package com.farpost.logwatcher.geb
 
 import org.testng.annotations.Test
+
 import static org.hamcrest.MatcherAssert.assertThat
-import static org.hamcrest.Matchers.containsString
-import static org.hamcrest.Matchers.not
-import static org.hamcrest.Matchers.hasItem
+import static org.hamcrest.Matchers.*
 
 public class SearchIT extends LogwatcherFunctionalTestSuite {
 

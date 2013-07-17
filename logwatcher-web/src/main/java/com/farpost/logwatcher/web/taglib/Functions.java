@@ -1,6 +1,5 @@
 package com.farpost.logwatcher.web.taglib;
 
-import com.farpost.logwatcher.AggregatedEntry;
 import com.farpost.logwatcher.Cause;
 import org.joda.time.ReadableDateTime;
 
@@ -20,10 +19,6 @@ public class Functions {
 
 	public static String shortFormat(Date date) {
 		return shortFormat.get().format(date);
-	}
-
-	public static boolean isNew(AggregatedEntry entry) {
-		return entry.getLastTime().plusMinutes(30).isAfterNow();
 	}
 
 	public static Cause rootCause(Cause cause) {

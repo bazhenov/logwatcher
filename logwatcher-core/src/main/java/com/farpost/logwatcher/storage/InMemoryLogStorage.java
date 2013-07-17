@@ -68,26 +68,6 @@ public class InMemoryLogStorage implements LogStorage {
 		});
 	}
 
-	private List<AggregatedEntry> findAggregatedEntries(final Collection<LogEntryMatcher> criterias) {
-		return withLock(readLock, new Callable<List<AggregatedEntry>>() {
-
-			public List<AggregatedEntry> call() throws Exception {
-				Map<String, AggregatedEntry> result = new HashMap<String, AggregatedEntry>();
-				for (LogEntry entry : entries) {
-					if (MatcherUtils.isMatching(entry, criterias)) {
-						AggregatedEntryImpl aggregated = (AggregatedEntryImpl) result.get(entry.getChecksum());
-						if (aggregated == null) {
-							result.put(entry.getChecksum(), new AggregatedEntryImpl(entry));
-						} else {
-							aggregated.happensAgain(1, entry.getDate());
-						}
-					}
-				}
-				return new ArrayList<AggregatedEntry>(result.values());
-			}
-		});
-	}
-
 	@Override
 	public Set<String> getUniqueApplicationIds(LocalDate date) {
 		List<LogEntry> entries = findEntries(entries().date(date).criterias());
@@ -96,15 +76,6 @@ public class InMemoryLogStorage implements LogStorage {
 			applicationIds.add(entry.getApplicationId());
 		}
 		return applicationIds;
-	}
-
-	public List<AggregatedEntry> getAggregatedEntries(String applicationId, LocalDate date, Severity severity) {
-		List<LogEntryMatcher> criterias = entries().
-			applicationId(applicationId).
-			date(date).
-			severity(severity).
-			criterias();
-		return findAggregatedEntries(criterias);
 	}
 
 	public <T> T walk(final Collection<LogEntryMatcher> criteria, final Visitor<LogEntry, T> visitor) {
@@ -123,8 +94,18 @@ public class InMemoryLogStorage implements LogStorage {
 		return visitor.getResult();
 	}
 
-	public int countEntries(Collection<LogEntryMatcher> criteria) {
-		return findAggregatedEntries(criteria).size();
+	public int countEntries(final Collection<LogEntryMatcher> criteria) {
+		return withLock(readLock, new Callable<Integer>() {
+			public Integer call() throws Exception {
+				int result = 0;
+				for (LogEntry entry : entries) {
+					if (MatcherUtils.isMatching(entry, criteria)) {
+						result++;
+					}
+				}
+				return result;
+			}
+		});
 	}
 
 	public void removeEntriesWithChecksum(final String checksum) throws LogStorageException {

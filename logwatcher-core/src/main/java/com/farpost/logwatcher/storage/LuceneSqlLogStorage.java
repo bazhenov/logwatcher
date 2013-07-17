@@ -21,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 
 import javax.sql.DataSource;
 import java.io.Closeable;
@@ -57,7 +56,6 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 	private volatile SearcherReference searcherRef;
 	private volatile long lastCommitTime = nanoTime();
 	private Marshaller marshaller;
-	private final RowMapper<AggregatedEntry> aggregateEntryMapper;
 
 	public LuceneSqlLogStorage(Directory directory, DataSource dataSource) throws IOException {
 		matcherMapper = new AnnotationDrivenMatcherMapperImpl<Query>(new LuceneMatcherMapperRules());
@@ -65,7 +63,6 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 		searcherRef = createSearcher();
 		this.jdbc = new JdbcTemplate(dataSource);
 		this.marshaller = new Jaxb2Marshaller();
-		this.aggregateEntryMapper = new CreateAggregatedEntryRowMapper(marshaller);
 		nextId = jdbc.queryForInt("SELECT MAX(id) + 1 FROM entry");
 	}
 
@@ -346,14 +343,6 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 		List<String> ids = jdbc.queryForList("SELECT application_id FROM aggregated_entry WHERE date = ? GROUP BY application_id",
 			String.class, date(date));
 		return new HashSet<String>(ids);
-	}
-
-	@Override
-	public List<AggregatedEntry> getAggregatedEntries(String applicationId, LocalDate date, Severity severity)
-		throws LogStorageException, InvalidCriteriaException {
-		return jdbc.query(
-			"SELECT checksum, application_id, last_time, count, severity, content FROM aggregated_entry WHERE application_id = ? AND date = ? AND severity >= ?",
-			aggregateEntryMapper, applicationId, date(date), severity.getCode());
 	}
 
 	private static List<int[]> gatherDocumentIds(IndexSearcher searcher) throws IOException {
