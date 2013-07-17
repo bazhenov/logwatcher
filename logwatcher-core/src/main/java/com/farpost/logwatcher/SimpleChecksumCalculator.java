@@ -3,6 +3,7 @@ package com.farpost.logwatcher;
 import com.google.common.hash.HashFunction;
 
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.google.common.base.Charsets.UTF_8;
@@ -18,17 +19,30 @@ import static java.util.regex.Pattern.compile;
 public class SimpleChecksumCalculator implements ChecksumCalculator {
 
 	private final HashFunction hash = md5();
-	private final Map<String, Pattern> patterns = newHashMap();
+	private final Map<Pattern, String> patterns = newHashMap();
 
 	public SimpleChecksumCalculator() {
-		patterns.put("Maximum execution time exceeded",
-			compile("Maximum execution time of \\d+ seconds exceeded in (/[a-z\\.0-9-_]+)+(:\\d+)?", CASE_INSENSITIVE));
-		patterns.put("Allowed memory size exhausted",
-			compile("Allowed memory size of \\d+ bytes exhausted \\(tried to allocate \\d+ bytes\\) in (/[a-z\\.0-9-_]+)+(:\\d+)?", CASE_INSENSITIVE));
+		registerPhpRelatedMessagePatterns();
+	}
+
+	private void registerPhpRelatedMessagePatterns() {
+		patterns.put(compile("Maximum execution time of \\d+ seconds exceeded in (?:/[a-z\\.0-9-_]+)+(?::\\d+)?", CASE_INSENSITIVE),
+			"Maximum execution time exceeded");
+		patterns.put(compile("Maximum execution time of \\d+ seconds exceeded in (?:/[a-z\\.0-9-_]+)+(?:\\(\\d+\\))?\\s*:\\s*regexp code:\\d+", CASE_INSENSITIVE),
+			"Maximum execution time exceeded");
+
+		patterns.put(compile("Allowed memory size of \\d+ bytes exhausted \\(tried to allocate \\d+ bytes\\) in (?:/[a-z\\.0-9-_]+)+(?::\\d+)?", CASE_INSENSITIVE),
+			"Allowed memory size exhausted");
+
+		patterns.put(compile("Call to undefined method ([a-z0-9_]+::[a-z0-9_]+)\\(\\) in (?:/[a-z\\.0-9-_]+)+(?::\\d+)?", CASE_INSENSITIVE),
+			"Call to undefined method");
+
+		patterns.put(compile("Call to a member function ([a-z0-9_]+)\\(\\) on a non-object in (?:/[a-z\\.0-9-_]+)+(?::\\d+)?", CASE_INSENSITIVE),
+			"Call to undefined function");
 	}
 
 	public String calculateChecksum(LogEntry entry) {
-		String title = checkForRegisteredPatterns(entry);
+		CharSequence title = checkForRegisteredPatterns(entry);
 		if (title != null) {
 			return hash.hashString(title, UTF_8).toString();
 		}
@@ -44,10 +58,15 @@ public class SimpleChecksumCalculator implements ChecksumCalculator {
 		return hash.hashString(checksum, UTF_8).toString();
 	}
 
-	private String checkForRegisteredPatterns(LogEntry entry) {
-		for (Map.Entry<String, Pattern> e : patterns.entrySet()) {
-			if (e.getValue().matcher(entry.getMessage()).matches()) {
-				return e.getKey();
+	private CharSequence checkForRegisteredPatterns(LogEntry entry) {
+		for (Map.Entry<Pattern, String> e : patterns.entrySet()) {
+			Matcher matcher = e.getKey().matcher(entry.getMessage());
+			if (matcher.matches()) {
+				StringBuilder builder = new StringBuilder(e.getValue());
+				for (int i = 1; i <= matcher.groupCount(); i++) {
+					builder.append(':').append(matcher.group(i));
+				}
+				return builder;
 			}
 		}
 		return null;

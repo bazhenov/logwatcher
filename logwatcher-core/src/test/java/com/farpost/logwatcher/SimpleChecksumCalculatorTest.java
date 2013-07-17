@@ -3,9 +3,11 @@ package com.farpost.logwatcher;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.Set;
+
 import static com.farpost.logwatcher.LogEntryBuilder.entry;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.not;
+import static com.google.common.collect.Sets.newHashSet;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.joda.time.DateTime.now;
 
@@ -94,24 +96,48 @@ public class SimpleChecksumCalculatorTest {
 
 	@Test
 	public void shouldCollapsePatternBasedMessages() {
-		LogEntry firstEntry = entry()
-			.message("Maximum execution time of 30 seconds exceeded in /var/www/baza.farpost.ru/rev/20130708-1134/slr/core/src/xml/xmlUtils.class.php:139")
-			.create();
+		assertAllMessagesHaveSameChecksum(calculator,
+			"Maximum execution time of 30 seconds exceeded in /var/www/baza.farpost.ru/rev/20130708-1134/slr/core/src/xml/xmlUtils.class.php:139",
+			"Maximum execution time of 30 seconds exceeded in /var/www/baza.farpost.ru/rev/20130710-1156/vendor/pear-pear.dev.loc/search_php_client/FarPost/Search/Client/Document.php:92",
+			"Maximum execution time of 30 seconds exceeded in /var/www/baza.farpost.ru/rev/20130716-0737/slr/db/src/sqlStatement.class.php(133) : regexp code:1");
 
-		LogEntry secondEntry = entry()
-			.message("Maximum execution time of 30 seconds exceeded in /var/www/baza.farpost.ru/rev/20130710-1156/vendor/pear-pear.dev.loc/search_php_client/FarPost/Search/Client/Document.php:92")
-			.create();
+		assertAllMessagesHaveSameChecksum(calculator,
+			"Allowed memory size of 268435456 bytes exhausted (tried to allocate 14313983 bytes) in /var/www/baza.farpost.ru/rev/20130709-1602/app/src/viewdir/cacheViewDirSearchFacade.class.php:35",
+			"Allowed memory size of 234245234 bytes exhausted (tried to allocate 32423 bytes) in /var/www/baza.farpost.ru/rev/viewdir/cacheViewDirSearchFacade.class.php");
 
-		assertThat(calculator.calculateChecksum(firstEntry), equalTo(calculator.calculateChecksum(secondEntry)));
+		assertAllMessagesHaveSameChecksum(calculator,
+			"Call to undefined method good::getOriginalPartnerSite() in /var/www/baza.farpost.ru/rev/20130716-1357/app/src/template/personal/personal_bulls_dir.inc.php:9",
+			"Call to undefined method good::getOriginalPartnerSite() in /var/www/baza.farpost.ru/rev/20130717-1357/app/src/template/personal/personal_bulls_dir.inc.php:19");
 
-		firstEntry = entry()
-			.message("Allowed memory size of 268435456 bytes exhausted (tried to allocate 14313983 bytes) in /var/www/baza.farpost.ru/rev/20130709-1602/app/src/viewdir/cacheViewDirSearchFacade.class.php:35")
-			.create();
+		assertAllMessagesHaveDifferentChecksum(calculator,
+			"Call to undefined method good::getOriginalPartnerSite() in /var/www/baza.farpost.ru/rev/20130717-1357/app/src/template/personal/personal_bulls_dir.inc.php:19",
+			"Call to undefined method good::getPartnerSite() in /var/www/baza.farpost.ru/rev/20130717-1357/app/src/template/personal/personal_bulls_dir.inc.php:19");
 
-		secondEntry = entry()
-			.message("Allowed memory size of 234245234 bytes exhausted (tried to allocate 32423 bytes) in /var/www/baza.farpost.ru/rev/viewdir/cacheViewDirSearchFacade.class.php")
-			.create();
+		assertAllMessagesHaveSameChecksum(calculator,
+			"Call to a member function execInterval() on a non-object in /var/www/baza.farpost.ru/rev/20130717-1139/src/FarPost/Baza/Personal/Notification/Services/GoodNotificationService.php:49",
+			"Call to a member function execInterval() on a non-object in /var/www/baza.farpost.ru/rev/20130717-1139/src/FarPost/Baza/Personal/Notification/GoodNotificationService.php:48");
 
-		assertThat(calculator.calculateChecksum(firstEntry), equalTo(calculator.calculateChecksum(secondEntry)));
+		assertAllMessagesHaveDifferentChecksum(calculator,
+			"Call to a member function execInterval() on a non-object in /var/www/baza.farpost.ru/rev/20130717-1139/src/FarPost/Baza/Personal/Notification/Services/GoodNotificationService.php:49",
+			"Call to a member function execInterval2() on a non-object in /var/www/baza.farpost.ru/rev/20130717-1139/src/FarPost/Baza/Personal/Notification/Services/GoodNotificationService.php:49");
+	}
+
+	public void assertAllMessagesHaveSameChecksum(ChecksumCalculator checksumCalculator, String... messages) {
+		Set<String> checksums = getMessageChecksumSet(checksumCalculator, messages);
+		assertThat("All messages should be mapped to single checksum", checksums.size(), is(1));
+	}
+
+	public void assertAllMessagesHaveDifferentChecksum(ChecksumCalculator checksumCalculator, String... messages) {
+		Set<String> checksums = getMessageChecksumSet(checksumCalculator, messages);
+		assertThat("All messages should have unique checksum", checksums.size(), is(messages.length));
+	}
+
+	private Set<String> getMessageChecksumSet(ChecksumCalculator checksumCalculator, String[] messages) {
+		Set<String> checksums = newHashSet();
+		for (String message : messages) {
+			LogEntry entry = entry().message(message).create();
+			checksums.add(checksumCalculator.calculateChecksum(entry));
+		}
+		return checksums;
 	}
 }
