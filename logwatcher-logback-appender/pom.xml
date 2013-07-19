@@ -15,11 +15,6 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>0.9.26</version>
-		</dependency>
-		<dependency>
 			<groupId>com.farpost.logwatcher</groupId>
 			<artifactId>logwatcher-commons</artifactId>
 		</dependency>

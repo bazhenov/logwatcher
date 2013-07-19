@@ -1,8 +1,10 @@
 package com.farpost.logwatcher.transport;
 
+import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.classic.spi.LoggerContextVO;
-import ch.qos.logback.classic.spi.ThrowableProxy;
+import ch.qos.logback.classic.spi.StackTraceElementProxy;
 import com.farpost.logwatcher.Cause;
 import com.farpost.logwatcher.LogEntry;
 import com.farpost.logwatcher.LogEntryImpl;
@@ -21,14 +23,17 @@ import java.net.SocketException;
 import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.hash.Hashing.md5;
 import static java.lang.Thread.currentThread;
+import static java.util.Collections.emptyMap;
 
 public class LogbackSocketTransport implements Transport {
 
 	private final int port;
 	private final LogEntryListener listener;
 	private final HashFunction hashFunction = md5();
+	private final static Map<String, String> EMPTY = emptyMap();
 	private Acceptor acceptor;
 	private Logger log = LoggerFactory.getLogger(LogbackSocketTransport.class);
 
@@ -60,19 +65,46 @@ public class LogbackSocketTransport implements Transport {
 
 	private LogEntry createLogEntry(ILoggingEvent event) {
 		DateTime dateTime = new DateTime(event.getTimeStamp());
-		ThrowableProxy proxy = (ThrowableProxy) event.getThrowableProxy();
+		IThrowableProxy proxy = event.getThrowableProxy();
 		Cause cause = proxy != null
-			? new Cause(proxy.getThrowable())
+			? new Cause(proxy.getClassName(), proxy.getMessage(), formatStackTrace(proxy))
 			: null;
 		String checksum = hashFunction.hashString(event.getMessage()).toString();
-		Map<String, String> attributes = event.getMDCPropertyMap();
-		LoggerContextVO context = event.getLoggerContextVO();
-		if (!attributes.containsKey("hostName") && context.getPropertyMap().containsKey("HOSTNAME")) {
-			attributes.put("hostName", context.getPropertyMap().get("HOSTNAME"));
-		}
-		return new LogEntryImpl(dateTime, event.getLoggerName(), event.getFormattedMessage(),
-			Severity.forName(event.getLevel().toString()),
+
+		Map<String, String> attributes = newHashMap();
+		Map<String, String> mdc = event.getMDCPropertyMap();
+		if (mdc != null)
+			attributes.putAll(mdc);
+		LoggerContextVO context = checkNotNull(event.getLoggerContextVO(), "Context is null");
+
+		Map<String, String> propertyMap = context.getPropertyMap();
+		if (!attributes.containsKey("hostName") && propertyMap.containsKey("HOSTNAME"))
+			attributes.put("hostName", propertyMap.get("HOSTNAME"));
+
+		return new LogEntryImpl(dateTime, event.getLoggerName(), event.getFormattedMessage(), forLevel(event.getLevel()),
 			checksum, context.getName(), attributes, cause);
+	}
+
+	private static Severity forLevel(Level level) {
+		if (level == Level.DEBUG)
+			return Severity.debug;
+		if (level == Level.WARN)
+			return Severity.warning;
+		if (level == Level.ERROR)
+			return Severity.error;
+		if (level == Level.TRACE)
+			return Severity.trace;
+		if (level == Level.INFO)
+			return Severity.info;
+		return Severity.error;
+	}
+
+	private static String formatStackTrace(IThrowableProxy proxy) {
+		StringBuilder builder = new StringBuilder();
+		for (StackTraceElementProxy i : proxy.getStackTraceElementProxyArray()) {
+			builder.append(i.getSTEAsString()).append('\n');
+		}
+		return builder.toString().trim();
 	}
 
 	private class Acceptor implements Runnable {
