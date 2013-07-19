@@ -1,6 +1,7 @@
 package com.farpost.logwatcher.transport;
 
 import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.net.SocketAppender;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.classic.spi.LoggerContextVO;
@@ -28,6 +29,9 @@ import static com.google.common.hash.Hashing.md5;
 import static java.lang.Thread.currentThread;
 import static java.util.Collections.emptyMap;
 
+/**
+ * This transport receives events sended by Logbacks {@link SocketAppender}.
+ */
 public class LogbackSocketTransport implements Transport {
 
 	private final int port;
@@ -51,7 +55,6 @@ public class LogbackSocketTransport implements Transport {
 		} catch (IOException e) {
 			throw new TransportException(e);
 		}
-
 	}
 
 	@Override
