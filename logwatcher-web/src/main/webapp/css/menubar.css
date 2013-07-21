@@ -1,4 +1,4 @@
-#menuBar            { position: absolute; right: 0; top: -4px; padding: 8px; -moz-border-radius: 0 4px 0 4px;
+#menuBar            { position: absolute; right: 10px; top: -4px; padding: 8px; -moz-border-radius: 0 4px 0 4px;
                       border-radius: 0 4px 0 4px; -webkit-border-bottom-left-radius: 4px;
                       -webkit-border-bottom-right-radius: 4px; background-color: #eee; border: 1px solid #ddd;
 											box-shadow: 0 0 10px #ddd; -moz-box-shadow: 0 0 10px #ddd; -webkit-box-shadow: 0 0 10px #ddd; }

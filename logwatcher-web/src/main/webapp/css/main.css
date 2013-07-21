@@ -22,7 +22,7 @@ img {
 }
 
 .section {
-	margin: 0 20px;
+	margin: 0 20px 20px 20px;
 	font-family: 'Open Sans', serif;
 	font-size: 13px;
 }
@@ -37,17 +37,16 @@ TABLE, TR, TBODY, TD {
 }
 
 #header {
-	padding: 0;
 	margin: 0;
 	height: 65px;
-	width: 950px;
 	text-align: left;
 	position: relative;
+	padding: 0 0 0 10px;
 }
 
 #searchPanel {
 	position: absolute;
-	right: 0;
+	right: 10px;
 	top: 60%;
 	color: gray;
 	font-size: 12px;
@@ -114,8 +113,6 @@ a:visited {
 	padding: 0 20px 20px 20px;
 	margin-top: 10px;
 	background-color: white;
-	box-shadow: 0 0 10px #ddd;
-	width: 970px;
 	text-align: left;
 	border: 1px solid white;
 	border-radius: 5px;
@@ -210,4 +207,8 @@ FORM {
 	white-space: pre-wrap;
 	color: #777;
 	font-size: 15px;
+}
+
+.input-append {
+	margin-bottom: 0;
 }

@@ -19,10 +19,10 @@
 		#end
 	#end
 
-</h2>
+	<a id="editModalButton"
+		 href="#editModal" role="button" class="btn btn-small" data-toggle="modal">Edit <i class="icon-edit"></i></a>
 
-<a id="editModalButton"
-	 href="#editModal" role="button" class="btn btn-small" data-toggle="modal">Edit <i class="icon-edit"></i></a>
+</h2>
 
 <div id="editModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
 		 aria-hidden="true">

@@ -4,7 +4,6 @@
 	border: 1px dashed #ddd;
 	padding: 10px;
 	border-radius: 5px;
-	overflow: scroll;
 }
 
 .log P, .log TD {
@@ -27,7 +26,7 @@
 }
 
 .log div {
-	padding: 5px 0;
+	padding: 10px 0;
 }
 
 .spinner {
@@ -49,6 +48,7 @@
 	font-size: 14px;
 	font-family: 'Open Sans', "Helvetica Neue", Helvetica, sans-serif;
 	font-weight: normal;
+	margin: 0;
 }
 
 .attributes label {
@@ -74,7 +74,8 @@
 }
 
 #statisticsTable {
-	width: 100%
+	width: 100%;
+	max-width: 1000px;
 }
 
 #minuteStatistics {
@@ -93,7 +94,5 @@
 
 #editModalButton {
 	position: absolute;
-	display: block;
-	right: 15px;
-	top: 15px;
+	margin: 8px 0 0 15px;
 }
