@@ -37,7 +37,7 @@
 	<div id="header">
 	    <s:url value="/images/logwatcher-logo.png" var="logoSrc"/>
 	    <s:url value="/dashboard" var="dashboardUrl"/>
-	    <a href="${dashboardUrl}"><img class="logo" src="${logoSrc}" alt="LogWatcher"/></a>
+	    <a href="${dashboardUrl}"><img class="logo" width="212" height="61" src="${logoSrc}" alt="LogWatcher"/></a>
 
 	    <div id="searchPanel">
 		<form action="/search">
@@ -59,7 +59,7 @@
 	    <sitemesh:write property="body"/>
 	</div>
 
-    <script src="/js/bootstrap.min.js"><!----></script>
+    <script src="/js/bootstrap.min.js"></script>
     </body>
     </html>
 </jsp:root>

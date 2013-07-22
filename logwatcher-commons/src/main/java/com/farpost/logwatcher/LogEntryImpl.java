@@ -13,6 +13,8 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 @XmlRootElement(name = "logEntry")
 public class LogEntryImpl implements LogEntry {
 
@@ -78,12 +80,6 @@ public class LogEntryImpl implements LogEntry {
 		this.attributes = attributes == null
 			? new HashMap<String, String>()
 			: new HashMap<String, String>(attributes);
-	}
-
-	private static void checkNotNull(Object argument) {
-		if (argument == null) {
-			throw new NullPointerException("Argument should not bu null");
-		}
 	}
 
 	@Override

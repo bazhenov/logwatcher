@@ -22,7 +22,7 @@ public class NgApiEntryListener implements LogEntryListener {
 	}
 
 	@Override
-	public void onEntry(LogEntry entry) {
+	public synchronized void onEntry(LogEntry entry) {
 		Checksum checksum = fromHexString(checksumCalculator.calculateChecksum(entry));
 		if (!clusterDao.isClusterRegistered(entry.getApplicationId(), checksum)) {
 			String message = entry.getMessage();

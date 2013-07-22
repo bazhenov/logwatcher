@@ -58,13 +58,20 @@
 				init-method="start"
 				destroy-method="stop"
 				p:bufferSize="${udp.bufferSize}">
-
 		<constructor-arg name="port" value="${udp.port}"/>
 		<constructor-arg name="listener">
 			<bean class="com.farpost.logwatcher.transport.WriteToChannelTransportListener">
 				<constructor-arg name="messageChannel" ref="messageChannel"/>
 			</bean>
 		</constructor-arg>
+	</bean>
+
+	<bean class="com.farpost.logwatcher.transport.LogbackSocketTransport"
+				lazy-init="false"
+				init-method="start"
+				destroy-method="stop">
+		<constructor-arg value="${udp.port}"/>
+		<constructor-arg ref="writeToStorageTransportListener"/>
 	</bean>
 
 	<bean id="exporter" class="org.springframework.jmx.export.MBeanExporter" lazy-init="false">
