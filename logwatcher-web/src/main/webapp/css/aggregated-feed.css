@@ -131,26 +131,15 @@
 
 #severityContainer {
 	position: absolute;
-	right: -26px;
-	top: -9px;
 }
 
 #severityContainer {
 	width: 160px;
 	font-size: 16px;
-	padding: 15px;
+	padding: 3px 0 0 10px;
 	z-index: 1;
 	color: #4f4f4f;
 	font-family: 'Licaida Grande', Tahoma, sans-serif;
-}
-
-#severityContainer TABLE TD {
-	vertical-align: top;
-}
-
-#severityContainer .severity-label {
-	padding-top: 7px;
-	padding-right: 5px;
 }
 
 #severityMenu {

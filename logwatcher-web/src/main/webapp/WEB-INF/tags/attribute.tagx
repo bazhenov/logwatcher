@@ -13,15 +13,10 @@
 			<c:choose>
 				<c:when test="${fn:length(row.value) gt lengthLimit}">
 					<code class="value">
-						<jsp:element name="abbr">
-							<jsp:attribute name="title"><c:out value="${row.value}"/></jsp:attribute>
-							<jsp:body>
-								<c:out value="${l:trim(row.value, lengthLimit, '...')}"/>
-								<c:if test="${row.count gt 1}">
-									<span>${row.count}</span>
-								</c:if>
-							</jsp:body>
-						</jsp:element>
+						<c:out value="${row.value}"/>
+						<c:if test="${row.count gt 1}">
+							<span>${row.count}</span>
+						</c:if>
 					</code>
 				</c:when>
 				<c:otherwise>

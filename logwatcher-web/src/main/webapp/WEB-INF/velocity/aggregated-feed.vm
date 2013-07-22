@@ -36,9 +36,26 @@
 		</ul>
 	</span>
 
-		<span class="additionalInfo">
-			on <span id="date">$date.format("dd MMMM, yyyy", $p.date)</span>
-		</span>
+	<span class="additionalInfo">
+		on <span id="date">$date.format("dd MMMM, yyyy", $p.date)</span>
+	</span>
+
+	<span id="severityContainer">
+		#macro(severity $severity $currentSeverity)
+			#if($severity != $currentSeverity)
+				<!--suppress HtmlUnknownTag -->
+				<li><a href="#" onclick="changeSeverity('/session?severity=$severity')">$severity</a></li>
+			#end
+		#end
+		<ul id="severityMenu">
+			<li class="selected"><span>$p.severity</span></li>
+			#severity("error", $p.severity)
+			#severity("warning", $p.severity)
+			#severity("info", $p.severity)
+			#severity("debug", $p.severity)
+			#severity("trace", $p.severity)
+		</ul>
+	</span>
 </h2>
 
 	#macro(popup $id)
@@ -56,30 +73,6 @@
 		</div>
 	</div>
 	#end
-
-<div id="severityContainer">
-	#macro(severity $severity $currentSeverity)
-		#if($severity != $currentSeverity)
-			<!--suppress HtmlUnknownTag -->
-			<li><a href="#" onclick="changeSeverity('/session?severity=$severity')">$severity</a></li>
-		#end
-	#end
-	<table>
-		<tr>
-			<td class="severity-label">Severity:</td>
-			<td>
-				<ul id="severityMenu">
-					<li class="selected"><span>$p.severity</span></li>
-					#severity("error", $p.severity)
-					#severity("warning", $p.severity)
-					#severity("info", $p.severity)
-					#severity("debug", $p.severity)
-					#severity("trace", $p.severity)
-				</ul>
-			</td>
-		</tr>
-	</table>
-</div>
 
 	#@popup("applicationSelector")
 		#if($p.applications.isEmpty())
@@ -104,15 +97,17 @@
 	var urlCallback = function (date) {
 		return baseUrl + '?date=' + date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
 	};
-	$("a.prevMonthLink").live("click", function () {
+	$("body").on("click", "a.prevMonthLink", function () {
 		baseDate.setMonth(baseDate.getMonth() - 1);
 		var newContent = buildCal(baseDate, urlCallback);
 		$("#dateSelector .innerBlock").html(newContent);
+		return false;
 	});
-	$("a.nextMonthLink").live("click", function () {
+	$("body").on("click", "a.nextMonthLink", function () {
 		baseDate.setMonth(baseDate.getMonth() + 1);
 		var newContent = buildCal(baseDate, urlCallback);
 		$("#dateSelector .innerBlock").html(newContent);
+		return false;
 	})
 </script>
 
@@ -130,7 +125,6 @@
 
 <script type="text/javascript">
 	function updateFeed() {
-		console.log("Updating feed");
 		$.ajax({
 			url: "/service/feed/${p.applicationId}",
 			data: {'date': "$dt"}
@@ -148,9 +142,9 @@
 					new Counterina(canvas, maxData).draw(count, severity);
 				})
 			});
-		setTimeout("updateFeed()", 3000);
+		setTimeout(updateFeed, 6000);
 	}
-	setTimeout("updateFeed()", 0);
+	setTimeout(updateFeed, 0);
 </script>
 
 </body>

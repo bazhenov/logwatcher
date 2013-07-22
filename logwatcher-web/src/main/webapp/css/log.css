@@ -52,15 +52,17 @@
 }
 
 .attributes label {
-	font-weight: 600;
+	color: #999 !important;
 	display: inline;
+	font-size: 12px;
 }
 
 .attributes span {
 	margin-left: 4px;
 	padding-left: 4px;
 	padding-right: 2px;
-	color: #777 !important;
+	font-size: 11px;
+	color: #999 !important;
 }
 
 .attributes code {
@@ -71,6 +73,7 @@
 	margin-right: 10px;
 	background: none;
 	border: none;
+	font-size: 14px;
 }
 
 #statisticsTable {

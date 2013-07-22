@@ -34,36 +34,30 @@
     </head>
 
     <body>
-    <table width="100%">
-        <tr>
-            <td align="center">
-                <div id="header">
-                    <s:url value="/images/logwatcher-logo.png" var="logoSrc"/>
-                    <s:url value="/dashboard" var="dashboardUrl"/>
-                    <a href="${dashboardUrl}"><img class="logo" src="${logoSrc}" alt="LogWatcher"/></a>
+	<div id="header">
+	    <s:url value="/images/logwatcher-logo.png" var="logoSrc"/>
+	    <s:url value="/dashboard" var="dashboardUrl"/>
+	    <a href="${dashboardUrl}"><img class="logo" src="${logoSrc}" alt="LogWatcher"/></a>
 
-                    <div id="searchPanel">
-                        <form action="/search">
-                            <input id="searchInput" type="text" name="q" accesskey="s" placeholder="Search..."
-                                   size="25"/>
-                        </form>
-                    </div>
+	    <div id="searchPanel">
+		<form action="/search">
+		    <input id="searchInput" type="text" name="q" accesskey="s" placeholder="Search..."
+			   size="25"/>
+		</form>
+	    </div>
 
-                    <div id="menuBar">
-                        <a href="${dashboardUrl}">Dashboard</a>
-                        <span class="devider">&amp;nbsp;</span>
+	    <div id="menuBar">
+		<a href="${dashboardUrl}">Dashboard</a>
+		<span class="devider">&amp;nbsp;</span>
 
-                        <c:url value="/search" var="url"/>
-                        <a href="${url}">Advanced search</a>
-                    </div>
-                </div>
+		<c:url value="/search" var="url"/>
+		<a href="${url}">Advanced search</a>
+	    </div>
+	</div>
 
-                <div id="contentPanel">
-                    <sitemesh:write property="body"/>
-                </div>
-            </td>
-        </tr>
-    </table>
+	<div id="contentPanel">
+	    <sitemesh:write property="body"/>
+	</div>
 
     <script src="/js/bootstrap.min.js"><!----></script>
     </body>
