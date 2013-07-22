@@ -59,7 +59,7 @@
 	    <sitemesh:write property="body"/>
 	</div>
 
-    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap.min.js"><!----></script>
     </body>
     </html>
 </jsp:root>
