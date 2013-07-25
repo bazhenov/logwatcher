@@ -1,0 +1,3 @@
+#!/bin/sh
+
+mvn -q -am -pl logwatcher-web install -DskipITs && mvn -q -f logwatcher-web/pom.xml jetty:run
