@@ -18,6 +18,16 @@ public enum Severity {
 		return null;
 	}
 
+	// TODO: rework woth Optional<> from guava
+	public static Severity forNameStrict(String name) {
+		for (Severity i : values()) {
+			if (i.toString().equalsIgnoreCase(name)) {
+				return i;
+			}
+		}
+		throw new IllegalArgumentException("Invalid severity name");
+	}
+
 	public static Severity forCode(int code) {
 		for (Severity i : values()) {
 			if (i.getCode() == code) {

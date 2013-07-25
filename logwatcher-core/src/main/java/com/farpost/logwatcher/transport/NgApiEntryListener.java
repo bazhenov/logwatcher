@@ -29,10 +29,9 @@ public class NgApiEntryListener implements LogEntryListener {
 			if (entry.getCause() != null) {
 				message = entry.getCause().getType() + ": " + message;
 			}
-			clusterDao.registerCluster(new Cluster(entry.getApplicationId(), entry.getSeverity(), message,
-				checksum));
+			clusterDao.registerCluster(new Cluster(entry.getApplicationId(), entry.getSeverity(), message, checksum));
 		}
-		clusterStatistic.registerEvent(entry.getApplicationId(), entry.getDate(), checksum);
+		clusterStatistic.registerEvent(entry.getApplicationId(), entry.getDate(), checksum, entry.getSeverity());
 		storage.writeEntry(entry);
 	}
 }

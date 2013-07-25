@@ -15,7 +15,6 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.util.Version;
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +25,10 @@ import javax.sql.DataSource;
 import java.io.Closeable;
 import java.io.IOException;
 import java.sql.Date;
-import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import static com.farpost.logwatcher.storage.LuceneUtils.*;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -84,32 +85,18 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 
 			int entryId = getNextId();
 
-			Timestamp entryTimestamp = timestamp(impl.getDate());
 			Date entryDate = date(impl.getDate().toLocalDate());
 			byte[] marshaledEntry = marshaller.marshall(impl);
 
 			jdbc.update("INSERT INTO entry (id, date, checksum,value) VALUES (?, ?, ?, ?)", entryId, entryDate,
 				checksum, marshaledEntry);
 
-			int affectedRows = jdbc.update(
-				"UPDATE aggregated_entry SET count = count + 1, last_time = ? WHERE date = ? AND checksum = ?",
-				entryTimestamp, entryDate, checksum);
-			if (affectedRows == 0) {
-				jdbc.update(
-					"INSERT INTO aggregated_entry (date, checksum, last_time, category, severity, application_id, count, content) VALUES (?, ?, ?, ?, ?, ?, 1, ?)",
-					entryDate, checksum, entryTimestamp, impl.getCategory(),
-					impl.getSeverity().getCode(), impl.getApplicationId(), marshaledEntry);
-			}
-
-			if (log.isDebugEnabled()) {
-				log.debug("Entry with checksum: " + checksum + " wrote to database");
-			}
+			log.debug("Entry wrote to database. Checksum: {}", checksum);
 
 			synchronized (writerLock) {
 				writer.addDocument(createLuceneDocument(entry, entryId));
 				commitChangesIfNeeded();
 			}
-
 
 		} catch (IOException e) {
 			throw new LogStorageException(e);
@@ -118,10 +105,6 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 
 	private static Date date(LocalDate date) {
 		return new Date(date.toDateTimeAtStartOfDay().getMillis());
-	}
-
-	private static Timestamp timestamp(DateTime date) {
-		return new Timestamp(date.getMillis());
 	}
 
 	/**
@@ -306,7 +289,6 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 	public void removeEntriesWithChecksum(String checksum) throws LogStorageException {
 		try {
 			jdbc.update("DELETE FROM entry WHERE checksum = ?", checksum);
-			jdbc.update("DELETE FROM aggregated_entry WHERE checksum = ?", checksum);
 
 			synchronized (writerLock) {
 				writer.deleteDocuments(new Term("checksum", normalize(checksum)));
@@ -335,14 +317,6 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 			}
 		}
 		return visitor.getResult();
-	}
-
-	@Override
-	public Set<String> getUniqueApplicationIds(LocalDate date) {
-		checkNotNull(date);
-		List<String> ids = jdbc.queryForList("SELECT application_id FROM aggregated_entry WHERE date = ? GROUP BY application_id",
-			String.class, date(date));
-		return new HashSet<String>(ids);
 	}
 
 	private static List<int[]> gatherDocumentIds(IndexSearcher searcher) throws IOException {

@@ -2,8 +2,7 @@ package com.farpost.logwatcher.web;
 
 import org.testng.annotations.Test;
 
-import static com.farpost.logwatcher.web.Functions.extractExceptionClass;
-import static com.farpost.logwatcher.web.Functions.formatIntensity;
+import static com.farpost.logwatcher.web.Functions.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -49,5 +48,18 @@ public class FunctionsTest {
 		assertThat(formatIntensity(128d), is("130/second"));
 		assertThat(formatIntensity(1523d), is("1500/second"));
 		assertThat(formatIntensity(15234d), is("15000/second"));
+	}
+
+	@Test
+	public void testShortNumberFormat() {
+		assertThat(shortNumberFormat(123), is("123"));
+		assertThat(shortNumberFormat(1230), is("1K"));
+		assertThat(shortNumberFormat(12300), is("12K"));
+		assertThat(shortNumberFormat(12500), is("12K"));
+		assertThat(shortNumberFormat(125000), is("125K"));
+		assertThat(shortNumberFormat(1250000), is("1M"));
+		assertThat(shortNumberFormat(12500000), is("12M"));
+		assertThat(shortNumberFormat(125000000), is("125M"));
+		assertThat(shortNumberFormat(1250000000), is("1250M"));
 	}
 }

@@ -3,13 +3,14 @@ package com.farpost.logwatcher.storage;
 import com.farpost.logwatcher.*;
 import org.joda.time.LocalDate;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
-import static com.farpost.logwatcher.storage.LogEntries.entries;
 
 /**
  * Реализация {@link LogStorage}, которая хранит все записи в памяти. Потокобезопасна.
@@ -66,16 +67,6 @@ public class InMemoryLogStorage implements LogStorage {
 				return result;
 			}
 		});
-	}
-
-	@Override
-	public Set<String> getUniqueApplicationIds(LocalDate date) {
-		List<LogEntry> entries = findEntries(entries().date(date).criterias());
-		HashSet<String> applicationIds = new HashSet<String>();
-		for (LogEntry entry : entries) {
-			applicationIds.add(entry.getApplicationId());
-		}
-		return applicationIds;
 	}
 
 	public <T> T walk(final Collection<LogEntryMatcher> criteria, final Visitor<LogEntry, T> visitor) {

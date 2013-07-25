@@ -9,7 +9,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.List;
-import java.util.Set;
 
 import static com.farpost.logwatcher.LogEntryBuilder.entry;
 import static com.farpost.logwatcher.storage.LogEntries.entries;
@@ -135,27 +134,6 @@ abstract public class LogStorageTestCase {
 
 		count = entries().date(today, tomorrow).count(storage);
 		assertThat(count, equalTo(1));
-	}
-
-	@Test
-	public void storageCanReturnUniqueApplicationIdSet() {
-		entry().
-			applicationId("foo").
-			occurred(today.toDateTime(parse("12:00"))).
-			saveIn(storage);
-		entry().
-			applicationId("bar").
-			occurred(today.toDateTime(parse("12:00"))).
-			saveIn(storage);
-		entry().
-			applicationId("baz").
-			occurred(yesterday.toDateTime(parse("13:52"))).
-			saveIn(storage);
-
-		Set<String> ids = storage.getUniqueApplicationIds(today);
-		assertThat(ids.size(), equalTo(2));
-		assertThat(ids, hasItem("foo"));
-		assertThat(ids, hasItem("bar"));
 	}
 
 	@Test

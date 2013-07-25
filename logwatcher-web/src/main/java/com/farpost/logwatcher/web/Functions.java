@@ -22,6 +22,16 @@ public class Functions {
 		return number + " " + result;
 	}
 
+	public static String shortNumberFormat(int n) {
+		if (n < 1000)
+			return Integer.toString(n);
+		else if (n < 1000000)
+			return (n / 1000) + "K";
+		else
+			return (n / 1000000) + "M";
+	}
+
+
 	public static String getSimpleType(String className) {
 		int index = className.lastIndexOf('.');
 		if (index < 0) index = className.lastIndexOf('\\');

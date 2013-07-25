@@ -6,7 +6,6 @@ import org.joda.time.LocalDate;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Имплементации этого интерфейса сохраняют обьекты типа LogEntry в постоянном хранилище.
@@ -83,12 +82,4 @@ public interface LogStorage {
 	<T> T walk(Collection<LogEntryMatcher> criteria, Visitor<LogEntry, T> visitor)
 		throws LogStorageException, InvalidCriteriaException;
 
-	/**
-	 * Возвращает множество applicationId для которых в хранилище существуют записи за указанную дату
-	 *
-	 * @param date дата выборки
-	 * @return множество идентификаторов приложений
-	 */
-	@Deprecated
-	Set<String> getUniqueApplicationIds(LocalDate date);
 }

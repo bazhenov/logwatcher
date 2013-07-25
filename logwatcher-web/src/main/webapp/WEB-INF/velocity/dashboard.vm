@@ -13,21 +13,40 @@
 		No entries found
 	</div>
 	#else
-		#foreach($id in $p.applications)
-		<div class="dashboardWidget">
-			<div class="title"><a href="/feed/$id">$id</a></div>
-			<ul>
-				#set($clusters = $p.getClusters($id))
-				#if ($clusters.isEmpty())
-					<li>No errors for today</li>
+	<div class="dashboard">
+		#foreach($app in $p.applications)
+			<a href="/feed/$app" class="item">
+				<span class="name">$app</span>
+				#set($s = $p.getApplicationStatistics($app))
+				#if($s["error"])
+					<span class="detail error"><i>&nbsp;</i> $f.shortNumberFormat($s["error"])</span>
 				#else
-					#foreach($cluster in $clusters)
-						<li><a href="/entries/$cluster.applicationId/${cluster.checksum}">$cluster.title</a></li>
-					#end
+					<span class="detail error"><i>&nbsp;</i></span>
 				#end
-			</ul>
-		</div>
+				#if($s["warning"])
+					<span class="detail warning"><i>&nbsp;</i> $f.shortNumberFormat($s["warning"])</span>
+				#else
+					<span class="detail warning"><i>&nbsp;</i></span>
+				#end
+				#if($s["info"])
+					<span class="detail info"><i>&nbsp;</i> $f.shortNumberFormat($s["info"])</span>
+				#else
+					<span class="detail info"><i>&nbsp;</i></span>
+				#end
+				#if($s["debug"])
+					<span class="detail debug"><i>&nbsp;</i> $f.shortNumberFormat($s["debug"])</span>
+				#else
+					<span class="detail debug"><i>&nbsp;</i></span>
+				#end
+				#if($s["trace"])
+					<span class="detail trace"><i>&nbsp;</i> $f.shortNumberFormat($s["trace"])</span>
+				#else
+					<span class="detail trace"><i>&nbsp;</i></span>
+				#end
+			</a>
 		#end
+	</div>
+	<div class="clear">&nbsp;</div>
 	#end
 
 <div style="clear: both;"></div>

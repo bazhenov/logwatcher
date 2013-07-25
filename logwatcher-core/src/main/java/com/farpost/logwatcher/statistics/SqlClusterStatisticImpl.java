@@ -1,10 +1,13 @@
 package com.farpost.logwatcher.statistics;
 
 import com.farpost.logwatcher.Checksum;
+import com.farpost.logwatcher.Severity;
 import com.google.common.base.Function;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
@@ -19,6 +22,7 @@ import java.util.Set;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Maps.newHashMap;
+import static com.google.common.collect.Sets.newTreeSet;
 import static org.joda.time.LocalDate.fromDateFields;
 
 public class SqlClusterStatisticImpl implements ClusterStatistic {
@@ -42,9 +46,14 @@ public class SqlClusterStatisticImpl implements ClusterStatistic {
 	}
 
 	@Override
-	public synchronized void registerEvent(String applicationId, DateTime date, Checksum checksum) {
+	public synchronized void registerEvent(String applicationId, DateTime date, Checksum checksum, Severity severity) {
+		checkNotNull(applicationId);
+		checkNotNull(date);
+		checkNotNull(checksum);
+		checkNotNull(severity);
+
 		updateGeneralStatistics(applicationId, date, checksum);
-		updateDayStatistics(applicationId, date, checksum);
+		updateDayStatistics(applicationId, date, checksum, severity);
 
 		MinuteVector v = getMinuteVector(applicationId, checksum);
 		v.increment(date);
@@ -53,7 +62,7 @@ public class SqlClusterStatisticImpl implements ClusterStatistic {
 	}
 
 	private void updateGeneralStatistics(String applicationId, DateTime date, Checksum checksum) {
-		String dt = date.toString("yyyy-MM-dd HH:mm:ss");
+		String dt = sqlDateTime(date);
 		int aff = template.update(
 			"UPDATE cluster_general_stat " +
 				"SET last_seen = CASE ? > last_seen WHEN TRUE THEN ? ELSE last_seen END, " +
@@ -67,21 +76,39 @@ public class SqlClusterStatisticImpl implements ClusterStatistic {
 		}
 	}
 
-	private void updateDayStatistics(String applicationId, DateTime date, Checksum checksum) {
+	private void updateDayStatistics(String applicationId, DateTime date, Checksum checksum, Severity severity) {
 		int affected = template.update(
 			"UPDATE cluster_day_stat SET count = count + 1 WHERE application = ? AND date = ? AND checksum = ? ",
-			applicationId, date.toString("yyyy-MM-dd"), checksum.toString());
+			applicationId, sqlDate(date.toLocalDate()), checksum.toString());
 		if (affected <= 0) {
-			template.update("INSERT INTO cluster_day_stat (application, date, checksum, count) VALUES (?, ?, ?, 1)",
-				applicationId, date.toString("yyyy-MM-dd"), checksum.toString());
+			template.update("INSERT INTO cluster_day_stat (application, date, checksum, severity, count) VALUES " +
+				"(?, ?, ?, ?, 1)", applicationId, sqlDate(date.toLocalDate()), checksum.toString(), severity.toString());
 		}
+	}
+
+	@Override
+	public Map<Severity, Integer> getSeverityStatistics(String applicationId, LocalDate date) {
+		ResultSetExtractor<Map<Severity, Integer>> rse = new ResultSetExtractor<Map<Severity, Integer>>() {
+			@Override
+			public Map<Severity, Integer> extractData(ResultSet rs) throws SQLException, DataAccessException {
+				Map<Severity, Integer> result = newHashMap();
+				while (rs.next()) {
+					Severity s = Severity.forNameStrict(rs.getString("severity"));
+					int i = rs.getInt("count");
+					result.put(s, i);
+				}
+				return result;
+			}
+		};
+		return template.query("SELECT severity, SUM(count) as count FROM cluster_day_stat WHERE " +
+			"application = ? AND date = ? GROUP BY severity", rse, applicationId, sqlDate(date));
 	}
 
 	@Override
 	public Set<String> getActiveApplications() {
 		Iterable<String> applications = template.queryForList("SELECT application FROM cluster_day_stat WHERE date > ?",
-			String.class, LocalDate.now().minusDays(7).toString("yyyy-MM-dd"));
-		return from(applications).transform(toLowerCase).toSet();
+			String.class, sqlDate(LocalDate.now().minusDays(7)));
+		return newTreeSet(from(applications).transform(toLowerCase));
 	}
 
 	@Override
@@ -114,6 +141,14 @@ public class SqlClusterStatisticImpl implements ClusterStatistic {
 	@Override
 	public Collection<Checksum> getActiveClusterChecksums(String applicationId, LocalDate date) {
 		return template.query("SELECT checksum FROM cluster_day_stat WHERE date = ? AND application = ?", createChecksum,
-			date.toString("yyyy-MM-dd"), applicationId);
+			sqlDate(date), applicationId);
+	}
+
+	private static String sqlDate(LocalDate date) {
+		return date.toString("yyyy-MM-dd");
+	}
+
+	private static String sqlDateTime(DateTime date) {
+		return date.toString("yyyy-MM-dd HH:mm:ss");
 	}
 }

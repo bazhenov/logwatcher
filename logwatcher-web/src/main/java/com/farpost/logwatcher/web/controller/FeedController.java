@@ -222,7 +222,7 @@ public class FeedController {
 		 * @return множество всех уникальных идентификаторов приложений
 		 */
 		public Set<Application> getApplications() {
-			Set<String> applicationIds = storage.getUniqueApplicationIds(fromDateFields(date));
+			Set<String> applicationIds = clusterStatistic.getActiveApplications();
 			Set<Application> set = newTreeSet();
 			for (String applicationId : applicationIds) {
 				String dateAsString = fromDateFields(date).toString();
