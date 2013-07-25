@@ -212,3 +212,14 @@ FORM {
 .input-append {
 	margin-bottom: 0;
 }
+
+
+.dashboard				{ max-width: 500px; margin: 0 auto }
+.dashboard .item			{ font-size: 18px; border-top: 1px dashed #b3b3b3; float: left; padding: 10px 15px 5px 15px; width: 400px; clear: both; color: #060606 }
+.dashboard .name			{ float: left; width: 180px; margin: 3px 10px 0 0 }
+.dashboard .detail			{ text-decoration: none; font-size: 11px; float: left; width: 30px; text-align: center }
+.dashboard .detail i			{ display: block; width: 10px; height: 10px; font-size: 1px; border-radius: 5px; background: #ccc; margin: 0 auto }
+.dashboard .detail1 i			{ background: #9b3837 }
+.dashboard .detail2 i			{ background: #ff6f00 }
+.dashboard .detail3 i			{ background: #01a32d }
+.clear					{ clear: both }
