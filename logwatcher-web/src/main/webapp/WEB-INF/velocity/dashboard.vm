@@ -21,27 +21,27 @@
 				#if($s["error"])
 					<span class="detail error"><i>&nbsp;</i> $f.shortNumberFormat($s["error"])</span>
 				#else
-					<span class="detail error"><i>&nbsp;</i></span>
+					<span class="detail"><i>&nbsp;</i> &nbsp;</span>
 				#end
 				#if($s["warning"])
 					<span class="detail warning"><i>&nbsp;</i> $f.shortNumberFormat($s["warning"])</span>
 				#else
-					<span class="detail warning"><i>&nbsp;</i></span>
+					<span class="detail"><i>&nbsp;</i> &nbsp;</span>
 				#end
 				#if($s["info"])
 					<span class="detail info"><i>&nbsp;</i> $f.shortNumberFormat($s["info"])</span>
 				#else
-					<span class="detail info"><i>&nbsp;</i></span>
+					<span class="detail"><i>&nbsp;</i> &nbsp;</span>
 				#end
 				#if($s["debug"])
 					<span class="detail debug"><i>&nbsp;</i> $f.shortNumberFormat($s["debug"])</span>
 				#else
-					<span class="detail debug"><i>&nbsp;</i></span>
+					<span class="detail"><i>&nbsp;</i> &nbsp;</span>
 				#end
 				#if($s["trace"])
 					<span class="detail trace"><i>&nbsp;</i> $f.shortNumberFormat($s["trace"])</span>
 				#else
-					<span class="detail trace"><i>&nbsp;</i></span>
+					<span class="detail"><i>&nbsp;</i> &nbsp;</span>
 				#end
 			</a>
 		#end

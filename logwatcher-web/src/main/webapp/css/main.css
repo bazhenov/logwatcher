@@ -230,7 +230,7 @@ FORM {
 
 .dashboard .name {
 	float: left;
-	width: 180px;
+	width: 240px;
 	margin: 3px 10px 0 0;
 	text-transform: capitalize
 }
@@ -249,7 +249,6 @@ FORM {
 	height: 10px;
 	font-size: 1px;
 	border-radius: 5px;
-	background: #ccc;
 	margin: 0 auto
 }
 
