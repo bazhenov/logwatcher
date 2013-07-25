@@ -93,7 +93,7 @@ public class SqlClusterStatisticImpl implements ClusterStatistic {
 			public Map<Severity, Integer> extractData(ResultSet rs) throws SQLException, DataAccessException {
 				Map<Severity, Integer> result = newHashMap();
 				while (rs.next()) {
-					Severity s = Severity.forNameStrict(rs.getString("severity"));
+					Severity s = Severity.forName(rs.getString("severity")).get();
 					int i = rs.getInt("count");
 					result.put(s, i);
 				}

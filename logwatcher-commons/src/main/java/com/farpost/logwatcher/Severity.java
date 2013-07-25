@@ -1,5 +1,9 @@
 package com.farpost.logwatcher;
 
+import com.google.common.base.Optional;
+
+import static com.google.common.base.Optional.absent;
+
 public enum Severity {
 
 	trace(1), debug(2), info(3), warning(4), error(5);
@@ -9,23 +13,13 @@ public enum Severity {
 		this.code = code;
 	}
 
-	public static Severity forName(String name) {
+	public static Optional<Severity> forName(String name) {
 		for (Severity i : values()) {
 			if (i.toString().equalsIgnoreCase(name)) {
-				return i;
+				return Optional.of(i);
 			}
 		}
-		return null;
-	}
-
-	// TODO: rework woth Optional<> from guava
-	public static Severity forNameStrict(String name) {
-		for (Severity i : values()) {
-			if (i.toString().equalsIgnoreCase(name)) {
-				return i;
-			}
-		}
-		throw new IllegalArgumentException("Invalid severity name");
+		return absent();
 	}
 
 	public static Severity forCode(int code) {

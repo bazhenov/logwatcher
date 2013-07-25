@@ -28,6 +28,8 @@ import java.util.Map;
 import java.util.Set;
 
 import static com.farpost.logwatcher.Checksum.fromHexString;
+import static com.farpost.logwatcher.Severity.error;
+import static com.farpost.logwatcher.Severity.forName;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
@@ -97,18 +99,18 @@ public class FeedController {
 	private static Severity getSeverity(HttpServletRequest request) {
 		String get = request.getParameter("severity");
 		if (get != null) {
-			return Severity.forName(get);
+			return forName(get).or(error);
 		}
 
 		Cookie[] cookies = request.getCookies();
 		if (cookies != null) {
 			for (Cookie cookie : cookies) {
 				if ("severity".equals(cookie.getName())) {
-					return Severity.forName(cookie.getValue());
+					return forName(cookie.getValue()).or(error);
 				}
 			}
 		}
-		return Severity.error;
+		return error;
 	}
 
 	public void setIssueLinkPattern(String issueLinkPattern) {

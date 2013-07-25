@@ -21,7 +21,7 @@ public class SqlClusterDao implements ClusterDao {
 		@Override
 		public Cluster mapRow(ResultSet rs, int rowNum) throws SQLException {
 			return new Cluster(rs.getString("application"), rs.getString("title"), fromHexString(rs.getString("checksum")),
-				rs.getString("description"), rs.getString("issue_key"), forName(rs.getString("severity")));
+				rs.getString("description"), rs.getString("issue_key"), forName(rs.getString("severity")).get());
 		}
 	};
 

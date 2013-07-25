@@ -2,10 +2,10 @@ package com.farpost.logwatcher;
 
 import org.testng.annotations.Test;
 
-import static com.farpost.logwatcher.Severity.trace;
-import static com.farpost.logwatcher.Severity.warning;
+import static com.farpost.logwatcher.Severity.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 
 public class SeverityTest {
 
@@ -16,14 +16,14 @@ public class SeverityTest {
 
 	@Test
 	public void seveityCanBeParsedFromString() {
-		assertThat(Severity.forName("warning"), equalTo(warning));
-		assertThat(Severity.forName("Warning"), equalTo(warning));
+		assertThat(forName("warning").get(), equalTo(warning));
+		assertThat(forName("Warning").get(), equalTo(warning));
 
-		assertThat(Severity.forName("oops"), equalTo(null));
+		assertThat(forName("oops").isPresent(), is(false));
 	}
 
 	@Test
 	public void seveityCanBeParsedFromInteger() {
-		assertThat(Severity.forCode(1), equalTo(trace));
+		assertThat(forCode(1), equalTo(trace));
 	}
 }
