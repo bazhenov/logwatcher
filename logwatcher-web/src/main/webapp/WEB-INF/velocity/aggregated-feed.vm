@@ -117,6 +117,9 @@
 	</script>
 	#end
 
+<div class="text-center">
+	<input id="filterPattern" type="search" class="input-xlarge search-query" placeholder="Filter by message..."/>
+</div>
 <div class="entries">
 	<div class="spinner">
 		<img src="/images/spinner_large.gif">
@@ -124,6 +127,28 @@
 </div>
 
 <script type="text/javascript">
+	var filterFeed = function () {
+		var pattern = $("#filterPattern").val().toLowerCase();
+		$(".entries .message").each(function (i, v) {
+			var text = v.innerText.toLowerCase();
+			var container = $(v).closest(".entry");
+
+			if (text.indexOf(pattern) >= 0) {
+				container.show(0);
+			} else {
+				container.hide(0);
+			}
+		});
+	};
+
+	$("#filterBtn").click(filterFeed);
+	$("#filterPattern").keyup(function (e) {
+		if (e.which == 13) {
+			e.preventDefault();
+		}
+		filterFeed();
+	});
+
 	function updateFeed() {
 		$.ajax({
 			url: "/service/feed/${p.applicationId}",
@@ -140,7 +165,8 @@
 					var count = parseInt($(canvas).attr("data-count"));
 					var severity = $(canvas).attr("data-severity");
 					new Counterina(canvas, maxData).draw(count, severity);
-				})
+				});
+				filterFeed();
 			});
 		setTimeout(updateFeed, 6000);
 	}
