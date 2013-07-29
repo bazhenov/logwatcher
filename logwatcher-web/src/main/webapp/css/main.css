@@ -275,3 +275,9 @@ FORM {
 .clear {
 	clear: both
 }
+
+#filterPattern {
+	font-size: 12pt;
+	line-height: 18pt;
+	height: 18pt;
+}

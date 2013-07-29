@@ -43,7 +43,6 @@
 	<span id="severityContainer">
 		#macro(severity $severity $currentSeverity)
 			#if($severity != $currentSeverity)
-				<!--suppress HtmlUnknownTag -->
 				<li><a href="#" onclick="changeSeverity('/session?severity=$severity')">$severity</a></li>
 			#end
 		#end
@@ -118,7 +117,7 @@
 	#end
 
 <div class="text-center">
-	<input id="filterPattern" type="search" class="input-xlarge search-query" placeholder="Filter by message..."/>
+	<input id="filterPattern" type="text" class="input-xlarge" placeholder="Filter by message..."/>
 </div>
 <div class="entries">
 	<div class="spinner">
