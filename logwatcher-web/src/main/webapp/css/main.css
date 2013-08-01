@@ -228,6 +228,11 @@ FORM {
 	color: #060606
 }
 
+.dashboard .item.empty {
+	color: #AAA;
+	font-size: 15px;
+}
+
 .dashboard .name {
 	float: left;
 	width: 240px;
