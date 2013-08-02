@@ -5,6 +5,15 @@
 	<link rel="stylesheet" type="text/css" href="/css/dashboard.css"/>
 </head>
 <body>
+
+	#macro(dt $severity $s)
+		#if($s[$severity])
+		<span class="detail $severity"><i>&nbsp;</i> $f.shortNumberFormat($s[$severity])</span>
+		#else
+		<span class="detail"><i>&nbsp;</i> &nbsp;</span>
+		#end
+	#end
+
 <h2>Dashboard</h2>
 
 	#if($p.applications.isEmpty())
@@ -15,35 +24,21 @@
 	#else
 	<div class="dashboard">
 		#foreach($app in $p.applications)
-			<a href="/feed/$app" class="item">
-				<span class="name">$app</span>
-				#set($s = $p.getApplicationStatistics($app))
-				#if($s["error"])
-					<span class="detail error"><i>&nbsp;</i> $f.shortNumberFormat($s["error"])</span>
-				#else
-					<span class="detail"><i>&nbsp;</i> &nbsp;</span>
-				#end
-				#if($s["warning"])
-					<span class="detail warning"><i>&nbsp;</i> $f.shortNumberFormat($s["warning"])</span>
-				#else
-					<span class="detail"><i>&nbsp;</i> &nbsp;</span>
-				#end
-				#if($s["info"])
-					<span class="detail info"><i>&nbsp;</i> $f.shortNumberFormat($s["info"])</span>
-				#else
-					<span class="detail"><i>&nbsp;</i> &nbsp;</span>
-				#end
-				#if($s["debug"])
-					<span class="detail debug"><i>&nbsp;</i> $f.shortNumberFormat($s["debug"])</span>
-				#else
-					<span class="detail"><i>&nbsp;</i> &nbsp;</span>
-				#end
-				#if($s["trace"])
-					<span class="detail trace"><i>&nbsp;</i> $f.shortNumberFormat($s["trace"])</span>
-				#else
-					<span class="detail"><i>&nbsp;</i> &nbsp;</span>
-				#end
-			</a>
+			#set($s = $p.getApplicationStatistics($app))
+			#if($s.isEmpty())
+				<a href="/feed/$app" class="item empty">
+					<span class="name">$app</span>
+				</a>
+			#else
+				<a href="/feed/$app" class="item">
+					<span class="name">$app</span>
+					#dt("error", $s)
+					#dt("warning", $s)
+					#dt("info", $s)
+					#dt("debug", $s)
+					#dt("trace", $s)
+				</a>
+			#end
 		#end
 	</div>
 	<div class="clear">&nbsp;</div>
