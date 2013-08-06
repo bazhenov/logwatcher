@@ -7,7 +7,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import static com.farpost.logwatcher.Severity.forName;
+import static com.farpost.logwatcher.SeverityUtils.forName;
 
 public class TranslationRulesImpl {
 

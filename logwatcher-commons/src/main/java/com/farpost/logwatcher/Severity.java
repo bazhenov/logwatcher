@@ -1,9 +1,5 @@
 package com.farpost.logwatcher;
 
-import com.google.common.base.Optional;
-
-import static com.google.common.base.Optional.absent;
-
 public enum Severity {
 
 	trace(1), debug(2), info(3), warning(4), error(5);
@@ -11,15 +7,6 @@ public enum Severity {
 
 	Severity(int code) {
 		this.code = code;
-	}
-
-	public static Optional<Severity> forName(String name) {
-		for (Severity i : values()) {
-			if (i.toString().equalsIgnoreCase(name)) {
-				return Optional.of(i);
-			}
-		}
-		return absent();
 	}
 
 	public static Severity forCode(int code) {

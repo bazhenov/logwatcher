@@ -11,7 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static com.farpost.logwatcher.Checksum.fromHexString;
-import static com.farpost.logwatcher.Severity.forName;
+import static com.farpost.logwatcher.SeverityUtils.forName;
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class SqlClusterDao implements ClusterDao {

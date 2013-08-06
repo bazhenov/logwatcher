@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
+import static com.farpost.logwatcher.SeverityUtils.forName;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Maps.newHashMap;
@@ -93,7 +94,7 @@ public class SqlClusterStatisticImpl implements ClusterStatistic {
 			public Map<Severity, Integer> extractData(ResultSet rs) throws SQLException, DataAccessException {
 				Map<Severity, Integer> result = newHashMap();
 				while (rs.next()) {
-					Severity s = Severity.forName(rs.getString("severity")).get();
+					Severity s = forName(rs.getString("severity")).get();
 					int i = rs.getInt("count");
 					result.put(s, i);
 				}
