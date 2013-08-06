@@ -6,6 +6,7 @@ import com.farpost.logwatcher.marshalling.Marshaller;
 import com.farpost.logwatcher.storage.spi.AnnotationDrivenMatcherMapperImpl;
 import com.farpost.logwatcher.storage.spi.MatcherMapper;
 import com.farpost.logwatcher.storage.spi.MatcherMapperException;
+import com.google.common.io.Closeables;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
@@ -32,7 +33,6 @@ import java.util.Map;
 
 import static com.farpost.logwatcher.storage.LuceneUtils.*;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.io.Closeables.closeQuietly;
 import static java.lang.System.nanoTime;
 import static java.util.Collections.emptyList;
 import static org.apache.lucene.index.IndexWriter.MaxFieldLength;
@@ -85,7 +85,7 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 
 			int entryId = getNextId();
 
-			Date entryDate = date(impl.getDate().toLocalDate());
+			Date entryDate = date(impl.getDate());
 			byte[] marshaledEntry = marshaller.marshall(impl);
 
 			jdbc.update("INSERT INTO entry (id, date, checksum,value) VALUES (?, ?, ?, ?)", entryId, entryDate,
@@ -103,8 +103,8 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 		}
 	}
 
-	private static Date date(LocalDate date) {
-		return new Date(date.toDateTimeAtStartOfDay().getMillis());
+	private static Date date(java.util.Date date) {
+		return new Date(date.getTime());
 	}
 
 	/**
@@ -136,7 +136,7 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 		SearcherReference newSearcher = createSearcher();
 		SearcherReference oldSearcher = searcherRef;
 		searcherRef = newSearcher;
-		closeQuietly(oldSearcher);
+		Closeables.close(oldSearcher, true);
 	}
 
 	public void setCommitThreshold(int commitThreshold) {
@@ -167,7 +167,7 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 		Document document = new Document();
 		document.add(term("applicationId", normalize(entry.getApplicationId())));
 		document.add(term("date", normalizeDate(entry.getDate())));
-		document.add(numeric("datetime", entry.getDate().getMillis()));
+		document.add(numeric("datetime", entry.getDate().getTime()));
 		document.add(text("message", entry.getMessage()));
 		document.add(term("severity", entry.getSeverity().name()));
 		document.add(term("checksum", normalize(entry.getChecksum())));

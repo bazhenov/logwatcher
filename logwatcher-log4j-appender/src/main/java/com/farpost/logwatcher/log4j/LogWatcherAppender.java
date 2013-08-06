@@ -9,10 +9,10 @@ import com.farpost.logwatcher.marshalling.Marshaller;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Level;
 import org.apache.log4j.spi.LoggingEvent;
-import org.joda.time.DateTime;
 
 import java.io.IOException;
 import java.net.*;
+import java.util.Date;
 
 import static java.lang.Math.min;
 
@@ -36,10 +36,12 @@ public class LogWatcherAppender extends AppenderSkeleton {
 	private String applicationId = "anonymous";
 	private Marshaller marshaller = new Jaxb2Marshaller();
 
+	@SuppressWarnings("UnusedDeclaration")
 	public String getAddress() {
 		return address.getHostName();
 	}
 
+	@SuppressWarnings("UnusedDeclaration")
 	public String getApplicationId() {
 		return applicationId;
 	}
@@ -100,7 +102,7 @@ public class LogWatcherAppender extends AppenderSkeleton {
 		Level level = event.getLevel();
 		String location = event.getLocationInformation().getClassName();
 		Severity severity = getSererity(level);
-		DateTime now = DateTime.now();
+		Date now = new Date();
 		String checksum = calculateChecksum(message, location);
 
 		LogEntry entry;

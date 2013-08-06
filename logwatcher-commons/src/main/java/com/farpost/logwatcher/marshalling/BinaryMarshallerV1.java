@@ -4,9 +4,9 @@ import com.farpost.logwatcher.Cause;
 import com.farpost.logwatcher.LogEntry;
 import com.farpost.logwatcher.LogEntryImpl;
 import com.farpost.logwatcher.Severity;
-import org.joda.time.DateTime;
 
 import java.io.*;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,7 +22,7 @@ public class BinaryMarshallerV1 implements Marshaller {
 			ObjectOutputStream objectStream = new ObjectOutputStream(byteStream);
 
 			objectStream.writeByte(1);
-			objectStream.writeLong(entry.getDate().getMillis());
+			objectStream.writeLong(entry.getDate().getTime());
 			objectStream.writeByte(entry.getSeverity().getCode());
 			objectStream.writeUTF(entry.getChecksum());
 			objectStream.writeUTF(entry.getApplicationId());
@@ -54,7 +54,7 @@ public class BinaryMarshallerV1 implements Marshaller {
 			ObjectInputStream objectStream = new ObjectInputStream(new ByteArrayInputStream(data));
 
 			checkVersion(objectStream.readByte());
-			DateTime date = new DateTime(objectStream.readLong());
+			Date date = new Date(objectStream.readLong());
 			Severity severity = Severity.forCode(objectStream.readByte());
 			String checksum = objectStream.readUTF();
 			String applicationId = objectStream.readUTF();

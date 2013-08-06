@@ -39,7 +39,8 @@ public class WriteToStorageTransportListenerTest {
 		throws TransportException, LogStorageException, InvalidCriteriaException, UnknownHostException {
 		DateTime date = now();
 		Cause cause = new Cause("type", "message", "stack");
-		LogEntry entry = new LogEntryImpl(date, "group", "message", Severity.error, "checksum", "default", null, cause);
+		LogEntry entry = new LogEntryImpl(date.toDate(), "group", "message", Severity.error, "checksum", "default", null,
+			cause);
 
 		listener.onMessage(marshaller.marshall(entry), getLocalHost());
 

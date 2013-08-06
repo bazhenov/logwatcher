@@ -1,6 +1,7 @@
 package com.farpost.logwatcher.storage;
 
 import com.farpost.logwatcher.LogEntry;
+import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 
@@ -28,7 +29,7 @@ public class DateMatcher implements LogEntryMatcher {
 	 * {@link DateMatcher#DateMatcher(LocalDate)}.
 	 *
 	 * @param from начало диапазона дат
-	 * @param to	 конец диапазона дат (исключается из диапазона поиска)
+	 * @param to   конец диапазона дат (исключается из диапазона поиска)
 	 */
 	public DateMatcher(LocalDate from, LocalDate to) {
 		checkNotNull(from, "Date 'from' must not be null");
@@ -52,7 +53,7 @@ public class DateMatcher implements LogEntryMatcher {
 	}
 
 	public boolean isMatch(LogEntry entry) {
-		return interval.contains(entry.getDate());
+		return interval.contains(new DateTime(entry.getDate()));
 	}
 
 	@Override

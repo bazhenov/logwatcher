@@ -5,7 +5,6 @@ import com.farpost.logwatcher.LogEntry;
 import com.farpost.logwatcher.LogEntryImpl;
 import com.farpost.logwatcher.Severity;
 import com.farpost.logwatcher.marshalling.Jaxb2Marshaller;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +16,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Map;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
@@ -57,7 +57,7 @@ public class SystemController {
 			? new Cause(new Exception(causeTitle))
 			: null;
 		Map<String, String> attributes = Collections.emptyMap();
-		LogEntry entry = new LogEntryImpl(new DateTime(), group, title, Severity.error, checksum, applicationId, attributes,
+		LogEntry entry = new LogEntryImpl(new Date(), group, title, Severity.error, checksum, applicationId, attributes,
 			cause);
 		byte[] bytes = marshaller.marshall(entry);
 		DatagramPacket packet = new DatagramPacket(bytes, bytes.length, getLocalHost(), port);

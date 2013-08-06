@@ -4,6 +4,7 @@ import com.farpost.logwatcher.*;
 import com.farpost.logwatcher.cluster.ClusterDao;
 import com.farpost.logwatcher.statistics.ClusterStatistic;
 import com.farpost.logwatcher.storage.LogStorage;
+import org.joda.time.DateTime;
 
 import static com.farpost.logwatcher.Checksum.fromHexString;
 
@@ -31,7 +32,7 @@ public class NgApiEntryListener implements LogEntryListener {
 			}
 			clusterDao.registerCluster(new Cluster(entry.getApplicationId(), entry.getSeverity(), message, checksum));
 		}
-		clusterStatistic.registerEvent(entry.getApplicationId(), entry.getDate(), checksum, entry.getSeverity());
+		clusterStatistic.registerEvent(entry.getApplicationId(), new DateTime(entry.getDate()), checksum, entry.getSeverity());
 		storage.writeEntry(entry);
 	}
 }

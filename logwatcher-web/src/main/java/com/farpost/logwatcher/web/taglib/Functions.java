@@ -1,7 +1,6 @@
 package com.farpost.logwatcher.web.taglib;
 
 import com.farpost.logwatcher.Cause;
-import org.joda.time.ReadableDateTime;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -61,9 +60,5 @@ public class Functions {
 
 	public static int magnitude(int number) {
 		return (int) Math.log10(number);
-	}
-
-	public static Date date(ReadableDateTime date) {
-		return date.toDateTime().toDate();
 	}
 }

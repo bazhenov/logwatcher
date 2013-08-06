@@ -4,7 +4,7 @@
 
     <jsp:directive.attribute name="entry" type="com.farpost.logwatcher.LogEntry" required="true"/>
 
-    <p><fmt:formatDate value="${lf:date(entry.date)}" pattern="dd MMM, HH:mm:ss"/> &amp;mdash; <c:out
+    <p><fmt:formatDate value="${entry.date}" pattern="dd MMM, HH:mm:ss"/> &amp;mdash; <c:out
             value="${entry.message}"/></p>
     <c:if test="${!empty(entry.attributes)}">
         <p>

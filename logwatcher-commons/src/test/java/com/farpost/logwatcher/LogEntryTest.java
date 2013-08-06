@@ -1,21 +1,20 @@
 package com.farpost.logwatcher;
 
-import org.joda.time.DateTime;
 import org.testng.annotations.Test;
+
+import java.util.Date;
 
 import static com.farpost.logwatcher.Severity.info;
 import static com.farpost.logwatcher.Severity.warning;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.joda.time.DateTime.now;
-import static org.joda.time.DateTimeConstants.NOVEMBER;
 
 public class LogEntryTest {
 
 	@Test
 	public void entryParameters() {
 		String logMessage = "ExceptionMessage";
-		DateTime date = new DateTime(2008, NOVEMBER, 12, 15, 23);
+		Date date = new Date(1226467380000L); // 2008, November 12, 15:23:00
 		String group = "group";
 		String checksum = "3d4f";
 		LogEntry logEntry = new LogEntryImpl(date, group, logMessage, info, checksum, "default", null);
@@ -42,7 +41,7 @@ public class LogEntryTest {
 	@Test
 	public void entryMayHaveCause() {
 		Cause cause = createCause();
-		LogEntry entry = new LogEntryImpl(now(), "group", "message", warning, "3d", "default", null, cause);
+		LogEntry entry = new LogEntryImpl(new Date(), "group", "message", warning, "3d", "default", null, cause);
 
 		assertThat(entry.getCause(), equalTo(cause));
 	}

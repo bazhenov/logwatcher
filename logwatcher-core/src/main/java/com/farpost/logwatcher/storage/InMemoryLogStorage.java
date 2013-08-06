@@ -44,7 +44,7 @@ public class InMemoryLogStorage implements LogStorage {
 				int removed = 0;
 				while (iterator.hasNext()) {
 					LogEntry entry = iterator.next();
-					if (entry.getDate().toLocalDate().isBefore(date)) {
+					if (entry.getDate().before(date.toDate())) {
 						iterator.remove();
 						removed++;
 					}

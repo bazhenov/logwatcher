@@ -46,7 +46,8 @@ public class LogEntryBuilder {
 	}
 
 	public LogEntry create() {
-		return new LogEntryImpl(time, group, message, severity, checksum, applicationId, attributes, createCause(cause));
+		return new LogEntryImpl(time.toDate(), group, message, severity, checksum, applicationId, attributes,
+			createCause(cause));
 	}
 
 	private static Cause createCause(Throwable cause) {
@@ -77,29 +78,6 @@ public class LogEntryBuilder {
 	public LogEntry saveIn(LogStorage storage) throws LogStorageException {
 		LogEntry entry = create();
 		storage.writeEntry(entry);
-		return entry;
-	}
-
-	/**
-	 * Записывает запись в постоянное хранилище.
-	 * <p/>
-	 * Этот метод идентичен методу {@link #saveIn(LogStorage)}, за тем лишь исключением,
-	 * что он сохраняет запись в хранилище указанное количество раз. Очень удобно в целях тестирования.
-	 *
-	 * @param storage хранилище
-	 * @param times	 сколько раз произвести запись
-	 * @return запись
-	 * @throws IllegalArgumentException в случае, если передано не положительное число указывающее количество
-	 *                                  записей производимых в хранилище.
-	 */
-	public LogEntry saveMultipleTimesIn(LogStorage storage, int times) {
-		if (times <= 0) {
-			throw new IllegalArgumentException("Times argument should be positive integer");
-		}
-		LogEntry entry = create();
-		for (int i = 0; i < times; i++) {
-			storage.writeEntry(entry);
-		}
 		return entry;
 	}
 

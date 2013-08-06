@@ -3,9 +3,11 @@ package com.farpost.logwatcher.storage;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.NumericField;
 import org.joda.time.LocalDate;
-import org.joda.time.ReadableDateTime;
+
+import java.util.Date;
 
 import static java.lang.String.format;
+import static org.joda.time.LocalDate.fromDateFields;
 
 class LuceneUtils {
 
@@ -25,8 +27,8 @@ class LuceneUtils {
 		return term.toLowerCase().trim();
 	}
 
-	static String normalizeDate(ReadableDateTime date) {
-		return normalizeDate(date.toDateTime().toLocalDate());
+	static String normalizeDate(Date date) {
+		return normalizeDate(fromDateFields(date));
 	}
 
 	/**

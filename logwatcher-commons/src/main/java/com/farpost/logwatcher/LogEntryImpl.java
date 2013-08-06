@@ -1,15 +1,13 @@
 package com.farpost.logwatcher;
 
 import com.farpost.logwatcher.marshalling.JaxbAttributesMapAdapter;
-import com.farpost.logwatcher.marshalling.JaxbDateAdapter;
-import org.joda.time.DateTime;
-import org.joda.time.ReadableDateTime;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,9 +16,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @XmlRootElement(name = "logEntry")
 public class LogEntryImpl implements LogEntry {
 
-	@XmlJavaTypeAdapter(value = JaxbDateAdapter.class)
 	@XmlAttribute
-	private final DateTime date;
+	private final Date date;
 
 	@XmlElement(name = "application")
 	private ApplicationContainer applicationContainer;
@@ -57,12 +54,12 @@ public class LogEntryImpl implements LogEntry {
 		this.attributes = new HashMap<String, String>();
 	}
 
-	public LogEntryImpl(ReadableDateTime date, String group, String message, Severity severity, String checksum,
+	public LogEntryImpl(Date date, String group, String message, Severity severity, String checksum,
 											String applicationId, Map<String, String> attributes) {
 		this(date, group, message, severity, checksum, applicationId, attributes, null);
 	}
 
-	public LogEntryImpl(ReadableDateTime date, String group, String message, Severity severity, String checksum,
+	public LogEntryImpl(Date date, String group, String message, Severity severity, String checksum,
 											String applicationId, Map<String, String> attributes, Cause cause) {
 		checkNotNull(date);
 		checkNotNull(group);
@@ -70,7 +67,7 @@ public class LogEntryImpl implements LogEntry {
 		checkNotNull(severity);
 		checkNotNull(applicationId);
 
-		this.date = date.toDateTime();
+		this.date = date;
 		this.groupContainer = new GroupContainer(group);
 		this.message = message;
 		this.severity = new SeverityContainer(severity);
@@ -83,7 +80,7 @@ public class LogEntryImpl implements LogEntry {
 	}
 
 	@Override
-	public DateTime getDate() {
+	public Date getDate() {
 		return date;
 	}
 
@@ -97,6 +94,7 @@ public class LogEntryImpl implements LogEntry {
 		return severity.getSeverity();
 	}
 
+	@SuppressWarnings("UnusedDeclaration")
 	public SeverityContainer getSeverityContainer() {
 		return severity;
 	}
@@ -106,6 +104,7 @@ public class LogEntryImpl implements LogEntry {
 		return groupContainer.getGroup();
 	}
 
+	@SuppressWarnings("UnusedDeclaration")
 	public GroupContainer getGroupContainer() {
 		return groupContainer;
 	}
@@ -130,6 +129,7 @@ public class LogEntryImpl implements LogEntry {
 		return applicationContainer.getApplicationId();
 	}
 
+	@SuppressWarnings("UnusedDeclaration")
 	public ApplicationContainer getApplicationContainer() {
 		return applicationContainer;
 	}
@@ -144,6 +144,7 @@ public class LogEntryImpl implements LogEntry {
 		return groupContainer.getGroup();
 	}
 
+	@SuppressWarnings("RedundantIfStatement")
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -184,6 +185,7 @@ public class LogEntryImpl implements LogEntry {
 		@XmlAttribute(name = "name")
 		private final Severity severity;
 
+		@SuppressWarnings("UnusedDeclaration")
 		public SeverityContainer() {
 			this(null);
 		}
@@ -218,6 +220,7 @@ public class LogEntryImpl implements LogEntry {
 		@XmlAttribute(name = "id")
 		private final String applicationId;
 
+		@SuppressWarnings("UnusedDeclaration")
 		public ApplicationContainer() {
 			this(null);
 		}
@@ -252,6 +255,7 @@ public class LogEntryImpl implements LogEntry {
 		@XmlAttribute(name = "name")
 		private final String group;
 
+		@SuppressWarnings("UnusedDeclaration")
 		public GroupContainer() {
 			this(null);
 		}

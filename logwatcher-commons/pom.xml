@@ -12,11 +12,4 @@
 	<artifactId>logwatcher-commons</artifactId>
 	<version>1.2</version>
 	<name>LogWatcher Commons API</name>
-
-	<dependencies>
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-		</dependency>
-	</dependencies>
 </project>

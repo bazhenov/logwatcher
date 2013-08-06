@@ -1,7 +1,6 @@
 package com.farpost.logwatcher;
 
-import org.joda.time.DateTime;
-
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -16,7 +15,7 @@ import java.util.Map;
  */
 public interface LogEntry {
 
-	DateTime getDate();
+	Date getDate();
 
 	String getMessage();
 

@@ -46,7 +46,7 @@ abstract public class LogStorageTestCase {
 			get(0);
 
 		assertThat(entryRef.getChecksum(), notNullValue());
-		assertThat(entryRef.getDate(), equalTo(occurredDate));
+		assertThat(entryRef.getDate(), equalTo(occurredDate.toDate()));
 	}
 
 	@Test

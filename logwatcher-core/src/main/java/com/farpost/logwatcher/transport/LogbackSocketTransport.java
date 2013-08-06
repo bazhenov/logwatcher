@@ -11,7 +11,6 @@ import com.farpost.logwatcher.LogEntry;
 import com.farpost.logwatcher.LogEntryImpl;
 import com.farpost.logwatcher.Severity;
 import com.google.common.hash.HashFunction;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,13 +20,13 @@ import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Date;
 import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.hash.Hashing.md5;
 import static java.lang.Thread.currentThread;
-import static java.util.Collections.emptyMap;
 
 /**
  * This transport receives events sended by Logbacks {@link SocketAppender}.
@@ -37,7 +36,6 @@ public class LogbackSocketTransport implements Transport {
 	private final int port;
 	private final LogEntryListener listener;
 	private final HashFunction hashFunction = md5();
-	private final static Map<String, String> EMPTY = emptyMap();
 	private Acceptor acceptor;
 	private Logger log = LoggerFactory.getLogger(LogbackSocketTransport.class);
 
@@ -67,7 +65,7 @@ public class LogbackSocketTransport implements Transport {
 	}
 
 	private LogEntry createLogEntry(ILoggingEvent event) {
-		DateTime dateTime = new DateTime(event.getTimeStamp());
+		Date dateTime = new Date(event.getTimeStamp());
 		IThrowableProxy proxy = event.getThrowableProxy();
 		Cause cause = proxy != null
 			? new Cause(proxy.getClassName(), proxy.getMessage(), formatStackTrace(proxy))

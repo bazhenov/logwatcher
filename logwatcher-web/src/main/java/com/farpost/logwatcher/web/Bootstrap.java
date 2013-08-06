@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 
 import java.io.File;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -17,8 +18,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.util.concurrent.Uninterruptibles.sleepUninterruptibly;
+import static java.lang.Thread.currentThread;
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.joda.time.DateTime.now;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Bootstrap implements InitializingBean {
@@ -77,7 +78,7 @@ public class Bootstrap implements InitializingBean {
 
 		@Override
 		public void run() {
-			register(new LogEntryImpl(now(), "group", "AdvertServiceException: Error Fetching http headers", Severity.error, "sum", "advertisement", null));
+			register(new LogEntryImpl(new Date(), "group", "AdvertServiceException: Error Fetching http headers", Severity.error, "sum", "advertisement", null));
 			Cause cause = new Cause("java.lang.RuntimeException", "Socket reading timeout", "AdvertServiceException: Error Fetching http headers\n" +
 				"  at /var/www/baza.farpost.ru/rev/20100325-1520/slr/advert/src/remote/AdvertSoapDecorator.class.php:16\n" +
 				"  10: slrSoapDecorator.class.php:94 AdvertSoapDecorator->handleException(\"Error Fetc...\", SoapFault)\n" +
@@ -92,36 +93,36 @@ public class Bootstrap implements InitializingBean {
 				"  1 : service_runner.php:38 advertUnpopularDeactivationService->run()");
 
 			for (int i = 0; i < 200; i++) {
-				register(new LogEntryImpl(now(), "group", "OverflowFundsException", Severity.warning, "sum2",
+				register(new LogEntryImpl(new Date(), "group", "OverflowFundsException", Severity.warning, "sum2",
 					"billing", new HashMap<String, String>() {{
 					put("url", "/some/foo/very/long/url/to/fit/in/screen");
 					put("machine", "aux1.srv.loc");
 				}}, cause));
 			}
 
-			register(new LogEntryImpl(now(), "group", "Ooops", Severity.info, "sum4",
+			register(new LogEntryImpl(new Date(), "group", "Ooops", Severity.info, "sum4",
 				"geocoder", null, cause));
-			register(new LogEntryImpl(now(), "group", "Ooops", Severity.debug, "sum4",
-				"geocoder", null, cause));
-
-			register(new LogEntryImpl(now(), "group", "Ooops", Severity.trace, "sum4",
+			register(new LogEntryImpl(new Date(), "group", "Ooops", Severity.debug, "sum4",
 				"geocoder", null, cause));
 
-			register(new LogEntryImpl(now(), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
+			register(new LogEntryImpl(new Date(), "group", "Ooops", Severity.trace, "sum4",
+				"geocoder", null, cause));
+
+			register(new LogEntryImpl(new Date(), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
 				"frontend", null, cause));
-			register(new LogEntryImpl(now(), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
+			register(new LogEntryImpl(new Date(), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
 				"frontend", null, cause));
-			register(new LogEntryImpl(now(), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
+			register(new LogEntryImpl(new Date(), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
 				"frontend", null, cause));
-			register(new LogEntryImpl(now(), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very very long longvery very long longvery very very long long Exception", Severity.error, "sum4",
+			register(new LogEntryImpl(new Date(), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very very long longvery very long longvery very very long long Exception", Severity.error, "sum4",
 				"frontend", null, cause));
 
-			register(new LogEntryImpl(now(), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum5",
+			register(new LogEntryImpl(new Date(), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum5",
 				"frontend", null, null));
-			register(new LogEntryImpl(now(), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum5",
+			register(new LogEntryImpl(new Date(), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum5",
 				"frontend", null, null));
 
-			while (true) {
+			while (!currentThread().isInterrupted()) {
 				fireNewEvent();
 				sleepUninterruptibly(1, SECONDS);
 			}
@@ -129,7 +130,7 @@ public class Bootstrap implements InitializingBean {
 
 		private void fireNewEvent() {
 			LogEntry e = entries.get(rnd.nextInt(entries.size()));
-			LogEntry n = new LogEntryImpl(now(), e.getGroup(), e.getMessage(), e.getSeverity(), e.getChecksum(), e.getApplicationId(),
+			LogEntry n = new LogEntryImpl(new Date(), e.getGroup(), e.getMessage(), e.getSeverity(), e.getChecksum(), e.getApplicationId(),
 				e.getAttributes(), e.getCause());
 			write(n);
 		}

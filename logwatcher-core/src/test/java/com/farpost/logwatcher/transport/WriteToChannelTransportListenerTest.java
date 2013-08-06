@@ -12,6 +12,7 @@ import org.testng.annotations.Test;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Date;
 
 import static com.farpost.logwatcher.Severity.error;
 import static com.farpost.logwatcher.transport.WriteToChannelTransportListener.SENDER_ADDRESS;
@@ -19,7 +20,6 @@ import static java.net.InetAddress.getLocalHost;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.joda.time.DateTime.now;
 
 public class WriteToChannelTransportListenerTest {
 
@@ -38,7 +38,7 @@ public class WriteToChannelTransportListenerTest {
 	public void listenerShouldWriteEntryToChannel()
 		throws TransportException, InterruptedException, UnknownHostException {
 		Cause cause = new Cause("type", "message", "stack");
-		LogEntry entry = new LogEntryImpl(now(), "group", "message", error, "checksum", "default", null, cause);
+		LogEntry entry = new LogEntryImpl(new Date(), "group", "message", error, "checksum", "default", null, cause);
 
 		byte[] message = marshaller.marshall(entry);
 		InetAddress sender = getLocalHost();
@@ -55,7 +55,7 @@ public class WriteToChannelTransportListenerTest {
 	public void listenerShouldThrowExceptionOnQueueOverflow()
 		throws TransportException, InterruptedException, UnknownHostException {
 		Cause cause = new Cause("type", "message", "stack");
-		LogEntry entry = new LogEntryImpl(now(), "group", "message", error, "checksum", "default", null, cause);
+		LogEntry entry = new LogEntryImpl(new Date(), "group", "message", error, "checksum", "default", null, cause);
 
 		byte[] message = marshaller.marshall(entry);
 		listener.onMessage(message, getLocalHost());

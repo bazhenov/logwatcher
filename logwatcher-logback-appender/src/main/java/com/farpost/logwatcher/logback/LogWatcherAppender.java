@@ -10,10 +10,10 @@ import com.farpost.logwatcher.LogEntryImpl;
 import com.farpost.logwatcher.Severity;
 import com.farpost.logwatcher.marshalling.Jaxb2Marshaller;
 import com.farpost.logwatcher.marshalling.Marshaller;
-import org.joda.time.DateTime;
 
 import java.io.IOException;
 import java.net.*;
+import java.util.Date;
 import java.util.Map;
 
 import static java.lang.Integer.parseInt;
@@ -36,7 +36,7 @@ public class LogWatcherAppender extends UnsynchronizedAppenderBase<ILoggingEvent
 	@Override
 	protected void append(ILoggingEvent event) {
 		try {
-			DateTime time = new DateTime(event.getTimeStamp());
+			Date time = new Date(event.getTimeStamp());
 			Severity severity = severity(event.getLevel());
 			ThrowableProxy proxy = (ThrowableProxy) event.getThrowableProxy();
 			Cause cause = proxy != null
