@@ -79,18 +79,18 @@ public class Bootstrap implements InitializingBean {
 		@Override
 		public void run() {
 			register(new LogEntryImpl(new Date(), "group", "AdvertServiceException: Error Fetching http headers", Severity.error, "sum", "advertisement", null));
-			Cause cause = new Cause("java.lang.RuntimeException", "Socket reading timeout", "AdvertServiceException: Error Fetching http headers\n" +
+			Cause cause = new Cause("java.lang.RuntimeException", "Socket reading timeout",
 				"  at /var/www/baza.farpost.ru/rev/20100325-1520/slr/advert/src/remote/AdvertSoapDecorator.class.php:16\n" +
-				"  10: slrSoapDecorator.class.php:94 AdvertSoapDecorator->handleException(\"Error Fetc...\", SoapFault)\n" +
-				"  9 : unknown:0 slrSoapDecorator->__call(\"findLinks\", [1])\n" +
-				"  8 : AdvertRemoteProvider.class.php:331 AdvertSoapDecorator->findLinks([2])\n" +
-				"  7 : AdvertLinkFinder.class.php:77 AdvertRemoteProvider->findLinks(AdvertLinkFinder)\n" +
-				"  6 : AdvertAbstractFinder.class.php:59 AdvertLinkFinder->getResults()\n" +
-				"  5 : AdvertAbstractFinder.class.php:35 AdvertAbstractFinder->fetchResults()\n" +
-				"  4 : AdvertRemoteAdvertisement.class.php:118 AdvertAbstractFinder->results()\n" +
-				"  3 : advertUnpopularDeactivationService.class.php:34 AdvertRemoteAdvertisement->getLinks(true)\n" +
-				"  2 : advertUnpopularDeactivationService.class.php:23 advertUnpopularDeactivationService->deactivateByMaxViews([849])\n" +
-				"  1 : service_runner.php:38 advertUnpopularDeactivationService->run()");
+					"  10: slrSoapDecorator.class.php:94 AdvertSoapDecorator->handleException(\"Error Fetc...\", SoapFault)\n" +
+					"  9 : unknown:0 slrSoapDecorator->__call(\"findLinks\", [1])\n" +
+					"  8 : AdvertRemoteProvider.class.php:331 AdvertSoapDecorator->findLinks([2])\n" +
+					"  7 : AdvertLinkFinder.class.php:77 AdvertRemoteProvider->findLinks(AdvertLinkFinder)\n" +
+					"  6 : AdvertAbstractFinder.class.php:59 AdvertLinkFinder->getResults()\n" +
+					"  5 : AdvertAbstractFinder.class.php:35 AdvertAbstractFinder->fetchResults()\n" +
+					"  4 : AdvertRemoteAdvertisement.class.php:118 AdvertAbstractFinder->results()\n" +
+					"  3 : advertUnpopularDeactivationService.class.php:34 AdvertRemoteAdvertisement->getLinks(true)\n" +
+					"  2 : advertUnpopularDeactivationService.class.php:23 advertUnpopularDeactivationService->deactivateByMaxViews([849])\n" +
+					"  1 : service_runner.php:38 advertUnpopularDeactivationService->run()");
 
 			for (int i = 0; i < 200; i++) {
 				register(new LogEntryImpl(new Date(), "group", "OverflowFundsException", Severity.warning, "sum2",
