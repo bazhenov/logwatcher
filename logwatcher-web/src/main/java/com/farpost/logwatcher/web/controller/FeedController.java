@@ -167,7 +167,6 @@ public class FeedController {
 		public MinuteVector getMinuteVector(Cluster c) {
 			return clusterStatistic.getMinuteVector(applicationId, c.getChecksum());
 		}
-
 	}
 
 	public class DetailsPage {

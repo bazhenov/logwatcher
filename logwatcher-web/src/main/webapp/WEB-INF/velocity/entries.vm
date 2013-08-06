@@ -70,9 +70,16 @@
 
 <h3>Statistics</h3>
 
-<p class="section">
-	Today: $p.statistics.todayCount times. Yesterday: $p.statistics.yesterdayCount times.
-	Last seen: $date.format("dd MMMM, HH:mm:ss", $p.statistics.lastSeenAt.toDate())
+<p class="section bigDate">
+	<span data-toggle="tooltip"
+				title="First seen at">$date.format("dd MMMM, HH:mm:ss", $p.statistics.firstSeenAt.toDate())</span>
+	&mdash; <span data-toggle="tooltip"
+								title="Last seen at">$date.format("dd MMMM, HH:mm:ss", $p.statistics.lastSeenAt.toDate())</span>
+</p>
+
+<p class="section bigNumber">
+	<span data-toggle="tooltip" title="The number of occurrences yesterday">$p.statistics.yesterdayCount</span> /
+	<span data-toggle="tooltip" title="The number of occurrences today">$p.statistics.todayCount<span>
 </p>
 
 <table id="statisticsTable">
@@ -108,5 +115,9 @@
 <script src="http://code.highcharts.com/highcharts.js"></script>
 <script src="/js/events.detailed-view.js"></script>
 <script src="/js/bootstrap-datepicker.js"></script>
+
+<script type="text/javascript">
+	$("*[data-toggle='tooltip']").tooltip()
+</script>
 </body>
 </html>

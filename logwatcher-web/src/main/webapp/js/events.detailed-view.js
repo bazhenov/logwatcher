@@ -12,7 +12,7 @@ $(document).ready(function () {
 		});
 	}
 
-	function showMinuteStatistics() {
+	function showStatistics() {
 		$.ajax({
 			dataType: "json",
 			url: "/service/stat/by-minute.json",
@@ -116,7 +116,7 @@ $(document).ready(function () {
 	});
 
 	showLogButton.click();
-	showMinuteStatistics();
+	showStatistics();
 	loadAttributes();
 
 	$("#clusterSave").click(function () {

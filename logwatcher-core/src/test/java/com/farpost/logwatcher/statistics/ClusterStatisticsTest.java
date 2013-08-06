@@ -57,6 +57,7 @@ public abstract class ClusterStatisticsTest {
 		assertThat(dayStat.getCount(LocalDate.now()), is(2));
 		assertThat(dayStat.getCount(LocalDate.now().minusDays(1)), is(1));
 		assertThat((double) dayStat.getLastSeenAt().getMillis(), closeTo(dateTime.getMillis(), 1000d));
+		assertThat((double) dayStat.getFirstSeenAt().getMillis(), closeTo(dateTime.minusDays(1).getMillis(), 1000d));
 	}
 
 	@Test

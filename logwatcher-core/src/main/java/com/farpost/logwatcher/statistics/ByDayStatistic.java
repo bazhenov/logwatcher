@@ -14,8 +14,11 @@ public final class ByDayStatistic {
 	private final Checksum checksum;
 	private final DateTime lastSeenAt;
 	private final Map<LocalDate, Integer> count;
+	private final DateTime firstSeenAt;
 
-	public ByDayStatistic(String applicationId, Checksum checksum, DateTime lastSeen, Map<LocalDate, Integer> counts) {
+	public ByDayStatistic(String applicationId, Checksum checksum, DateTime firstSeenAt, DateTime lastSeen,
+												Map<LocalDate, Integer> counts) {
+		this.firstSeenAt = checkNotNull(firstSeenAt);
 		this.applicationId = checkNotNull(applicationId);
 		this.checksum = checkNotNull(checksum);
 		this.lastSeenAt = checkNotNull(lastSeen);
@@ -44,5 +47,9 @@ public final class ByDayStatistic {
 
 	public int getCount(LocalDate date) {
 		return count.containsKey(date) ? count.get(date) : 0;
+	}
+
+	public DateTime getFirstSeenAt() {
+		return firstSeenAt;
 	}
 }

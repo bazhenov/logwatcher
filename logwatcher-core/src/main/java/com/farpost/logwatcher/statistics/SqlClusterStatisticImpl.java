@@ -131,11 +131,15 @@ public class SqlClusterStatisticImpl implements ClusterStatistic {
 			counts.put(fromDateFields(rowSet.getDate("date")), rowSet.getInt("count"));
 		}
 
+		// TODO можно выполнить за один запрос
 		Date lastSeen = template.queryForObject(
 			"SELECT last_seen FROM cluster_general_stat WHERE application = ? AND checksum = ?", Date.class,
 			applicationId, checksum.toString());
+		Date firstSeen = template.queryForObject(
+			"SELECT first_seen FROM cluster_general_stat WHERE application = ? AND checksum = ?", Date.class,
+			applicationId, checksum.toString());
 
-		return new ByDayStatistic(applicationId, checksum, new DateTime(lastSeen), counts);
+		return new ByDayStatistic(applicationId, checksum, new DateTime(firstSeen), new DateTime(lastSeen), counts);
 	}
 
 	@Override
