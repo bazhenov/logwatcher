@@ -124,6 +124,7 @@ public class FeedController {
 
 		private int entriesCount;
 		private final Collection<Cluster> clusters;
+		private final Collection<Cluster> newClusters;
 
 		private final Map<Checksum, ByDayStatistic> dayStatisticMap = newHashMap();
 
@@ -134,18 +135,26 @@ public class FeedController {
 			Collection<Checksum> checksums = clusterStatistic.getActiveClusterChecksums(applicationId, this.date);
 
 			Collection<Cluster> clusters = newArrayList();
+			Collection<Cluster> newClusters = newArrayList();
 			for (Checksum checksum : checksums) {
 				Cluster cluster = clusterDao.findCluster(applicationId, checksum);
 				if (cluster.getSeverity().isEqualOrMoreImportantThan(severity)) {
 					ByDayStatistic dayStatistic = clusterStatistic.getByDayStatistic(applicationId, checksum);
 					dayStatisticMap.put(checksum, dayStatistic);
 					entriesCount += dayStatistic.getCount(this.date);
-					clusters.add(cluster);
+
+					if (dayStatistic.getFirstSeenAt().toLocalDate().equals(LocalDate.now()))
+						newClusters.add(cluster);
+					else
+						clusters.add(cluster);
 				}
 			}
 			this.clusters = Ordering
 				.from(new ByLastOccurrenceDateComparator(dayStatisticMap))
 				.sortedCopy(clusters);
+			this.newClusters = Ordering
+				.from(new ByLastOccurrenceDateComparator(dayStatisticMap))
+				.sortedCopy(newClusters);
 		}
 
 		public int getEntriesCount() {
@@ -158,6 +167,10 @@ public class FeedController {
 
 		public Collection<Cluster> getClusters() {
 			return clusters;
+		}
+
+		public Collection<Cluster> getNewClusters() {
+			return newClusters;
 		}
 
 		public ByDayStatistic getStatistics(Cluster c) {
