@@ -19,9 +19,12 @@
 
 .samplesTable SPAN {
 	font-family: Monaco, 'Courier New', monospace;
-	background-color: #eee;
-	padding: 4px;
-	font-size: 80%;
+	background-color: #f5f5f5;
+	padding: 5px;
+	margin-right: 10px;
+	border-radius: 4px;
+	font-size: 12px;
+	cursor: pointer;
 }
 
 .sampleDescription {

@@ -28,32 +28,38 @@
             <td align="center">
                 <table class="samplesTable">
                     <tr>
-                        <td class="sampleDescription">log message</td>
-                        <td><span>contains: {keywords with AND/OR/NOT/-/+ operators}</span></td>
+                        <td class="sampleDescription">Search by log message</td>
+                        <td><span class="search-sample">contains: 'sql AND bulletin'</span></td>
                     </tr>
                     <tr>
-                        <td class="sampleDescription">application id</td>
-                        <td><span>at: {application id}</span></td>
+                        <td class="sampleDescription">Search by application id</td>
+                        <td><span class="search-sample">at: frontend</span><span
+                                class="search-sample">at: backend</span></td>
                     </tr>
                     <tr>
-                        <td class="sampleDescription">relative date</td>
-                        <td><span>occurred: last N (days|week|month)</span></td>
+                        <td class="sampleDescription">Search by relative date</td>
+                        <td><span class="search-sample">occurred: last 3 days</span><span
+                                class="search-sample">occurred: last 2 weeks</span></td>
                     </tr>
                     <tr>
-                        <td class="sampleDescription">absolute date</td>
-                        <td><span>occurred: YYYY-MM-DD</span></td>
+                        <td class="sampleDescription">Search by absolute date</td>
+                        <td><span class="search-sample">occurred: 2013-02-13</span></td>
                     </tr>
                     <tr>
-                        <td class="sampleDescription">absolute date range</td>
-                        <td><span>occurred: YYYY-MM-DD/YYY-MM-DD</span></td>
+                        <td class="sampleDescription">Search by absolute date range</td>
+                        <td><span class="search-sample">occurred: 2013-02-01/2013-02-02</span></td>
                     </tr>
                     <tr>
-                        <td class="sampleDescription">exception type</td>
-                        <td><span>caused-by: {exception type}</span></td>
+                        <td class="sampleDescription">Search by exception type</td>
+                        <td><span class="search-sample">caused-by: RuntimeException</span></td>
                     </tr>
                     <tr>
-                        <td class="sampleDescription">attribute value</td>
-                        <td><span>@{name}: {value}</span></td>
+                        <td class="sampleDescription">Search by attribute value</td>
+                        <td><span class="search-sample">@host: server.com</span></td>
+                    </tr>
+                    <tr>
+                        <td class="sampleDescription">Set severity (error by default)</td>
+                        <td><span class="search-sample">serverity: warning</span></td>
                     </tr>
                 </table>
             </td>
