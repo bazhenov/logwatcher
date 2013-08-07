@@ -13,15 +13,23 @@ import com.farpost.logwatcher.marshalling.Marshaller;
 
 import java.io.IOException;
 import java.net.*;
+import java.nio.charset.Charset;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.Map;
 
+import static com.farpost.logwatcher.Utils.bytesToHex;
 import static java.lang.Integer.parseInt;
-import static java.lang.Math.min;
+import static java.net.InetAddress.getLocalHost;
+import static java.nio.charset.Charset.forName;
+import static java.security.MessageDigest.getInstance;
 
 public class LogWatcherAppender extends UnsynchronizedAppenderBase<ILoggingEvent> {
 
 	private static final int DEFAULT_PORT = 6578;
+	private static final Charset utf8 = forName("utf8");
+	private final String hostName;
 	private InetAddress address;
 	private int port;
 	private String applicationId;
@@ -29,8 +37,9 @@ public class LogWatcherAppender extends UnsynchronizedAppenderBase<ILoggingEvent
 	private final Marshaller marshaller;
 	private final Object socketLock = new Object();
 
-	public LogWatcherAppender() {
+	public LogWatcherAppender() throws UnknownHostException {
 		marshaller = new Jaxb2Marshaller();
+		hostName = getLocalHost().getHostName();
 	}
 
 	@Override
@@ -44,9 +53,10 @@ public class LogWatcherAppender extends UnsynchronizedAppenderBase<ILoggingEvent
 				: null;
 
 			Map<String, String> attributes = event.getMDCPropertyMap();
+			if (!attributes.containsKey("host"))
+				attributes.put("host", hostName);
 			LogEntry entry = new LogEntryImpl(time, event.getLoggerName(), event.getFormattedMessage(), severity,
-				calculateChecksum(event.getMessage()),
-				applicationId, attributes, cause);
+				calculateChecksum(event.getMessage()), applicationId, attributes, cause);
 
 			byte[] data = marshaller.marshall(entry);
 			DatagramPacket packet = new DatagramPacket(data, data.length);
@@ -59,12 +69,17 @@ public class LogWatcherAppender extends UnsynchronizedAppenderBase<ILoggingEvent
 			}
 		} catch (IOException e) {
 			throw new RuntimeException(e);
+		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
-	private String calculateChecksum(String message) {
-		String checksum = message.replaceAll("[ |{|}]", "");
-		return checksum.substring(0, min(32, checksum.length()));
+	public static String calculateChecksum(String message) throws NoSuchAlgorithmException {
+		if (!message.contains("{}"))
+			return null;
+		MessageDigest md5 = getInstance("md5");
+		md5.update(message.replaceAll("[ |{|}]", "").toLowerCase().getBytes(utf8));
+		return bytesToHex(md5.digest());
 	}
 
 	private Severity severity(Level level) {

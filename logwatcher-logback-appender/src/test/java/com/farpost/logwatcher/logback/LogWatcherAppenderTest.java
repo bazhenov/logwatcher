@@ -17,18 +17,15 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.net.BindException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketException;
+import java.net.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import static java.lang.Math.random;
 import static java.lang.Thread.currentThread;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.not;
+import static java.net.InetAddress.getLocalHost;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.notNullValue;
@@ -119,16 +116,18 @@ public class LogWatcherAppenderTest {
 		LogEntry entry = getLastMessage();
 
 		assertThat(entry.getMessage(), equalTo(message));
+		assertThat(entry.getChecksum(), nullValue());
 	}
 
 	@Test
-	public void appenderShouldSendMdcValuesAsWell() throws InterruptedException {
+	public void appenderShouldSendMdcValuesAsWell() throws InterruptedException, UnknownHostException {
 		MDC.put("url", "/foo?a=1");
 		root.error("Request processing failed");
 
 		LogEntry entry = getLastMessage();
 
 		assertThat(entry.getAttributes(), hasEntry("url", "/foo?a=1"));
+		assertThat(entry.getAttributes(), hasEntry("host", getLocalHost().getHostName()));
 	}
 
 	/**
@@ -144,7 +143,8 @@ public class LogWatcherAppenderTest {
 		return marshaller.unmarshall(lastMessage);
 	}
 
-	private static Appender<ILoggingEvent> createAppender(String address, String applicationId) throws SocketException {
+	private static Appender<ILoggingEvent> createAppender(String address, String applicationId)
+		throws SocketException, UnknownHostException {
 		LogWatcherAppender appender = new LogWatcherAppender();
 		appender.setAddress(address);
 		appender.setApplicationId(applicationId);
