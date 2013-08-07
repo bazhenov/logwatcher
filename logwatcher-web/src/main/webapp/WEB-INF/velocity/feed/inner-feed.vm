@@ -1,91 +1,75 @@
+#* @vtlvariable name="p" type="com.farpost.logwatcher.web.controller.FeedController.InnerFeedPage" *#
 <html>
 <head>
 </head>
 <body>
-
-	#macro(entry $c $s)
-	#* @vtlvariable name="c" type="com.farpost.logwatcher.Cluster" *#
-	#* @vtlvariable name="s" type="com.farpost.logwatcher.statistics.ByDayStatistic" *#
-		#set($lastDate = $s.lastSeenAt.toDate())
-		#set($lastOccurredDate = $date.format("yyyy-MM-dd", $lastDate))
-	<a name='$c.checksum'></a>
-
-	<div class='entry ${c.severity}'>
-		<a href="$link.uri("/entries/$c.applicationId/$c.checksum")">
-			<div class='entryHeader'>
-				<canvas class="count" width="60" height="60" data-count="$s.getCount($p.date)"
-								data-severity="$c.severity"></canvas>
-
-				<div class='message'>
-					#if($c.issueKey)
-						<span class="issueKey">$c.issueKey</span>
-					#end
-					#set($cause = $f.extractExceptionClass($c.title))
-					#if ($cause.type)
-						#if($cause.type == $cause.simpleType)
-							<span class="causeType">$cause.type</span>
-						#else
-							<span class="causeType">
-									<abbr title="$cause.type">$cause.simpleType<abbr></span>
-						#end
-					#end
-					#if($cause.message.isEmpty())
-						<span class="noMessage">No message</span>
-					#else
-						$cause.message
-					#end
-				</div>
-				<div class='messageOverlay'></div>
-				<div class='times'>
-					#if($date.format("d MMMM yyyy", $date.systemDate) == $date.format("d MMMM yyyy", $lastDate))
-						<abbr title='$date.format("d MMMM yyyy, HH:mm:ss zz", $lastDate)'>
-							$date.format("HH:mm", $lastDate)
-						</abbr>
-					#else
-						$date.format("dd MMMM yyyy, HH:mm", $lastDate)
-					#end
-					#set($intensity = $f.getIntensity($p.getMinuteVector($c)))
-					#if($intensity >= 0.1)
-						<span class="rightNowMarker">~$f.formatIntensity($intensity)</span>
-					#end
-					#if($c.description)
-						<span class="description">$display.truncate($c.description, 110, "...", true)</span>
-					#end
-				</div>
-			</div>
-		</a>
-	</div>
-	#end
-#* @vtlvariable name="p" type="com.farpost.logwatcher.web.controller.FeedController.InnerFeedPage" *#
-	#if($p.clusters.isEmpty() && $p.newClusters.isEmpty())
+	#if($p.clusters.isEmpty())
 	<div id="notificationPanel">
 		<p>Try to change severity settings</p>
 		<br/>
 		No results found
 	</div>
 	#else
-		#if(!$p.newClusters.isEmpty())
-		<h3>New entries</h3>
+	<div class="entries">
+		#foreach($c in $p.clusters)
+			#set($s = $p.getStatistics($c))
+			#set($lastDate = $s.lastSeenAt.toDate())
+			#set($lastOccurredDate = $date.format("yyyy-MM-dd", $lastDate))
+			<a name='$c.checksum'></a>
 
-		<div class="entries">
-			#foreach($c in $p.newClusters)
-				#set($stat = $p.getStatistics($c))
-				#entry($c $stat)
-			#end
-		</div>
-		<hr/>
+			<div class='entry ${c.severity}'>
+				<a href="$link.uri("/entries/$c.applicationId/$c.checksum")">
+					<div class='entryHeader'>
+						<canvas class="count" width="60" height="60" data-count="$s.getCount($p.date)"
+										data-severity="$c.severity"></canvas>
+
+						<div class='message'>
+							#if($c.issueKey)
+								<span class="issueKey">$c.issueKey</span>
+							#end
+							#set($cause = $f.extractExceptionClass($c.title))
+							#if ($cause.type)
+								#if($cause.type == $cause.simpleType)
+									<span class="causeType">$cause.type</span>
+								#else
+									<span class="causeType">
+									<abbr title="$cause.type">$cause.simpleType<abbr></span>
+								#end
+							#end
+							#if($cause.message.isEmpty())
+								<span class="noMessage">No message</span>
+							#else
+								$cause.message
+							#end
+						</div>
+						#if($s.firstSeenAt.isAfter($p.today))
+							<div class="newClusterMarker">*</div>
+						#end
+
+						<div class='times'>
+							#if($date.format("d MMMM yyyy", $date.systemDate) == $date.format("d MMMM yyyy", $lastDate))
+								<abbr title='$date.format("d MMMM yyyy, HH:mm:ss zz", $lastDate)'>
+									$date.format("HH:mm", $lastDate)
+								</abbr>
+							#else
+								$date.format("dd MMMM yyyy, HH:mm", $lastDate)
+							#end
+							#set($intensity = $f.getIntensity($p.getMinuteVector($c)))
+							#if($intensity >= 0.1)
+								<span class="rightNowMarker">~$f.formatIntensity($intensity)</span>
+							#end
+							#if($c.description)
+								<span class="description">$display.truncate($c.description, 110, "...", true)</span>
+							#end
+						</div>
+					</div>
+				</a>
+			</div>
 		#end
-		#if(!$p.clusters.isEmpty())
-		<div class="entries">
-			#foreach($c in $p.clusters)
-				#set($stat = $p.getStatistics($c))
-				#entry($c $stat)
-			#end
-		</div>
-		#end
+	</div>
 
 	<div id="footer">
-		$f.pluralize($math.add($p.clusters.size(), $p.newClusters.size()), "entry entries entries")
+		$f.pluralize($p.clusters.size(), "entry entries entries")
 		$f.pluralize($p.entriesCount, "message messages messages")
 	</div>
 	#end

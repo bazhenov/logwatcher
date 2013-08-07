@@ -43,7 +43,7 @@
 .entry .message {
 	color: #111;
 	margin-left: 85px;
-	margin-right: 225px;
+	margin-right: 80px;
 	margin-top: 6px;
 	font-family: 'Open Sans', sans-serif;
 	font-size: 18px;
@@ -51,6 +51,17 @@
 	height: 28px;
 	white-space: nowrap;
 	line-height: 26px
+}
+
+.entry .newClusterMarker {
+	color: #9b3837;
+	position: absolute;
+	vertical-align: middle;
+	width: 50px;
+	top: 0;
+	right: 0;
+	line-height: 77px;
+	font-size: 48px;
 }
 
 .entry .message .issueKey {
@@ -103,20 +114,6 @@
 
 .entryFooter a {
 	margin-right: 15px;
-}
-
-.messageOverlay {
-	position: absolute;
-	height: 28px;
-	width: 50px;
-	top: 14px;
-	right: 224px;
-	background: url("../images/sha.png") repeat-y;
-}
-
-.entry:hover .messageOverlay,
-.selectedEntry .messageOverlay {
-	background: url("../images/sha-hover.png") repeat-y;
 }
 
 .entryContent ul {

@@ -11,6 +11,7 @@ import com.farpost.logwatcher.statistics.MinuteVector;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
 import com.google.common.collect.Ordering;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -35,6 +36,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.collect.Sets.newTreeSet;
 import static org.joda.time.LocalDate.fromDateFields;
+import static org.joda.time.LocalDate.now;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @Controller
@@ -124,7 +126,6 @@ public class FeedController {
 
 		private int entriesCount;
 		private final Collection<Cluster> clusters;
-		private final Collection<Cluster> newClusters;
 
 		private final Map<Checksum, ByDayStatistic> dayStatisticMap = newHashMap();
 
@@ -135,26 +136,18 @@ public class FeedController {
 			Collection<Checksum> checksums = clusterStatistic.getActiveClusterChecksums(applicationId, this.date);
 
 			Collection<Cluster> clusters = newArrayList();
-			Collection<Cluster> newClusters = newArrayList();
 			for (Checksum checksum : checksums) {
 				Cluster cluster = clusterDao.findCluster(applicationId, checksum);
 				if (cluster.getSeverity().isEqualOrMoreImportantThan(severity)) {
 					ByDayStatistic dayStatistic = clusterStatistic.getByDayStatistic(applicationId, checksum);
 					dayStatisticMap.put(checksum, dayStatistic);
 					entriesCount += dayStatistic.getCount(this.date);
-
-					if (dayStatistic.getFirstSeenAt().toLocalDate().equals(LocalDate.now()))
-						newClusters.add(cluster);
-					else
-						clusters.add(cluster);
+					clusters.add(cluster);
 				}
 			}
 			this.clusters = Ordering
 				.from(new ByLastOccurrenceDateComparator(dayStatisticMap))
 				.sortedCopy(clusters);
-			this.newClusters = Ordering
-				.from(new ByLastOccurrenceDateComparator(dayStatisticMap))
-				.sortedCopy(newClusters);
 		}
 
 		public int getEntriesCount() {
@@ -169,8 +162,8 @@ public class FeedController {
 			return clusters;
 		}
 
-		public Collection<Cluster> getNewClusters() {
-			return newClusters;
+		public DateTime getToday() {
+			return now().toDateTimeAtStartOfDay();
 		}
 
 		public ByDayStatistic getStatistics(Cluster c) {

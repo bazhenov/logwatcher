@@ -124,4 +124,8 @@
 		<location>/WEB-INF/jsp/error.jspx</location>
 	</error-page>
 
+	<listener>
+		<listener-class>ch.qos.logback.classic.selector.servlet.ContextDetachingSCL</listener-class>
+	</listener>
+
 </web-app>
