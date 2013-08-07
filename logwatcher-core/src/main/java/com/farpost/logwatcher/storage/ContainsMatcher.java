@@ -1,5 +1,6 @@
 package com.farpost.logwatcher.storage;
 
+import com.farpost.logwatcher.Cause;
 import com.farpost.logwatcher.LogEntry;
 
 public class ContainsMatcher implements LogEntryMatcher {
@@ -11,8 +12,10 @@ public class ContainsMatcher implements LogEntryMatcher {
 	}
 
 	public boolean isMatch(LogEntry entry) {
-		return entry.getMessage().contains(needle) ||
-			entry.getCause() != null && entry.getCause().getStackTrace().contains(needle);
+		if (entry.getMessage().contains(needle))
+			return true;
+		Cause cause = entry.getCause();
+		return cause != null && (cause.getMessage().contains(needle) || cause.getStackTrace().contains(needle));
 	}
 
 	public String getNeedle() {

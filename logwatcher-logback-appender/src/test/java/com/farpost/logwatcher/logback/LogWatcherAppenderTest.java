@@ -144,7 +144,7 @@ public class LogWatcherAppenderTest {
 	}
 
 	private static Appender<ILoggingEvent> createAppender(String address, String applicationId)
-		throws SocketException, UnknownHostException {
+		throws SocketException {
 		LogWatcherAppender appender = new LogWatcherAppender();
 		appender.setAddress(address);
 		appender.setApplicationId(applicationId);

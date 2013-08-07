@@ -175,6 +175,8 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 		while (cause != null) {
 			document.add(term("caused-by", normalize(cause.getType())));
 			document.add(text("stacktrace", cause.getStackTrace()));
+			if (cause.getMessage() != null)
+				document.add(text("stacktrace", cause.getMessage()));
 			cause = cause.getCause();
 		}
 		document.add(term("id", Integer.toString(entryId)));

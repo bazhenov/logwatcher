@@ -2,6 +2,7 @@ package com.farpost.logwatcher.logback;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.classic.spi.LoggerContextVO;
 import ch.qos.logback.classic.spi.ThrowableProxy;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
 import com.farpost.logwatcher.Cause;
@@ -21,7 +22,6 @@ import java.util.Map;
 
 import static com.farpost.logwatcher.Utils.bytesToHex;
 import static java.lang.Integer.parseInt;
-import static java.net.InetAddress.getLocalHost;
 import static java.nio.charset.Charset.forName;
 import static java.security.MessageDigest.getInstance;
 
@@ -29,7 +29,6 @@ public class LogWatcherAppender extends UnsynchronizedAppenderBase<ILoggingEvent
 
 	private static final int DEFAULT_PORT = 6578;
 	private static final Charset utf8 = forName("utf8");
-	private final String hostName;
 	private InetAddress address;
 	private int port;
 	private String applicationId;
@@ -37,9 +36,8 @@ public class LogWatcherAppender extends UnsynchronizedAppenderBase<ILoggingEvent
 	private final Marshaller marshaller;
 	private final Object socketLock = new Object();
 
-	public LogWatcherAppender() throws UnknownHostException {
+	public LogWatcherAppender() {
 		marshaller = new Jaxb2Marshaller();
-		hostName = getLocalHost().getHostName();
 	}
 
 	@Override
@@ -48,13 +46,14 @@ public class LogWatcherAppender extends UnsynchronizedAppenderBase<ILoggingEvent
 			Date time = new Date(event.getTimeStamp());
 			Severity severity = severity(event.getLevel());
 			ThrowableProxy proxy = (ThrowableProxy) event.getThrowableProxy();
+			LoggerContextVO context = event.getLoggerContextVO();
 			Cause cause = proxy != null
 				? new Cause(proxy.getThrowable())
 				: null;
 
 			Map<String, String> attributes = event.getMDCPropertyMap();
 			if (!attributes.containsKey("host"))
-				attributes.put("host", hostName);
+				attributes.put("host", context.getPropertyMap().get("HOSTNAME"));
 			LogEntry entry = new LogEntryImpl(time, event.getLoggerName(), event.getFormattedMessage(), severity,
 				calculateChecksum(event.getMessage()), applicationId, attributes, cause);
 

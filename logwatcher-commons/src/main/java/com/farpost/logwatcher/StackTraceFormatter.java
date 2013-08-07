@@ -13,9 +13,9 @@ public class StackTraceFormatter {
 		StringBuilder stackTraceBuilder = new StringBuilder();
 		StackTraceElement[] trace = throwable.getStackTrace();
 		for (StackTraceElement traceElement : trace) {
-			stackTraceBuilder.append("\n\tat ").append(traceElement);
+			stackTraceBuilder.append("\tat ").append(traceElement).append("\n");
 		}
 
-		return stackTraceBuilder.append("\n").toString();
+		return stackTraceBuilder.toString();
 	}
 }
