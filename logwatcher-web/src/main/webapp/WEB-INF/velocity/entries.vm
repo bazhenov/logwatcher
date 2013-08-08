@@ -21,7 +21,6 @@
 
 	<a id="editModalButton"
 		 href="#editModal" role="button" class="btn btn-small" data-toggle="modal">Edit <i class="icon-edit"></i></a>
-
 </h2>
 
 <div id="editModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
@@ -103,12 +102,13 @@
 
 <h3>Log samples</h3>
 
-<div class="log section">
+<div class="section">
 	<div class="input-append date">
 		<input id="datePicker" class="input-small" type="text" value='$date.format("yyyy-MM-dd", $date.date)'
 					 data-date-format="yyyy-mm-dd"/>
 		<button id="showLog" class="btn" type="button">Show!</button>
 	</div>
+
 	<div id="logSamples"></div>
 </div>
 

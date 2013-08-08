@@ -300,3 +300,8 @@ FORM {
 	line-height: 18pt;
 	height: 18pt;
 }
+
+.wideModel {
+	width: 70%;
+	margin-left: -33%;
+}

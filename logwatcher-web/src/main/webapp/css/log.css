@@ -1,3 +1,11 @@
+TABLE TD {
+	font-size: 14px;
+}
+
+#logSamples {
+	margin-top: 20px;
+}
+
 .log {
 	color: #222;
 	background-color: #fcfcfc;
@@ -21,8 +29,10 @@
 	text-align: right;
 }
 
-.log P.cause {
+P.cause {
 	white-space: pre;
+	font-size: 12px;
+	font-family: 'Monaco', monospace;
 }
 
 .log div {
