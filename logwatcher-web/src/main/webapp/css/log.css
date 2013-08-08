@@ -109,3 +109,18 @@ P.cause {
 	position: absolute;
 	margin: 8px 0 0 15px;
 }
+
+TD.severity-cell {
+	vertical-align: middle;
+	width: 10px;
+	text-align: center;
+}
+
+TD.category-cell {
+	font-family: 'Monaco', monospace;
+	font-size: 12px;
+}
+
+TD.message-cell {
+	width: 70%;
+}

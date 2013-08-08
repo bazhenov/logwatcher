@@ -8,9 +8,9 @@
 
 	#macro(dt $severity $s)
 		#if($s[$severity])
-		<span class="detail $severity"><i>&nbsp;</i> $f.shortNumberFormat($s[$severity])</span>
+		<span class="severity-circle $severity"><i>&nbsp;</i> $f.shortNumberFormat($s[$severity])</span>
 		#else
-		<span class="detail"><i>&nbsp;</i> &nbsp;</span>
+		<span class="severity-circle"><i>&nbsp;</i> &nbsp;</span>
 		#end
 	#end
 

@@ -254,40 +254,46 @@ FORM {
 	text-transform: capitalize
 }
 
-.dashboard .detail {
+.severity-circle {
 	text-decoration: none;
 	font-size: 11px;
-	float: left;
-	width: 30px;
 	text-align: center
 }
 
-.dashboard .detail i {
+.severity-circle i {
 	display: block;
 	width: 10px;
 	height: 10px;
 	font-size: 1px;
 	border-radius: 5px;
+}
+
+.dashboard .severity-circle {
+	float: left;
+	width: 30px;
+}
+
+.dashboard .severity-circle i {
 	margin: 0 auto
 }
 
-.dashboard .error i {
+.error i {
 	background: #9b3837
 }
 
-.dashboard .warning i {
+.warning i {
 	background: #ff6f00
 }
 
-.dashboard .info i {
+.info i {
 	background: #01a32d
 }
 
-.dashboard .debug i {
+.debug i {
 	background: #224477
 }
 
-.dashboard .trace i {
+.trace i {
 	background: #aaa
 }
 
