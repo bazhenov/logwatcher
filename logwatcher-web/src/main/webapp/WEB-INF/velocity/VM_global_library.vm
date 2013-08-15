@@ -7,10 +7,12 @@
 	#if(!$e.attributes.isEmpty())
 		<table class="attr">
 			#foreach($i in $e.attributes.entrySet())
-				<tr>
-					<td class="attributeName">@$i.key</td>
-					<td>$i.value</td>
-				</tr>
+				#if(!$i.value.isEmpty())
+					<tr>
+						<td class="attributeName">@$i.key</td>
+						<td>$i.value</td>
+					</tr>
+				#end
 			#end
 		</table>
 	#end
