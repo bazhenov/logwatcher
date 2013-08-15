@@ -85,6 +85,12 @@ function Counterina(canvas, maxData) {
 	this.draw = function (count, severity) {
 		var context = canvas.getContext('2d');
 
+		var isRetina = window.devicePixelRatio == 2;
+		if (isRetina) {
+			canvas.width = canvas.width * 2;
+			canvas.height = canvas.height * 2;
+		}
+
 		var x = canvas.width / 2;
 		var y = canvas.height / 2;
 		var text = this.formatNumber(count);
@@ -92,7 +98,9 @@ function Counterina(canvas, maxData) {
 		var rMax = canvas.width / 2;
 		var radius = (Math.sqrt(count - 1) * (rMax - rMin)) / (Math.sqrt(this.maxData - 1)) + rMin;
 
-		context.font = 'bold 12pt Helvetica Neue';
+		var fontSizeRatio = isRetina ? 2 : 1;
+		var fontSize = 12;
+		context.font = 'bold ' + (fontSize * fontSizeRatio) + 'pt Helvetica Neue';
 		context.textAlign = 'center';
 		context.textBaseline = 'middle';
 
@@ -132,7 +140,7 @@ function Counterina(canvas, maxData) {
 			context.closePath();
 			context.fill();
 
-			context.font = 'bold 10pt Helvetica Neue';
+			context.font = 'bold ' + (fontSize - 2) * fontSizeRatio + 'pt Helvetica Neue';
 			context.textBaseline = 'bottom';
 			context.fillText(text, x, canvas.height);
 		} else {
@@ -146,10 +154,13 @@ function Counterina(canvas, maxData) {
 				context.fillStyle = 'white';
 				context.fillText(text, x, y);
 			} else {
-				context.font = 'bold 10pt Helvetica Neue';
+				context.font = 'bold ' + (fontSize - 2) * fontSizeRatio + 'pt Helvetica Neue';
 				context.fillStyle = 'white';
 				context.fillText(text, x, y);
 			}
+		}
+		if (isRetina) {
+			context.scale(2, 2);
 		}
 	}
 }
