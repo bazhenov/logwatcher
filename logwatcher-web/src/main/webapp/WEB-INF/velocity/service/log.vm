@@ -35,9 +35,11 @@ No result found
 
 						#if(!$e.attributes.isEmpty())
 							#foreach($i in $e.attributes.entrySet())
-								<p>
-									<b>@$i.key</b>: $i.value
-								</p>
+								#if(!$i.value.isEmpty())
+									<p>
+										<b>@$i.key</b>: $i.value
+									</p>
+								#end
 							#end
 						#end
 
