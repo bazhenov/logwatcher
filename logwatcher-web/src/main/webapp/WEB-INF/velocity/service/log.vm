@@ -15,15 +15,19 @@ No result found
 				<th>Date</th>
 				<th>Category</th>
 				<th>Message</th>
+				<th></th>
 			</tr>
 			</thead>
 			<tbody>
 				#foreach($e in $p.entries)
-				<tr data-toggle="modal" data-target="#entry$foreach.index">
+				<tr>
 					<td class="severity-cell"><span class="severity-circle $e.severity"><i>&nbsp;</i></span></td>
 					<td>$date.format("HH:mm:ss", $e.date)</td>
 					<td class="category-cell">$e.category</td>
 					<td class="message-cell">$e.message</td>
+					<td>
+						<a href="#" data-toggle="modal" data-target="#entry$foreach.index"><i class="icon-align-justify"></i></a>
+					</td>
 				</tr>
 				<div id="entry$foreach.index" role="dialog" class="modal hide fade wideModel" data-keyboard="true">
 					<div class="modal-header">
