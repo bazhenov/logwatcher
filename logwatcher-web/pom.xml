@@ -32,12 +32,12 @@
 			<artifactId>json</artifactId>
 			<version>20080701</version>
 		</dependency>
-        <dependency>
-            <groupId>me.bazhenov.groovy-shell</groupId>
-            <artifactId>groovy-shell-server</artifactId>
-            <version>1.2</version>
-        </dependency>
-        <dependency>
+		<dependency>
+			<groupId>me.bazhenov.groovy-shell</groupId>
+			<artifactId>groovy-shell-server</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<dependency>
 			<groupId>org.sitemesh</groupId>
 			<artifactId>sitemesh</artifactId>
 			<version>3.0-alpha-1</version>
