@@ -27,12 +27,19 @@ TABLE TD {
 
 .log TABLE.attr TD.attributeName {
 	text-align: right;
+	color: #999 !important;
+}
+
+.log .message {
+	font-weight: bold;
+	font-size: 14px;
 }
 
 P.cause {
 	white-space: pre;
 	font-size: 12px;
 	font-family: 'Monaco', monospace;
+	margin-top: 5px;
 }
 
 .log div {
