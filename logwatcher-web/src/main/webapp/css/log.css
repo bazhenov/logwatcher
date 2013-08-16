@@ -6,14 +6,6 @@ TABLE TD {
 	margin-top: 20px;
 }
 
-.log {
-	color: #222;
-	background-color: #fcfcfc;
-	border: 1px dashed #ddd;
-	padding: 10px;
-	border-radius: 5px;
-}
-
 .log P, .log TD {
 	padding: 0;
 	margin: 0;
