@@ -10,7 +10,7 @@ class DashboardIT extends LogwatcherFunctionalTestSuite {
 
 	@Test
 	public void newApplicationShouldBeShownOnDashboard() {
-		def newAppName = "NewApp"
+		def newAppName = "newapp"
 
 		to DashboardPage
 		assertThat applications, not(hasItem(newAppName))
