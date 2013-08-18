@@ -18,7 +18,7 @@ import static org.slf4j.LoggerFactory.getLogger
 
 abstract class LogwatcherFunctionalTestSuite extends GebReportingTest {
 
-	private static final String APPLICATION_URL = System.getProperty("it.location")
+	private static final String APPLICATION_URL = System.getProperty("it.location", "http://localhost:8181")
 	private static final String REPORT_DIRECTORY = System.getProperty("reportsDir", "./report")
 	private static final int PORT = 6578
 	private static WebDriver driver;
@@ -29,7 +29,7 @@ abstract class LogwatcherFunctionalTestSuite extends GebReportingTest {
 	Configuration createConf() {
 		def config = new Configuration()
 		config.driver = createDriver()
-		config.baseUrl = System.getProperty("it.location")
+		config.baseUrl = APPLICATION_URL
 		config.reportsDir = getReportDir()
 		return config
 	}
@@ -41,7 +41,7 @@ abstract class LogwatcherFunctionalTestSuite extends GebReportingTest {
 				driver = new FirefoxDriver()
 			} else {
 				logger.info("HtmlUnit driver selected")
-				driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_3)
+				driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_10)
 				driver.javascriptEnabled = true
 			}
 		}
@@ -80,6 +80,7 @@ abstract class LogwatcherFunctionalTestSuite extends GebReportingTest {
 	}
 
 	protected ch.qos.logback.classic.Logger getLogger(String applicationId) {
+		applicationId = applicationId.toLowerCase()
 		//noinspection GroovyAssignabilityCheck
 		ch.qos.logback.classic.Logger logger = LoggerFactory.getLogger(applicationId)
 		logger.setLevel(Level.DEBUG)
