@@ -11,13 +11,15 @@ public class SearchIT extends LogwatcherFunctionalTestSuite {
 	public void searchByApplicationTest() {
 		getLogger("Foo").error("foo error")
 		getLogger("Bar").error("bar error")
+		getLogger("Billing").error("billing error")
 
 		to SearchPage
-		searchField.value("at: Foo")
+		searchField.value("at: Bar")
 		search()
 		waitFor { at SearchResultsPage }
-		assertThat results, hasItem(containsString("foo error"))
-		assertThat results, not(hasItem(containsString("bar error")))
+		assertThat results, hasItem(containsString("bar error"))
+		assertThat results, not(hasItem(containsString("foo error")))
+		assertThat results, not(hasItem(containsString("billing error")))
 	}
 
 	@Test
@@ -26,7 +28,7 @@ public class SearchIT extends LogwatcherFunctionalTestSuite {
 		getLogger("Foo").error("message", new AssertionError());
 
 		to SearchPage
-		searchField.value("caused-by: IllegalArgumentException")
+		searchField.value("caused-by: java.lang.IllegalArgumentException")
 		search()
 		waitFor { at SearchResultsPage }
 		assertThat results, hasItem(containsString("IllegalArgumentException"))

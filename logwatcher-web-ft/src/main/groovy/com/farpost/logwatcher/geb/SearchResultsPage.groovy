@@ -4,11 +4,13 @@ import geb.Page
 
 class SearchResultsPage extends Page {
 
+	@SuppressWarnings("GroovyUnusedDeclaration")
 	static at = { title.startsWith("LogWatcher Search:") }
 
+	@SuppressWarnings("GroovyUnusedDeclaration")
 	static content = {
-		results { $("div.logEntry")*.text() }
-		result { index -> results[index] }
+		results { $("div.log div")*.text() }
+		result { int index -> results[index] }
 	}
 
 }
