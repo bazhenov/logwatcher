@@ -9,7 +9,7 @@
 			#foreach($i in $e.attributes.entrySet())
 				#if(!$i.value.isEmpty())
 					<tr>
-						<td class="attributeName">@$i.key</td>
+						<td class="attributeName">$i.key</td>
 						<td>$i.value</td>
 					</tr>
 				#end

@@ -129,7 +129,7 @@
 	var filterFeed = function () {
 		var pattern = $("#filterPattern").val().toLowerCase();
 		$(".entries .message").each(function (i, v) {
-			var text = v.innerText.toLowerCase();
+			var text = v.innerText ? v.innerText.toLowerCase() : '';
 			var container = $(v).closest(".entry");
 
 			if (text.indexOf(pattern) >= 0) {

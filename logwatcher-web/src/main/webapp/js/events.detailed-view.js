@@ -28,6 +28,7 @@ $(document).ready(function () {
 					xAxis: {
 						categories: data['labels'],
 						labels: {
+                            maxStaggerLines: 1,
 							step: 6
 						}
 					},
@@ -70,6 +71,7 @@ $(document).ready(function () {
 					xAxis: {
 						categories: data['labels'],
 						labels: {
+                            maxStaggerLines: 1,
 							step: 6
 						}
 					},

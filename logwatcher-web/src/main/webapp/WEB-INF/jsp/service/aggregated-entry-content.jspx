@@ -7,9 +7,9 @@
 
     <jsp:useBean id="attributes" scope="request" type="java.util.Map"/>
 
-    <ol class='attributes'>
+    <table class='attributes'>
         <c:forEach var="row" items="${attributes}">
-            <li><l:attribute name="${row.key}" attribute="${row.value}"/></li>
+            <l:attribute name="${row.key}" attribute="${row.value}"/>
         </c:forEach>
-    </ol>
+    </table>
 </jsp:root>
