@@ -10,7 +10,7 @@ class SearchResultsPage extends Page {
 	@SuppressWarnings("GroovyUnusedDeclaration")
 	static content = {
 		results { $("div.log div")*.text() }
-		result { int index -> results[index] }
+		result { int index -> results.get(index) }
 	}
 
 }
