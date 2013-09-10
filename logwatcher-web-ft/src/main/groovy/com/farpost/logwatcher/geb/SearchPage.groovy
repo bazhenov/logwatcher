@@ -12,7 +12,7 @@ class SearchPage extends Page {
 	@SuppressWarnings("GroovyUnusedDeclaration")
 	static content = {
 		searchField { $("form", name: "searchForm").q() }
-		search (to: SearchResultsPage) {
+		search(to: SearchResultsPage) {
 			searchField << Keys.ENTER
 			true
 		}
