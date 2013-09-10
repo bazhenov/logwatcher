@@ -23,9 +23,6 @@ class ApplicationFeedPage extends Page {
 		$("#severityMenu").jquery.addClass("hover")
 		$("a", text: severity).click()
 		waitFor {
-			println "selectedSeverity = ${selectedSeverity.text()}"
-			println "severityMenu = ${severityMenu.text()}"
-			println "title = ${title}"
 			selectedSeverity.present && selectedSeverity.text() == severity
 		}
 	}
