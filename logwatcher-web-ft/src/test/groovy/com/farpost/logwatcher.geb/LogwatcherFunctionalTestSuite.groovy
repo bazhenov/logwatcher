@@ -41,7 +41,7 @@ abstract class LogwatcherFunctionalTestSuite extends GebReportingTest {
 				driver = new FirefoxDriver()
 			} else {
 				logger.info("HtmlUnit driver selected")
-				driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_10)
+				driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_17)
 				driver.javascriptEnabled = true
 			}
 		}

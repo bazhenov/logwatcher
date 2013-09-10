@@ -15,8 +15,8 @@
 	<name>LogWatcher Functional Test Suite Using Geb</name>
 
 	<properties>
-		<selenium.version>2.26.0</selenium.version>
-		<geb.version>0.7.2</geb.version>
+		<selenium.version>2.35.0</selenium.version>
+		<geb.version>0.9.1</geb.version>
 
 		<it.port>8181</it.port>
 		<it.location>http://localhost:${it.port}</it.location>
@@ -55,12 +55,12 @@
 			<artifactId>logback-classic</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.codehaus.geb</groupId>
+			<groupId>org.gebish</groupId>
 			<artifactId>geb-core</artifactId>
 			<version>${geb.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.codehaus.geb</groupId>
+			<groupId>org.gebish</groupId>
 			<artifactId>geb-testng</artifactId>
 			<version>${geb.version}</version>
 		</dependency>
@@ -78,6 +78,11 @@
 			<artifactId>selenium-firefox-driver</artifactId>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<version>${selenium.version}</version>
+		</dependency>
+		<dependency>
+			<artifactId>xml-apis</artifactId>
+			<groupId>xml-apis</groupId>
+			<version>1.4.01</version>
 		</dependency>
 	</dependencies>
 
