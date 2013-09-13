@@ -47,6 +47,9 @@
 						#end
 
 						<div class='times'>
+							#if(!$p.applicationId.isPresent())
+								<span class="applicationId">$c.applicationId</span> &mdash;
+							#end
 							#if($date.format("d MMMM yyyy", $date.systemDate) == $date.format("d MMMM yyyy", $lastDate))
 								<abbr title='$date.format("d MMMM yyyy, HH:mm:ss zz", $lastDate)'>
 									$date.format("HH:mm", $lastDate)
