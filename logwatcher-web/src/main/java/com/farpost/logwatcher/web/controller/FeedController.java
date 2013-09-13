@@ -10,6 +10,7 @@ import com.farpost.logwatcher.statistics.ClusterStatistic;
 import com.farpost.logwatcher.statistics.MinuteVector;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
+import com.google.common.base.Optional;
 import com.google.common.collect.Ordering;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -31,6 +32,7 @@ import java.util.Set;
 import static com.farpost.logwatcher.Checksum.fromHexString;
 import static com.farpost.logwatcher.Severity.error;
 import static com.farpost.logwatcher.SeverityUtils.forName;
+import static com.google.common.base.Optional.fromNullable;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
@@ -78,6 +80,18 @@ public class FeedController {
 		return new ModelAndView("aggregated-feed", "p", new FeedPage(request, date, applicationId, severity));
 	}
 
+	@RequestMapping("/feed")
+	@ModelAttribute("p")
+	public ModelAndView handleAggregatedFeed(@RequestParam(required = false) @DateTimeFormat(iso = DATE) java.util.Date date,
+																					 HttpServletRequest request) {
+		if (date == null) {
+			date = new java.util.Date();
+		}
+
+		Severity severity = getSeverity(request);
+		return new ModelAndView("aggregated-feed", "p", new FeedPage(request, date, null, severity));
+	}
+
 	@RequestMapping("/service/feed/{applicationId}")
 	public ModelAndView handleInnerFeed(@PathVariable String applicationId,
 																			@RequestParam(required = false) @DateTimeFormat(iso = DATE) Date date,
@@ -89,6 +103,18 @@ public class FeedController {
 		Severity severity = getSeverity(request);
 
 		return new ModelAndView("feed/inner-feed", "p", new InnerFeedPage(date, applicationId, severity));
+	}
+
+	@RequestMapping("/service/feed")
+	public ModelAndView handleAggregatedInnerFeed(@RequestParam(required = false) @DateTimeFormat(iso = DATE) Date date,
+																								HttpServletRequest request) {
+		if (date == null) {
+			date = new java.util.Date();
+		}
+
+		Severity severity = getSeverity(request);
+
+		return new ModelAndView("feed/inner-feed", "p", new InnerFeedPage(date, null, severity));
 	}
 
 	@RequestMapping("/entries/{applicationId}/{checksum}")
@@ -131,23 +157,47 @@ public class FeedController {
 
 		public InnerFeedPage(Date date, String applicationId, Severity severity) {
 			this.applicationId = applicationId;
-
 			this.date = LocalDate.fromDateFields(date);
-			Collection<Checksum> checksums = clusterStatistic.getActiveClusterChecksums(applicationId, this.date);
-
-			Collection<Cluster> clusters = newArrayList();
-			for (Checksum checksum : checksums) {
-				Cluster cluster = clusterDao.findCluster(applicationId, checksum);
-				if (cluster.getSeverity().isEqualOrMoreImportantThan(severity)) {
-					ByDayStatistic dayStatistic = clusterStatistic.getByDayStatistic(applicationId, checksum);
-					dayStatisticMap.put(checksum, dayStatistic);
-					entriesCount += dayStatistic.getCount(this.date);
-					clusters.add(cluster);
+			if (applicationId == null) {
+				Set<String> activeApplications = clusterStatistic.getActiveApplications();
+				Collection<Cluster> clusters = newArrayList();
+				for (String app : activeApplications) {
+					Collection<Checksum> checksums = clusterStatistic.getActiveClusterChecksums(app, this.date);
+					for (Checksum checksum : checksums) {
+						Cluster cluster = clusterDao.findCluster(app, checksum);
+						if (cluster.getSeverity().isEqualOrMoreImportantThan(severity)) {
+							ByDayStatistic dayStatistic = clusterStatistic.getByDayStatistic(app, checksum);
+							dayStatisticMap.put(checksum, dayStatistic);
+							entriesCount += dayStatistic.getCount(this.date);
+							clusters.add(cluster);
+						}
+					}
 				}
+				this.clusters = Ordering
+					.from(new ByLastOccurrenceDateComparator(dayStatisticMap))
+					.sortedCopy(clusters);
+
+			} else {
+				Collection<Checksum> checksums = clusterStatistic.getActiveClusterChecksums(applicationId, this.date);
+
+				Collection<Cluster> clusters = newArrayList();
+				for (Checksum checksum : checksums) {
+					Cluster cluster = clusterDao.findCluster(applicationId, checksum);
+					if (cluster.getSeverity().isEqualOrMoreImportantThan(severity)) {
+						ByDayStatistic dayStatistic = clusterStatistic.getByDayStatistic(applicationId, checksum);
+						dayStatisticMap.put(checksum, dayStatistic);
+						entriesCount += dayStatistic.getCount(this.date);
+						clusters.add(cluster);
+					}
+				}
+				this.clusters = Ordering
+					.from(new ByLastOccurrenceDateComparator(dayStatisticMap))
+					.sortedCopy(clusters);
 			}
-			this.clusters = Ordering
-				.from(new ByLastOccurrenceDateComparator(dayStatisticMap))
-				.sortedCopy(clusters);
+		}
+
+		public Optional<String> getApplicationId() {
+			return fromNullable(applicationId);
 		}
 
 		public int getEntriesCount() {
@@ -171,7 +221,7 @@ public class FeedController {
 		}
 
 		public MinuteVector getMinuteVector(Cluster c) {
-			return clusterStatistic.getMinuteVector(applicationId, c.getChecksum());
+			return clusterStatistic.getMinuteVector(c.getApplicationId(), c.getChecksum());
 		}
 	}
 
@@ -239,8 +289,8 @@ public class FeedController {
 			return set;
 		}
 
-		public String getApplicationId() {
-			return applicationId;
+		public Optional<String> getApplicationId() {
+			return fromNullable(applicationId);
 		}
 	}
 

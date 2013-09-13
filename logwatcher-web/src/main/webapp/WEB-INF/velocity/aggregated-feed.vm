@@ -1,7 +1,12 @@
 #* @vtlvariable name="p" type="com.farpost.logwatcher.web.controller.FeedController.FeedPage" *#
 <html>
 <head>
-	<title>LogWatcher: $p.applicationId feed</title>
+	#if($p.applicationId.isPresent())
+		<title>LogWatcher: $p.applicationId feed</title>
+	#else
+		<title>LogWatcher aggregated feed</title>
+	#end
+
 
 	<link rel="stylesheet" type="text/css" href="/css/popup.css"/>
 	<link rel="stylesheet" type="text/css" href="/css/aggregated-feed.css"/>
@@ -12,8 +17,10 @@
 		var severityLevel = '$p.severity';
 	</script>
 
-	<link rel="alternate" type="application/rss+xml" title="LogWatcher RSS"
-				href="/rss/$p.applicationId?severity=$p.severity"/>
+	#if($p.applicationId.isPresent())
+		<link rel="alternate" type="application/rss+xml" title="LogWatcher RSS"
+					href="/rss/$p.applicationId?severity=$p.severity"/>
+	#end
 	#set($dt = $date.format("yyyy-MM-dd", $p.date))
 </head>
 
@@ -21,11 +28,17 @@
 <h2>
 
 	<span class="dropdown">
-		<span id="applicationId" class="dropdown-toggle" data-toggle="dropdown">$p.applicationId</span>
+		#if($p.applicationId.isPresent())
+			<span id="applicationId" class="dropdown-toggle" data-toggle="dropdown">$p.applicationId.get()</span>
+		#else
+			<span id="applicationId" class="dropdown-toggle" data-toggle="dropdown">All applications</span>
+		#end
+
 		<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
 			#if($p.applications.isEmpty())
 				<li class="disabled"><a onclick="return false;">No applications found</a></li>
 			#else
+				<li><a href="/feed"><b>All applications</b></a></li>
 				#foreach($a in $p.applications)
 					<li><a href="$a.url">$a.id</a></li>
 				#end
@@ -91,7 +104,7 @@
 
 
 <script type="text/javascript">
-	var baseUrl = "/feed/$p.applicationId";
+	var baseUrl = "/feed/$p.applicationId.or('')";
 	var baseDate = new Date("$date.format('yyyy', $p.date)", $date.format('M', $p.date)-1, 1);
 	var urlCallback = function (date) {
 		return baseUrl + '?date=' + date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
@@ -150,7 +163,7 @@
 
 	function updateFeed() {
 		$.ajax({
-			url: "/service/feed/${p.applicationId}",
+			url: "/service/feed/${p.applicationId.or('')}",
 			data: {'date': "$dt"}
 		}).done(function (data) {
 				$(".entries").html(data);
