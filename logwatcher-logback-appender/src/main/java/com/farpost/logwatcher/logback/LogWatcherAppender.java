@@ -18,6 +18,7 @@ import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.farpost.logwatcher.Utils.bytesToHex;
@@ -51,9 +52,10 @@ public class LogWatcherAppender extends UnsynchronizedAppenderBase<ILoggingEvent
 				? new Cause(proxy.getThrowable())
 				: null;
 
-			Map<String, String> attributes = event.getMDCPropertyMap();
-			if (!attributes.containsKey("host"))
-				attributes.put("host", context.getPropertyMap().get("HOSTNAME"));
+			Map<String, String> attributes = safeMap(event.getMDCPropertyMap());
+			Map<String, String> propertyMap = safeMap(context.getPropertyMap());
+			if (!attributes.containsKey("host") && propertyMap.containsKey("HOSTNAME"))
+				attributes.put("host", propertyMap.get("HOSTNAME"));
 			LogEntry entry = new LogEntryImpl(time, event.getLoggerName(), event.getFormattedMessage(), severity,
 				calculateChecksum(event.getMessage()), applicationId, attributes, cause);
 
@@ -71,6 +73,12 @@ public class LogWatcherAppender extends UnsynchronizedAppenderBase<ILoggingEvent
 		} catch (NoSuchAlgorithmException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	private static <K, V> Map<K, V> safeMap(Map<K, V> attributes) {
+		return attributes == null
+			? new HashMap<K, V>()
+			: attributes;
 	}
 
 	public static String calculateChecksum(String message) throws NoSuchAlgorithmException {
