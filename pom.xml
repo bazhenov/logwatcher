@@ -95,7 +95,7 @@
 			<dependency>
 				<artifactId>logwatcher-logback-appender</artifactId>
 				<groupId>com.farpost.logwatcher</groupId>
-				<version>1.4.0</version>
+				<version>1.4.1</version>
 			</dependency>
 
 			<!-- Spring dependencies -->
