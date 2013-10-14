@@ -59,7 +59,7 @@
                     </tr>
                     <tr>
                         <td class="sampleDescription">Set severity (error by default)</td>
-                        <td><span class="search-sample">serverity: warning</span></td>
+                        <td><span class="search-sample">severity: warning</span></td>
                     </tr>
                 </table>
             </td>
