@@ -7,6 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.google.common.base.Charsets.UTF_8;
+import static com.google.common.base.Strings.nullToEmpty;
 import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.hash.Hashing.md5;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
@@ -46,14 +47,19 @@ public class SimpleChecksumCalculator implements ChecksumCalculator {
 		if (title != null) {
 			return hash.hashString(title, UTF_8).toString();
 		}
-		String checksum = entry.getApplicationId() + ":" + entry.getSeverity();
+		StringBuilder checksum = new StringBuilder()
+			.append(entry.getApplicationId())
+			.append(':')
+			.append(entry.getSeverity());
+
+		if (!nullToEmpty(entry.getChecksum()).isEmpty())
+			checksum.append(':').append(entry.getChecksum());
+
 		Cause cause = entry.getCause();
 		if (cause != null) {
-			checksum += ":" + cause.getRootCause().getType();
+			checksum.append(':').append(cause.getRootCause().getType());
 		} else if (entry.getChecksum() == null || entry.getChecksum().isEmpty()) {
-			checksum += ":" + entry.getMessage();
-		} else {
-			checksum += ":" + entry.getChecksum();
+			checksum.append(':').append(entry.getMessage());
 		}
 		return hash.hashString(checksum, UTF_8).toString();
 	}
