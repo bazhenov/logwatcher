@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.Set;
 
 import static com.farpost.logwatcher.LogEntryBuilder.entry;
+import static com.farpost.logwatcher.Severity.debug;
 import static com.google.common.collect.Sets.newHashSet;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -23,12 +24,10 @@ public class SimpleChecksumCalculatorTest {
 	@Test
 	public void calculatorShouldCalculateSameChecksumForEntriesWithSameExceptions() {
 		Exception exception = new RuntimeException();
-		LogEntry firstEntry = new LogEntryImpl(new Date(), "", "message_1", Severity.debug,
-			"checksum_1", "application", null,
+		LogEntry firstEntry = new LogEntryImpl(new Date(), "", "message_1", debug, "checksum_1", "application", null,
 			new Cause(exception));
 
-		LogEntry secondEntry = new LogEntryImpl(new Date(), "", "message_2", Severity.debug,
-			"checksum_2", "application", null,
+		LogEntry secondEntry = new LogEntryImpl(new Date(), "", "message_2", debug, "checksum_1", "application", null,
 			new Cause(exception));
 
 		assertThat(calculator.calculateChecksum(firstEntry), equalTo(calculator.calculateChecksum(secondEntry)));
@@ -36,22 +35,16 @@ public class SimpleChecksumCalculatorTest {
 
 	@Test
 	public void calculatorShouldCalculateSameChecksumForEntriesWithoutExceptionsAndWithSameExistingChecksum() {
-		LogEntry firstEntry = new LogEntryImpl(new Date(), "", "message_1", Severity.debug,
-			"checksum_same", "application", null);
-
-		LogEntry secondEntry = new LogEntryImpl(new Date(), "", "message_2", Severity.debug,
-			"checksum_same", "application", null);
+		LogEntry firstEntry = new LogEntryImpl(new Date(), "", "message_1", debug, "checksum_same", "application", null);
+		LogEntry secondEntry = new LogEntryImpl(new Date(), "", "message_2", debug, "checksum_same", "application", null);
 
 		assertThat(calculator.calculateChecksum(firstEntry), equalTo(calculator.calculateChecksum(secondEntry)));
 	}
 
 	@Test
 	public void calculatorShouldCalculateSameChecksumForEntriesWithoutChecksumAndWithSameMessages() {
-		LogEntry firstEntry = new LogEntryImpl(new Date(), "", "message_same", Severity.debug,
-			"", "application", null);
-
-		LogEntry secondEntry = new LogEntryImpl(new Date(), "", "message_same", Severity.debug,
-			null, "application", null);
+		LogEntry firstEntry = new LogEntryImpl(new Date(), "", "message_same", debug, "", "application", null);
+		LogEntry secondEntry = new LogEntryImpl(new Date(), "", "message_same", debug, null, "application", null);
 
 		assertThat(calculator.calculateChecksum(firstEntry), equalTo(calculator.calculateChecksum(secondEntry)));
 	}
@@ -59,11 +52,10 @@ public class SimpleChecksumCalculatorTest {
 	@Test
 	public void applicationIdAndSeverityHaveHighestPriority() {
 		Exception exceptionSame = new RuntimeException();
-		LogEntry firstEntry = new LogEntryImpl(new Date(), "", "message_same", Severity.debug,
-			"checksum_same", "application_1", null, new Cause(exceptionSame));
-
-		LogEntry secondEntry = new LogEntryImpl(new Date(), "", "message_same", Severity.debug,
-			"checksum_same", "application_2", null, new Cause(exceptionSame));
+		LogEntry firstEntry = new LogEntryImpl(new Date(), "", "message_same", debug, "checksum_same", "application_1",
+			null, new Cause(exceptionSame));
+		LogEntry secondEntry = new LogEntryImpl(new Date(), "", "message_same", debug, "checksum_same", "application_2",
+			null, new Cause(exceptionSame));
 
 		assertThat(calculator.calculateChecksum(firstEntry), not(equalTo(calculator.calculateChecksum(secondEntry))));
 	}
@@ -73,22 +65,21 @@ public class SimpleChecksumCalculatorTest {
 		Exception exception1 = new RuntimeException();
 		Exception exception2 = new IllegalArgumentException();
 
-		LogEntry firstEntry = new LogEntryImpl(new Date(), "", "message_same", Severity.debug,
-			"checksum_same", "application_same", null, new Cause(exception1));
-
-		LogEntry secondEntry = new LogEntryImpl(new Date(), "", "message_same", Severity.debug,
-			"checksum_same", "application_same", null, new Cause(exception2));
+		LogEntry firstEntry = new LogEntryImpl(new Date(), "", "message_same", debug, "checksum_same", "application_same",
+			null, new Cause(exception1));
+		LogEntry secondEntry = new LogEntryImpl(new Date(), "", "message_same", debug, "checksum_same", "application_same",
+			null, new Cause(exception2));
 
 		assertThat(calculator.calculateChecksum(firstEntry), not(equalTo(calculator.calculateChecksum(secondEntry))));
 	}
 
 	@Test
 	public void existingChecksumHasHigherPriorityThanMessage() {
-		LogEntry firstEntry = new LogEntryImpl(new Date(), "", "message_same", Severity.debug,
-			"checksum_1", "application_same", null);
+		LogEntry firstEntry = new LogEntryImpl(new Date(), "", "message_same", debug, "checksum_1", "application_same",
+			null);
 
-		LogEntry secondEntry = new LogEntryImpl(new Date(), "", "message_same", Severity.debug,
-			"checksum_2", "application_same", null);
+		LogEntry secondEntry = new LogEntryImpl(new Date(), "", "message_same", debug, "checksum_2", "application_same",
+			null);
 
 		assertThat(calculator.calculateChecksum(firstEntry), not(equalTo(calculator.calculateChecksum(secondEntry))));
 		assertThat(calculator.calculateChecksum(firstEntry), equalTo("77a11fd86c33ba53e92d2d4a9f1109eb"));
