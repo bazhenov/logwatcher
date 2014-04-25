@@ -36,6 +36,10 @@
 		<constructor-arg ref="indexLocation"/>
 	</bean>
 
+	<bean class="com.farpost.logwatcher.web.AttributeFormatterImpl">
+		<constructor-arg value="${templates}"/>
+	</bean>
+
 	<bean id="storage" class="com.farpost.logwatcher.storage.LuceneSqlLogStorage"
 				p:commitThreshold="${index.commitThreshold}" destroy-method="close">
 		<constructor-arg ref="luceneDirectory"/>

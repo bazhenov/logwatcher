@@ -61,7 +61,7 @@ No result found
 	</div>
 	<div class="tab-pane log active" id="plain-log">
 		#foreach($e in $p.entries)
-			#logEntry($e)
+			#logEntry($e, $p.formatter)
 		#end
 	</div>
 </div>

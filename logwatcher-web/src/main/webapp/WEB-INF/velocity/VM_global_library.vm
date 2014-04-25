@@ -1,5 +1,6 @@
-#macro (logEntry $e)
+#macro (logEntry $e, $formatter)
 #* @vtlvariable name="e" type="com.farpost.logwatcher.LogEntry" *#
+#* @vtlvariable name="formatter" type="com.farpost.logwatcher.web.AttributeFormatter" *#
 <div>
 	<p
 		class="message">$date.format("dd MMM, HH:mm:ss", $e.date) &mdash; $e.severity.toString().substring(0, 1).toUpperCase()
@@ -10,7 +11,8 @@
 				#if(!$i.value.isEmpty())
 					<tr>
 						<td class="attributeName">$i.key</td>
-						<td>$i.value</td>
+						#set($_value = $formatter.format($e.applicationId, $i.key, $i.value))
+						<td>$_value</td>
 					</tr>
 				#end
 			#end

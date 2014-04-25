@@ -8,6 +8,7 @@ import com.farpost.logwatcher.statistics.MinuteVector;
 import com.farpost.logwatcher.storage.InvalidCriteriaException;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
+import com.farpost.logwatcher.web.AttributeFormatter;
 import com.google.common.base.Function;
 import com.google.common.collect.Ordering;
 import org.joda.time.DateTime;
@@ -48,6 +49,9 @@ public class BackController {
 
 	@Autowired
 	private ClusterDao clusterDao;
+
+	@Autowired
+	private AttributeFormatter formatter;
 
 	public BackController() {
 	}
@@ -146,7 +150,7 @@ public class BackController {
 	 * @param v     minute vector
 	 * @param width the width of the wished window
 	 * @return the first relative index of minute vector so the window of given width will contains
-	 *         some statistical data (the empty tail of the graph will be cut off).
+	 * some statistical data (the empty tail of the graph will be cut off).
 	 */
 	public static int calculateRelativeWindow(MinuteVector v, int width) {
 		int start = 0 - width + 1;
@@ -169,6 +173,10 @@ public class BackController {
 
 		public List<LogEntry> getEntries() {
 			return entries;
+		}
+
+		public AttributeFormatter getFormatter() {
+			return formatter;
 		}
 	}
 }

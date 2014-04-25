@@ -5,6 +5,7 @@ import com.farpost.logwatcher.storage.DateMatcher;
 import com.farpost.logwatcher.storage.LogEntryMatcher;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.SeverityMatcher;
+import com.farpost.logwatcher.web.AttributeFormatter;
 import com.google.common.collect.Ordering;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
-import java.util.Map;
 
 import static com.farpost.logwatcher.storage.LogEntries.entries;
 
@@ -27,6 +27,9 @@ public class SearchController {
 
 	@Autowired
 	private QueryTranslator translator;
+
+	@Autowired
+	private AttributeFormatter formatter;
 
 	@RequestMapping("/search")
 	@ModelAttribute("p")
@@ -75,8 +78,8 @@ public class SearchController {
 			return entries;
 		}
 
-		public Map<String, String> getQueryTerms() throws InvalidQueryException {
-			return new QueryParser().parse(query);
+		public AttributeFormatter getFormatter() {
+			return formatter;
 		}
 
 		public String getQuery() {
