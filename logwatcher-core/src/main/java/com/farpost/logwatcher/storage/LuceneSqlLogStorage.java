@@ -79,22 +79,18 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 		try {
 			checkNotNull(entry);
 			// TODO: контрольная сумма должна расчитыватся где-то в другом месте. Это слой хранения данных
-			LogEntryImpl impl = (LogEntryImpl) entry;
 			final String checksum = checksumCalculator.calculateChecksum(entry);
-			impl.setChecksum(checksum);
-
 			int entryId = getNextId();
+			Date entryDate = date(entry.getDate());
+			byte[] marshaledEntry = marshaller.marshall(entry);
 
-			Date entryDate = date(impl.getDate());
-			byte[] marshaledEntry = marshaller.marshall(impl);
-
-			jdbc.update("INSERT INTO entry (id, date, checksum,value) VALUES (?, ?, ?, ?)", entryId, entryDate,
+			jdbc.update("INSERT INTO entry (id, date, checksum, value) VALUES (?, ?, ?, ?)", entryId, entryDate,
 				checksum, marshaledEntry);
 
 			log.debug("Entry wrote to database. Checksum: {}", checksum);
 
 			synchronized (writerLock) {
-				writer.addDocument(createLuceneDocument(entry, entryId));
+				writer.addDocument(createLuceneDocument(entry, entryId, checksum));
 				commitChangesIfNeeded();
 			}
 
@@ -163,14 +159,14 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 		}
 	}
 
-	private Document createLuceneDocument(LogEntry entry, int entryId) {
+	private Document createLuceneDocument(LogEntry entry, int entryId, String checksum) {
 		Document document = new Document();
 		document.add(term("applicationId", normalize(entry.getApplicationId())));
 		document.add(term("date", normalizeDate(entry.getDate())));
 		document.add(numeric("datetime", entry.getDate().getTime()));
 		document.add(text("message", entry.getMessage()));
 		document.add(term("severity", entry.getSeverity().name()));
-		document.add(term("checksum", normalize(entry.getChecksum())));
+		document.add(term("checksum", normalize(checksum)));
 		Cause cause = entry.getCause();
 		while (cause != null) {
 			document.add(term("caused-by", normalize(cause.getType())));

@@ -42,6 +42,14 @@ public class SimpleChecksumCalculatorTest {
 	}
 
 	@Test
+	public void shouldMergeTwoEntriesWithSimilarMEssageIfCauseAndChecksumIsNotProvided() {
+		LogEntry firstEntry = new LogEntryImpl(new Date(), "", "w1 w2 w3 w4", debug, null, "application", null);
+		LogEntry secondEntry = new LogEntryImpl(new Date(), "", "w1 w2 w3", debug, null, "application", null);
+
+		assertThat(calculator.calculateChecksum(firstEntry), equalTo(calculator.calculateChecksum(secondEntry)));
+	}
+
+	@Test
 	public void calculatorShouldCalculateSameChecksumForEntriesWithoutChecksumAndWithSameMessages() {
 		LogEntry firstEntry = new LogEntryImpl(new Date(), "", "message_same", debug, "", "application", null);
 		LogEntry secondEntry = new LogEntryImpl(new Date(), "", "message_same", debug, null, "application", null);

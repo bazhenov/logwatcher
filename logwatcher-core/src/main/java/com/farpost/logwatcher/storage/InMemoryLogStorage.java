@@ -23,13 +23,15 @@ public class InMemoryLogStorage implements LogStorage {
 	private final Lock readLock = lock.readLock();
 	private final ChecksumCalculator checksumCalculator = new SimpleChecksumCalculator();
 
-	public void writeEntry(LogEntry entry) throws LogStorageException {
+	public void writeEntry(final LogEntry entry) throws LogStorageException {
 		final LogEntryImpl impl = (LogEntryImpl) entry;
 		withLock(writeLock, new Callable<Void>() {
 
 			public Void call() {
+				//if (entry.getChecksum() == null) {
 				String checksum = checksumCalculator.calculateChecksum(impl);
 				impl.setChecksum(checksum);
+				//}
 				entries.add(impl);
 				return null;
 			}
@@ -106,7 +108,7 @@ public class InMemoryLogStorage implements LogStorage {
 				Iterator<LogEntry> iterator = entries.iterator();
 				while (iterator.hasNext()) {
 					LogEntry entry = iterator.next();
-					if (checksum.equals(entry.getChecksum())) {
+					if (checksum.equals(checksumCalculator.calculateChecksum(entry))) {
 						iterator.remove();
 					}
 				}

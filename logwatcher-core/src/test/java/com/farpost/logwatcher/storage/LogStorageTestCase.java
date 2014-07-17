@@ -1,8 +1,6 @@
 package com.farpost.logwatcher.storage;
 
-import com.farpost.logwatcher.CountVisitor;
-import com.farpost.logwatcher.LogEntry;
-import com.farpost.logwatcher.Severity;
+import com.farpost.logwatcher.*;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.testng.annotations.BeforeMethod;
@@ -254,8 +252,9 @@ abstract public class LogStorageTestCase {
 			occurred(yesterday.toDateTime(parse("11:36"))).
 			saveIn(storage);
 
-		storage.removeEntriesWithChecksum(entry.getChecksum());
+		ChecksumCalculator calculator = new SimpleChecksumCalculator();
 
+		storage.removeEntriesWithChecksum(calculator.calculateChecksum(entry));
 		assertThat(entries().count(storage), equalTo(1));
 	}
 

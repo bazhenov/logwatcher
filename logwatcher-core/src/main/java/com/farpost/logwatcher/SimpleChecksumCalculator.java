@@ -1,5 +1,6 @@
 package com.farpost.logwatcher;
 
+import com.google.common.base.Joiner;
 import com.google.common.hash.HashFunction;
 
 import java.util.Map;
@@ -60,9 +61,19 @@ public class SimpleChecksumCalculator implements ChecksumCalculator {
 		if (cause != null) {
 			checksum.append(':').append(cause.getType());
 		} else if (entry.getChecksum() == null || entry.getChecksum().isEmpty()) {
-			checksum.append(':').append(entry.getMessage());
+			checksum.append(':').append(trimmedMessage(entry.getMessage()));
 		}
 		return hash.hashString(checksum, UTF_8).toString();
+	}
+
+	private static String trimmedMessage(String message) {
+		String[] parts = message.split("\\s+", 4);
+		if (parts.length == 4) {
+			parts[parts.length - 1] = null;
+			return Joiner.on(' ').skipNulls().join(parts);
+		} else {
+			return message;
+		}
 	}
 
 	private CharSequence checkForRegisteredPatterns(LogEntry entry) {
