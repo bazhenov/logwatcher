@@ -50,14 +50,15 @@ public class SimpleChecksumCalculator implements ChecksumCalculator {
 		StringBuilder checksum = new StringBuilder()
 			.append(entry.getApplicationId())
 			.append(':')
-			.append(entry.getSeverity());
+			.append(entry.getSeverity())
+			.append(entry.getGroup());
 
 		if (!nullToEmpty(entry.getChecksum()).isEmpty())
 			checksum.append(':').append(entry.getChecksum());
 
 		Cause cause = entry.getCause();
 		if (cause != null) {
-			checksum.append(':').append(cause.getRootCause().getType());
+			checksum.append(':').append(cause.getType());
 		} else if (entry.getChecksum() == null || entry.getChecksum().isEmpty()) {
 			checksum.append(':').append(entry.getMessage());
 		}
