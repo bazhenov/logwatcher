@@ -107,7 +107,7 @@ public class SqlClusterStatisticImpl implements ClusterStatistic {
 
 	@Override
 	public Set<String> getActiveApplications() {
-		Iterable<String> applications = template.queryForList("SELECT application FROM cluster_day_stat WHERE date > ?",
+		Iterable<String> applications = template.queryForList("SELECT DISTINCT application FROM cluster_day_stat WHERE date > ?",
 			String.class, sqlDate(LocalDate.now().minusDays(7)));
 		return newTreeSet(from(applications).transform(toLowerCase));
 	}
