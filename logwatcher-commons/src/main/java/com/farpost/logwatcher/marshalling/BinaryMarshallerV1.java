@@ -27,7 +27,7 @@ public class BinaryMarshallerV1 implements Marshaller {
 			objectStream.writeUTF(entry.getChecksum());
 			objectStream.writeUTF(entry.getApplicationId());
 			objectStream.writeUTF(entry.getMessage());
-			objectStream.writeUTF(entry.getCategory());
+			objectStream.writeUTF(entry.getGroup());
 
 			writeAttributes(objectStream, entry.getAttributes());
 			writeCause(objectStream, entry.getCause());

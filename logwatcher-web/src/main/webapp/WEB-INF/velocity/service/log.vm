@@ -23,7 +23,7 @@ No result found
 				<tr>
 					<td class="severity-cell"><span class="severity-circle $e.severity"><i>&nbsp;</i></span></td>
 					<td>$date.format("HH:mm:ss", $e.date)</td>
-					<td class="category-cell">$e.category</td>
+					<td class="group-cell">$e.group</td>
 					<td class="message-cell">$e.message</td>
 					<td>
 						<a href="#" data-toggle="modal" data-target="#entry$foreach.index"><i class="icon-align-justify"></i></a>

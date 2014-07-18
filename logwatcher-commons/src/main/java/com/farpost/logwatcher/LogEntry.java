@@ -21,8 +21,6 @@ public interface LogEntry {
 
 	Severity getSeverity();
 
-	String getCategory();
-
 	Cause getCause();
 
 	String getChecksum();

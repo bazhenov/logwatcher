@@ -34,7 +34,7 @@ public abstract class AbstractLogEntryMarshallerTest {
 		assertThat(entryCopy.getDate(), equalTo(entry.getDate()));
 		assertThat(entryCopy.getSeverity(), equalTo(entry.getSeverity()));
 		assertThat(entryCopy.getApplicationId(), equalTo(entry.getApplicationId()));
-		assertThat(entryCopy.getCategory(), equalTo(entry.getCategory()));
+		assertThat(entryCopy.getGroup(), equalTo(entry.getGroup()));
 		assertThat(entryCopy.getChecksum(), equalTo(entry.getChecksum()));
 		assertThat(entryCopy.getMessage(), equalTo(entry.getMessage()));
 		assertThat(entryCopy.getAttributes(), equalTo(entry.getAttributes()));

@@ -78,7 +78,7 @@ public class Bootstrap implements InitializingBean {
 
 		@Override
 		public void run() {
-			register(new LogEntryImpl(new Date(), "group", "AdvertServiceException: Error Fetching http headers", Severity.error, "sum", "advertisement", null));
+			register(new LogEntryImpl(new Date(), "com.farpost.AdvertManager", "AdvertServiceException: Error Fetching http headers", Severity.error, "sum", "advertisement", null));
 			Cause cause = new Cause("java.lang.RuntimeException", "Socket reading timeout",
 				"  at /var/www/baza.farpost.ru/rev/20100325-1520/slr/advert/src/remote/AdvertSoapDecorator.class.php:16\n" +
 					"  10: slrSoapDecorator.class.php:94 AdvertSoapDecorator->handleException(\"Error Fetc...\", SoapFault)\n" +
@@ -93,33 +93,33 @@ public class Bootstrap implements InitializingBean {
 					"  1 : service_runner.php:38 advertUnpopularDeactivationService->run()");
 
 			for (int i = 0; i < 200; i++) {
-				register(new LogEntryImpl(new Date(), "group", "OverflowFundsException", Severity.warning, "sum2",
+				register(new LogEntryImpl(new Date(), "com.farpost.AuditPolicy", "OverflowFundsException", Severity.warning, "sum2",
 					"billing", new HashMap<String, String>() {{
 					put("url", "/some/foo/very/long/url/to/fit/in/screen");
 					put("machine", "aux1.srv.loc");
 				}}, cause));
 			}
 
-			register(new LogEntryImpl(new Date(), "group", "Ooops", Severity.info, "sum4",
+			register(new LogEntryImpl(new Date(), "", "Ooops", Severity.info, "sum4",
 				"geocoder", null, cause));
-			register(new LogEntryImpl(new Date(), "group", "Ooops", Severity.debug, "sum4",
-				"geocoder", null, cause));
-
-			register(new LogEntryImpl(new Date(), "group", "Ooops", Severity.trace, "sum4",
+			register(new LogEntryImpl(new Date(), "", "Ooops", Severity.debug, "sum4",
 				"geocoder", null, cause));
 
-			register(new LogEntryImpl(new Date(), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
+			register(new LogEntryImpl(new Date(), "FarPost\\Geocoder\\ServiceImpl", "Ooops", Severity.trace, "sum4",
+				"geocoder", null, cause));
+
+			register(new LogEntryImpl(new Date(), "", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
 				"frontend", null, cause));
-			register(new LogEntryImpl(new Date(), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
+			register(new LogEntryImpl(new Date(), "", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
 				"frontend", null, cause));
-			register(new LogEntryImpl(new Date(), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
+			register(new LogEntryImpl(new Date(), "", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum4",
 				"frontend", null, cause));
-			register(new LogEntryImpl(new Date(), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very very long longvery very long longvery very very long long Exception", Severity.error, "sum4",
+			register(new LogEntryImpl(new Date(), "", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very very long longvery very long longvery very very long long Exception", Severity.error, "sum4",
 				"frontend", null, cause));
 
-			register(new LogEntryImpl(new Date(), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum5",
+			register(new LogEntryImpl(new Date(), "FarPost\\Geocoder\\AdvertServiceManager", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum5",
 				"frontend", null, null));
-			register(new LogEntryImpl(new Date(), "group", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum5",
+			register(new LogEntryImpl(new Date(), "", "very 'very' very long longvery very very long longvery very very long long Exceptionvery very very long longvery very very long longvery very very long long Exception", Severity.error, "sum5",
 				"frontend", null, null));
 
 			while (!currentThread().isInterrupted()) {

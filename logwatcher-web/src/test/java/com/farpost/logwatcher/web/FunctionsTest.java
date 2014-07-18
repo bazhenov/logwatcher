@@ -5,6 +5,7 @@ import org.testng.annotations.Test;
 import static com.farpost.logwatcher.web.Functions.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 public class FunctionsTest {
 
@@ -35,6 +36,15 @@ public class FunctionsTest {
 		assertThat(def.getSimpleType(), is("HTTP_Request2_MessageException"));
 		assertThat(def.getType(), is("HTTP_Request2_MessageException"));
 		assertThat(def.getMessage(), is("Can't search similar images"));
+	}
+
+	@Test
+	public void testRetreiveSimpleName() {
+		assertThat(retreiveSimpleName("com.farpost.SearchEngine"), is("SearchEngine"));
+		assertThat(retreiveSimpleName("SearchEngine"), nullValue());
+		assertThat(retreiveSimpleName(".SearchEngine"), is("SearchEngine"));
+
+		assertThat(retreiveSimpleName("com\\farpost\\SearchEngine"), is("SearchEngine"));
 	}
 
 	@Test

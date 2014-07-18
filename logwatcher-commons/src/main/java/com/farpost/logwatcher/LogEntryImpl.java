@@ -101,11 +101,6 @@ public class LogEntryImpl implements LogEntry {
 		return severity;
 	}
 
-	@Override
-	public String getCategory() {
-		return groupContainer.getGroup();
-	}
-
 	@SuppressWarnings("UnusedDeclaration")
 	public GroupContainer getGroupContainer() {
 		return groupContainer;

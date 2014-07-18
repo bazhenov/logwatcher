@@ -97,4 +97,11 @@ public class Functions {
 			return round(intensity / factor) * factor + "/second";
 		}
 	}
+
+	public static String retreiveSimpleName(String className) {
+		int index = Math.max(className.lastIndexOf('.'), className.lastIndexOf('\\'));
+		if (index >= 0 && index < className.length() - 1)
+			return className.substring(index + 1);
+		return null;
+	}
 }

@@ -40,9 +40,26 @@
 	background-color: #ffffe5;
 }
 
+.entry .offset {
+	margin-left: 85px;
+}
+
+.entry .group {
+	font-size: 13px;
+	line-height: 16px;
+	font-weight: 600;
+	color: #333;
+	border-radius: 3px;
+	border: 1px solid darkgray;
+	padding: 0 5px;
+}
+
+.entry .group ABBR {
+	border-bottom: 0;
+}
+
 .entry .message {
 	color: #111;
-	margin-left: 85px;
 	margin-right: 80px;
 	margin-top: 6px;
 	font-family: 'Open Sans', sans-serif;
@@ -80,30 +97,22 @@
 
 .entryHeader .times {
 	color: #666;
-	font-size: 60%;
+	font-size: 12px;
 	line-height: 16px;
-	margin-left: 85px;
 }
 
 .times abbr {
 	margin-right: 5px;
-	cursor: default;
-	border-bottom: 1px dotted !important
 }
 
 .causeType abbr {
-	cursor: default;
 	border-bottom: 0;
 }
 
 .entryHeader .applicationId {
 	font-variant: small-caps;
-	font-size: 120%;
+	font-size: 16px;
 	color: black;
-}
-
-.entryHeader .group {
-	color: gray !important;
 }
 
 .entryFooter {

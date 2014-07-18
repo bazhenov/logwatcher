@@ -23,47 +23,60 @@
 						<canvas class="count" width="60" height="60" data-count="$s.getCount($p.date)"
 										data-severity="$c.severity"></canvas>
 
-						<div class='message'>
+						<div class='message offset'>
 							#if($c.issueKey)
 								<span class="issueKey">$c.issueKey</span>
 							#end
-							#set($cause = $f.extractExceptionClass($c.title))
-							#if ($cause.type)
-								#if($cause.type == $cause.simpleType)
-									<span class="causeType">$cause.type</span>
+							#if ($c.causeType)
+								#set($simpleCauseType = $f.retreiveSimpleName($c.causeType))
+								#if($simpleCauseType)
+									<span class="causeType"><abbr title="$c.causeType">$simpleCauseType<abbr></span>
 								#else
-									<span class="causeType">
-									<abbr title="$cause.type">$cause.simpleType<abbr></span>
+									<span class="causeType">$c.causeType</span>
 								#end
 							#end
-							#if($cause.message.isEmpty())
+							#if($c.title.isEmpty())
 								<span class="noMessage">No message</span>
 							#else
-								$cause.message
+								$c.title
 							#end
 						</div>
 						#if($s.firstSeenAt.isAfter($p.today))
 							<div class="newClusterMarker">*</div>
 						#end
 
-						<div class='times'>
+						<div class="offset">
+							#if(!$c.group.isEmpty())
+								#set($simpleGroup = $f.retreiveSimpleName($c.group))
+								#if($simpleGroup)
+									<span class="group"><abbr title="$c.group">$simpleGroup</abbr></span>
+								#else
+									<span class="group">$c.group</span>
+								#end
+							#end
+							
 							#if(!$p.applicationId.isPresent())
-								<span class="applicationId">$c.applicationId</span> &mdash;
+								<span class="applicationId">$c.applicationId
+
+								</span>
 							#end
-							#if($date.format("d MMMM yyyy", $date.systemDate) == $date.format("d MMMM yyyy", $lastDate))
-								<abbr title='$date.format("d MMMM yyyy, HH:mm:ss zz", $lastDate)'>
-									$date.format("HH:mm", $lastDate)
-								</abbr>
-							#else
-								$date.format("dd MMMM yyyy, HH:mm", $lastDate)
-							#end
-							#set($intensity = $f.getIntensity($p.getMinuteVector($c)))
-							#if($intensity >= 0.1)
-								<span class="rightNowMarker">~$f.formatIntensity($intensity)</span>
-							#end
-							#if($c.description)
-								<span class="description">$display.truncate($c.description, 110, "...", true)</span>
-							#end
+
+							<span class='times'>
+								#if($date.format("d MMMM yyyy", $date.systemDate) == $date.format("d MMMM yyyy", $lastDate))
+									<abbr title='$date.format("d MMMM yyyy, HH:mm:ss zz", $lastDate)'>
+										$date.format("HH:mm", $lastDate)
+									</abbr>
+								#else
+									$date.format("dd MMMM yyyy, HH:mm", $lastDate)
+								#end
+								#set($intensity = $f.getIntensity($p.getMinuteVector($c)))
+								#if($intensity >= 0.1)
+									<span class="rightNowMarker">~$f.formatIntensity($intensity)</span>
+								#end
+								#if($c.description)
+									<span class="description">$display.truncate($c.description, 110, "...", true)</span>
+								#end
+							</span>
 						</div>
 					</div>
 				</a>

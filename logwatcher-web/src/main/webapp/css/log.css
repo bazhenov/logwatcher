@@ -116,7 +116,7 @@ TD.severity-cell {
 	text-align: center;
 }
 
-TD.category-cell {
+TD.group-cell {
 	font-family: 'Monaco', monospace;
 	font-size: 12px;
 }

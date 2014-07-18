@@ -25,7 +25,6 @@ public class InMemoryClusterDao implements ClusterDao {
 			map = newHashMap();
 			clusterMap.put(cluster.getApplicationId(), map);
 		}
-		checkArgument(!map.containsKey(cluster.getChecksum()), "Cluster already registered");
 		map.put(cluster.getChecksum(), cluster);
 	}
 

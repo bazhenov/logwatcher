@@ -25,14 +25,13 @@ public class NgApiEntryListener implements LogEntryListener {
 	@Override
 	public synchronized void onEntry(LogEntry entry) {
 		Checksum checksum = fromHexString(checksumCalculator.calculateChecksum(entry));
-		if (!clusterDao.isClusterRegistered(entry.getApplicationId(), checksum)) {
-			String message = entry.getMessage();
-			if (entry.getCause() != null) {
-				message = entry.getCause().getType() + ": " + message;
-			}
-			clusterDao.registerCluster(new Cluster(entry.getApplicationId(), entry.getSeverity(), message, checksum));
-		}
-		clusterStatistic.registerEvent(entry.getApplicationId(), new DateTime(entry.getDate()), checksum, entry.getSeverity());
+		Cluster cluster = new Cluster(entry.getApplicationId(), entry.getSeverity(), entry.getMessage(), checksum);
+		if (entry.getCause() != null)
+			cluster.setCauseType(entry.getCause().getType());
+		cluster.setGroup(entry.getGroup());
+		clusterDao.registerCluster(cluster);
+		clusterStatistic.registerEvent(entry.getApplicationId(), new DateTime(entry.getDate()), checksum,
+			entry.getSeverity());
 		storage.writeEntry(entry);
 	}
 }

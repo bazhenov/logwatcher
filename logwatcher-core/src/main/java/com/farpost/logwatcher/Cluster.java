@@ -22,6 +22,8 @@ public final class Cluster {
 	private final String applicationId;
 	private final Checksum checksum;
 	private final Severity severity;
+	private String group;
+	private String causeType;
 
 	@Nullable
 	private String issueKey;
@@ -38,6 +40,22 @@ public final class Cluster {
 
 	public Cluster(String applicationId, Severity severity, String title, Checksum checksum) {
 		this(applicationId, title, checksum, null, null, severity);
+	}
+
+	public String getGroup() {
+		return group;
+	}
+
+	public String getCauseType() {
+		return causeType;
+	}
+
+	public void setGroup(String group) {
+		this.group = group;
+	}
+
+	public void setCauseType(String causeType) {
+		this.causeType = causeType;
 	}
 
 	/**
@@ -92,7 +110,8 @@ public final class Cluster {
 
 		Cluster that = (Cluster) o;
 		return equal(checksum, that.checksum) && equal(description, that.description) && equal(issueKey, that.issueKey) &&
-			equal(title, that.title) && equal(applicationId, that.applicationId) && equal(severity, that.severity);
+			equal(title, that.title) && equal(applicationId, that.applicationId) && equal(severity, that.severity) &&
+			equal(causeType, that.causeType) && equal(group, that.group);
 	}
 
 	@Override
@@ -106,6 +125,8 @@ public final class Cluster {
 			.add("applicationId", applicationId)
 			.add("checksum", checksum)
 			.add("title", title)
+			.add("group", group)
+			.add("causeType", causeType)
 			.toString();
 	}
 }

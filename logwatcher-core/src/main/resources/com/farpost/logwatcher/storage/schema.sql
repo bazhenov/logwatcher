@@ -27,6 +27,8 @@ CREATE TABLE IF NOT EXISTS cluster_general_stat (
 CREATE TABLE IF NOT EXISTS cluster (
 	application VARCHAR(255) NOT NULL,
 	checksum VARCHAR(255) NOT NULL,
+	cause_type VARCHAR(255) NULL,
+	`group` VARCHAR(255) NULL,
 	description TEXT NULL,
 	severity VARCHAR(16) NOT NULL,
 	issue_key VARCHAR(16) NULL,

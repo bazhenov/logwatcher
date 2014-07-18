@@ -6,6 +6,7 @@ import com.google.common.base.Function;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
+import javax.annotation.Nullable;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,8 +21,12 @@ public class SqlClusterDao implements ClusterDao {
 	private RowMapper<Cluster> createCluster = new RowMapper<Cluster>() {
 		@Override
 		public Cluster mapRow(ResultSet rs, int rowNum) throws SQLException {
-			return new Cluster(rs.getString("application"), rs.getString("title"), fromHexString(rs.getString("checksum")),
-				rs.getString("description"), rs.getString("issue_key"), forName(rs.getString("severity")).get());
+			Cluster cluster = new Cluster(rs.getString("application"), rs.getString("title"),
+				fromHexString(rs.getString("checksum")), rs.getString("description"), rs.getString("issue_key"),
+				forName(rs.getString("severity")).get());
+			cluster.setCauseType(rs.getString("cause_type"));
+			cluster.setGroup(rs.getString("group"));
+			return cluster;
 		}
 	};
 
@@ -36,14 +41,27 @@ public class SqlClusterDao implements ClusterDao {
 	}
 
 	@Override
-	public void registerCluster(Cluster cluster) {
+	public void registerCluster(final Cluster cluster) {
 		String title = cluster.getTitle().length() > 255
 			? cluster.getTitle().substring(0, 255)
 			: cluster.getTitle();
-		template.update("INSERT INTO cluster (application, checksum, description, severity, title, issue_key) " +
-			"VALUES (?, ?, ?, ?, ?, ?)",
-			cluster.getApplicationId(), cluster.getChecksum().toString(), cluster.getDescription(),
-			cluster.getSeverity().toString(), title, cluster.getIssueKey());
+		if (isClusterRegistered(cluster.getApplicationId(), cluster.getChecksum())) {
+			changeCluster(cluster.getApplicationId(), cluster.getChecksum(), new Function<Cluster, Void>() {
+				@Nullable
+				@Override
+				public Void apply(Cluster input) {
+					input.setTitle(cluster.getTitle());
+					input.setCauseType(cluster.getCauseType());
+					input.setGroup(cluster.getGroup());
+					return null;
+				}
+			});
+		} else {
+			template.update("INSERT INTO cluster (application, checksum, description, severity, title, issue_key, " +
+					"`group`, cause_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+				cluster.getApplicationId(), cluster.getChecksum().toString(), cluster.getDescription(),
+				cluster.getSeverity().toString(), title, cluster.getIssueKey(), cluster.getGroup(), cluster.getCauseType());
+		}
 	}
 
 	@Override
@@ -58,8 +76,9 @@ public class SqlClusterDao implements ClusterDao {
 		checkArgument(cluster != null, "Cluster not found");
 		f.apply(cluster);
 		//noinspection ConstantConditions
-		template.update("UPDATE cluster SET title = ?, issue_key = ?, description = ? " +
-			"WHERE application = ? AND checksum = ?",
-			cluster.getTitle(), cluster.getIssueKey(), cluster.getDescription(), applicationId, checksum.toString());
+		template.update("UPDATE cluster SET title = ?, issue_key = ?, description = ?, `group` = ?, cause_type = ? " +
+				"WHERE application = ? AND checksum = ?",
+			cluster.getTitle(), cluster.getIssueKey(), cluster.getDescription(), cluster.getGroup(), cluster.getCauseType(),
+			applicationId, checksum.toString());
 	}
 }

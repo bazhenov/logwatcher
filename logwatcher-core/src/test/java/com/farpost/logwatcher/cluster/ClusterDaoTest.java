@@ -40,9 +40,30 @@ public abstract class ClusterDaoTest {
 		String applicationId = "foo";
 		Checksum checksum = checksum(1, 2, 3);
 		Cluster cluster = new Cluster(applicationId, info, "title", checksum);
+		cluster.setGroup("gr1");
+		cluster.setCauseType("Exception");
 		dao.registerCluster(cluster);
 
 		Cluster clusterCopy = dao.findCluster(applicationId, checksum);
+		assertThat(clusterCopy, equalTo(cluster));
+	}
+
+	@Test
+	public void shouldBeAbleToUpdateClusterInfo() {
+		String applicationId = "foo";
+		Checksum checksum = checksum(1, 2, 3);
+		Cluster cluster = new Cluster(applicationId, info, "title", checksum);
+		cluster.setGroup("gr1");
+		cluster.setCauseType("Exception");
+		dao.registerCluster(cluster);
+
+		Cluster clusterCopy = dao.findCluster(applicationId, checksum);
+		assertThat(clusterCopy, equalTo(cluster));
+
+		cluster.setCauseType(null);
+		dao.registerCluster(cluster);
+
+		clusterCopy = dao.findCluster(applicationId, checksum);
 		assertThat(clusterCopy, equalTo(cluster));
 	}
 
