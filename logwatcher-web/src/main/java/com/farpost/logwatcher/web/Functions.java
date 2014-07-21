@@ -99,6 +99,8 @@ public class Functions {
 	}
 
 	public static String retreiveSimpleName(String className) {
+		if (className == null)
+			return null;
 		int index = Math.max(className.lastIndexOf('.'), className.lastIndexOf('\\'));
 		if (index >= 0 && index < className.length() - 1)
 			return className.substring(index + 1);

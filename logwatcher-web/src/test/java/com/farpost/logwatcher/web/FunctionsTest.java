@@ -45,6 +45,7 @@ public class FunctionsTest {
 		assertThat(retreiveSimpleName(".SearchEngine"), is("SearchEngine"));
 
 		assertThat(retreiveSimpleName("com\\farpost\\SearchEngine"), is("SearchEngine"));
+		assertThat(retreiveSimpleName(null), nullValue());
 	}
 
 	@Test
