@@ -27,7 +27,7 @@
 							#if($c.issueKey)
 								<span class="issueKey">$c.issueKey</span>
 							#end
-							#if ($c.causeType)
+							#if ("$!c.causeType" != "")
 								#set($simpleCauseType = $f.retreiveSimpleName($c.causeType))
 								#if($simpleCauseType)
 									<span class="causeType"><abbr title="$c.causeType">$simpleCauseType<abbr></span>
@@ -46,7 +46,7 @@
 						#end
 
 						<div class="offset">
-							#if("$c.group" != "")
+							#if("$!c.group" != "")
 								#set($simpleGroup = $f.retreiveSimpleName($c.group))
 								#if($simpleGroup)
 									<span class="group"><abbr title="$c.group">$simpleGroup</abbr></span>
