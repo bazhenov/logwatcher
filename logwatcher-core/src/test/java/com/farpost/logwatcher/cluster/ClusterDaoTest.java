@@ -12,6 +12,7 @@ import static com.farpost.logwatcher.TestUtils.checksum;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 public abstract class ClusterDaoTest {
 
@@ -28,11 +29,11 @@ public abstract class ClusterDaoTest {
 	public void shouldBeAbleToRegisterNewCluster() {
 		Checksum checksum = checksum(1, 2, 3);
 		String applicationId = "foo";
-		assertThat(dao.isClusterRegistered(applicationId, checksum), is(false));
+		assertThat(dao.findCluster(applicationId, checksum), nullValue());
 		Cluster cluster = new Cluster(applicationId, error, "Message title", checksum);
 		dao.registerCluster(cluster);
 		// Intentionally use another instance of checksum to check non-reference equality
-		assertThat(dao.isClusterRegistered(applicationId, checksum(1, 2, 3)), is(true));
+		assertThat(dao.findCluster(applicationId, checksum(1, 2, 3)), equalTo(cluster));
 	}
 
 	@Test

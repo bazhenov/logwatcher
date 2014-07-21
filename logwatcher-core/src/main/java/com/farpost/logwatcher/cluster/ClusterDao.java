@@ -6,9 +6,6 @@ import com.google.common.base.Function;
 
 public interface ClusterDao {
 
-	@Deprecated
-	boolean isClusterRegistered(String applicationId, Checksum checksum);
-
 	void registerCluster(Cluster cluster);
 
 	Cluster findCluster(String applicationId, Checksum checksum);

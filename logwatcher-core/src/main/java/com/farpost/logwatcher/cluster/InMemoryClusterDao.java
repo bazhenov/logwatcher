@@ -13,7 +13,6 @@ public class InMemoryClusterDao implements ClusterDao {
 
 	private final Map<String, Map<Checksum, Cluster>> clusterMap = newHashMap();
 
-	@Override
 	public boolean isClusterRegistered(String applicationId, Checksum checksum) {
 		return clusterMap.containsKey(applicationId) && clusterMap.get(applicationId).containsKey(checksum);
 	}

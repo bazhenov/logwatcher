@@ -3,6 +3,7 @@ package com.farpost.logwatcher.cluster;
 import com.farpost.logwatcher.Checksum;
 import com.farpost.logwatcher.Cluster;
 import com.google.common.base.Function;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -34,8 +35,7 @@ public class SqlClusterDao implements ClusterDao {
 		template = new JdbcTemplate(dataSource);
 	}
 
-	@Override
-	public boolean isClusterRegistered(String applicationId, Checksum checksum) {
+	private boolean isClusterRegistered(String applicationId, Checksum checksum) {
 		return template.queryForInt("SELECT COUNT(*) FROM cluster WHERE application = ? AND checksum = ?",
 			applicationId, checksum.toString()) > 0;
 	}
@@ -66,8 +66,12 @@ public class SqlClusterDao implements ClusterDao {
 
 	@Override
 	public Cluster findCluster(String applicationId, Checksum checksum) {
-		return template.queryForObject("SELECT * FROM cluster WHERE application = ? AND checksum = ?", createCluster,
-			applicationId, checksum.toString());
+		try {
+			return template.queryForObject("SELECT * FROM cluster WHERE application = ? AND checksum = ?", createCluster,
+				applicationId, checksum.toString());
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
 	}
 
 	@Override
