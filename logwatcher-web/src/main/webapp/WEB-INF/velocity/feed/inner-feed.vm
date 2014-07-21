@@ -46,7 +46,7 @@
 						#end
 
 						<div class="offset">
-							#if(!$c.group.isEmpty())
+							#if("$c.group" != "")
 								#set($simpleGroup = $f.retreiveSimpleName($c.group))
 								#if($simpleGroup)
 									<span class="group"><abbr title="$c.group">$simpleGroup</abbr></span>
@@ -54,7 +54,7 @@
 									<span class="group">$c.group</span>
 								#end
 							#end
-							
+
 							#if(!$p.applicationId.isPresent())
 								<span class="applicationId">$c.applicationId
 

@@ -42,10 +42,12 @@ public final class Cluster {
 		this(applicationId, title, checksum, null, null, severity);
 	}
 
+	@Nullable
 	public String getGroup() {
 		return group;
 	}
 
+	@Nullable
 	public String getCauseType() {
 		return causeType;
 	}

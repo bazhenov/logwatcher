@@ -2,7 +2,7 @@
 <html>
 <head>
 	#if($p.applicationId.isPresent())
-		<title>LogWatcher: $p.applicationId feed</title>
+		<title>LogWatcher: $p.applicationId.get() feed</title>
 	#else
 		<title>LogWatcher aggregated feed</title>
 	#end
