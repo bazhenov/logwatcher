@@ -29,7 +29,7 @@
 							#end
 							#if ("$!c.causeType" != "")
 								#set($simpleCauseType = $f.retreiveSimpleName($c.causeType))
-								#if($simpleCauseType)
+								#if("$!simpleCauseType" != "")
 									<span class="causeType"><abbr title="$c.causeType">$simpleCauseType<abbr></span>
 								#else
 									<span class="causeType">$c.causeType</span>
@@ -48,7 +48,7 @@
 						<div class="offset">
 							#if("$!c.group" != "")
 								#set($simpleGroup = $f.retreiveSimpleName($c.group))
-								#if($simpleGroup)
+								#if("$!simpleGroup" != "")
 									<span class="group"><abbr title="$c.group">$simpleGroup</abbr></span>
 								#else
 									<span class="group">$c.group</span>
