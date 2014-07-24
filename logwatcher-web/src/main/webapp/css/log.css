@@ -15,6 +15,7 @@ TABLE TD {
 
 .log TABLE.attr TD {
 	padding: 0 5px;
+	white-space: pre;
 }
 
 .log TABLE.attr TD.attributeName {

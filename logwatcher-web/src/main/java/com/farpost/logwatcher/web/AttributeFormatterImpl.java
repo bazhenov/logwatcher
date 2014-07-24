@@ -5,6 +5,7 @@ import com.google.common.base.Splitter;
 import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
+import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
 
 public class AttributeFormatterImpl implements AttributeFormatter {
 
@@ -31,9 +32,9 @@ public class AttributeFormatterImpl implements AttributeFormatter {
 	public String format(String applicationId, String name, String value) {
 		String key = applicationId + "/" + name;
 		if (templates.containsKey(key)) {
-			return templates.get(key).replaceAll("\\*", value);
+			return templates.get(key).replaceAll("\\*", escapeHtml(value));
 		} else {
-			return value;
+			return escapeHtml(value);
 		}
 	}
 }

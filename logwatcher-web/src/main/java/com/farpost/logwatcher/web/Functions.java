@@ -2,10 +2,14 @@ package com.farpost.logwatcher.web;
 
 import com.farpost.logwatcher.Cause;
 import com.farpost.logwatcher.statistics.MinuteVector;
+import com.google.common.base.Joiner;
+import com.google.common.base.Predicate;
+import com.google.common.base.Splitter;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.google.common.collect.Iterables.filter;
 import static java.lang.Math.*;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static java.util.regex.Pattern.compile;
@@ -54,7 +58,7 @@ public class Functions {
 			if (cause != rootCause) {
 				stackTrace.append("\n\n").append(prefix).append("Caused by ");
 			}
-			String iStack = cause.getStackTrace().replaceAll("\n", "\n" + prefix);
+			String iStack = removeEmptyStrings(cause.getStackTrace()).replaceAll("\n", "\n" + prefix);
 			stackTrace.append(cause.getType())
 				.append(": ")
 				.append(cause.getMessage())
@@ -65,6 +69,17 @@ public class Functions {
 			prefix.append("  ");
 		}
 		return stackTrace.toString();
+	}
+
+	private static String removeEmptyStrings(String str) {
+		Iterable<String> parts = Splitter.on('\n').split(str);
+		parts = filter(parts, new Predicate<String>() {
+			@Override
+			public boolean apply(String input) {
+				return !input.trim().isEmpty();
+			}
+		});
+		return Joiner.on('\n').join(parts);
 	}
 
 	public static CauseDef extractExceptionClass(String title) {

@@ -9,10 +9,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 
 import java.io.File;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -78,7 +75,9 @@ public class Bootstrap implements InitializingBean {
 
 		@Override
 		public void run() {
-			register(new LogEntryImpl(new Date(), "com.farpost.AdvertManager", "AdvertServiceException: Error Fetching http headers", Severity.error, "sum", "advertisement", null));
+			Map<String, String> attributes = new HashMap<String, String>();
+			attributes.put("req.foo", "<b>Hello</b>");
+			register(new LogEntryImpl(new Date(), "com.farpost.AdvertManager", "AdvertServiceException: Error Fetching http headers", Severity.error, "sum", "advertisement", attributes));
 			Cause cause = new Cause("java.lang.RuntimeException", "Socket reading timeout",
 				"  at /var/www/baza.farpost.ru/rev/20100325-1520/slr/advert/src/remote/AdvertSoapDecorator.class.php:16\n" +
 					"  10: slrSoapDecorator.class.php:94 AdvertSoapDecorator->handleException(\"Error Fetc...\", SoapFault)\n" +
@@ -96,7 +95,8 @@ public class Bootstrap implements InitializingBean {
 				register(new LogEntryImpl(new Date(), "com.farpost.AuditPolicy", "OverflowFundsException", Severity.warning, "sum2",
 					"billing", new HashMap<String, String>() {{
 					put("url", "/some/foo/very/long/url/to/fit/in/screen");
-					put("machine", "aux1.srv.loc");
+					put("machine", "aux1.<b>srv</b>.loc\n" +
+						"aux2.srv.loc");
 				}}, cause));
 			}
 
