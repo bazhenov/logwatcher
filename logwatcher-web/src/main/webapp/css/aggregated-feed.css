@@ -44,20 +44,6 @@
 	margin-left: 85px;
 }
 
-.entry .group {
-	font-size: 13px;
-	line-height: 16px;
-	font-weight: 600;
-	color: #333;
-	border-radius: 3px;
-	border: 1px solid darkgray;
-	padding: 0 5px;
-}
-
-.entry .group ABBR {
-	border-bottom: 0;
-}
-
 .entry .message {
 	color: #111;
 	margin-right: 80px;
@@ -81,18 +67,30 @@
 	font-size: 48px;
 }
 
-.entry .message .issueKey {
+.entry .group {
+	padding: 0 5px;
+}
+
+.entry .group ABBR {
+	border-bottom: 0;
+}
+
+.entry .issueKey {
 	text-transform: uppercase;
 }
 
-.entry .message .causeType, .entry .message .issueKey {
-	font-size: 14px;
-	color: #444;
-	background-color: #eee;
-	font-weight: 600;
+.entry .causeType, .entry .group, .entry .applicationId {
+	font-size: 13px;
+	line-height: 16px;
 	border-radius: 3px;
-	padding: 1px 6px;
+	color: #999;
+	border: 1px solid #ddd;
+	padding: 0 6px;
+}
+
+.entry .causeType, .entry .issueKey {
 	margin-right: 3px;
+	background-color: #eee;
 }
 
 .entryHeader .times {
@@ -109,10 +107,8 @@
 	border-bottom: 0;
 }
 
-.entryHeader .applicationId {
-	font-variant: small-caps;
-	font-size: 16px;
-	color: black;
+.entry .applicationId {
+	text-transform: capitalize;
 }
 
 .entryFooter {
@@ -282,11 +278,13 @@ h2 span#pieChartLink {
 .rightNowMarker {
 	background-color: #f60;
 	color: white;
-	font-weight: 600;
-	font-size: 80%;
+	font-weight: 500;
+	font-size: 13px;
 	padding: 0 5px;
 	border-radius: 4px;
-	margin-left: 5px;
+	margin: 0 5px;
+	line-height: 16px;
+	border: 1px solid #f60;
 }
 
 .description {

@@ -27,14 +27,6 @@
 							#if($c.issueKey)
 								<span class="issueKey">$c.issueKey</span>
 							#end
-							#if ("$!c.causeType" != "")
-								#set($simpleCauseType = $f.retreiveSimpleName($c.causeType))
-								#if("$!simpleCauseType" != "")
-									<span class="causeType"><abbr title="$c.causeType">$simpleCauseType<abbr></span>
-								#else
-									<span class="causeType">$c.causeType</span>
-								#end
-							#end
 							#if($c.title.isEmpty())
 								<span class="noMessage">No message</span>
 							#else
@@ -46,21 +38,6 @@
 						#end
 
 						<div class="offset">
-							#if("$!c.group" != "")
-								#set($simpleGroup = $f.retreiveSimpleName($c.group))
-								#if("$!simpleGroup" != "")
-									<span class="group"><abbr title="$c.group">$simpleGroup</abbr></span>
-								#else
-									<span class="group">$c.group</span>
-								#end
-							#end
-
-							#if(!$p.applicationId.isPresent())
-								<span class="applicationId">$c.applicationId
-
-								</span>
-							#end
-
 							<span class='times'>
 								#if($date.format("d MMMM yyyy", $date.systemDate) == $date.format("d MMMM yyyy", $lastDate))
 									<abbr title='$date.format("d MMMM yyyy, HH:mm:ss zz", $lastDate)'>
@@ -77,6 +54,28 @@
 									<span class="description">$display.truncate($c.description, 110, "...", true)</span>
 								#end
 							</span>
+
+							#if(!$p.applicationId.isPresent())
+								<span class="applicationId">$c.applicationId</span>
+							#end
+
+							#if("$!c.group" != "")
+								#set($simpleGroup = $f.retreiveSimpleName($c.group))
+								#if("$!simpleGroup" != "")
+									<span class="group"><abbr title="$c.group">$simpleGroup</abbr></span>
+								#else
+									<span class="group">$c.group</span>
+								#end
+							#end
+
+							#if ("$!c.causeType" != "")
+								#set($simpleCauseType = $f.retreiveSimpleName($c.causeType))
+								#if("$!simpleCauseType" != "")
+									<span class="causeType"><abbr title="$c.causeType">$simpleCauseType<abbr></span>
+								#else
+									<span class="causeType">$c.causeType</span>
+								#end
+							#end
 						</div>
 					</div>
 				</a>
