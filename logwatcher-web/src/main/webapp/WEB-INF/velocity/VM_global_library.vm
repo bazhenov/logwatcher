@@ -12,7 +12,7 @@
 					<tr>
 						<td class="attributeName">$i.key</td>
 						#set($_value = $formatter.format($e.applicationId, $i.key, $i.value))
-						<td>$_value</td>
+						<td>$!_value</td>
 					</tr>
 				#end
 			#end
