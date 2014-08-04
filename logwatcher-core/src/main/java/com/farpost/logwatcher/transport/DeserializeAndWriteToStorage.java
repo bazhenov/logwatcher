@@ -4,7 +4,6 @@ import com.farpost.logwatcher.LogEntry;
 import com.farpost.logwatcher.marshalling.Marshaller;
 import com.google.common.io.Files;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.integration.Message;
 import org.springframework.integration.annotation.ServiceActivator;
 
@@ -16,13 +15,14 @@ import static com.farpost.logwatcher.transport.WriteToChannelTransportListener.S
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.getRootCause;
 import static java.io.File.createTempFile;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class DeserializeAndWriteToStorage {
 
 	private final Marshaller marshaller;
 	private final LogEntryListener listener;
 
-	private static final Logger log = LoggerFactory.getLogger(DeserializeAndWriteToStorage.class);
+	private static final Logger log = getLogger(DeserializeAndWriteToStorage.class);
 
 	public DeserializeAndWriteToStorage(Marshaller marshaller, LogEntryListener listener) {
 		this.marshaller = checkNotNull(marshaller);
@@ -53,5 +53,4 @@ public class DeserializeAndWriteToStorage {
 			log.debug("Packet processing failed. Sender is {}. Packet dump at {}", sender, tempFile.getAbsolutePath());
 		}
 	}
-
 }

@@ -35,6 +35,7 @@ abstract public class LogStorageTestCase {
 		LogEntry entry = entry().
 			occurred(occurredDate).
 			attribute("foo", "bar").
+			attribute("nullAttribute", null).
 			create();
 		storage.writeEntry(entry);
 
