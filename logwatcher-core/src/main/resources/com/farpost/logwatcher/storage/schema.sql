@@ -32,6 +32,6 @@ CREATE TABLE IF NOT EXISTS cluster (
 	description TEXT NULL,
 	severity VARCHAR(16) NOT NULL,
 	issue_key VARCHAR(16) NULL,
-	title VARCHAR(255) NOT NULL,
+	title TEXT NOT NULL,
 	PRIMARY KEY(application, checksum)
 );
