@@ -14,9 +14,11 @@ public class AggregatedAttributeTest {
 		attr.add(new AttributeValue("aux2", 15));
 		attr.add(new AttributeValue("aux1", 16));
 		attr.add(new AttributeValue("aux2", 8));
+		attr.add(new AttributeValue(null, 6));
 
 		assertThat(attr.getCountFor("aux1"), equalTo(16));
 		assertThat(attr.getCountFor("aux2"), equalTo(23));
+		assertThat(attr.getCountFor(null), equalTo(6));
 	}
 
 	@Test

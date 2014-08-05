@@ -12,9 +12,6 @@ public class AttributeValue {
 	private final AtomicInteger count;
 
 	public AttributeValue(String value, int count) {
-		if (value == null) {
-			throw new NullPointerException("Attribute value can not be null");
-		}
 		this.value = value;
 		this.count = new AtomicInteger(count);
 	}

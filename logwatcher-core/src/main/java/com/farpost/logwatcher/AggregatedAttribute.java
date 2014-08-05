@@ -1,5 +1,6 @@
 package com.farpost.logwatcher;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,7 +39,7 @@ public class AggregatedAttribute {
 		return attributeValues;
 	}
 
-	public void incrementCountFor(String value) {
+	public void incrementCountFor(@Nullable String value) {
 		AttributeValue v = values.get(value);
 		if (v == null) {
 			values.put(value, new AttributeValue(value, 1));
