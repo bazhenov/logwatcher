@@ -10,8 +10,10 @@
 
 	<link rel="stylesheet" type="text/css" href="/css/popup.css"/>
 	<link rel="stylesheet" type="text/css" href="/css/aggregated-feed.css"/>
+	<link rel="stylesheet" type="text/css" href="/css/bootstrap-switch.min.css"/>
 
 	<script type="text/javascript" src="/js/calendar.js"></script>
+	<script type="text/javascript" src="/js/bootstrap-switch.min.js"></script>
 
 	<script type="text/javascript">
 		var severityLevel = '$p.severity';
@@ -67,6 +69,10 @@
 			#severity("debug", $p.severity)
 			#severity("trace", $p.severity)
 		</ul>
+	</span>
+	<span id='refreshFeedSwitch'>
+		<input type='checkbox' name='refreshFeed' checked='checked'
+			data-on-label='refresh' data-off-label='hold' data-size='mini' />
 	</span>
 </h2>
 
@@ -161,25 +167,31 @@
 		filterFeed();
 	});
 
+	var cbxRefreshFeed = $(":checkbox[name='refreshFeed']").bootstrapSwitch()
 	function updateFeed() {
-		$.ajax({
-			url: "/service/feed/${p.applicationId.or('')}",
-			data: {'date': "$dt"}
-		}).done(function (data) {
-				$(".entries").html(data);
-				var maxData = 0;
-				var sel = $('.entry .count');
-				sel.each(function (i, canvas) {
-					var count = parseInt($(canvas).attr("data-count"));
-					if (count > maxData) maxData = count;
+		if (cbxRefreshFeed.bootstrapSwitch('state')) {
+			console.log('update feed');
+			$.ajax({
+				url: "/service/feed/${p.applicationId.or('')}",
+				data: {'date': "$dt"}
+			}).done(function (data) {
+					$(".entries").html(data);
+					var maxData = 0;
+					var sel = $('.entry .count');
+					sel.each(function (i, canvas) {
+						var count = parseInt($(canvas).attr("data-count"));
+						if (count > maxData) maxData = count;
+					});
+					sel.each(function (i, canvas) {
+						var count = parseInt($(canvas).attr("data-count"));
+						var severity = $(canvas).attr("data-severity");
+						new Counterina(canvas, maxData).draw(count, severity);
+					});
+					filterFeed();
 				});
-				sel.each(function (i, canvas) {
-					var count = parseInt($(canvas).attr("data-count"));
-					var severity = $(canvas).attr("data-severity");
-					new Counterina(canvas, maxData).draw(count, severity);
-				});
-				filterFeed();
-			});
+		} else {
+			console.log('NOT update feed');
+		}
 		setTimeout(updateFeed, 6000);
 	}
 	setTimeout(updateFeed, 0);

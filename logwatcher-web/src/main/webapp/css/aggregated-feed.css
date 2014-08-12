@@ -291,3 +291,8 @@ h2 span#pieChartLink {
 	font-size: 12px;
 	padding: 0 5px;
 }
+
+#refreshFeedSwitch {
+	display: inline-block;
+	float: right;
+}
