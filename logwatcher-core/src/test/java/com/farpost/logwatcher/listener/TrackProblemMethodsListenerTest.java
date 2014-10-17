@@ -3,6 +3,7 @@ package com.farpost.logwatcher.listener;
 import com.farpost.logwatcher.JavaStackTraceParser;
 import com.farpost.logwatcher.LogEntry;
 import com.farpost.logwatcher.StackTraceLine;
+import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -15,8 +16,7 @@ import static com.farpost.logwatcher.LogEntryBuilder.entry;
 import static com.farpost.logwatcher.listener.TrackProblemMethodsListener.ClusterReference;
 import static com.google.common.collect.Iterables.getFirst;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 
 public class TrackProblemMethodsListenerTest {
 
@@ -50,7 +50,8 @@ public class TrackProblemMethodsListenerTest {
 	public void clusterReferenceShouldBeSerializableToJson() throws IOException {
 		ClusterReference ref = new ClusterReference(new StackTraceLine("foo", "bar", null, 0), fromHexString("ab"));
 
-		assertThat(mapper.writeValueAsString(ref),
-			is("{\"file\":null,\"class\":\"foo\",\"method\":\"bar\",\"cluster\":\"ab\",\"line\":0}"));
+		JsonNode t1 = mapper.readTree("{\"file\":null,\"class\":\"foo\",\"method\":\"bar\",\"cluster\":\"ab\",\"line\":0}");
+		JsonNode t2 = mapper.readTree(mapper.writeValueAsString(ref));
+		assertThat(t1, equalTo(t2));
 	}
 }
