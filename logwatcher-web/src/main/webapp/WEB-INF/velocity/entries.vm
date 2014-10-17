@@ -9,7 +9,7 @@
 
 <body>
 
-<h2 data-checksum="${p.cluster.checksum}" data-application="$p.cluster.applicationId">
+<h2 data-clusterChecksum="${p.cluster.checksum}" data-application="$p.cluster.applicationId">
 	$display.truncate($p.cluster.title, 90, "...", true)
 	#if($p.cluster.issueKey)
 		#if($p.getIssueLink($p.cluster.issueKey))

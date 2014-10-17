@@ -16,4 +16,6 @@
 	<bean class="com.farpost.logwatcher.web.controller.DashboardController"/>
 	<bean class="com.farpost.logwatcher.web.controller.SearchController"/>
 
+	<bean class="com.farpost.logwatcher.web.controller.ProblemMethodsController"/>
+
 </beans>

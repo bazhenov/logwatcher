@@ -18,7 +18,7 @@
 
 	<bean id="bootstrap" class="com.farpost.logwatcher.web.Bootstrap"
 				p:indexLocation-ref="indexLocation"
-				p:entryListener-ref="writeToStorageTransportListener"
+				p:entryListener-ref="transportListener"
 				p:loadSampleDump="${loadSampleDump}"/>
 
 	<bean id="indexLocation" class="java.io.File" init-method="mkdirs">
@@ -46,12 +46,28 @@
 		<constructor-arg ref="dataSource"/>
 	</bean>
 
+	<bean id="transportListener" class="com.farpost.logwatcher.transport.CompositeEventListener">
+		<constructor-arg>
+			<list>
+				<ref bean="writeToStorageTransportListener"/>
+				<ref bean="trackProblemMethodsListener"/>
+			</list>
+		</constructor-arg>
+	</bean>
+
 	<!-- "Сервис", записывающий логи в хранилище -->
 	<bean id="writeToStorageTransportListener" class="com.farpost.logwatcher.transport.NgApiEntryListener">
 		<constructor-arg name="storage" ref="storage"/>
 		<constructor-arg name="clusterDao" ref="clusterDao"/>
 		<constructor-arg name="clusterStatistic" ref="clusterStatistics"/>
 	</bean>
+
+	<bean id="trackProblemMethodsListener" class="com.farpost.logwatcher.listener.TrackProblemMethodsListener">
+		<constructor-arg ref="stackTraceParser"/>
+	</bean>
+
+	<bean id="stackTraceParser" class="com.farpost.logwatcher.JavaStackTraceParser"
+				p:allowedPackagePrefix="com.farpost"/>
 
 	<bean id="marshaller" class="com.farpost.logwatcher.marshalling.Jaxb2Marshaller"/>
 

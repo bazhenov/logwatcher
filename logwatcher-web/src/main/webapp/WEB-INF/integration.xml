@@ -50,7 +50,7 @@
 		<int:service-activator>
 			<bean class="com.farpost.logwatcher.transport.DeserializeAndWriteToStorage">
 				<constructor-arg ref="marshaller"/>
-				<constructor-arg ref="writeToStorageTransportListener"/>
+				<constructor-arg ref="transportListener"/>
 			</bean>
 		</int:service-activator>
 	</int:chain>
@@ -73,7 +73,7 @@
 				init-method="start"
 				destroy-method="stop">
 		<constructor-arg value="${udp.port}"/>
-		<constructor-arg ref="writeToStorageTransportListener"/>
+		<constructor-arg ref="transportListener"/>
 	</bean>
 
 	<bean id="exporter" class="org.springframework.jmx.export.MBeanExporter" lazy-init="false">

@@ -79,21 +79,43 @@ public class Bootstrap implements InitializingBean {
 			attributes.put("req.foo", "<b>Hello</b>");
 			register(new LogEntryImpl(new Date(), "com.farpost.AdvertManager", "AdvertServiceException: Error Fetching http headers", Severity.error, "sum", "advertisement", attributes));
 			Cause cause = new Cause("java.lang.RuntimeException", "Socket reading timeout",
-				"  at /var/www/baza.farpost.ru/rev/20100325-1520/slr/advert/src/remote/AdvertSoapDecorator.class.php:16\n" +
-					"  10: slrSoapDecorator.class.php:94 AdvertSoapDecorator->handleException(\"Error Fetc...\", SoapFault)\n" +
-					"  9 : unknown:0 slrSoapDecorator->__call(\"findLinks\", [1])\n" +
-					"  8 : AdvertRemoteProvider.class.php:331 AdvertSoapDecorator->findLinks([2])\n" +
-					"  7 : AdvertLinkFinder.class.php:77 AdvertRemoteProvider->findLinks(AdvertLinkFinder)\n" +
-					"  6 : AdvertAbstractFinder.class.php:59 AdvertLinkFinder->getResults()\n" +
-					"  5 : AdvertAbstractFinder.class.php:35 AdvertAbstractFinder->fetchResults()\n" +
-					"  4 : AdvertRemoteAdvertisement.class.php:118 AdvertAbstractFinder->results()\n" +
-					"  3 : advertUnpopularDeactivationService.class.php:34 AdvertRemoteAdvertisement->getLinks(true)\n" +
-					"  2 : advertUnpopularDeactivationService.class.php:23 advertUnpopularDeactivationService->deactivateByMaxViews([849])\n" +
-					"  1 : service_runner.php:38 advertUnpopularDeactivationService->run()");
+				"\tat com.farpost.logwatcher.transport.CompositeEventListener.onEntry(CompositeEventListener.java:22) ~[classes/:na]\n" +
+					"\tat com.farpost.logwatcher.transport.CompositeEventListenerTest.listenerShouldBeCalledEventIfPreviousListenerThrownAnException(CompositeEventListenerTest.java:33) [test-classes/:na]\n" +
+					"\tat sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.6.0_65]\n" +
+					"\tat sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39) ~[na:1.6.0_65]\n" +
+					"\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25) ~[na:1.6.0_65]\n" +
+					"\tat java.lang.reflect.Method.invoke(Method.java:597) ~[na:1.6.0_65]\n" +
+					"\tat org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:76) [testng-6.0.1.jar:na]\n" +
+					"\tat org.testng.internal.Invoker.invokeMethod(Invoker.java:673) [testng-6.0.1.jar:na]\n" +
+					"\tat org.testng.internal.Invoker.invokeTestMethod(Invoker.java:846) [testng-6.0.1.jar:na]\n" +
+					"\tat org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1170) [testng-6.0.1.jar:na]\n" +
+					"\tat org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125) [testng-6.0.1.jar:na]\n" +
+					"\tat org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:109) [testng-6.0.1.jar:na]\n" +
+					"\tat org.testng.TestRunner.runWorkers(TestRunner.java:1147) [testng-6.0.1.jar:na]\n" +
+					"\tat org.testng.TestRunner.privateRun(TestRunner.java:749) [testng-6.0.1.jar:na]\n" +
+					"\tat org.testng.TestRunner.run(TestRunner.java:600) [testng-6.0.1.jar:na]\n" +
+					"\tat org.testng.SuiteRunner.runTest(SuiteRunner.java:317) [testng-6.0.1.jar:na]\n" +
+					"\tat org.testng.SuiteRunner.runSequentially(SuiteRunner.java:312) [testng-6.0.1.jar:na]\n" +
+					"\tat org.testng.SuiteRunner.privateRun(SuiteRunner.java:274) [testng-6.0.1.jar:na]\n" +
+					"\tat org.testng.SuiteRunner.run(SuiteRunner.java:223) [testng-6.0.1.jar:na]\n" +
+					"\tat org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52) [testng-6.0.1.jar:na]\n" +
+					"\tat org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86) [testng-6.0.1.jar:na]\n" +
+					"\tat org.testng.TestNG.runSuitesSequentially(TestNG.java:1039) [testng-6.0.1.jar:na]\n" +
+					"\tat org.testng.TestNG.runSuitesLocally(TestNG.java:964) [testng-6.0.1.jar:na]\n" +
+					"\tat org.testng.TestNG.run(TestNG.java:900) [testng-6.0.1.jar:na]\n" +
+					"\tat org.testng.remote.RemoteTestNG.run(RemoteTestNG.java:110) [testng-6.0.1.jar:na]\n" +
+					"\tat org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:205) [testng-6.0.1.jar:na]\n" +
+					"\tat org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:174) [testng-6.0.1.jar:na]\n" +
+					"\tat org.testng.RemoteTestNGStarter.main(RemoteTestNGStarter.java:125) [testng-plugin.jar:na]\n" +
+					"\tat sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.6.0_65]\n" +
+					"\tat sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39) ~[na:1.6.0_65]\n" +
+					"\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25) ~[na:1.6.0_65]\n" +
+					"\tat java.lang.reflect.Method.invoke(Method.java:597) ~[na:1.6.0_65]\n" +
+					"\tat com.intellij.rt.execution.application.AppMain.main(AppMain.java:134) [idea_rt.jar:na]\n");
 
 			for (int i = 0; i < 200; i++) {
 				register(new LogEntryImpl(new Date(), "com.farpost.AuditPolicy", "OverflowFundsException", Severity.warning, "sum2",
-					"billing", new HashMap<String, String>() {{
+					"search", new HashMap<String, String>() {{
 					put("url", "/some/foo/very/long/url/to/fit/in/screen");
 					put("machine", "aux1.<b>srv</b>.loc\n" +
 						"aux2.srv.loc");
