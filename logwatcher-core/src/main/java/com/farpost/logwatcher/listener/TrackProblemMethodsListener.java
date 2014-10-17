@@ -5,6 +5,7 @@ import com.farpost.logwatcher.transport.LogEntryListener;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
+import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -47,7 +48,10 @@ public class TrackProblemMethodsListener implements LogEntryListener {
 
 	public static final class ClusterReference {
 
+		@Nonnull
 		private final StackTraceLine stackTraceLine;
+
+		@Nonnull
 		private final Checksum clusterChecksum;
 
 		public ClusterReference(StackTraceLine stackTraceLine, Checksum clusterChecksum) {
@@ -88,6 +92,23 @@ public class TrackProblemMethodsListener implements LogEntryListener {
 		@JsonProperty("line")
 		public int getLineNo() {
 			return stackTraceLine.getLineNo();
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (!(o instanceof ClusterReference)) return false;
+
+			ClusterReference that = (ClusterReference) o;
+
+			return clusterChecksum.equals(that.clusterChecksum) && stackTraceLine.equals(that.stackTraceLine);
+		}
+
+		@Override
+		public int hashCode() {
+			int result = stackTraceLine.hashCode();
+			result = 31 * result + clusterChecksum.hashCode();
+			return result;
 		}
 	}
 }
