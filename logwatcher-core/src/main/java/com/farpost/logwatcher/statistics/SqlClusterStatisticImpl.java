@@ -63,7 +63,7 @@ public class SqlClusterStatisticImpl implements ClusterStatistic {
 	}
 
 	private void updateGeneralStatistics(String applicationId, DateTime date, Checksum checksum) {
-		String dt = sqlDateTime(date);
+		Date dt = date.toDate();
 		int aff = template.update(
 			"UPDATE cluster_general_stat " +
 				"SET last_seen = CASE ? > last_seen WHEN TRUE THEN ? ELSE last_seen END, " +
@@ -101,7 +101,7 @@ public class SqlClusterStatisticImpl implements ClusterStatistic {
 				return result;
 			}
 		};
-		return template.query("SELECT severity, SUM(count) as count FROM cluster_day_stat WHERE " +
+		return template.query("SELECT severity, SUM(count) AS count FROM cluster_day_stat WHERE " +
 			"application = ? AND date = ? GROUP BY severity", rse, applicationId, sqlDate(date));
 	}
 
@@ -149,11 +149,7 @@ public class SqlClusterStatisticImpl implements ClusterStatistic {
 			sqlDate(date), applicationId);
 	}
 
-	private static String sqlDate(LocalDate date) {
-		return date.toString("yyyy-MM-dd");
-	}
-
-	private static String sqlDateTime(DateTime date) {
-		return date.toString("yyyy-MM-dd HH:mm:ss");
+	private static Date sqlDate(LocalDate date) {
+		return date.toDate();
 	}
 }

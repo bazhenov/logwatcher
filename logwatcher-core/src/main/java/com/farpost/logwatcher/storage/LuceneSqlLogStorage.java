@@ -25,7 +25,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import javax.sql.DataSource;
 import java.io.Closeable;
 import java.io.IOException;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -81,10 +80,9 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 			// TODO: контрольная сумма должна расчитыватся где-то в другом месте. Это слой хранения данных
 			final String checksum = checksumCalculator.calculateChecksum(entry);
 			int entryId = getNextId();
-			Date entryDate = date(entry.getDate());
 			byte[] marshaledEntry = marshaller.marshall(entry);
 
-			jdbc.update("INSERT INTO entry (id, date, checksum, value) VALUES (?, ?, ?, ?)", entryId, entryDate,
+			jdbc.update("INSERT INTO entry (id, date, checksum, value) VALUES (?, ?, ?, ?)", entryId, entry.getDate(),
 				checksum, marshaledEntry);
 
 			log.debug("Entry wrote to database. Checksum: {}", checksum);
@@ -97,10 +95,6 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 		} catch (IOException e) {
 			throw new LogStorageException(e);
 		}
-	}
-
-	private static Date date(java.util.Date date) {
-		return new Date(date.getTime());
 	}
 
 	/**
