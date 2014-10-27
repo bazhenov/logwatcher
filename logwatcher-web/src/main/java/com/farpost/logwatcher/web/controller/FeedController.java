@@ -93,10 +93,10 @@ public class FeedController {
 
 	@RequestMapping("/service/feed/{applicationId}")
 	public ModelAndView handleInnerFeed(@PathVariable String applicationId,
-																			@RequestParam(required = false) @DateTimeFormat(iso = DATE) Date date,
+																			@RequestParam(required = false) @DateTimeFormat(iso = DATE) LocalDate date,
 																			HttpServletRequest request) {
 		if (date == null) {
-			date = new java.util.Date();
+			date = now();
 		}
 
 		Severity severity = getSeverity(request);
@@ -105,10 +105,10 @@ public class FeedController {
 	}
 
 	@RequestMapping("/service/feed")
-	public ModelAndView handleAggregatedInnerFeed(@RequestParam(required = false) @DateTimeFormat(iso = DATE) Date date,
+	public ModelAndView handleAggregatedInnerFeed(@RequestParam(required = false) @DateTimeFormat(iso = DATE) LocalDate date,
 																								HttpServletRequest request) {
 		if (date == null) {
-			date = new java.util.Date();
+			date = now();
 		}
 
 		Severity severity = getSeverity(request);
@@ -154,9 +154,9 @@ public class FeedController {
 
 		private final Map<Checksum, ByDayStatistic> dayStatisticMap = newHashMap();
 
-		public InnerFeedPage(Date date, String applicationId, Severity severity) {
+		public InnerFeedPage(LocalDate date, String applicationId, Severity severity) {
 			this.applicationId = applicationId;
-			this.date = LocalDate.fromDateFields(date);
+			this.date = date;
 			if (applicationId == null) {
 				Set<String> activeApplications = clusterStatistic.getActiveApplications();
 				Collection<Cluster> clusters = newArrayList();
