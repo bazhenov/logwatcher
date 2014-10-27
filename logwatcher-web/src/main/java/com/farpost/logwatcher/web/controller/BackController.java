@@ -13,6 +13,8 @@ import com.google.common.base.Function;
 import com.google.common.collect.Ordering;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +54,8 @@ public class BackController {
 
 	@Autowired
 	private AttributeFormatter formatter;
+
+	private static final Logger log = LoggerFactory.getLogger(BackController.class);
 
 	public BackController() {
 	}
@@ -141,9 +145,10 @@ public class BackController {
 	@RequestMapping("/service/log")
 	@ModelAttribute("p")
 	public DetailsLogPage handleLog(@RequestParam String application,
-																	@RequestParam @DateTimeFormat(iso = DATE) Date date,
+																	@RequestParam @DateTimeFormat(iso = DATE) LocalDate date,
 																	@RequestParam String checksum) {
-		return new DetailsLogPage(application, checksum, date);
+		log.error("Date registered: {}", date);
+		return new DetailsLogPage(application, checksum, date.toDate());
 	}
 
 	/**

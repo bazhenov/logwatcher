@@ -37,7 +37,6 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.collect.Sets.newTreeSet;
-import static org.joda.time.LocalDate.fromDateFields;
 import static org.joda.time.LocalDate.now;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
@@ -70,10 +69,10 @@ public class FeedController {
 	@RequestMapping("/feed/{applicationId}")
 	@ModelAttribute("p")
 	public ModelAndView handleFeed(@PathVariable String applicationId,
-																 @RequestParam(required = false) @DateTimeFormat(iso = DATE) java.util.Date date,
+																 @RequestParam(required = false) @DateTimeFormat(iso = DATE) LocalDate date,
 																 HttpServletRequest request) {
 		if (date == null) {
-			date = new java.util.Date();
+			date = now();
 		}
 
 		Severity severity = getSeverity(request);
@@ -82,10 +81,10 @@ public class FeedController {
 
 	@RequestMapping("/feed")
 	@ModelAttribute("p")
-	public ModelAndView handleAggregatedFeed(@RequestParam(required = false) @DateTimeFormat(iso = DATE) java.util.Date date,
+	public ModelAndView handleAggregatedFeed(@RequestParam(required = false) @DateTimeFormat(iso = DATE) LocalDate date,
 																					 HttpServletRequest request) {
 		if (date == null) {
-			date = new java.util.Date();
+			date = now();
 		}
 
 		Severity severity = getSeverity(request);
@@ -253,11 +252,11 @@ public class FeedController {
 	public class FeedPage {
 
 		private HttpServletRequest request;
-		private Date date;
+		private LocalDate date;
 		private String applicationId;
 		private Severity severity;
 
-		public FeedPage(HttpServletRequest request, Date date, String applicationId, Severity severity) {
+		public FeedPage(HttpServletRequest request, LocalDate date, String applicationId, Severity severity) {
 			this.request = request;
 			this.date = date;
 			this.applicationId = applicationId;
@@ -270,7 +269,7 @@ public class FeedController {
 		}
 
 		public Date getDate() {
-			return date;
+			return date.toDate();
 		}
 
 		/**
@@ -282,7 +281,7 @@ public class FeedController {
 			Set<String> applicationIds = clusterStatistic.getActiveApplications();
 			Set<Application> set = newTreeSet();
 			for (String applicationId : applicationIds) {
-				String dateAsString = fromDateFields(date).toString();
+				String dateAsString = date.toString();
 				String url = request.getContextPath() + "/feed/" + applicationId + "?date=" + dateAsString;
 				set.add(new Application(applicationId, url));
 			}
