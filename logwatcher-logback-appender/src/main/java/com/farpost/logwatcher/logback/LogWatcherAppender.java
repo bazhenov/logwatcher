@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static ch.qos.logback.core.CoreConstants.HOSTNAME_KEY;
 import static com.farpost.logwatcher.Utils.bytesToHex;
 import static java.lang.Integer.parseInt;
 import static java.nio.charset.Charset.forName;
@@ -54,8 +55,13 @@ public class LogWatcherAppender extends UnsynchronizedAppenderBase<ILoggingEvent
 
 			Map<String, String> attributes = safeMap(event.getMDCPropertyMap());
 			Map<String, String> propertyMap = safeMap(context.getPropertyMap());
-			if (!attributes.containsKey("host") && propertyMap.containsKey("HOSTNAME"))
-				attributes.put("host", propertyMap.get("HOSTNAME"));
+			// Чтобы в контексте было определено свойство HOSTNAME_KEY, должна быть явно указана конфигурация
+			// logback с использованием -Dlogback.configurationFile
+			if (!attributes.containsKey("host") && propertyMap.containsKey(HOSTNAME_KEY))
+				attributes.put("host", propertyMap.get(HOSTNAME_KEY));
+			if (!attributes.containsKey("thread") && event.getThreadName() != null)
+				attributes.put("thread", event.getThreadName());
+
 			LogEntry entry = new LogEntryImpl(time, event.getLoggerName(), event.getFormattedMessage(), severity,
 				calculateChecksum(event.getMessage()), applicationId, attributes, cause);
 
@@ -78,7 +84,7 @@ public class LogWatcherAppender extends UnsynchronizedAppenderBase<ILoggingEvent
 	private static <K, V> Map<K, V> safeMap(Map<K, V> attributes) {
 		return attributes == null
 			? new HashMap<K, V>()
-			: attributes;
+			: new HashMap<K, V>(attributes);
 	}
 
 	public static String calculateChecksum(String message) throws NoSuchAlgorithmException {

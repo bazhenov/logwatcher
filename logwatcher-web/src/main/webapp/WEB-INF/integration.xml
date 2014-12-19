@@ -68,14 +68,6 @@
 		</constructor-arg>
 	</bean>
 
-	<bean class="com.farpost.logwatcher.transport.LogbackSocketTransport"
-				lazy-init="false"
-				init-method="start"
-				destroy-method="stop">
-		<constructor-arg value="${udp.port}"/>
-		<constructor-arg ref="transportListener"/>
-	</bean>
-
 	<bean id="exporter" class="org.springframework.jmx.export.MBeanExporter" lazy-init="false">
 		<property name="beans">
 			<map>

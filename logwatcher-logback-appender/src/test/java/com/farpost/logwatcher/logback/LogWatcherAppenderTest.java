@@ -19,6 +19,7 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.net.*;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -122,12 +123,34 @@ public class LogWatcherAppenderTest {
 	@Test
 	public void appenderShouldSendMdcValuesAsWell() throws InterruptedException, UnknownHostException {
 		MDC.put("url", "/foo?a=1");
-		root.error("Request processing failed");
+		try {
+			root.error("Request processing failed");
 
+			LogEntry entry = getLastMessage();
+
+			assertThat(entry.getAttributes(), hasEntry("url", "/foo?a=1"));
+			assertThat(entry.getAttributes(), hasEntry("host", getLocalHost().getHostName()));
+		} finally {
+			MDC.remove("url");
+		}
+	}
+
+	@Test
+	public void shouldAddThreadNamesToContext() throws InterruptedException, UnknownHostException {
+		final CountDownLatch latch = new CountDownLatch(1);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				Thread.currentThread().setName("donkey");
+				root.error("Request processing failed");
+				latch.countDown();
+			}
+		}).start();
+
+		latch.await();
 		LogEntry entry = getLastMessage();
 
-		assertThat(entry.getAttributes(), hasEntry("url", "/foo?a=1"));
-		assertThat(entry.getAttributes(), hasEntry("host", getLocalHost().getHostName()));
+		assertThat(entry.getAttributes(), hasEntry("thread", "donkey"));
 	}
 
 	/**
