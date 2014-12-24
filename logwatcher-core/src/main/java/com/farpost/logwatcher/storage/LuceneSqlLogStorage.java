@@ -197,8 +197,8 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 			Searcher searcher = ref.getSearcher();
 
 			TopDocs topDocs = sort != null
-				? searcher.search(query, null, 100, DATETIME_SORT)
-				: searcher.search(query, null, 100);
+				? searcher.search(query, null, 500, DATETIME_SORT)
+				: searcher.search(query, null, 500);
 
 			Integer result[] = new Integer[topDocs.scoreDocs.length];
 			for (int i = 0; i < topDocs.scoreDocs.length; i++) {
