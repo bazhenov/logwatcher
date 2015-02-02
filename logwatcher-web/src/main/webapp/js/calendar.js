@@ -26,7 +26,7 @@ function buildCal(baseDate, urlCallback){
 			iDate.setDate(day);
 			var url = urlCallback(iDate);
 
-			x = ( day <= scanfortoday )
+			x = ( (baseDate.getMonth() < todaydate.getMonth()) || (day <= scanfortoday) )
 				? "<a href='"+url+"'>" + day + "</a>"
 				: day;
 			if ( baseDate.getMonth() >= todaydate.getMonth() && day > scanfortoday ) {
