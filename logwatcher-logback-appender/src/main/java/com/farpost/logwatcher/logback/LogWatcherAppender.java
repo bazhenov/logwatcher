@@ -88,7 +88,7 @@ public class LogWatcherAppender extends UnsynchronizedAppenderBase<ILoggingEvent
 	}
 
 	public static String calculateChecksum(String message) throws NoSuchAlgorithmException {
-		if (!message.contains("{}"))
+		if (message == null || !message.contains("{}"))
 			return null;
 		MessageDigest md5 = getInstance("md5");
 		md5.update(message.replaceAll("[ |{|}]", "").toLowerCase().getBytes(utf8));

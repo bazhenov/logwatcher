@@ -85,6 +85,13 @@ public class LogWatcherAppenderTest {
 	}
 
 	@Test
+	public void appenderShouldAbleToProcessNullMessages() throws InterruptedException {
+		root.debug(null);
+		LogEntry entry = getLastMessage();
+		assertThat(entry.getMessage(), equalTo("null"));
+	}
+
+	@Test
 	public void appenderShouldProcessPlaceholders() throws InterruptedException {
 		root.debug("Hi there, {}", "to you");
 

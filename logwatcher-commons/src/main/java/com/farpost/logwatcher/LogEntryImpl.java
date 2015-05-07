@@ -61,13 +61,12 @@ public class LogEntryImpl implements LogEntry {
 											String applicationId, Map<String, String> attributes, Cause cause) {
 		checkNotNull(date);
 		checkNotNull(group);
-		checkNotNull(message);
 		checkNotNull(severity);
 		checkNotNull(applicationId);
 
 		this.date = date;
 		this.groupContainer = new GroupContainer(group);
-		this.message = message;
+		this.message = message == null ? "null" : message;
 		this.severity = new SeverityContainer(severity);
 		this.checksum = checksum;
 		this.applicationContainer = new ApplicationContainer(applicationId);

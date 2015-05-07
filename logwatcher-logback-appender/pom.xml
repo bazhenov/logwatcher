@@ -9,7 +9,7 @@
 		<version>2.0</version>
 	</parent>
 	<artifactId>logwatcher-logback-appender</artifactId>
-	<version>1.5</version>
+	<version>1.5.1</version>
 
 	<name>LogWatcher Logback Appender</name>
 
