@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.farpost.logwatcher.storage.LuceneUtils.*;
+import static com.google.common.base.Objects.firstNonNull;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.lang.System.nanoTime;
 import static java.util.Collections.emptyList;
@@ -63,7 +64,7 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 		searcherRef = createSearcher();
 		this.jdbc = new JdbcTemplate(dataSource);
 		this.marshaller = new Jaxb2Marshaller();
-		nextId = jdbc.queryForInt("SELECT MAX(id) + 1 FROM entry");
+		nextId = firstNonNull(jdbc.queryForObject("SELECT MAX(id) + 1 FROM entry", Integer.class), 0);
 	}
 
 	@Override

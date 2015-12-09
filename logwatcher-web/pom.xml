@@ -71,9 +71,9 @@
 
 		<!-- Jetty provided dependencies -->
 		<dependency>
-			<groupId>org.mortbay.jetty</groupId>
-			<artifactId>jetty</artifactId>
-			<version>6.1.24</version>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-server</artifactId>
+			<version>9.3.6.v20151106</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -125,8 +125,8 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.mortbay.jetty</groupId>
-				<artifactId>maven-jetty-plugin</artifactId>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
 				<configuration>
 					<reload>manual</reload>
 				</configuration>

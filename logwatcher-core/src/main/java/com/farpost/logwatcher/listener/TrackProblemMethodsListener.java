@@ -2,8 +2,8 @@ package com.farpost.logwatcher.listener;
 
 import com.farpost.logwatcher.*;
 import com.farpost.logwatcher.transport.LogEntryListener;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.annotation.Nonnull;
 import java.util.HashSet;

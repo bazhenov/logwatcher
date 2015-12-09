@@ -4,7 +4,7 @@ import com.farpost.logwatcher.LogEntry;
 import com.farpost.logwatcher.marshalling.Marshaller;
 import com.google.common.io.Files;
 import org.slf4j.Logger;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.integration.annotation.ServiceActivator;
 
 import java.io.File;

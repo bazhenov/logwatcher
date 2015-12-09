@@ -3,8 +3,8 @@ package com.farpost.logwatcher.listener;
 import com.farpost.logwatcher.JavaStackTraceParser;
 import com.farpost.logwatcher.LogEntry;
 import com.farpost.logwatcher.StackTraceLine;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 

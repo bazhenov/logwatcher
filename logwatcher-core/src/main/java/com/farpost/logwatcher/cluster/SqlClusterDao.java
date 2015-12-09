@@ -36,7 +36,7 @@ public class SqlClusterDao implements ClusterDao {
 	}
 
 	private boolean isClusterRegistered(String applicationId, Checksum checksum) {
-		return template.queryForInt("SELECT COUNT(*) FROM cluster WHERE application = ? AND checksum = ?",
+		return template.queryForObject("SELECT COUNT(*) FROM cluster WHERE application = ? AND checksum = ?", Integer.class,
 			applicationId, checksum.toString()) > 0;
 	}
 
