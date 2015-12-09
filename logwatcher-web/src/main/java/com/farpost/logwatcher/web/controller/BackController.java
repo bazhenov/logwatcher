@@ -1,6 +1,9 @@
 package com.farpost.logwatcher.web.controller;
 
-import com.farpost.logwatcher.*;
+import com.farpost.logwatcher.AggregateAttributesVisitor;
+import com.farpost.logwatcher.AggregationResult;
+import com.farpost.logwatcher.ByOccurrenceDateComparator;
+import com.farpost.logwatcher.LogEntry;
 import com.farpost.logwatcher.cluster.ClusterDao;
 import com.farpost.logwatcher.statistics.ByDayStatistic;
 import com.farpost.logwatcher.statistics.ClusterStatistic;
@@ -9,7 +12,6 @@ import com.farpost.logwatcher.storage.InvalidCriteriaException;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
 import com.farpost.logwatcher.web.AttributeFormatter;
-import com.google.common.base.Function;
 import com.google.common.collect.Ordering;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -84,18 +86,14 @@ public class BackController {
 																									@RequestParam final String issueKey, @RequestParam final String title,
 																									@RequestParam final String description) {
 		try {
-			clusterDao.changeCluster(application, fromHexString(checksum), new Function<Cluster, Void>() {
-				@Override
-				public Void apply(Cluster input) {
-					input.setTitle(title);
-					input.setIssueKey(issueKey);
-					input.setDescription(description);
-					return null;
-				}
+			clusterDao.changeCluster(application, fromHexString(checksum), input -> {
+				input.setTitle(title);
+				input.setIssueKey(issueKey);
+				input.setDescription(description);
 			});
-			return new ResponseEntity<String>("Ok", OK);
+			return new ResponseEntity<>("Ok", OK);
 		} catch (IllegalArgumentException e) {
-			return new ResponseEntity<String>(e.getMessage(), BAD_REQUEST);
+			return new ResponseEntity<>(e.getMessage(), BAD_REQUEST);
 		}
 
 	}

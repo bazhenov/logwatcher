@@ -14,7 +14,7 @@ public class QueryParser {
 	public Map<String, String> parse(String query) throws InvalidQueryException {
 		String lastOperation = null;
 		StringBuffer operand = new StringBuffer();
-		Map<String, String> operations = new HashMap<String, String>();
+		Map<String, String> operations = new HashMap<>();
 		for ( String part : query.replace(":", ": ").split(" ") ) {
 			if ( part.endsWith(":") ) {
 				if ( lastOperation != null ) {

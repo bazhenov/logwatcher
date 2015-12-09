@@ -3,7 +3,6 @@ package com.farpost.logwatcher.web;
 import com.farpost.logwatcher.Cause;
 import com.farpost.logwatcher.statistics.MinuteVector;
 import com.google.common.base.Joiner;
-import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 
 import java.util.regex.Matcher;
@@ -73,12 +72,7 @@ public class Functions {
 
 	private static String removeEmptyStrings(String str) {
 		Iterable<String> parts = Splitter.on('\n').split(str);
-		parts = filter(parts, new Predicate<String>() {
-			@Override
-			public boolean apply(String input) {
-				return !input.trim().isEmpty();
-			}
-		});
+		parts = filter(parts, input -> !input.trim().isEmpty());
 		return Joiner.on('\n').join(parts);
 	}
 

@@ -12,7 +12,7 @@ import java.util.List;
 
 public class LogEntriesFinder {
 
-	private final List<LogEntryMatcher> criterias = new LinkedList<LogEntryMatcher>();
+	private final List<LogEntryMatcher> criterias = new LinkedList<>();
 
 	public LogEntriesFinder date(LocalDate date) {
 		criterias.add(new DateMatcher(date));
@@ -119,6 +119,6 @@ public class LogEntriesFinder {
 	}
 
 	public List<LogEntryMatcher> all() {
-		return new ArrayList<LogEntryMatcher>();
+		return new ArrayList<>();
 	}
 }

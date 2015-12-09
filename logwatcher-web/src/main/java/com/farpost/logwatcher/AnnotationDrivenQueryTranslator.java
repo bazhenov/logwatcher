@@ -36,7 +36,7 @@ import java.util.Map;
  */
 public class AnnotationDrivenQueryTranslator implements QueryTranslator {
 
-	private final Map<String, Method> methods = new HashMap<String, Method>();;
+	private final Map<String, Method> methods = new HashMap<>();
 	private Method defaultMethod;
 	private final QueryParser queryParser = new QueryParser();
 	private final Object rules;
@@ -48,7 +48,7 @@ public class AnnotationDrivenQueryTranslator implements QueryTranslator {
 
 	public List<LogEntryMatcher> translate(String query) throws InvalidQueryException {
 		Map<String, String> operands = queryParser.parse(query);
-		List<LogEntryMatcher> matchers = new ArrayList<LogEntryMatcher>(operands.size());
+		List<LogEntryMatcher> matchers = new ArrayList<>(operands.size());
 		for ( Map.Entry<String, String> entry : operands.entrySet() ) {
 			String operation = entry.getKey();
 			String operand = entry.getValue();
@@ -64,11 +64,7 @@ public class AnnotationDrivenQueryTranslator implements QueryTranslator {
 					throw new InvalidQueryException("Translation rule for operation '"+ operation +"' is not set");
 				}
 				matchers.add(matcher);
-			} catch ( IllegalAccessException e ) {
-				throw new InvalidQueryException(e);
-			} catch ( IllegalArgumentException e ) {
-				throw new InvalidQueryException(e);
-			} catch ( InvocationTargetException e ) {
+			} catch ( IllegalAccessException | IllegalArgumentException | InvocationTargetException e ) {
 				throw new InvalidQueryException(e);
 			}
 		}

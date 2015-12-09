@@ -32,7 +32,7 @@ public class LogEntryBuilder {
 	private Severity severity = Severity.error;
 	private String checksum = "";
 	private String applicationId = "some-application";
-	private Map<String, String> attributes = new HashMap<String, String>();
+	private Map<String, String> attributes = new HashMap<>();
 	private Throwable cause;
 
 	/**
@@ -98,6 +98,11 @@ public class LogEntryBuilder {
 
 	public LogEntryBuilder attribute(String name, String value) {
 		attributes.put(name, value);
+		return this;
+	}
+
+	public LogEntryBuilder group(String group) {
+		this.group = group;
 		return this;
 	}
 

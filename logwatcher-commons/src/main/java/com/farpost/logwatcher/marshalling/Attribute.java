@@ -1,5 +1,7 @@
 package com.farpost.logwatcher.marshalling;
 
+import com.farpost.logwatcher.LogEntryImpl;
+
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 

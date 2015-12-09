@@ -13,7 +13,7 @@ public class CauseDef {
 	private String type;
 	private String message;
 
-	public CauseDef(String simpleType, String type, String message) {
+	public CauseDef(@Nullable String simpleType, @Nullable String type, String message) {
 		this.simpleType = simpleType;
 		this.type = type;
 		this.message = checkNotNull(message);

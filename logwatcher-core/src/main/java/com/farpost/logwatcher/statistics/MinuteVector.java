@@ -14,7 +14,7 @@ public final class MinuteVector {
 
 	public static final int SIZE = 1440;
 	/**
-	 * Curcular buffer of long values each describing the count of events in particular minute of the day.
+	 * Circular buffer of long values each describing the count of events in particular minute of the day.
 	 * <p/>
 	 * Each value consist of day marker (2 high order bytes) and event count (6 low order bytes).
 	 */
@@ -31,10 +31,10 @@ public final class MinuteVector {
 	}
 
 	public MinuteVector(byte[] raw) {
-		this.v = recostructFromByteArray(raw);
+		this.v = reconstructFromByteArray(raw);
 	}
 
-	private static long[] recostructFromByteArray(byte[] raw) {
+	private static long[] reconstructFromByteArray(byte[] raw) {
 		checkArgument(raw.length == SIZE * 8);
 		ByteArrayInputStream is = new ByteArrayInputStream(raw);
 		byte[] b = new byte[8];

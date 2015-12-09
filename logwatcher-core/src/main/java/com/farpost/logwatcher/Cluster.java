@@ -29,7 +29,7 @@ public final class Cluster {
 	private String issueKey;
 
 	public Cluster(String applicationId, String title, Checksum checksum, String description,
-								 String issueKey, Severity severity) {
+								 @Nullable String issueKey, Severity severity) {
 		this.applicationId = applicationId;
 		this.title = checkNotNull(title);
 		this.checksum = checkNotNull(checksum);

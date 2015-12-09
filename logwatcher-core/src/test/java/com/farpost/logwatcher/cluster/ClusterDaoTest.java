@@ -2,7 +2,6 @@ package com.farpost.logwatcher.cluster;
 
 import com.farpost.logwatcher.Checksum;
 import com.farpost.logwatcher.Cluster;
-import com.google.common.base.Function;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -10,9 +9,7 @@ import static com.farpost.logwatcher.Severity.error;
 import static com.farpost.logwatcher.Severity.info;
 import static com.farpost.logwatcher.TestUtils.checksum;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 
 public abstract class ClusterDaoTest {
 
@@ -75,14 +72,10 @@ public abstract class ClusterDaoTest {
 		Cluster cluster = new Cluster(applicationId, info, "title", checksum);
 		dao.registerCluster(cluster);
 
-		dao.changeCluster(applicationId, checksum, new Function<Cluster, Void>() {
-			@Override
-			public Void apply(Cluster c) {
-				c.setTitle("New title");
-				c.setIssueKey("PRJ-12");
-				c.setDescription("Some meaningful text");
-				return null;
-			}
+		dao.changeCluster(applicationId, checksum, c -> {
+			c.setTitle("New title");
+			c.setIssueKey("PRJ-12");
+			c.setDescription("Some meaningful text");
 		});
 
 		Cluster clusterCopy = dao.findCluster(applicationId, checksum);

@@ -11,7 +11,7 @@ import static com.farpost.logwatcher.SeverityUtils.forName;
 
 public class TranslationRulesImpl {
 
-	ThreadLocal<DateFormat> dateFormat = new ThreadLocal<DateFormat>() {
+	private ThreadLocal<DateFormat> dateFormat = new ThreadLocal<DateFormat>() {
 		@Override
 		protected DateFormat initialValue() {
 			return new SimpleDateFormat("yyyy-MM-dd");

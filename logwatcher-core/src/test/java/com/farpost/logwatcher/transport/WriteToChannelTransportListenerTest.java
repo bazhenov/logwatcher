@@ -36,7 +36,7 @@ public class WriteToChannelTransportListenerTest {
 
 	@Test
 	public void listenerShouldWriteEntryToChannel()
-		throws TransportException, InterruptedException, UnknownHostException {
+		throws TransportException, UnknownHostException {
 		Cause cause = new Cause("type", "message", "stack");
 		LogEntry entry = new LogEntryImpl(new Date(), "group", "message", error, "checksum", "default", null, cause);
 
@@ -53,7 +53,7 @@ public class WriteToChannelTransportListenerTest {
 
 	@Test(expectedExceptions = TransportException.class)
 	public void listenerShouldThrowExceptionOnQueueOverflow()
-		throws TransportException, InterruptedException, UnknownHostException {
+		throws TransportException, UnknownHostException {
 		Cause cause = new Cause("type", "message", "stack");
 		LogEntry entry = new LogEntryImpl(new Date(), "group", "message", error, "checksum", "default", null, cause);
 

@@ -9,7 +9,6 @@ import com.farpost.logwatcher.storage.spi.MatcherMapperException;
 import com.google.common.io.Closeables;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
@@ -59,7 +58,7 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 	private Marshaller marshaller;
 
 	public LuceneSqlLogStorage(Directory directory, DataSource dataSource) throws IOException {
-		matcherMapper = new AnnotationDrivenMatcherMapperImpl<Query>(new LuceneMatcherMapperRules());
+		matcherMapper = new AnnotationDrivenMatcherMapperImpl<>(new LuceneMatcherMapperRules());
 		writer = new IndexWriter(directory, new StandardAnalyzer(Version.LUCENE_30), MaxFieldLength.UNLIMITED);
 		searcherRef = createSearcher();
 		this.jdbc = new JdbcTemplate(dataSource);
@@ -180,16 +179,11 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 	@Override
 	public List<LogEntry> findEntries(Collection<LogEntryMatcher> criteria)
 		throws LogStorageException, InvalidCriteriaException {
-		return walk(criteria, new CollectingVisitor<LogEntry>());
+		return walk(criteria, new CollectingVisitor<>());
 	}
 
 	private Integer[] findEntriesIds(final Collection<LogEntryMatcher> criteria) {
-		return withSearcher(new SearcherTask<Integer[]>() {
-			@Override
-			public Integer[] call(SearcherReference ref) throws IOException {
-				return findEntriesIds(criteria, null, ref);
-			}
-		});
+		return withSearcher(ref -> findEntriesIds(criteria, null, ref));
 	}
 
 	private Integer[] findEntriesIds(Collection<LogEntryMatcher> criteria, Sort sort, SearcherReference ref) {
@@ -207,9 +201,7 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 			}
 			return result;
 
-		} catch (MatcherMapperException e) {
-			throw new LogStorageException(e);
-		} catch (IOException e) {
+		} catch (MatcherMapperException | IOException e) {
 			throw new LogStorageException(e);
 		}
 	}
@@ -230,7 +222,7 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 	public int removeOldEntries(LocalDate date) throws LogStorageException {
 		try {
 			checkNotNull(date);
-			Collection<LogEntryMatcher> criteria = new ArrayList<LogEntryMatcher>();
+			Collection<LogEntryMatcher> criteria = new ArrayList<>();
 			criteria.add(new DateMatcher(new LocalDate(0), date));
 			Integer[] ids;
 			int recordsRemoved = 0;
@@ -248,11 +240,7 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 
 			return recordsRemoved;
 
-		} catch (DataAccessException e) {
-			throw new LogStorageException(e);
-		} catch (CorruptIndexException e) {
-			throw new LogStorageException(e);
-		} catch (IOException e) {
+		} catch (DataAccessException | IOException e) {
 			throw new LogStorageException(e);
 		}
 	}
@@ -260,20 +248,15 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 	@Override
 	public int countEntries(final Collection<LogEntryMatcher> criteria)
 		throws LogStorageException, InvalidCriteriaException {
-		return withSearcher(new SearcherTask<Integer>() {
-			@Override
-			public Integer call(SearcherReference ref) throws IOException {
-				try {
-					Searcher searcher = ref.getSearcher();
-					Query query = criteria.isEmpty()
-						? new MatchAllDocsQuery()
-						: createLuceneQuery(criteria);
-					return searcher.search(query, 1).totalHits;
-				} catch (MatcherMapperException e) {
-					throw new LogStorageException(e);
-				} catch (IOException e) {
-					throw new LogStorageException(e);
-				}
+		return withSearcher(ref -> {
+			try {
+				Searcher searcher = ref.getSearcher();
+				Query query = criteria.isEmpty()
+					? new MatchAllDocsQuery()
+					: createLuceneQuery(criteria);
+				return searcher.search(query, 1).totalHits;
+			} catch (MatcherMapperException | IOException e) {
+				throw new LogStorageException(e);
 			}
 		});
 	}
@@ -295,12 +278,7 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 	@Override
 	public <T> T walk(final Collection<LogEntryMatcher> criteria, Visitor<LogEntry, T> visitor)
 		throws LogStorageException, InvalidCriteriaException {
-		Integer[] ids = withSearcher(new SearcherTask<Integer[]>() {
-			@Override
-			public Integer[] call(SearcherReference ref) throws IOException {
-				return findEntriesIds(criteria, DATETIME_SORT, ref);
-			}
-		});
+		Integer[] ids = withSearcher(ref -> findEntriesIds(criteria, DATETIME_SORT, ref));
 		if (ids.length > 0) {
 			String idString = arrayToCommaDelimitedString(ids);
 

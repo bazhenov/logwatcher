@@ -33,7 +33,7 @@ public class LogWatcherAppenderTest {
 
 	@BeforeMethod
 	public void setUp() throws SocketException, TransportException {
-		messages = new LinkedBlockingQueue<byte[]>();
+		messages = new LinkedBlockingQueue<>();
 		int port = 6590;
 		transport = new UdpTransport(port, new QueueAppendListener(messages));
 		transport.setBufferSize(100 * 1024);

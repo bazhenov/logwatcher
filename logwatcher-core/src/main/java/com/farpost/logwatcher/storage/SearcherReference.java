@@ -4,10 +4,10 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.search.Searcher;
 
 import java.io.Closeable;
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.google.common.io.Closeables.closeQuietly;
 import static java.lang.Thread.yield;
 
 /**
@@ -77,8 +77,14 @@ final class SearcherReference implements Closeable {
 		while (referenceCount.get() > 0) {
 			yield();
 		}
-		closeQuietly(searcher);
-		closeQuietly(indexReader);
+		try {
+			searcher.close();
+		} catch(IOException ignore) {
+		}
+		try {
+			indexReader.close();
+		} catch(IOException ignore) {
+		}
 	}
 
 	/**

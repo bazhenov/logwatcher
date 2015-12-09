@@ -2,7 +2,8 @@ package com.farpost.logwatcher.cluster;
 
 import com.farpost.logwatcher.Checksum;
 import com.farpost.logwatcher.Cluster;
-import com.google.common.base.Function;
+
+import java.util.function.Consumer;
 
 public interface ClusterDao {
 
@@ -17,5 +18,5 @@ public interface ClusterDao {
 	 * @param checksum      cluster checksum
 	 * @param f             function which is change cluster
 	 */
-	void changeCluster(String applicationId, Checksum checksum, Function<Cluster, Void> f);
+	void changeCluster(String applicationId, Checksum checksum, Consumer<Cluster> f);
 }

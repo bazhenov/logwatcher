@@ -30,7 +30,7 @@ abstract public class LogStorageTestCase {
 	}
 
 	@Test
-	public void storageCanSaveEntry() throws Exception {
+	public void storageCanSaveEntry() {
 		DateTime occurredDate = today.toDateTime(parse("11:35"));
 		LogEntry entry = entry().
 			occurred(occurredDate).
@@ -85,7 +85,7 @@ abstract public class LogStorageTestCase {
 		entry().message("bar foo bar").saveIn(storage);
 		entry().message("bar bar bar").saveIn(storage);
 
-		CountVisitor<LogEntry> visitor = new CountVisitor<LogEntry>();
+		CountVisitor<LogEntry> visitor = new CountVisitor<>();
 		int count = entries().
 			date(today).
 			contains("foo").
@@ -136,7 +136,7 @@ abstract public class LogStorageTestCase {
 	}
 
 	@Test
-	public void storageCanCountEntries() throws Exception {
+	public void storageCanCountEntries() {
 		LogEntry entry = entry().create();
 
 		storage.writeEntry(entry);

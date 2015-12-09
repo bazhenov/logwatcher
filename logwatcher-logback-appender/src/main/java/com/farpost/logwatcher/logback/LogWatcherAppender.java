@@ -74,24 +74,22 @@ public class LogWatcherAppender extends UnsynchronizedAppenderBase<ILoggingEvent
 				}
 				socket.send(packet);
 			}
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		} catch (NoSuchAlgorithmException e) {
+		} catch (IOException | NoSuchAlgorithmException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	private static <K, V> Map<K, V> safeMap(Map<K, V> attributes) {
 		return attributes == null
-			? new HashMap<K, V>()
-			: new HashMap<K, V>(attributes);
+			? new HashMap<>()
+			: new HashMap<>(attributes);
 	}
 
-	public static String calculateChecksum(String message) throws NoSuchAlgorithmException {
+	private static String calculateChecksum(String message) throws NoSuchAlgorithmException {
 		if (message == null || !message.contains("{}"))
 			return null;
 		MessageDigest md5 = getInstance("md5");
-		md5.update(message.replaceAll("[ |{|}]", "").toLowerCase().getBytes(utf8));
+		md5.update(message.replaceAll("[ |{}]", "").toLowerCase().getBytes(utf8));
 		return bytesToHex(md5.digest());
 	}
 

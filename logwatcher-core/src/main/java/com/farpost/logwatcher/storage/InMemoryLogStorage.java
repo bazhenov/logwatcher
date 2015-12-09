@@ -12,12 +12,15 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import static com.farpost.logwatcher.storage.MatcherUtils.isMatching;
+import static java.util.stream.Collectors.toList;
+
 /**
  * Реализация {@link LogStorage}, которая хранит все записи в памяти. Потокобезопасна.
  */
 public class InMemoryLogStorage implements LogStorage {
 
-	private final List<LogEntry> entries = new ArrayList<LogEntry>();
+	private final List<LogEntry> entries = new ArrayList<>();
 	private final ReadWriteLock lock = new ReentrantReadWriteLock();
 	private final Lock writeLock = lock.writeLock();
 	private final Lock readLock = lock.readLock();
@@ -25,95 +28,61 @@ public class InMemoryLogStorage implements LogStorage {
 
 	public void writeEntry(final LogEntry entry) throws LogStorageException {
 		final LogEntryImpl impl = (LogEntryImpl) entry;
-		withLock(writeLock, new Callable<Void>() {
-
-			public Void call() {
-				//if (entry.getChecksum() == null) {
-				String checksum = checksumCalculator.calculateChecksum(impl);
-				impl.setChecksum(checksum);
-				//}
-				entries.add(impl);
-				return null;
-			}
+		withLock(writeLock, () -> {
+			//if (entry.getChecksum() == null) {
+			String checksum = checksumCalculator.calculateChecksum(impl);
+			impl.setChecksum(checksum);
+			//}
+			entries.add(impl);
+			return null;
 		});
 	}
 
 	public int removeOldEntries(final LocalDate date) throws LogStorageException {
-		return withLock(writeLock, new Callable<Integer>() {
-
-			public Integer call() throws Exception {
-				Iterator<LogEntry> iterator = entries.iterator();
-				int removed = 0;
-				while (iterator.hasNext()) {
-					LogEntry entry = iterator.next();
-					if (entry.getDate().before(date.toDate())) {
-						iterator.remove();
-						removed++;
-					}
+		return withLock(writeLock, () -> {
+			Iterator<LogEntry> iterator = entries.iterator();
+			int removed = 0;
+			while (iterator.hasNext()) {
+				LogEntry entry = iterator.next();
+				if (entry.getDate().before(date.toDate())) {
+					iterator.remove();
+					removed++;
 				}
-				return removed;
 			}
+			return removed;
 		});
 	}
 
 	public List<LogEntry> findEntries(final Collection<LogEntryMatcher> criteria) {
-		return withLock(readLock, new Callable<List<LogEntry>>() {
-
-			public List<LogEntry> call() throws Exception {
-				List<LogEntry> result = new ArrayList<LogEntry>();
-				for (LogEntry entry : entries) {
-					if (MatcherUtils.isMatching(entry, criteria)) {
-						result.add(entry);
-					}
-				}
-				return result;
-			}
-		});
+		return withLock(readLock, () -> entries.stream()
+				.filter(entry -> isMatching(entry, criteria))
+				.collect(toList())
+		);
 	}
 
 	public <T> T walk(final Collection<LogEntryMatcher> criteria, final Visitor<LogEntry, T> visitor) {
-		withLock(readLock, new Callable<Void>() {
-
-			public Void call() throws Exception {
-				for (LogEntry entry : entries) {
-					if (MatcherUtils.isMatching(entry, criteria)) {
-						visitor.visit(entry);
-					}
-				}
-				return null;
-			}
+		withLock(readLock, () -> {
+			entries.stream().filter(entry -> isMatching(entry, criteria)).forEach(visitor::visit);
+			return null;
 		});
 
 		return visitor.getResult();
 	}
 
 	public int countEntries(final Collection<LogEntryMatcher> criteria) {
-		return withLock(readLock, new Callable<Integer>() {
-			public Integer call() throws Exception {
-				int result = 0;
-				for (LogEntry entry : entries) {
-					if (MatcherUtils.isMatching(entry, criteria)) {
-						result++;
-					}
-				}
-				return result;
-			}
-		});
+		return withLock(readLock, () -> (int)entries.stream().filter(e -> isMatching(e, criteria)).count());
 	}
 
 	public void removeEntriesWithChecksum(final String checksum) throws LogStorageException {
-		withLock(writeLock, new Callable<Void>() {
-
-			public Void call() throws Exception {
-				Iterator<LogEntry> iterator = entries.iterator();
-				while (iterator.hasNext()) {
-					LogEntry entry = iterator.next();
-					if (checksum.equals(checksumCalculator.calculateChecksum(entry))) {
-						iterator.remove();
-					}
+		withLock(writeLock, () -> {
+			Iterator<LogEntry> iterator = entries.iterator();
+			while (iterator.hasNext()) {
+				LogEntry entry = iterator.next();
+				if (checksum.equals(checksumCalculator.calculateChecksum(entry))) {
+					iterator.remove();
 				}
-				return null;
 			}
+			return null;
 		});
 	}
 

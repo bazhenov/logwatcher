@@ -9,7 +9,7 @@ import static java.util.Arrays.sort;
 public class AggregatedAttribute {
 
 	private final String name;
-	Map<String, AttributeValue> values = new HashMap<String, AttributeValue>();
+	private Map<String, AttributeValue> values = new HashMap<>();
 
 	public AggregatedAttribute(String name, Map<String, Integer> counts) {
 		this.name = name;
@@ -58,18 +58,14 @@ public class AggregatedAttribute {
 	}
 
 	public void merge(AggregatedAttribute attribute) {
-		for (AttributeValue value : attribute.values.values()) {
-			add(value);
-		}
+		attribute.values.values().forEach(this::add);
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append('{');
-		for (AttributeValue value : values.values()) {
-			builder.append(value);
-		}
+		values.values().forEach(builder::append);
 		builder.append('}');
 		return builder.toString();
 	}

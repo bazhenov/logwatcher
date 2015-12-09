@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class AggregateAttributesVisitor implements Visitor<LogEntry, AggregationResult> {
 
-	private Map<String, AggregatedAttribute> attributeMap = new HashMap<String, AggregatedAttribute>();
+	private Map<String, AggregatedAttribute> attributeMap = new HashMap<>();
 	private LogEntry lastEntry;
 
 	@Override

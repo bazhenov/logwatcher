@@ -121,12 +121,12 @@ public class SimpleChecksumCalculatorTest {
 			"Call to a member function execInterval2() on a non-object in /var/www/baza.farpost.ru/rev/20130717-1139/src/FarPost/Baza/Personal/Notification/Services/GoodNotificationService.php:49");
 	}
 
-	public void assertAllMessagesHaveSameChecksum(ChecksumCalculator checksumCalculator, String... messages) {
+	private void assertAllMessagesHaveSameChecksum(ChecksumCalculator checksumCalculator, String... messages) {
 		Set<String> checksums = getMessageChecksumSet(checksumCalculator, messages);
 		assertThat("All messages should be mapped to single checksum", checksums.size(), is(1));
 	}
 
-	public void assertAllMessagesHaveDifferentChecksum(ChecksumCalculator checksumCalculator, String... messages) {
+	private void assertAllMessagesHaveDifferentChecksum(ChecksumCalculator checksumCalculator, String... messages) {
 		Set<String> checksums = getMessageChecksumSet(checksumCalculator, messages);
 		assertThat("All messages should have unique checksum", checksums.size(), is(messages.length));
 	}

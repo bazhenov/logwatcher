@@ -167,7 +167,7 @@
 		filterFeed();
 	});
 
-	var cbxRefreshFeed = $(":checkbox[name='refreshFeed']").bootstrapSwitch()
+	var cbxRefreshFeed = $(":checkbox[name='refreshFeed']").bootstrapSwitch();
 	function updateFeed() {
 		if (cbxRefreshFeed.bootstrapSwitch('state')) {
 			console.log('update feed');

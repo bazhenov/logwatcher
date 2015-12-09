@@ -1,9 +1,10 @@
 package com.farpost.logwatcher.marshalling;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * JAXB Адаптер сериализующий тип Map<String, String> в XML дерево аттрибутов
@@ -12,7 +13,7 @@ public class JaxbAttributesMapAdapter extends XmlAdapter<AttributeList, Map<Stri
 
 	@Override
 	public Map<String, String> unmarshal(AttributeList list) throws Exception {
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		for (Attribute attribute : list.getAttributes()) {
 			map.put(attribute.getName(), attribute.getValue());
 		}
@@ -21,10 +22,9 @@ public class JaxbAttributesMapAdapter extends XmlAdapter<AttributeList, Map<Stri
 
 	@Override
 	public AttributeList marshal(Map<String, String> map) throws Exception {
-		ArrayList<Attribute> list = new ArrayList<Attribute>(map.size());
-		for (Map.Entry<String, String> row : map.entrySet()) {
-			list.add(new Attribute(row.getKey(), row.getValue()));
-		}
-		return new AttributeList(list);
+		return new AttributeList(map.entrySet().stream()
+				.map(row -> new Attribute(row.getKey(), row.getValue()))
+				.collect(toList())
+		);
 	}
 }

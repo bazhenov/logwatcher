@@ -9,7 +9,7 @@ import java.util.Map;
  */
 public class AggregationResult {
 
-	private Map<String, AggregatedAttribute> attributeMap = new HashMap<String, AggregatedAttribute>();
+	private Map<String, AggregatedAttribute> attributeMap = new HashMap<>();
 	private LogEntry firstEntry;
 
 	public AggregationResult(Map<String, AggregatedAttribute> attributeMap, LogEntry firstEntry) {

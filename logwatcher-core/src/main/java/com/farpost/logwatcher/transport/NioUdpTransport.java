@@ -15,7 +15,6 @@ public class NioUdpTransport implements Transport {
 
 	private TransportListener listener;
 	private InetSocketAddress address;
-	private NioUdpTransport.ReadThread thread;
 	private Thread threadWrapper;
 
 	public NioUdpTransport(InetAddress addr, int port, TransportListener listener) {
@@ -24,7 +23,7 @@ public class NioUdpTransport implements Transport {
 	}
 
 	public void start() throws TransportException {
-		thread = new ReadThread();
+		ReadThread thread = new ReadThread();
 		thread.init();
 		threadWrapper = new Thread(thread);
 		threadWrapper.start();
@@ -68,9 +67,7 @@ public class NioUdpTransport implements Transport {
 				}
 			} catch (ClosedByInterruptException e) {
 				currentThread().interrupt();
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			} catch (TransportException e) {
+			} catch (IOException | TransportException e) {
 				throw new RuntimeException(e);
 			}
 		}

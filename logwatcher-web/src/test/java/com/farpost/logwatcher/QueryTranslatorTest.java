@@ -11,7 +11,7 @@ public class QueryTranslatorTest {
 
 	private static final LocalDate today = LocalDate.now();
 
-	QueryTranslator translator = new AnnotationDrivenQueryTranslator(new TranslationRulesImpl());
+	private QueryTranslator translator = new AnnotationDrivenQueryTranslator(new TranslationRulesImpl());
 
 	@Test
 	public void severityCriteria() throws InvalidQueryException {

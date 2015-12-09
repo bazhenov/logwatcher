@@ -16,7 +16,7 @@ class ResultSetIterable implements Iterable<String> {
 		return new ResultIterator();
 	}
 
-	public class ResultIterator implements Iterator<String> {
+	private class ResultIterator implements Iterator<String> {
 
 		public boolean hasNext() {
 			try {

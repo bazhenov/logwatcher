@@ -50,7 +50,7 @@ public class Bootstrap implements InitializingBean {
 		}
 	}
 
-	public static boolean deleteDirectory(File path) {
+	private static boolean deleteDirectory(File path) {
 		if (path.exists()) {
 			File[] files = checkNotNull(path.listFiles());
 			for (File file : files) {
@@ -75,7 +75,7 @@ public class Bootstrap implements InitializingBean {
 
 		@Override
 		public void run() {
-			Map<String, String> attributes = new HashMap<String, String>();
+			Map<String, String> attributes = new HashMap<>();
 			attributes.put("req.foo", "<b>Hello</b>");
 			register(new LogEntryImpl(new Date(), "com.farpost.AdvertManager", "AdvertServiceException: Error Fetching http headers", Severity.error, "sum", "advertisement", attributes));
 			Cause cause = new Cause("java.lang.RuntimeException", "Socket reading timeout",

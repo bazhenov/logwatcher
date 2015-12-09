@@ -9,7 +9,7 @@ import static java.lang.Math.abs;
 
 public class Functions {
 
-	public static final ThreadLocal<DateFormat> shortFormat = new ThreadLocal<DateFormat>() {
+	private static final ThreadLocal<DateFormat> shortFormat = new ThreadLocal<DateFormat>() {
 		@Override
 		protected DateFormat initialValue() {
 			return new DateTimeFormat();

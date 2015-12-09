@@ -15,7 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class TrackProblemMethodsListener implements LogEntryListener {
 
 	private final SimpleChecksumCalculator calculator = new SimpleChecksumCalculator();
-	private final Set<ClusterReference> trackedClusterReferences = new HashSet<ClusterReference>();
+	private final Set<ClusterReference> trackedClusterReferences = new HashSet<>();
 	private final JavaStackTraceParser parser;
 
 	public TrackProblemMethodsListener(JavaStackTraceParser parser) {
@@ -42,7 +42,7 @@ public class TrackProblemMethodsListener implements LogEntryListener {
 
 	public Set<ClusterReference> getTrackedClusterReferences() {
 		synchronized (trackedClusterReferences) {
-			return new HashSet<ClusterReference>(trackedClusterReferences);
+			return new HashSet<>(trackedClusterReferences);
 		}
 	}
 
@@ -59,12 +59,12 @@ public class TrackProblemMethodsListener implements LogEntryListener {
 			this.clusterChecksum = checkNotNull(clusterChecksum);
 		}
 
-		@JsonIgnore
+		@Nonnull @JsonIgnore
 		public StackTraceLine getStackTraceLine() {
 			return stackTraceLine;
 		}
 
-		@JsonIgnore
+		@Nonnull @JsonIgnore
 		public Checksum getClusterChecksum() {
 			return clusterChecksum;
 		}

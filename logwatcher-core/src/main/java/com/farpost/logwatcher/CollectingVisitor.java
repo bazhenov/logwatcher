@@ -5,7 +5,7 @@ import java.util.List;
 
 public class CollectingVisitor<I> implements Visitor<I, List<I>> {
 
-	private List<I> collectedEntries = new ArrayList<I>();
+	private List<I> collectedEntries = new ArrayList<>();
 
 	@Override
 	public void visit(I entry) {

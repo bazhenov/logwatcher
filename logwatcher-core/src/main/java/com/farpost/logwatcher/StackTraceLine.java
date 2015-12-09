@@ -19,7 +19,7 @@ public final class StackTraceLine {
 	private final String fileName;
 	private final int lineNo;
 
-	public StackTraceLine(String className, String methodName, @Nullable String fileName, int lineNo) {
+	public StackTraceLine(@Nonnull String className, @Nonnull String methodName, @Nullable String fileName, int lineNo) {
 		checkArgument(!isNullOrEmpty(className), "Class name should not be empty");
 		checkArgument(!isNullOrEmpty(methodName), "Method name should not be empty");
 		checkArgument(lineNo >= 0, "Line number should not be negative");

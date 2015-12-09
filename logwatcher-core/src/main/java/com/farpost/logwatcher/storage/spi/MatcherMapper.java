@@ -17,5 +17,5 @@ public interface MatcherMapper<T> {
 	 *         не может быть найдено
 	 * @throws MatcherMapperException в случае ошибки конвертации
 	 */
-	public T handle(LogEntryMatcher matcher) throws MatcherMapperException;
+	T handle(LogEntryMatcher matcher) throws MatcherMapperException;
 }

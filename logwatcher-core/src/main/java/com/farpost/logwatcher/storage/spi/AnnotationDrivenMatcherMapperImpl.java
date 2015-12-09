@@ -27,6 +27,7 @@ public class AnnotationDrivenMatcherMapperImpl<T> implements MatcherMapper<T> {
 		this.handlerClass = handler.getClass();
 	}
 
+	@SuppressWarnings("unchecked")
 	public T handle(LogEntryMatcher matcher) throws MatcherMapperException {
 		for (Method m : handlerClass.getDeclaredMethods()) {
 			if (m.getAnnotation(Matcher.class) != null) {
@@ -36,9 +37,7 @@ public class AnnotationDrivenMatcherMapperImpl<T> implements MatcherMapper<T> {
 				}
 				try {
 					return (T) m.invoke(handler, matcher);
-				} catch (IllegalAccessException e) {
-					throw new MatcherMapperException(e);
-				} catch (InvocationTargetException e) {
+				} catch (IllegalAccessException | InvocationTargetException e) {
 					throw new MatcherMapperException(e);
 				}
 			}

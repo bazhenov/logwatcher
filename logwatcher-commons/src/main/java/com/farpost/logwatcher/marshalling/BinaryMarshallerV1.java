@@ -78,7 +78,7 @@ public class BinaryMarshallerV1 implements Marshaller {
 
 	private Map<String, String> readAttributes(ObjectInputStream objectStream) throws IOException {
 		int attributesCount = objectStream.readInt();
-		Map<String, String> attributes = new HashMap<String, String>();
+		Map<String, String> attributes = new HashMap<>();
 		for (int i = 0; i < attributesCount; i++) {
 			String key = objectStream.readUTF();
 			String value = objectStream.readUTF();

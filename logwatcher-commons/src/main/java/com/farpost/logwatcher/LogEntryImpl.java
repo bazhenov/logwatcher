@@ -49,7 +49,7 @@ public class LogEntryImpl implements LogEntry {
 		this.checksum = null;
 		this.applicationContainer = null;
 		this.cause = null;
-		this.attributes = new HashMap<String, String>();
+		this.attributes = new HashMap<>();
 	}
 
 	public LogEntryImpl(Date date, String group, String message, Severity severity, String checksum,
@@ -72,8 +72,8 @@ public class LogEntryImpl implements LogEntry {
 		this.applicationContainer = new ApplicationContainer(applicationId);
 		this.cause = cause;
 		this.attributes = attributes == null
-			? new HashMap<String, String>()
-			: new HashMap<String, String>(attributes);
+			? new HashMap<>()
+			: new HashMap<>(attributes);
 	}
 
 	private static void checkNotNull(Object object) {

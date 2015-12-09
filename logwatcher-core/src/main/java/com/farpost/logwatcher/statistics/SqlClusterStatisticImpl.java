@@ -2,18 +2,13 @@ package com.farpost.logwatcher.statistics;
 
 import com.farpost.logwatcher.Checksum;
 import com.farpost.logwatcher.Severity;
-import com.google.common.base.Function;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 import javax.sql.DataSource;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
@@ -29,18 +24,6 @@ import static org.joda.time.LocalDate.fromDateFields;
 public class SqlClusterStatisticImpl implements ClusterStatistic {
 
 	private final JdbcTemplate template;
-	private static final RowMapper<Checksum> createChecksum = new RowMapper<Checksum>() {
-		@Override
-		public Checksum mapRow(ResultSet rs, int rowNum) throws SQLException {
-			return Checksum.fromHexString(rs.getString(1));
-		}
-	};
-	private Function<String, String> toLowerCase = new Function<String, String>() {
-		@Override
-		public String apply(String input) {
-			return input.toLowerCase();
-		}
-	};
 
 	public SqlClusterStatisticImpl(DataSource ds) {
 		template = new JdbcTemplate(checkNotNull(ds));
@@ -89,17 +72,14 @@ public class SqlClusterStatisticImpl implements ClusterStatistic {
 
 	@Override
 	public Map<Severity, Integer> getSeverityStatistics(String applicationId, LocalDate date) {
-		ResultSetExtractor<Map<Severity, Integer>> rse = new ResultSetExtractor<Map<Severity, Integer>>() {
-			@Override
-			public Map<Severity, Integer> extractData(ResultSet rs) throws SQLException, DataAccessException {
-				Map<Severity, Integer> result = newHashMap();
-				while (rs.next()) {
-					Severity s = forName(rs.getString("severity")).get();
-					int i = rs.getInt("count");
-					result.put(s, i);
-				}
-				return result;
+		ResultSetExtractor<Map<Severity, Integer>> rse = rs -> {
+			Map<Severity, Integer> result = newHashMap();
+			while (rs.next()) {
+				Severity s = forName(rs.getString("severity")).get();
+				int i = rs.getInt("count");
+				result.put(s, i);
 			}
+			return result;
 		};
 		return template.query("SELECT severity, SUM(count) AS count FROM cluster_day_stat WHERE " +
 			"application = ? AND date = ? GROUP BY severity", rse, applicationId, sqlDate(date));
@@ -109,7 +89,7 @@ public class SqlClusterStatisticImpl implements ClusterStatistic {
 	public Set<String> getActiveApplications() {
 		Iterable<String> applications = template.queryForList("SELECT DISTINCT application FROM cluster_day_stat WHERE date > ?",
 			String.class, sqlDate(LocalDate.now().minusDays(7)));
-		return newTreeSet(from(applications).transform(toLowerCase));
+		return newTreeSet(from(applications).transform(String::toLowerCase));
 	}
 
 	@Override
@@ -145,8 +125,8 @@ public class SqlClusterStatisticImpl implements ClusterStatistic {
 
 	@Override
 	public Collection<Checksum> getActiveClusterChecksums(String applicationId, LocalDate date) {
-		return template.query("SELECT checksum FROM cluster_day_stat WHERE date = ? AND application = ?", createChecksum,
-			sqlDate(date), applicationId);
+		return template.query("SELECT checksum FROM cluster_day_stat WHERE date = ? AND application = ?",
+				(rs, rowNum) -> Checksum.fromHexString(rs.getString(1)), sqlDate(date), applicationId);
 	}
 
 	private static Date sqlDate(LocalDate date) {

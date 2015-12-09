@@ -30,44 +30,38 @@ public class Reconvert {
 
 		DataSource ds = new SingleConnectionDataSource("jdbc:mysql://192.168.2.10/test", "root", "", true);
 
-		Connection connection = ds.getConnection();
 		SimpleChecksumCalculator c = new SimpleChecksumCalculator();
 
-		Map<String, List<LogEntry>> entries = new HashMap<String, List<LogEntry>>();
-		try {
+		Map<String, List<LogEntry>> entries = new HashMap<>();
+		try(Connection connection = ds.getConnection()) {
 			Statement s = connection.createStatement(TYPE_FORWARD_ONLY, CONCUR_READ_ONLY);
 			s.setFetchSize(MIN_VALUE);
 			ResultSet rs = s.executeQuery("SELECT value FROM entry");
 
-			while (rs.next()) {
+			while(rs.next()) {
 				String xml = rs.getString(1);
 				LogEntry e = m.unmarshall(xml.getBytes(UTF_8));
-				if (e.getApplicationId().equalsIgnoreCase("search")) {
+				if(e.getApplicationId().equalsIgnoreCase("search")) {
 
 					String checksum = c.calculateChecksum(e);
-					if (!entries.containsKey(checksum)) {
-						entries.put(checksum, new ArrayList<LogEntry>());
+					if(!entries.containsKey(checksum)) {
+						entries.put(checksum, new ArrayList<>());
 					}
 					entries.get(checksum).add(e);
 
 				}
 			}
-		} finally {
-			connection.close();
 		}
 
-		FileWriter writer = new FileWriter("result.log");
-		try {
-			for (String checksum : entries.keySet()) {
+		try(FileWriter writer = new FileWriter("result.log")) {
+			for(String checksum : entries.keySet()) {
 				writer.write("Checksum: " + checksum + "\n");
-				for (LogEntry e : entries.get(checksum)) {
+				for(LogEntry e : entries.get(checksum)) {
 					String cause = e.getCause() != null ? "/" + e.getCause().getType() : "";
 					writer.write(e.getSeverity() + " [" + e.getGroup() + "]" + cause + ": " + e.getMessage() + "\n");
 				}
 				writer.write("\n");
 			}
-		} finally {
-			writer.close();
 		}
 	}
 }

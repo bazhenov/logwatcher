@@ -8,6 +8,7 @@
 		<property name="locations">
 			<list>
 				<value>classpath:default.properties</value>
+				<!--suppress SpringPlaceholdersInspection -->
 				<value>${resourcesFile}</value>
 			</list>
 		</property>

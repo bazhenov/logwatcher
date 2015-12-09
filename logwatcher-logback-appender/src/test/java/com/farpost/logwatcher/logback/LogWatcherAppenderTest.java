@@ -46,7 +46,7 @@ public class LogWatcherAppenderTest {
 	public void setUp() throws IOException, TransportException {
 		int port = findUnboundPort();
 		try {
-			messages = new LinkedBlockingQueue<byte[]>();
+			messages = new LinkedBlockingQueue<>();
 			transport = new UdpTransport(port, new QueueAppendListener(messages));
 			transport.start();
 		} catch (BindException e) {
@@ -143,15 +143,12 @@ public class LogWatcherAppenderTest {
 	}
 
 	@Test
-	public void shouldAddThreadNamesToContext() throws InterruptedException, UnknownHostException {
+	public void shouldAddThreadNamesToContext() throws InterruptedException {
 		final CountDownLatch latch = new CountDownLatch(1);
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				Thread.currentThread().setName("donkey");
-				root.error("Request processing failed");
-				latch.countDown();
-			}
+		new Thread(() -> {
+			Thread.currentThread().setName("donkey");
+			root.error("Request processing failed");
+			latch.countDown();
 		}).start();
 
 		latch.await();
@@ -173,8 +170,7 @@ public class LogWatcherAppenderTest {
 		return marshaller.unmarshall(lastMessage);
 	}
 
-	private static Appender<ILoggingEvent> createAppender(String address, String applicationId)
-		throws SocketException {
+	private static Appender<ILoggingEvent> createAppender(String address, String applicationId) {
 		LogWatcherAppender appender = new LogWatcherAppender();
 		appender.setAddress(address);
 		appender.setApplicationId(applicationId);
@@ -185,7 +181,7 @@ public class LogWatcherAppenderTest {
 	 * @return случайный свободный порт в диапазоне от 1025 до 65535
 	 * @throws java.io.IOException в случае ошибки при закрытии временного сокета
 	 */
-	public static int findUnboundPort() throws IOException {
+	private static int findUnboundPort() throws IOException {
 		int port;
 		while (!currentThread().isInterrupted()) {
 			// pick a random port in 1025-65535 range

@@ -151,7 +151,6 @@
 						<id>start-jetty</id>
 						<phase>pre-integration-test</phase>
 						<goals>
-							<!--suppress MavenModelInspection -->
 							<goal>deploy-war</goal>
 						</goals>
 					</execution>
@@ -159,7 +158,6 @@
 						<id>stop-jetty</id>
 						<phase>post-integration-test</phase>
 						<goals>
-							<!--suppress MavenModelInspection -->
 							<goal>stop</goal>
 						</goals>
 					</execution>

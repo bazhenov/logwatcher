@@ -26,12 +26,7 @@ public class UdpTransport implements Transport {
 
 	public void start() throws TransportException {
 		Thread thread = new Thread(runnable, "UDP Transport thread");
-		thread.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-			@Override
-			public void uncaughtException(Thread t, Throwable e) {
-				log.error("Abnormal thread shutdown", e);
-			}
-		});
+		thread.setUncaughtExceptionHandler((t, e) -> log.error("Abnormal thread shutdown", e));
 		thread.start();
 	}
 

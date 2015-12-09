@@ -43,7 +43,7 @@ public abstract class AbstractLogEntryMarshallerTest {
 
 	@Test
 	public void marshallingEntryWithAttributes() {
-		Map<String, String> attributes = new HashMap<String, String>();
+		Map<String, String> attributes = new HashMap<>();
 		attributes.put("foo", "bar");
 		attributes.put("bar", "foo");
 		LogEntry entry = new LogEntryImpl(new Date(), "group", "message", Severity.info, "1fe", "default", attributes, null);
@@ -53,5 +53,5 @@ public abstract class AbstractLogEntryMarshallerTest {
 		assertThat(entryCopy, equalTo(entry));
 	}
 
-	protected abstract Marshaller getMarshaller() throws Exception;
+	protected abstract Marshaller getMarshaller();
 }
