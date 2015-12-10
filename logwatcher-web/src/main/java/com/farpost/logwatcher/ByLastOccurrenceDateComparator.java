@@ -2,13 +2,12 @@ package com.farpost.logwatcher;
 
 import com.farpost.logwatcher.statistics.ByDayStatistic;
 
-import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Map;
 
 import static java.lang.Math.signum;
 
-public class ByLastOccurrenceDateComparator implements Comparator<Cluster>, Serializable {
+public class ByLastOccurrenceDateComparator implements Comparator<Cluster> {
 
 	private final Map<Checksum, ByDayStatistic> dayStatisticMap;
 

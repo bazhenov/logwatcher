@@ -2,11 +2,11 @@ package com.farpost.logwatcher;
 
 import com.farpost.logwatcher.marshalling.Jaxb2Marshaller;
 import com.farpost.logwatcher.marshalling.Marshaller;
+import com.google.common.base.Charsets;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 
 import javax.sql.DataSource;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -33,8 +33,8 @@ public class Reconvert {
 		SimpleChecksumCalculator c = new SimpleChecksumCalculator();
 
 		Map<String, List<LogEntry>> entries = new HashMap<>();
-		try(Connection connection = ds.getConnection()) {
-			Statement s = connection.createStatement(TYPE_FORWARD_ONLY, CONCUR_READ_ONLY);
+		try(Connection connection = ds.getConnection();
+		    Statement s = connection.createStatement(TYPE_FORWARD_ONLY, CONCUR_READ_ONLY)) {
 			s.setFetchSize(MIN_VALUE);
 			ResultSet rs = s.executeQuery("SELECT value FROM entry");
 
@@ -53,10 +53,10 @@ public class Reconvert {
 			}
 		}
 
-		try(FileWriter writer = new FileWriter("result.log")) {
-			for(String checksum : entries.keySet()) {
-				writer.write("Checksum: " + checksum + "\n");
-				for(LogEntry e : entries.get(checksum)) {
+		try(Writer writer = new OutputStreamWriter(new FileOutputStream("result.log"), Charsets.UTF_8)) {
+			for(Map.Entry<String, List<LogEntry>> mapEntry : entries.entrySet()) {
+				writer.write("Checksum: " + mapEntry.getKey() + "\n");
+				for(LogEntry e : mapEntry.getValue()) {
 					String cause = e.getCause() != null ? "/" + e.getCause().getType() : "";
 					writer.write(e.getSeverity() + " [" + e.getGroup() + "]" + cause + ": " + e.getMessage() + "\n");
 				}
