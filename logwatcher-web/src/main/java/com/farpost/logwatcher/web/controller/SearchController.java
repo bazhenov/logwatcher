@@ -6,6 +6,7 @@ import com.farpost.logwatcher.storage.LogEntryMatcher;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.SeverityMatcher;
 import com.farpost.logwatcher.web.AttributeFormatter;
+import com.farpost.logwatcher.web.LogEntryClassifier;
 import com.google.common.collect.Ordering;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ public class SearchController {
 
 	@Autowired
 	private AttributeFormatter formatter;
+
+	@Autowired
+	private LogEntryClassifier entryClassifier;
 
 	@RequestMapping("/search")
 	@ModelAttribute("p")
@@ -80,6 +84,10 @@ public class SearchController {
 
 		public AttributeFormatter getFormatter() {
 			return formatter;
+		}
+
+		public LogEntryClassifier getClassifier() {
+			return entryClassifier;
 		}
 
 		public String getQuery() {

@@ -3,12 +3,19 @@ $(document).ready(function () {
 	var checksum = el.attr("data-checksum");
 	var application = el.attr("data-application");
 
-	function loadAttributes() {
-		var el = $("#attributesContainer");
-		el.load("/service/content", {'checksum': checksum}, function (response, code) {
-			if (code != "success") {
-				el.html("Error while loading data...");
-			}
+	function loadDayData() {
+		var date = $("#datePicker").val();
+		location.hash = date;
+		var data = {'date': date, 'application': application, 'checksum': checksum};
+		$.ajax({ url: "/service/content", data: data }).done(function (result) {
+			$("#attributesContainer").html(result);
+		}).fail(function() {
+			$("#attributesContainer").html("Failed to load data");
+		});
+		$.ajax({ url: "/service/log", data: data }).done(function (result) {
+			$("#logSamples").html(result);
+		}).fail(function() {
+			$("#logSamples").html("Failed to load data");
 		});
 	}
 
@@ -100,26 +107,19 @@ $(document).ready(function () {
 		});
 	}
 
-	$('#datePicker').datepicker({
+	var datePicker = $('#datePicker').datepicker({
 		onRender: function (date) {
 			return date.valueOf() > new Date().valueOf() ? 'disabled' : '';
 		}
 	});
+	if(location.hash) {
+		datePicker.val(location.hash.replace('#', ''));
+	}
 
-	var showLogButton = $("#showLog");
-	showLogButton.click(function () {
-		var date = $("#datePicker").val();
-		$.ajax({
-			url: "/service/log",
-			data: {'date': date, 'application': application, 'checksum': checksum}
-		}).done(function (data) {
-				$("#logSamples").html(data);
-			});
-	});
+	$("#showLog").click(loadDayData);
 
-	showLogButton.click();
 	showStatistics();
-	loadAttributes();
+	loadDayData();
 
 	$("#clusterSave").click(function () {
 		var title = $("#clusterTitle").val();

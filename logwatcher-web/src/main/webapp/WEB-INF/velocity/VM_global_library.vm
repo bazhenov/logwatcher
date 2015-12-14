@@ -1,9 +1,9 @@
-#macro (logEntry $e, $formatter)
+#macro (logEntry $e, $formatter, $classifier)
 #* @vtlvariable name="e" type="com.farpost.logwatcher.LogEntry" *#
 #* @vtlvariable name="formatter" type="com.farpost.logwatcher.web.AttributeFormatter" *#
-<div>
-	<p
-		class="message">$date.format("dd MMM, HH:mm:ss", $e.date) &mdash; $e.severity.toString().substring(0, 1).toUpperCase()
+#* @vtlvariable name="classifier" type="com.farpost.logwatcher.web.LogEntryClassifier" *#
+<div class="${classifier.getEntryCssClass($e)}">
+	<p class="message">$date.format("dd MMM, HH:mm:ss", $e.date) &mdash; $e.severity.toString().substring(0, 1).toUpperCase()
 		#if($e.group) [$e.group] #end  $e.message</p>
 	#if(!$e.attributes.isEmpty())
 		<table class="attr">
@@ -11,7 +11,7 @@
 				#if(!$i.value.isEmpty())
 					<tr>
 						<td class="attributeName">$i.key</td>
-						#set($_value = $formatter.format($e.applicationId, $i.key, $i.value))
+						#set($_value = $formatter.format($e.applicationId, $i.key, $e.attributes))
 						<td>$!_value</td>
 					</tr>
 				#end

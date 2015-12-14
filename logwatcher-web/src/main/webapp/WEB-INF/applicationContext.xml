@@ -37,6 +37,8 @@
 		<constructor-arg ref="indexLocation"/>
 	</bean>
 
+	<bean class="com.farpost.logwatcher.web.LogEntryBotAttributeClassifier"/>
+
 	<bean class="com.farpost.logwatcher.web.AttributeFormatterImpl">
 		<constructor-arg value="${templates}"/>
 	</bean>

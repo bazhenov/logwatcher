@@ -43,6 +43,7 @@
 		<property name="viewNames">
 			<list>
 				<value>service/log</value>
+				<value>service/aggregated-entry-content</value>
 				<value>application</value>
 				<value>aggregated-feed</value>
 				<value>entries</value>

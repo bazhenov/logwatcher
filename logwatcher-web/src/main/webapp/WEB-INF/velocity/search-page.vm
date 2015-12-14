@@ -24,7 +24,7 @@
 	#else
 	<div class="log section">
 		#foreach($e in $p.entries)
-			#logEntry($e, $p.formatter)
+			#logEntry($e, $p.formatter, $p.classifier)
 		#end
 	</div>
 

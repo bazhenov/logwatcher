@@ -1,9 +1,6 @@
 package com.farpost.logwatcher.web.controller;
 
-import com.farpost.logwatcher.AggregateAttributesVisitor;
-import com.farpost.logwatcher.AggregationResult;
-import com.farpost.logwatcher.ByOccurrenceDateComparator;
-import com.farpost.logwatcher.LogEntry;
+import com.farpost.logwatcher.*;
 import com.farpost.logwatcher.cluster.ClusterDao;
 import com.farpost.logwatcher.statistics.ByDayStatistic;
 import com.farpost.logwatcher.statistics.ClusterStatistic;
@@ -12,6 +9,9 @@ import com.farpost.logwatcher.storage.InvalidCriteriaException;
 import com.farpost.logwatcher.storage.LogStorage;
 import com.farpost.logwatcher.storage.LogStorageException;
 import com.farpost.logwatcher.web.AttributeFormatter;
+import com.farpost.logwatcher.web.LogEntryClassifier;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import com.google.common.collect.Ordering;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -25,10 +25,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.farpost.logwatcher.Checksum.fromHexString;
 import static com.farpost.logwatcher.statistics.MinuteVector.SIZE;
@@ -57,6 +54,9 @@ public class BackController {
 	@Autowired
 	private AttributeFormatter formatter;
 
+	@Autowired
+	private LogEntryClassifier entryClassifier;
+
 	private static final Logger log = LoggerFactory.getLogger(BackController.class);
 
 	public BackController() {
@@ -67,17 +67,29 @@ public class BackController {
 	}
 
 	@RequestMapping("/service/content")
-	public String handleAttributes(@RequestParam("checksum") String checksum, ModelMap map)
-		throws LogStorageException, InvalidCriteriaException, ParseException {
+	public String handleAttributes(
+			@RequestParam String application,
+			@RequestParam("checksum") String checksum,
+			@RequestParam @DateTimeFormat(iso = DATE) LocalDate date,
+			ModelMap map
+	) throws LogStorageException, InvalidCriteriaException, ParseException {
 
 		AggregateAttributesVisitor visitor = new AggregateAttributesVisitor();
 
-		AggregationResult result = entries().
-			checksum(checksum).
-			date(LocalDate.now()).
-			walk(storage, visitor);
+		AggregationResult result = entries()
+				.applicationId(application)
+				.checksum(checksum)
+				.date(date)
+				.walk(storage, visitor);
 
-		map.addAttribute("attributes", result.getAttributeMap());
+		Multimap<String, AggregatedAttributeEntry> attributes = ArrayListMultimap.create();
+		for(AggregatedAttribute a : result.getAttributeMap().values()) {
+			for(AttributeValue v : a.getValues()) {
+				String formatted = formatter.format(application, a.getName(), v.getValue());
+				attributes.put(a.getName(), new AggregatedAttributeEntry(v.getValue(), formatted, v.getCount()));
+			}
+		}
+		map.addAttribute("attributes", attributes.asMap());
 		return "service/aggregated-entry-content";
 	}
 
@@ -180,6 +192,34 @@ public class BackController {
 
 		public AttributeFormatter getFormatter() {
 			return formatter;
+		}
+
+		public LogEntryClassifier getClassifier() {
+			return entryClassifier;
+		}
+	}
+
+	public static class AggregatedAttributeEntry {
+		private final String value;
+		private final String formattedValue;
+		private final int count;
+
+		public AggregatedAttributeEntry(String value, String formattedValue, int count) {
+			this.value = value;
+			this.formattedValue = formattedValue;
+			this.count = count;
+		}
+
+		public String getValue() {
+			return value;
+		}
+
+		public String getFormattedValue() {
+			return formattedValue;
+		}
+
+		public int getCount() {
+			return count;
 		}
 	}
 }

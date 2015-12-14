@@ -114,11 +114,15 @@ public class Bootstrap implements InitializingBean {
 					"\tat com.intellij.rt.execution.application.AppMain.main(AppMain.java:134) [idea_rt.jar:na]\n");
 
 			for (int i = 0; i < 200; i++) {
+				boolean isBot =  i > 100;
 				register(new LogEntryImpl(new Date(), "com.farpost.AuditPolicy", "OverflowFundsException", Severity.warning, "sum2",
 					"search", new HashMap<String, String>() {{
 					put("url", "/some/foo/very/long/url/to/fit/in/screen");
-					put("machine", "aux1.<b>srv</b>.loc\n" +
-						"aux2.srv.loc");
+					put("machine", "aux1.<b>srv</b>.loc\naux2.srv.loc");
+					put("parameter", "some relatively long sampled parameter with value = " + Math.round(Math.random() * 20));
+					if(isBot) {
+						put("isBot", "true");
+					}
 				}}, cause));
 			}
 

@@ -18,6 +18,10 @@ TABLE TD {
 	white-space: pre;
 }
 
+.log .entry-bot {
+	background-color: #f1f1f1;
+}
+
 .log TABLE.attr TD.attributeName {
 	text-align: right;
 	color: #999 !important;
@@ -61,6 +65,10 @@ P.cause {
 	margin: 0;
 }
 
+.attributes td {
+	vertical-align: top;
+}
+
 .attributes .la {
 	color: #999 !important;
 	font-size: 12px;
@@ -85,6 +93,14 @@ P.cause {
 	background: none;
 	border: none;
 	font-size: 14px;
+}
+
+.attributes code.long-line {
+	display: block;
+}
+
+.attributes a.show-hidden {
+	cursor: pointer;
 }
 
 #statisticsTable {

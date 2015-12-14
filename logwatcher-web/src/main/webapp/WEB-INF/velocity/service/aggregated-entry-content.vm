@@ -1,0 +1,55 @@
+#* @vtlvariable name="attributes" type="java.util.Map< java.lang.String,
+	java.util.Collection<com.farpost.logwatcher.web.controller.BackController.AggregatedAttributeEntry>>" *#
+
+#set($valuesLimit = 15)
+#set($lengthLimit = 30)
+#set($linesCollapseLimit = 5)
+
+<table class='attributes'>
+	#foreach($attribute in $attributes.entrySet())
+		#set($codeClass = '')
+		#set($longLine = false)
+		#foreach($entry in $attribute.value)
+			#if($velocityCount > $valuesLimit)
+				#break
+			#elseif($entry.formattedValue.length() > $lengthLimit)
+				#set($codeClass = 'long-line')
+				#set($longLine = true)
+				#break
+			#end
+		#end
+
+		<tr>
+			<td class="la">$attribute.key</td>
+			<td class="value">
+				#set($codeStyle = '')
+				#set($hiddenCount = 0)
+				#foreach($entry in $attribute.value)
+					#if($velocityCount > $valuesLimit)
+						#break
+					#end
+					#if($longLine && $velocityCount > $linesCollapseLimit)
+						#set($codeClass = "long-line collapsed")
+						#set($codeStyle = 'display: none')
+						#set($hiddenCount = $hiddenCount + 1)
+					#end
+					#set($_value = $entry.formattedValue)
+					<code class="value $codeClass" style="$codeStyle">
+						$_value
+						#if($entry.count > 1)
+							<span>${entry.count}</span>
+						#end
+					</code>
+				#end
+				#set($moreCount = $attribute.value.size() - $valuesLimit)
+				#if($hiddenCount > 0)
+					<a onclick="$(this).closest('td').find('.collapsed').toggle()" class="show-hidden">$hiddenCount hidden</a>
+				#end
+				#if($hiddenCount > 0 && $moreCount > 0) and #end
+				#if($moreCount > 0)
+					${moreCount} more&hellip;
+				#end
+			</td>
+		</tr>
+	#end
+</table>
