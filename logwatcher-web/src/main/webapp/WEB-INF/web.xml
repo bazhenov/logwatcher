@@ -12,7 +12,7 @@
 
 	<servlet>
 		<servlet-name>jsp</servlet-name>
-		<servlet-class>org.apache.jasper.servlet.JspServlet</servlet-class>
+		<servlet-class>org.eclipse.jetty.jsp.JettyJspServlet</servlet-class>
 		<init-param>
 			<param-name>enablePooling</param-name>
 			<param-value>false</param-value>
@@ -52,11 +52,6 @@
 		<filter-name>sitemesh-filter</filter-name>
 		<url-pattern>*.jspx</url-pattern>
 	</filter-mapping>
-
-	<servlet-mapping>
-		<servlet-name>jsp</servlet-name>
-		<url-pattern>*.jspx</url-pattern>
-	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>spring</servlet-name>
