@@ -88,6 +88,12 @@
 	</tr>
 </table>
 
+<div class="input-append date">
+	<input id="datePicker" class="input-small" type="text" value='$date.format("yyyy-MM-dd", $date.date)'
+			data-date-format="yyyy-mm-dd"/>
+	<button id="showLog" class="btn" type="button">Show!</button>
+</div>
+
 <h3>Context Sampling</h3>
 
 <div id="attributesContainer" class="section">
@@ -103,12 +109,6 @@
 <h3>Log samples</h3>
 
 <div class="section">
-	<div class="input-append date">
-		<input id="datePicker" class="input-small" type="text" value='$date.format("yyyy-MM-dd", $date.date)'
-					 data-date-format="yyyy-mm-dd"/>
-		<button id="showLog" class="btn" type="button">Show!</button>
-	</div>
-
 	<div id="logSamples"></div>
 </div>
 

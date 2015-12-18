@@ -12,7 +12,9 @@
 		#foreach($entry in $attribute.value)
 			#if($velocityCount > $valuesLimit)
 				#break
-			#elseif($entry.formattedValue.length() > $lengthLimit)
+			## ниже проверяем длинну value, а не formattedValue, т.к. форматирование обычно используется для
+			## формирования ссылок и прочего невидимого html
+			#elseif($entry.value.length() > $lengthLimit)
 				#set($codeClass = 'long-line')
 				#set($longLine = true)
 				#break
