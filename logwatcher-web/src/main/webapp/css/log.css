@@ -20,6 +20,8 @@ TABLE TD {
 
 .log .entry-bot {
 	background-color: #f1f1f1;
+	margin-bottom: 6px;
+	padding-bottom: -6px;
 }
 
 .log TABLE.attr TD.attributeName {

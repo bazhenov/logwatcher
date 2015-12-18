@@ -2,10 +2,18 @@ $(document).ready(function () {
 	var el = $("h2");
 	var checksum = el.attr("data-checksum");
 	var application = el.attr("data-application");
+	var datePicker = $('#datePicker').datepicker({
+		onRender: function (date) {
+			return date.valueOf() > new Date().valueOf() ? 'disabled' : '';
+		}
+	});
 
-	function loadDayData() {
-		var date = $("#datePicker").val();
-		location.hash = date;
+	function loadDayData(date) {
+		if(date.trim() == '') {
+			date = new Date().toJSON().slice(0, 10);
+		}
+		datePicker.val(date);
+		window.location.hash = date;
 		var data = {'date': date, 'application': application, 'checksum': checksum};
 		$.ajax({ url: "/service/content", data: data }).done(function (result) {
 			$("#attributesContainer").html(result);
@@ -66,20 +74,20 @@ $(document).ready(function () {
 		$.ajax({
 			dataType: "json",
 			url: "/service/stat/by-day.json",
-			data: {application: application, checksum: checksum, days: 30},
+			data: {application: application, checksum: checksum, days: 60},
 			success: function (data) {
 				$('#dayStatistics').highcharts({
 					chart: {
 						type: 'column'
 					},
 					title: {
-						text: 'Event frequency (last month)'
+						text: 'Event frequency (last 60 days)'
 					},
 					xAxis: {
 						categories: data['labels'],
 						labels: {
                             maxStaggerLines: 1,
-							step: 6
+							step: 12
 						}
 					},
 					yAxis: {
@@ -107,19 +115,20 @@ $(document).ready(function () {
 		});
 	}
 
-	var datePicker = $('#datePicker').datepicker({
-		onRender: function (date) {
-			return date.valueOf() > new Date().valueOf() ? 'disabled' : '';
+	$("#showLog").click(function() { loadDayData(datePicker.val()) });
+	$(window).on('hashchange', function() {
+		var date = location.hash.replace('#', '');
+		if(date != datePicker.val()) {
+			loadDayData(date);
 		}
 	});
-	if(location.hash) {
-		datePicker.val(location.hash.replace('#', ''));
-	}
-
-	$("#showLog").click(loadDayData);
 
 	showStatistics();
-	loadDayData();
+	if(location.hash) {
+		loadDayData(location.hash.replace('#', ''));
+	} else {
+		loadDayData(datePicker.val());
+	}
 
 	$("#clusterSave").click(function () {
 		var title = $("#clusterTitle").val();
