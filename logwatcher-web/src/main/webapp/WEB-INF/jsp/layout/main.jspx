@@ -48,11 +48,15 @@
         </div>
 
         <div id="menuBar">
+            <c:url value="/feed" var="feedUrl"/>
+            <a href="${feedUrl}">All applications</a>
+            <span class="devider">&amp;nbsp;</span>
+
             <a href="${dashboardUrl}">Dashboard</a>
             <span class="devider">&amp;nbsp;</span>
 
-            <c:url value="/search" var="url"/>
-            <a href="${url}">Advanced search</a>
+            <c:url value="/search" var="searchUrl"/>
+            <a href="${searchUrl}">Advanced search</a>
         </div>
     </div>
 
