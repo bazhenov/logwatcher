@@ -13,7 +13,6 @@ $(document).ready(function () {
 			date = new Date().toJSON().slice(0, 10);
 		}
 		datePicker.val(date);
-		window.location.hash = date;
 		var data = {'date': date, 'application': application, 'checksum': checksum};
 		$.ajax({ url: "/service/content", data: data }).done(function (result) {
 			$("#attributesContainer").html(result);
@@ -115,7 +114,9 @@ $(document).ready(function () {
 		});
 	}
 
-	$("#showLog").click(function() { loadDayData(datePicker.val()) });
+	$("#showLog").click(function() {
+		window.location.hash = datePicker.val();
+	});
 	$(window).on('hashchange', function() {
 		var date = location.hash.replace('#', '');
 		if(date != datePicker.val()) {
