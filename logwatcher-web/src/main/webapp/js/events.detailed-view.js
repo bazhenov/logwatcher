@@ -115,6 +115,7 @@ $(document).ready(function () {
 	}
 
 	$("#showLog").click(function() {
+		loadDayData(datePicker.val());
 		window.location.hash = datePicker.val();
 	});
 	$(window).on('hashchange', function() {
