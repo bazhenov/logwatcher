@@ -10,6 +10,7 @@ import org.springframework.beans.factory.InitializingBean;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -27,6 +28,7 @@ public class Bootstrap implements InitializingBean {
 
 	private boolean loadSampleDump = false;
 	private File indexLocation;
+	private AtomicLong eventId = new AtomicLong();
 
 	public void setEntryListener(LogEntryListener entryListener) {
 		this.entryListener = entryListener;
@@ -156,8 +158,11 @@ public class Bootstrap implements InitializingBean {
 
 		private void fireNewEvent() {
 			LogEntry e = entries.get(rnd.nextInt(entries.size()));
+			Map<String, String> attributes = new HashMap<>(e.getAttributes());
+			attributes.put("event number", String.valueOf(eventId.incrementAndGet()));
+
 			LogEntry n = new LogEntryImpl(new Date(), e.getGroup(), e.getMessage(), e.getSeverity(), e.getChecksum(), e.getApplicationId(),
-				e.getAttributes(), e.getCause());
+				attributes, e.getCause());
 			write(n);
 		}
 
