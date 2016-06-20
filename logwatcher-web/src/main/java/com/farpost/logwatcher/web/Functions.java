@@ -92,7 +92,7 @@ public class Functions {
 	}
 
 	public static double getIntensity(MinuteVector vector) {
-		return ((double) vector.get(0) + vector.get(-1)) / 120d;
+		return ((double) vector.get(-2) + vector.get(-1)) / 120d;
 	}
 
 	public static String formatIntensity(double intensity) {
