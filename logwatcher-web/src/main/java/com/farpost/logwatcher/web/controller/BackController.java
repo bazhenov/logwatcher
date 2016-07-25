@@ -183,7 +183,7 @@ public class BackController {
 				checksum(checksum).
 				date(fromDateFields(date)).
 				find(storage);
-			entries = Ordering.from(new ByOccurrenceDateComparator()).greatestOf(logEntries, 100);
+			entries = Ordering.from(new ByOccurrenceDateComparator()).greatestOf(logEntries, 1000);
 		}
 
 		public List<LogEntry> getEntries() {
