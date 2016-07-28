@@ -15,8 +15,6 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Ordering;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +23,10 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import static com.farpost.logwatcher.Checksum.fromHexString;
 import static com.farpost.logwatcher.statistics.MinuteVector.SIZE;
@@ -56,8 +57,6 @@ public class BackController {
 
 	@Autowired
 	private LogEntryClassifier entryClassifier;
-
-	private static final Logger log = LoggerFactory.getLogger(BackController.class);
 
 	public BackController() {
 	}
@@ -157,7 +156,6 @@ public class BackController {
 	public DetailsLogPage handleLog(@RequestParam String application,
 																	@RequestParam @DateTimeFormat(iso = DATE) LocalDate date,
 																	@RequestParam String checksum) {
-		log.error("Date registered: {}", date);
 		return new DetailsLogPage(application, checksum, date.toDate());
 	}
 
