@@ -54,14 +54,15 @@ public class SimpleChecksumCalculator implements ChecksumCalculator {
 			.append(entry.getSeverity())
 			.append(entry.getGroup());
 
-		if (!nullToEmpty(entry.getChecksum()).isEmpty())
+		if (!nullToEmpty(entry.getChecksum()).isEmpty()) {
 			checksum.append(':').append(entry.getChecksum());
-
-		Cause cause = entry.getCause();
-		if (cause != null) {
-			checksum.append(':').append(cause.getType());
-		} else if (entry.getChecksum() == null || entry.getChecksum().isEmpty()) {
+		} else /* if(entry.getCause() == null || !entry.getMessage().equals(entry.getCause().getMessage())) */ {
+			//вот этот if выше нужно раскомментить, если у нас полезет мусор в рамках BZR-19045
 			checksum.append(':').append(trimmedMessage(entry.getMessage()));
+		}
+
+		if (entry.getCause() != null) {
+			checksum.append(':').append(entry.getCause().getType());
 		}
 		return hash.hashString(checksum, UTF_8).toString();
 	}
