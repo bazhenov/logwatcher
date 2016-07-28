@@ -18,7 +18,7 @@
 			<a name='$c.checksum'></a>
 
 			<div class='entry ${c.severity}'>
-				<a href="$link.uri("/entries/$c.applicationId/$c.checksum")">
+				<a href="$link.uri("/entries/$c.applicationId/$c.checksum").anchor($p.date)">
 					<div class='entryHeader'>
 						<canvas class="count" width="60" height="60" data-count="$s.getCount($p.date)"
 										data-severity="$c.severity"></canvas>
