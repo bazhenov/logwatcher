@@ -56,8 +56,9 @@ public class SimpleChecksumCalculator implements ChecksumCalculator {
 
 		if (!nullToEmpty(entry.getChecksum()).isEmpty()) {
 			checksum.append(':').append(entry.getChecksum());
-		} else /* if(entry.getCause() == null || !entry.getMessage().equals(entry.getCause().getMessage())) */ {
-			//вот этот if выше нужно раскомментить, если у нас полезет мусор в рамках BZR-19045
+		} else /* if(entry.getCause() == null) */ {
+			// вот этот if выше нужно раскомментить, если у нас полезет мусор в рамках BZR-19045
+			// можно ещё попробовать воткнуть  вот такое -> || !entry.getMessage().equals(entry.getCause().getMessage())
 			checksum.append(':').append(trimmedMessage(entry.getMessage()));
 		}
 
