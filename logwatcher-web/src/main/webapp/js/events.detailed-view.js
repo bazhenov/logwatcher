@@ -2,6 +2,7 @@ $(document).ready(function () {
 	var el = $("h2");
 	var checksum = el.attr("data-checksum");
 	var application = el.attr("data-application");
+	var currentLimit = 100;
 	var datePicker = $('#datePicker').datepicker({
 		onRender: function (date) {
 			return date.valueOf() > new Date().valueOf() ? 'disabled' : '';
@@ -13,7 +14,9 @@ $(document).ready(function () {
 			date = new Date().toJSON().slice(0, 10);
 		}
 		datePicker.val(date);
-		var data = {'date': date, 'application': application, 'checksum': checksum};
+		var data = {'date': date, 'application': application, 'checksum': checksum, 'limit': currentLimit};
+		$("#attributesContainer").html("<div class='spinner'></div>");
+		$("#logSamples").html("<div class='spinner'></div>");
 		$.ajax({ url: "/service/content", data: data }).done(function (result) {
 			$("#attributesContainer").html(result);
 		}).fail(function() {
@@ -114,7 +117,8 @@ $(document).ready(function () {
 		});
 	}
 
-	$("#showLog").click(function() {
+	$(".showLog").click(function() {
+		currentLimit = $(this).data('limit');
 		loadDayData(datePicker.val());
 		window.location.hash = datePicker.val();
 	});

@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.List;
 
 import static com.farpost.logwatcher.storage.LogEntries.entries;
+import static java.util.Comparator.comparing;
 
 @Controller
 public class SearchController {
@@ -73,8 +74,8 @@ public class SearchController {
 
 		public SearchPage(String query, List<LogEntryMatcher> matchers) {
 			this.query = query;
-			entries = entries().withCriteria(matchers).find(storage);
-			entries = Ordering.from(new ByOccurrenceDateComparator()).greatestOf(entries, 100);
+			entries = entries().withCriterion(matchers).limit(100).find(storage);
+			entries = Ordering.from(comparing(LogEntry::getDate).reversed()).immutableSortedCopy(entries);
 		}
 
 

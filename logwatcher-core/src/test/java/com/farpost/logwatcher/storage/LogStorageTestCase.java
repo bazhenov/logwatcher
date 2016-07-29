@@ -276,8 +276,8 @@ abstract public class LogStorageTestCase {
 
 		List<LogEntryMatcher> criteria = entries().
 			applicationId("foo").
-			criterias();
-		List<LogEntry> entries = storage.findEntries(criteria);
+			getCriteria();
+		List<LogEntry> entries = storage.findEntries(criteria, 1000);
 		assertThat(entries.size(), equalTo(1));
 		assertThat(entries, hasItem(todayEntry));
 	}

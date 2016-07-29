@@ -12,10 +12,11 @@ import java.util.List;
 
 public class LogEntriesFinder {
 
-	private final List<LogEntryMatcher> criterias = new LinkedList<>();
+	private final List<LogEntryMatcher> criteria = new LinkedList<>();
+	private int limit = 1000;
 
 	public LogEntriesFinder date(LocalDate date) {
-		criterias.add(new DateMatcher(date));
+		criteria.add(new DateMatcher(date));
 		return this;
 	}
 
@@ -27,7 +28,7 @@ public class LogEntriesFinder {
 	 * @return this
 	 */
 	public LogEntriesFinder date(LocalDate from, LocalDate to) {
-		criterias.add(new DateMatcher(from, to));
+		criteria.add(new DateMatcher(from, to));
 		return this;
 	}
 
@@ -38,7 +39,7 @@ public class LogEntriesFinder {
 	 * @return this
 	 */
 	public LogEntriesFinder applicationId(String applicationId) {
-		return withCriteria(new ApplicationIdMatcher(applicationId));
+		return withCriterion(new ApplicationIdMatcher(applicationId));
 	}
 
 	/**
@@ -48,32 +49,42 @@ public class LogEntriesFinder {
 	 * @return this
 	 */
 	public LogEntriesFinder checksum(String checksum) {
-		return withCriteria(new ChecksumMatcher(checksum));
+		return withCriterion(new ChecksumMatcher(checksum));
 	}
 
 	public LogEntriesFinder severity(Severity severity) {
-		return withCriteria(new SeverityMatcher(severity));
+		return withCriterion(new SeverityMatcher(severity));
 	}
 
 	public LogEntriesFinder contains(String part) {
-		return withCriteria(new ContainsMatcher(part));
+		return withCriterion(new ContainsMatcher(part));
 	}
 
 	public LogEntriesFinder causedBy(String type) {
-		return withCriteria(new CauseTypeMatcher(type));
+		return withCriterion(new CauseTypeMatcher(type));
 	}
 
 	public LogEntriesFinder attribute(String name, String expectedValue) {
-		return withCriteria(new AttributeValueMatcher(name, expectedValue));
+		return withCriterion(new AttributeValueMatcher(name, expectedValue));
 	}
 
-	private LogEntriesFinder withCriteria(LogEntryMatcher matcher) {
-		criterias.add(matcher);
+	/**
+	 * @param limit ограничение на количество записей, обрабатываемых методами {@link #find(LogStorage)} и
+	 * {@link #walk(LogStorage, Visitor)}.
+	 * @return this
+	 */
+	public LogEntriesFinder limit(int limit) {
+		this.limit = limit;
 		return this;
 	}
 
-	public LogEntriesFinder withCriteria(Collection<LogEntryMatcher> matchers) {
-		criterias.addAll(matchers);
+	private LogEntriesFinder withCriterion(LogEntryMatcher matcher) {
+		criteria.add(matcher);
+		return this;
+	}
+
+	public LogEntriesFinder withCriterion(Collection<LogEntryMatcher> matchers) {
+		criteria.addAll(matchers);
 		return this;
 	}
 
@@ -82,8 +93,8 @@ public class LogEntriesFinder {
 	 *
 	 * @return коллекция matcher'ов
 	 */
-	public List<LogEntryMatcher> criterias() {
-		return criterias;
+	public List<LogEntryMatcher> getCriteria() {
+		return criteria;
 	}
 
 	/**
@@ -95,7 +106,7 @@ public class LogEntriesFinder {
 	 * @throws InvalidCriteriaException в случае некорректно составленных критериев
 	 */
 	public int count(LogStorage storage) throws LogStorageException, InvalidCriteriaException {
-		return storage.countEntries(criterias);
+		return storage.countEntries(criteria);
 	}
 
 	/**
@@ -104,18 +115,18 @@ public class LogEntriesFinder {
 	 * @param storage хранилище
 	 * @return список записей
 	 * @throws InvalidCriteriaException в случае если неверно заданы критерии фильтрации
-	 * @throws LogStorageException			в случае внутренней ошибки хранилища
-	 * @see LogStorage#findEntries(Collection)
+	 * @throws LogStorageException      в случае внутренней ошибки хранилища
+	 * @see LogStorage#findEntries(Collection, int)
 	 */
 	public List<LogEntry> find(LogStorage storage) throws LogStorageException,
 		InvalidCriteriaException {
-		return storage.findEntries(criterias);
+		return storage.findEntries(criteria, limit);
 	}
 
 	public <T> T walk(LogStorage storage, Visitor<LogEntry, T> visitor)
 		throws LogStorageException, InvalidCriteriaException {
 
-		return storage.walk(criterias, visitor);
+		return storage.walk(criteria, limit, visitor);
 	}
 
 	public List<LogEntryMatcher> all() {

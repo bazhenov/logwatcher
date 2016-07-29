@@ -177,23 +177,23 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 	}
 
 	@Override
-	public List<LogEntry> findEntries(Collection<LogEntryMatcher> criteria)
+	public List<LogEntry> findEntries(Collection<LogEntryMatcher> criteria, int limit)
 		throws LogStorageException, InvalidCriteriaException {
-		return walk(criteria, new CollectingVisitor<>());
+		return walk(criteria, limit, new CollectingVisitor<>());
 	}
 
-	private Integer[] findEntriesIds(final Collection<LogEntryMatcher> criteria) {
-		return withSearcher(ref -> findEntriesIds(criteria, null, ref));
+	private Integer[] findEntriesIds(final Collection<LogEntryMatcher> criteria, int limit) {
+		return withSearcher(ref -> findEntriesIds(criteria, null, ref, limit));
 	}
 
-	private Integer[] findEntriesIds(Collection<LogEntryMatcher> criteria, Sort sort, SearcherReference ref) {
+	private Integer[] findEntriesIds(Collection<LogEntryMatcher> criteria, Sort sort, SearcherReference ref, int limit) {
 		try {
 			Query query = createLuceneQuery(criteria);
 			Searcher searcher = ref.getSearcher();
 
 			TopDocs topDocs = sort != null
-				? searcher.search(query, null, 1000, DATETIME_SORT)
-				: searcher.search(query, null, 1000);
+				? searcher.search(query, null, limit, DATETIME_SORT)
+				: searcher.search(query, null, limit);
 
 			Integer result[] = new Integer[topDocs.scoreDocs.length];
 			for (int i = 0; i < topDocs.scoreDocs.length; i++) {
@@ -227,7 +227,7 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 			Integer[] ids;
 			int recordsRemoved = 0;
 
-			while ((ids = findEntriesIds(criteria)).length > 0) {
+			while ((ids = findEntriesIds(criteria, 1000)).length > 0) {
 				jdbc.update("DELETE FROM entry WHERE id IN (" + arrayToCommaDelimitedString(ids) + ")");
 				synchronized (writerLock) {
 					for (int id : ids) {
@@ -276,9 +276,9 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 	}
 
 	@Override
-	public <T> T walk(final Collection<LogEntryMatcher> criteria, Visitor<LogEntry, T> visitor)
+	public <T> T walk(final Collection<LogEntryMatcher> criteria, int limit, Visitor<LogEntry, T> visitor)
 		throws LogStorageException, InvalidCriteriaException {
-		Integer[] ids = withSearcher(ref -> findEntriesIds(criteria, DATETIME_SORT, ref));
+		Integer[] ids = withSearcher(ref -> findEntriesIds(criteria, DATETIME_SORT, ref, limit));
 		if (ids.length > 0) {
 			String idString = arrayToCommaDelimitedString(ids);
 

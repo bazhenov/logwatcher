@@ -53,16 +53,20 @@ public class InMemoryLogStorage implements LogStorage {
 		});
 	}
 
-	public List<LogEntry> findEntries(final Collection<LogEntryMatcher> criteria) {
+	public List<LogEntry> findEntries(final Collection<LogEntryMatcher> criteria, int limit) {
 		return withLock(readLock, () -> entries.stream()
 				.filter(entry -> isMatching(entry, criteria))
+				.limit(limit)
 				.collect(toList())
 		);
 	}
 
-	public <T> T walk(final Collection<LogEntryMatcher> criteria, final Visitor<LogEntry, T> visitor) {
+	public <T> T walk(final Collection<LogEntryMatcher> criteria, int limit, final Visitor<LogEntry, T> visitor) {
 		withLock(readLock, () -> {
-			entries.stream().filter(entry -> isMatching(entry, criteria)).forEach(visitor::visit);
+			entries.stream()
+				.filter(entry -> isMatching(entry, criteria))
+				.limit(limit)
+				.forEach(visitor::visit);
 			return null;
 		});
 

@@ -60,11 +60,12 @@ public interface LogStorage {
 	 * Возвращает список записей удовлетворяющих заданным критериям.
 	 *
 	 * @param criteria критерии отбора записей
+	 * @param limit ограничение на количество возвращаемых записей
 	 * @return список записей
 	 * @throws LogStorageException      в случае внутренней ошибки хранилища
 	 * @throws InvalidCriteriaException в случае если указанные неверные критерии отбора
 	 */
-	List<LogEntry> findEntries(Collection<LogEntryMatcher> criteria)
+	List<LogEntry> findEntries(Collection<LogEntryMatcher> criteria, int limit)
 		throws LogStorageException, InvalidCriteriaException;
 
 	/**
@@ -74,12 +75,12 @@ public interface LogStorage {
 	 * быть потокобезопасна.
 	 *
 	 * @param criteria критерии по которым осуществляется итерация
-	 * @param visitor  visitor
-	 * @return результат расчитанный имплементацией {@link Visitor}.
+	 * @param limit ограничение на количество обрабатываемых записей
+	 * @param visitor  visitor  @return результат расчитанный имплементацией {@link Visitor}.
 	 * @throws LogStorageException      в случае внутренней ошибки хранилища
 	 * @throws InvalidCriteriaException в случае если некорректно заданы критерии поиска
 	 */
-	<T> T walk(Collection<LogEntryMatcher> criteria, Visitor<LogEntry, T> visitor)
+	<T> T walk(Collection<LogEntryMatcher> criteria, int limit, Visitor<LogEntry, T> visitor)
 		throws LogStorageException, InvalidCriteriaException;
 
 }

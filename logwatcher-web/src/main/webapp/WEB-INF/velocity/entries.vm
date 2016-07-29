@@ -91,7 +91,9 @@
 <div class="input-append date">
 	<input id="datePicker" class="input-small" type="text" value='$date.format("yyyy-MM-dd", $date.date)'
 			data-date-format="yyyy-mm-dd"/>
-	<button id="showLog" class="btn" type="button">Show!</button>
+	<button class="showLog btn" type="button" data-limit="100">Show 100</button>
+	<button class="showLog btn" type="button" data-limit="1000">Show 1000</button>
+	<button class="showLog btn" type="button" data-limit="3000">Show 3000</button>
 </div>
 
 <h3>Context Sampling</h3>

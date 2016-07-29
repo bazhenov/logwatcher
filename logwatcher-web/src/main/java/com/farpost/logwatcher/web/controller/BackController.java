@@ -12,7 +12,6 @@ import com.farpost.logwatcher.web.AttributeFormatter;
 import com.farpost.logwatcher.web.LogEntryClassifier;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import com.google.common.collect.Ordering;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +22,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.farpost.logwatcher.Checksum.fromHexString;
 import static com.farpost.logwatcher.statistics.MinuteVector.SIZE;
@@ -34,6 +30,7 @@ import static com.farpost.logwatcher.storage.LogEntries.entries;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
+import static java.util.Comparator.comparing;
 import static org.joda.time.LocalDate.fromDateFields;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -79,6 +76,7 @@ public class BackController {
 				.applicationId(application)
 				.checksum(checksum)
 				.date(date)
+				.limit(1000)
 				.walk(storage, visitor);
 
 		Multimap<String, AggregatedAttributeEntry> attributes = ArrayListMultimap.create();
@@ -153,10 +151,13 @@ public class BackController {
 
 	@RequestMapping("/service/log")
 	@ModelAttribute("p")
-	public DetailsLogPage handleLog(@RequestParam String application,
-																	@RequestParam @DateTimeFormat(iso = DATE) LocalDate date,
-																	@RequestParam String checksum) {
-		return new DetailsLogPage(application, checksum, date.toDate());
+	public DetailsLogPage handleLog(
+		@RequestParam String application,
+		@RequestParam @DateTimeFormat(iso = DATE) LocalDate date,
+		@RequestParam String checksum,
+		@RequestParam(required = false, defaultValue = "100") int limit
+	) {
+		return new DetailsLogPage(application, checksum, date.toDate(), limit);
 	}
 
 	/**
@@ -175,13 +176,15 @@ public class BackController {
 
 		private final List<LogEntry> entries;
 
-		public DetailsLogPage(String application, String checksum, Date date) {
+		public DetailsLogPage(String application, String checksum, Date date, int limit) {
 			Collection<LogEntry> logEntries = entries().
 				applicationId(application).
 				checksum(checksum).
 				date(fromDateFields(date)).
+				limit(limit).
 				find(storage);
-			entries = Ordering.from(new ByOccurrenceDateComparator()).greatestOf(logEntries, 1000);
+			entries = new ArrayList<>(logEntries);
+			entries.sort(comparing(LogEntry::getDate).reversed());
 		}
 
 		public List<LogEntry> getEntries() {
