@@ -61,7 +61,7 @@ public class InMemoryLogStorage implements LogStorage {
 		);
 	}
 
-	public <T> T walk(final Collection<LogEntryMatcher> criteria, int limit, final Visitor<LogEntry, T> visitor) {
+	public void walk(final Collection<LogEntryMatcher> criteria, int limit, final Visitor<LogEntry, ?> visitor) {
 		withLock(readLock, () -> {
 			entries.stream()
 				.filter(entry -> isMatching(entry, criteria))
@@ -69,8 +69,6 @@ public class InMemoryLogStorage implements LogStorage {
 				.forEach(visitor::visit);
 			return null;
 		});
-
-		return visitor.getResult();
 	}
 
 	public int countEntries(final Collection<LogEntryMatcher> criteria) {

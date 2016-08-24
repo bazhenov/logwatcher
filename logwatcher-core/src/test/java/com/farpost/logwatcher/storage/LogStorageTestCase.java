@@ -274,10 +274,10 @@ abstract public class LogStorageTestCase {
 		int removedEntriesCount = storage.removeOldEntries(today);
 		assertThat(removedEntriesCount, equalTo(1));
 
-		List<LogEntryMatcher> criteria = entries().
-			applicationId("foo").
-			getCriteria();
-		List<LogEntry> entries = storage.findEntries(criteria, 1000);
+		List<LogEntry> entries = entries()
+			.applicationId("foo")
+			.limit(1000)
+			.find(storage);
 		assertThat(entries.size(), equalTo(1));
 		assertThat(entries, hasItem(todayEntry));
 	}

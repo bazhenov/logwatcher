@@ -80,7 +80,7 @@ public interface LogStorage {
 	 * @throws LogStorageException      в случае внутренней ошибки хранилища
 	 * @throws InvalidCriteriaException в случае если некорректно заданы критерии поиска
 	 */
-	<T> T walk(Collection<LogEntryMatcher> criteria, int limit, Visitor<LogEntry, T> visitor)
+	void walk(Collection<LogEntryMatcher> criteria, int limit, Visitor<LogEntry, ?> visitor)
 		throws LogStorageException, InvalidCriteriaException;
 
 }

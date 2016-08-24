@@ -3,8 +3,11 @@ CREATE TABLE IF NOT EXISTS entry (
 	value BLOB NOT NULL,
 	checksum VARCHAR(255) NOT NULL,
 	date DATE NOT NULL,
+	application VARCHAR(255) NULL,
 	PRIMARY KEY(id)
 );
+CREATE INDEX ix_date ON entry(date);
+CREATE INDEX ix_checksum_date ON entry(checksum, date);
 
 CREATE TABLE IF NOT EXISTS cluster_day_stat (
 	application VARCHAR(255) NOT NULL,
@@ -14,6 +17,7 @@ CREATE TABLE IF NOT EXISTS cluster_day_stat (
 	severity VARCHAR(255) NOT NULL,
 	PRIMARY KEY(application, checksum, date)
 );
+CREATE INDEX ix_cluster_date ON cluster_day_stat(date);
 
 CREATE TABLE IF NOT EXISTS cluster_general_stat (
 	application VARCHAR(255) NOT NULL,

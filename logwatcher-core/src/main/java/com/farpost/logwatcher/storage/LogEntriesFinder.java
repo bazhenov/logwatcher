@@ -89,15 +89,6 @@ public class LogEntriesFinder {
 	}
 
 	/**
-	 * Возвращает коллекцию matcher'ов по заданным finder'ом критериям.
-	 *
-	 * @return коллекция matcher'ов
-	 */
-	public List<LogEntryMatcher> getCriteria() {
-		return criteria;
-	}
-
-	/**
 	 * Возвращает количество записей в хранилище подпадающих под заданные критерии.
 	 *
 	 * @param storage Хранилище логов
@@ -126,7 +117,8 @@ public class LogEntriesFinder {
 	public <T> T walk(LogStorage storage, Visitor<LogEntry, T> visitor)
 		throws LogStorageException, InvalidCriteriaException {
 
-		return storage.walk(criteria, limit, visitor);
+		storage.walk(criteria, limit, visitor);
+		return visitor.getResult();
 	}
 
 	public List<LogEntryMatcher> all() {

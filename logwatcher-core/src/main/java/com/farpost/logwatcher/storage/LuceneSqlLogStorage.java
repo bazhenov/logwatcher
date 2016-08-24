@@ -6,6 +6,7 @@ import com.farpost.logwatcher.marshalling.Marshaller;
 import com.farpost.logwatcher.storage.spi.AnnotationDrivenMatcherMapperImpl;
 import com.farpost.logwatcher.storage.spi.MatcherMapper;
 import com.farpost.logwatcher.storage.spi.MatcherMapperException;
+import com.google.common.base.Joiner;
 import com.google.common.io.Closeables;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.farpost.logwatcher.storage.LuceneUtils.*;
 import static com.google.common.base.Objects.firstNonNull;
@@ -44,7 +46,7 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 
 	private static final Sort DATETIME_SORT = new Sort(new SortField("datetime", SortField.LONG, true));
 	private final MatcherMapper<Query> matcherMapper;
-	private int nextId;
+	private final AtomicInteger nextId;
 
 	private final JdbcTemplate jdbc;
 	private final IndexWriter writer;
@@ -63,7 +65,7 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 		searcherRef = createSearcher();
 		this.jdbc = new JdbcTemplate(dataSource);
 		this.marshaller = new Jaxb2Marshaller();
-		nextId = firstNonNull(jdbc.queryForObject("SELECT MAX(id) + 1 FROM entry", Integer.class), 0);
+		nextId = new AtomicInteger(firstNonNull(jdbc.queryForObject("SELECT MAX(id) + 1 FROM entry", Integer.class), 0));
 	}
 
 	@Override
@@ -79,13 +81,13 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 			checkNotNull(entry);
 			// TODO: контрольная сумма должна расчитыватся где-то в другом месте. Это слой хранения данных
 			final String checksum = checksumCalculator.calculateChecksum(entry);
-			int entryId = getNextId();
 			byte[] marshaledEntry = marshaller.marshall(entry);
+			int entryId = nextId.incrementAndGet();
 
-			jdbc.update("INSERT INTO entry (id, date, checksum, value) VALUES (?, ?, ?, ?)", entryId, entry.getDate(),
-				checksum, marshaledEntry);
+			jdbc.update("INSERT INTO entry (id, date, checksum, application, value) VALUES (?, ?, ?, ?, ?)",
+				entryId, entry.getDate(), checksum, entry.getApplicationId(), marshaledEntry);
 
-			log.debug("Entry wrote to database. Checksum: {}", checksum);
+			log.debug("Entry written to database. Checksum: {}", checksum);
 
 			synchronized (writerLock) {
 				writer.addDocument(createLuceneDocument(entry, entryId, checksum));
@@ -133,10 +135,6 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 		this.commitThreshold = commitThreshold;
 	}
 
-	private synchronized int getNextId() {
-		return nextId++;
-	}
-
 	/**
 	 * Коммитит изменения в индекс если с момента последнего коммита прошло более {@link #commitThreshold} секунд.
 	 *
@@ -179,7 +177,9 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 	@Override
 	public List<LogEntry> findEntries(Collection<LogEntryMatcher> criteria, int limit)
 		throws LogStorageException, InvalidCriteriaException {
-		return walk(criteria, limit, new CollectingVisitor<>());
+		CollectingVisitor<LogEntry> visitor = new CollectingVisitor<>();
+		walk(criteria, limit, visitor);
+		return visitor.getResult();
 	}
 
 	private Integer[] findEntriesIds(final Collection<LogEntryMatcher> criteria, int limit) {
@@ -276,18 +276,46 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 	}
 
 	@Override
-	public <T> T walk(final Collection<LogEntryMatcher> criteria, int limit, Visitor<LogEntry, T> visitor)
+	public void walk(final Collection<LogEntryMatcher> criteria, int limit, Visitor<LogEntry, ?> visitor)
 		throws LogStorageException, InvalidCriteriaException {
-		Integer[] ids = withSearcher(ref -> findEntriesIds(criteria, DATETIME_SORT, ref, limit));
-		if (ids.length > 0) {
-			String idString = arrayToCommaDelimitedString(ids);
+		if(!queryDatabaseIfPossible(criteria, limit, visitor)) {
+			Integer[] ids = withSearcher(ref -> findEntriesIds(criteria, DATETIME_SORT, ref, limit));
+			if(ids.length > 0) {
+				String idString = arrayToCommaDelimitedString(ids);
 
-			List<byte[]> rows = jdbc.queryForList("SELECT value FROM entry WHERE id IN ( " + idString + " )", byte[].class);
-			for (byte[] data : rows) {
-				visitor.visit(marshaller.unmarshall(data));
+				jdbc.queryForList("SELECT value FROM entry WHERE id IN ( " + idString + " )", byte[].class).stream()
+					.map(marshaller::unmarshall)
+					.forEach(visitor::visit);
 			}
 		}
-		return visitor.getResult();
+	}
+
+	private boolean queryDatabaseIfPossible(Collection<LogEntryMatcher> matchers, int limit, Visitor<LogEntry, ?> visitor) {
+		Collection<String> conditions = new ArrayList<>();
+		Collection<Object> params = new ArrayList<>();
+		for(LogEntryMatcher matcher : matchers) {
+			if(matcher instanceof ApplicationIdMatcher) {
+				conditions.add("(application = ? OR application IS NULL)");
+				params.add(((ApplicationIdMatcher)matcher).getApplicationId());
+			} else if(matcher instanceof ChecksumMatcher) {
+				conditions.add("checksum = ?");
+				params.add(((ChecksumMatcher)matcher).getChecksum());
+			} else if(matcher instanceof DateMatcher) {
+				conditions.add("date >= ? AND date < ?");
+				params.add(((DateMatcher)matcher).getDateFrom().toDate());
+				params.add(((DateMatcher)matcher).getDateTo().toDate());
+			} else {
+				return false;
+			}
+		}
+		String condition = conditions.isEmpty() ? "" : "WHERE " + Joiner.on(" AND ").join(conditions);
+		params.add(limit);
+		jdbc.queryForList(
+			"SELECT value FROM entry " + condition + " ORDER BY id DESC LIMIT ?", params.toArray(), byte[].class
+		).stream()
+			.map(marshaller::unmarshall)
+			.forEach(visitor::visit);
+		return true;
 	}
 
 	private static List<int[]> gatherDocumentIds(IndexSearcher searcher) throws IOException {

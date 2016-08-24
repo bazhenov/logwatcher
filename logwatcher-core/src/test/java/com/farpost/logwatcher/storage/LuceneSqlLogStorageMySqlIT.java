@@ -25,8 +25,7 @@ public class LuceneSqlLogStorageMySqlIT extends LogStorageTestCase {
 
 		execSql(
 			"/com/farpost/logwatcher/storage/schema-cleanup.sql",
-			"/com/farpost/logwatcher/storage/schema.sql",
-			"/com/farpost/logwatcher/storage/schema-indexes.sql"
+			"/com/farpost/logwatcher/storage/schema.sql"
 		);
 	}
 

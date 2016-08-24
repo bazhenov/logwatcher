@@ -26,7 +26,8 @@ public class AggregateAttributesVisitorTest {
 
 		LogEntryBuilder.entry().attribute("bar", "foo").saveIn(storage);
 
-		AggregationResult result = storage.walk(entries().all(), 1000, visitor);
+		storage.walk(entries().all(), 1000, visitor);
+		AggregationResult result = visitor.getResult();
 
 		Map<String, AggregatedAttribute> attributes = result.getAttributeMap();
 		assertThat(attributes.get("foo").getCountFor("foo"), equalTo(2));
