@@ -7,8 +7,8 @@
 	<link rel="stylesheet" type="text/css" href="/css/datepicker.css"/>
 </head>
 
-<body>
-
+<body data-message="$p.cluster.title">
+<div class="clusterInnerContainer" data-message="${p.cluster.title}">
 <h2 data-checksum="${p.cluster.checksum}" data-application="$p.cluster.applicationId">
 	$display.truncate($p.cluster.title, 90, "...", true)
 	#if($p.cluster.issueKey)
@@ -121,5 +121,6 @@
 <script type="text/javascript">
 	$("*[data-toggle='tooltip']").tooltip()
 </script>
+</div>
 </body>
 </html>

@@ -3,13 +3,16 @@
 #* @vtlvariable name="formatter" type="com.farpost.logwatcher.web.AttributeFormatter" *#
 #* @vtlvariable name="classifier" type="com.farpost.logwatcher.web.LogEntryClassifier" *#
 <div class="${classifier.getEntryCssClass($e)}">
-	<p class="message">$date.format("dd MMM, HH:mm:ss", $e.date) &mdash; $e.severity.toString().substring(0, 1).toUpperCase()
-		#if($e.group) [$e.group] #end  $e.message</p>
+	<p class="message">
+		<span class="m_date">$date.format("dd MMM, HH:mm:ss", $e.date)</span>
+		<span class="m_group">&mdash; $e.severity.toString().substring(0, 1).toUpperCase() #if($e.group) [$e.group] #end</span>
+		<span class="m_message">$e.message</span>
+	</p>
 	#if(!$e.attributes.isEmpty())
 		<table class="attr">
 			#foreach($i in $e.attributes.entrySet())
 				#if(!$i.value.isEmpty())
-					<tr>
+					<tr data-attribte="$i.key">
 						<td class="attributeName">$i.key</td>
 						#set($_value = $formatter.format($e.applicationId, $i.key, $e.attributes))
 						<td>$!_value</td>

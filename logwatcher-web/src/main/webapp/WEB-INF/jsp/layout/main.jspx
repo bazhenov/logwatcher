@@ -24,6 +24,8 @@
 
         <script type="text/javascript" src="/js/jquery-1.10.2.min.js">/**/</script>
 
+        <script type="text/javascript" src="http://www.farpost.ru/resources/js/logwatcher.js?${dateAsString}">/**/</script>
+
         <c:url value='/css/main.css' var="cssUrl"/>
         <link rel="stylesheet" href="${cssUrl}"/>
 
