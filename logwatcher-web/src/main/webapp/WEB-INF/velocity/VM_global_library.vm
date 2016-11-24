@@ -12,7 +12,7 @@
 		<table class="attr">
 			#foreach($i in $e.attributes.entrySet())
 				#if(!$i.value.isEmpty())
-					<tr data-attribte="$i.key">
+					<tr data-attribute="$i.key">
 						<td class="attributeName">$i.key</td>
 						#set($_value = $formatter.format($e.applicationId, $i.key, $e.attributes))
 						<td>$!_value</td>

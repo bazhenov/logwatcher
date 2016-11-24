@@ -23,7 +23,7 @@
 
 		## вообще не показываем атрибут, если его единственное значение - пустая строка.
 		#if(!($attribute.value.size() == 1 && $attribute.value.iterator().next().value.isEmpty()))
-			<tr>
+			<tr data-attribute="$attribute.key">
 				<td class="la">$attribute.key</td>
 				<td class="value">
 					#set($codeStyle = '')
