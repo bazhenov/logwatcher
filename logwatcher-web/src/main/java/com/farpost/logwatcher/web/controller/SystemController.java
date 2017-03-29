@@ -65,9 +65,15 @@ public class SystemController {
 		return "Ok";
 	}
 
+	@RequestMapping("/rejected_by_overflow")
+	@ResponseBody
+	public long getRejectedByChannelOverflow() {
+		return MessageCounter.getRejectedByChannelOverflow();
+	}
+
 	@RequestMapping("/received_persisted_delta")
 	@ResponseBody
-	public long rejectedByOverflow() {
+	public long getReceivedPersistedDelta() {
 		return MessageCounter.getReceivedPersistedDelta();
 	}
 }

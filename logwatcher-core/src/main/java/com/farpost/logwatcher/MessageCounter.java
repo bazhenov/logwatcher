@@ -6,9 +6,14 @@ public class MessageCounter {
 
 	private static final AtomicLong received = new AtomicLong();
 	private static final AtomicLong persisted = new AtomicLong();
+	private static final AtomicLong rejectedByChannelOverflow = new AtomicLong();
 
 	public static void incrementReceived() {
 		received.incrementAndGet();
+	}
+
+	public static void incrementRejectedByChannelOverflow() {
+		rejectedByChannelOverflow.incrementAndGet();
 	}
 
 	public static void incrementPersisted() {
@@ -17,5 +22,9 @@ public class MessageCounter {
 
 	public static long getReceivedPersistedDelta() {
 		return received.get() - persisted.get();
+	}
+
+	public static long getRejectedByChannelOverflow() {
+		return rejectedByChannelOverflow.get();
 	}
 }
