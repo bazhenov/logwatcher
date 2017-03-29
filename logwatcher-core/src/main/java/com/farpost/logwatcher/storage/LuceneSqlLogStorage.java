@@ -97,6 +97,7 @@ public class LuceneSqlLogStorage implements LogStorage, Closeable {
 		} catch (IOException e) {
 			throw new LogStorageException(e);
 		}
+		MessageCounter.incrementPersisted();
 	}
 
 	/**

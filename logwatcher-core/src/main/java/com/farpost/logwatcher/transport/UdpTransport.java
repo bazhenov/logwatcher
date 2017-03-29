@@ -1,5 +1,6 @@
 package com.farpost.logwatcher.transport;
 
+import com.farpost.logwatcher.MessageCounter;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -78,6 +79,7 @@ public class UdpTransport implements Transport {
 				}
 
 				try {
+					MessageCounter.incrementReceived();
 					listener.onMessage(message, sender);
 				} catch (Exception e) {
 					log.error("Listener failed at message: " + Arrays.toString(message), e);

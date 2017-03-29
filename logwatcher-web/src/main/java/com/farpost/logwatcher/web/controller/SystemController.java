@@ -1,9 +1,6 @@
 package com.farpost.logwatcher.web.controller;
 
-import com.farpost.logwatcher.Cause;
-import com.farpost.logwatcher.LogEntry;
-import com.farpost.logwatcher.LogEntryImpl;
-import com.farpost.logwatcher.Severity;
+import com.farpost.logwatcher.*;
 import com.farpost.logwatcher.marshalling.Jaxb2Marshaller;
 import com.farpost.logwatcher.transport.WriteToChannelTransportListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,9 +65,9 @@ public class SystemController {
 		return "Ok";
 	}
 
-	@RequestMapping("/rejected_by_overflow")
+	@RequestMapping("/received_persisted_delta")
 	@ResponseBody
 	public long rejectedByOverflow() {
-		return WriteToChannelTransportListener.rejectedByOverflowCount.get();
+		return MessageCounter.getReceivedPersistedDelta();
 	}
 }
